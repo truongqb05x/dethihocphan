@@ -1,0 +1,35 @@
+-- Bảng lưu thông tin trường học
+CREATE TABLE schools (
+  id INT AUTO_INCREMENT PRIMARY KEY, -- id: Khóa chính, tự tăng, định danh duy nhất cho mỗi trường.
+  name VARCHAR(255) NOT NULL         -- name: Tên trường học (ví dụ: "Trường A", "Trường B").
+);
+
+-- Bảng lưu thông tin khoa của từng trường
+CREATE TABLE faculties (
+  id INT AUTO_INCREMENT PRIMARY KEY, -- id: Khóa chính, tự tăng, định danh duy nhất cho mỗi khoa.
+  school_id INT NOT NULL,            -- school_id: Khóa ngoại liên kết đến bảng schools (xác định trường mà khoa thuộc về).
+  name VARCHAR(255) NOT NULL,        -- name: Tên khoa (ví dụ: "Khoa X", "Khoa Z").
+  FOREIGN KEY (school_id) REFERENCES schools(id) -- Ràng buộc khóa ngoại đảm bảo school_id tồn tại trong bảng schools.
+);
+
+-- Bảng lưu thông tin các môn học thuộc từng khoa
+CREATE TABLE subjects (
+  id INT AUTO_INCREMENT PRIMARY KEY, -- id: Khóa chính, tự tăng, định danh duy nhất cho mỗi môn học.
+  faculty_id INT NOT NULL,           -- faculty_id: Khóa ngoại liên kết đến bảng faculties (xác định khoa mà môn học thuộc về).
+  name VARCHAR(255) NOT NULL,        -- name: Tên môn học (ví dụ: "Môn Toán", "Môn Anh").
+  FOREIGN KEY (faculty_id) REFERENCES faculties(id) -- Ràng buộc khóa ngoại đảm bảo faculty_id tồn tại trong bảng faculties.
+);
+
+-- Bảng lưu thông tin tài liệu (đề thi, đề cương)
+CREATE TABLE documents (
+  id INT AUTO_INCREMENT PRIMARY KEY, -- id: Khóa chính, tự tăng, định danh duy nhất cho mỗi tài liệu.
+  subject_id INT NOT NULL,            -- subject_id: Khóa ngoại liên kết đến bảng subjects (xác định môn học của tài liệu).
+  year INT NOT NULL,                  -- year: Năm của tài liệu (ví dụ: 2022).
+  file_name VARCHAR(255) NOT NULL,    -- file_name: Tên file tài liệu (ví dụ: "Đề Thi Toán 2022.pdf").
+  file_info VARCHAR(255) NOT NULL,    -- file_info: Thông tin mô tả thêm về tài liệu (ví dụ: "Trường A - Khoa X - Môn Toán - 2022").
+  document_type ENUM('exam', 'syllabus') NOT NULL, -- document_type: Loại tài liệu, 'exam' cho đề thi, 'syllabus' cho đề cương.
+  file_path VARCHAR(255) NOT NULL,    -- file_path: Đường dẫn lưu trữ file trên hệ thống hoặc URL.
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- created_at: Thời gian tạo bản ghi.
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- updated_at: Thời gian cập nhật bản ghi (tự động cập nhật mỗi khi có thay đổi).
+  FOREIGN KEY (subject_id) REFERENCES subjects(id) -- Ràng buộc khóa ngoại đảm bảo subject_id tồn tại trong bảng subjects.
+);

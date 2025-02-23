@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản Lý Dữ Liệu - Giao Diện Cải Tiến</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .container {
+      background: #fff;
+      width: 100%;
+      max-width: 600px;
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 24px;
+      color: #333;
+    }
+    .form-group { margin-bottom: 20px; }
+    label { display: block; margin-bottom: 8px; font-size: 14px; color: #555; font-weight: 500; }
+    select, input[type="text"], textarea {
+      width: 100%;
+      padding: 12px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    select:focus, input[type="text"]:focus, textarea:focus {
+      outline: none;
+      border-color: #007BFF;
+      box-shadow: 0 0 5px rgba(0,123,255,0.5);
+    }
+    textarea[readonly] { background-color: #e9ecef; cursor: not-allowed; }
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    button:hover {
+      color: linear-gradient(135deg, #0056b3, #007BFF);
+      transform: translateY(-2px);
+    }
+    select:hover, input[type="text"]:hover, textarea:hover { border-color: #007BFF; }
+    @media (max-width: 576px) {
+      .container { padding: 20px; }
+      h1 { font-size: 20px; }
+    }
+    /* Style cho phần Tab */
+    .tab {
+      overflow: hidden;
+      border-bottom: 1px solid #ccc;
+      margin-bottom: 20px;
+    }
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 16px;
+      color: #007BFF;
+    }
+    .tab button:hover { background-color: #ddd; }
+    .tab button.active { background-color: #ccc; }
+    .tabcontent { display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Quản Lý Dữ Liệu</h1>
+    <div class="tab">
+      <button class="tablinks active" onclick="openTab(event, 'updateData')">Thêm Tài Liệu</button>
+      <button class="tablinks" onclick="openTab(event, 'addSchool')">Thêm Trường</button>
+      <button class="tablinks" onclick="openTab(event, 'addDepartment')">Thêm Khoa</button>
+      <button class="tablinks" onclick="openTab(event, 'addSubject')">Thêm Môn Học</button>
+    </div>
+
+<!-- Tab Nội Dung: Cập Nhật Dữ Liệu -->
+<!-- Tab Nội Dung: Cập Nhật Dữ Liệu -->
+<!-- Tab Nội Dung: Cập Nhật Dữ Liệu -->
+<div id="updateData" class="tabcontent" style="display: block;">
+  <form id="uploadForm" action="#" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+      <select id="truong" name="truong">
+        <option value="">-- Chọn Trường --</option>
+        <!-- Các option sẽ được tự động load từ API -->
+      </select>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+  const truongSelect = document.getElementById("truong");
+
+  // Hàm xóa hết các option (giữ lại option mặc định đầu tiên)
+  function clearSelect(selectElement) {
+    const defaultOption = selectElement.options[0].cloneNode(true);
+    selectElement.innerHTML = "";
+    selectElement.appendChild(defaultOption);
+  }
+
+  // Hàm load danh sách trường từ API
+  function loadSchools() {
+    clearSelect(truongSelect);
+    fetch("/api/get_schools_v2")
+      .then(response => {
+        if (!response.ok) throw new Error("Lỗi khi lấy dữ liệu trường");
+        return response.json();
+      })
+      .then(data => {
+        console.log("DEBUG: fetched schools:", data);
+        data.forEach(school => {
+          const option = document.createElement("option");
+          option.value = school.id;
+          option.textContent = school.school_name;
+          truongSelect.appendChild(option);
+        });
+      })
+      .catch(error => console.error("Error fetching schools:", error));
+  }
+
+  // Gọi loadSchools khi trang được load
+  loadSchools();
+});
+
+    </script>
+  <div class="form-group">
+      <label for="khoa">Chọn Khoa:</label>
+      <select id="khoa" name="khoa">
+        <option value="">-- Chọn Khoa --</option>
+        <!-- Các option sẽ được cập nhật từ API -->
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="mon">Chọn Môn:</label>
+      <select id="mon" name="mon">
+        <option value="">-- Chọn Môn --</option>
+        <!-- Các option sẽ được cập nhật từ API -->
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="nam">Chọn Năm:</label>
+      <select id="nam" name="nam">
+        <option value="">-- Chọn Năm --</option>
+        <option value="2017 - 2018">2017 - 2018</option>
+        <option value="2018 - 2019">2018 - 2019</option>
+        <option value="2019 - 2020">2019 - 2020 </option>
+        <option value="2021 - 2022">2021 - 2022</option>
+        <option value="2022 - 2023">2022 - 2023</option>
+        <option value="2023 - 2024">2023 - 2024</option>
+        <option value="2024 - 2025">2024 - 2025</option>
+        <!-- Thêm các năm khác tại đây -->
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="loai">Chọn Loại Đề Thi / Tài Liệu:</label>
+      <select id="loai" name="loai">
+        <option value="">-- Chọn Loại --</option>
+        <option value="deThi">Đề Thi</option>
+        <option value="taiLieu">Tài Liệu</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="tenDeThi">Tên Đề Thi:</label>
+      <input type="text" id="tenDeThi" name="tenDeThi" placeholder="Nhập tên đề thi">
+    </div>
+    <div class="form-group">
+      <label for="infoTitle">Info Title:</label>
+      <!-- Giá trị mặc định ban đầu (sẽ được cập nhật tự động theo các lựa chọn) -->
+      <textarea id="infoTitle" name="infoTitle" rows="4" readonly>Trường Đại học Khoa học Huế - Khoa Báo chí - Truyền thông - Báo In - 2024 - 2025</textarea>
+    </div>
+    <!-- Div chọn file: cho phép chọn tất cả các dạng file -->
+    <div class="form-group">
+      <label for="fileInput">Chọn file:</label>
+      <input type="file" id="fileInput" name="fileInput" accept="*/*">
+    </div>
+    <button type="submit" style="color: green;">Cập Nhật</button>
+  </form>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const truongSelect = document.getElementById("truong");
+  const khoaSelect  = document.getElementById("khoa");
+  const monSelect   = document.getElementById("mon");
+  const namSelect   = document.getElementById("nam");
+  const loaiSelect  = document.getElementById("loai");
+  const infoTitle   = document.getElementById("infoTitle");
+  const uploadForm  = document.getElementById("uploadForm");
+
+  // Hàm xóa các option (giữ lại option mặc định đầu tiên)
+  function clearSelect(selectElement) {
+    selectElement.innerHTML = selectElement.options[0].outerHTML;
+  }
+
+  // Hàm cập nhật nội dung của Info Title dựa trên các lựa chọn
+  function updateInfoTitle() {
+    const truongText = truongSelect.value ? truongSelect.options[truongSelect.selectedIndex].text : "";
+    const khoaText  = khoaSelect.value ? khoaSelect.options[khoaSelect.selectedIndex].text : "";
+    const monText   = monSelect.value ? monSelect.options[monSelect.selectedIndex].text : "";
+    const namText   = namSelect.value ? namSelect.options[namSelect.selectedIndex].text : "";
+
+    let yearRange = namText;
+    if (namText) {
+      const year = parseInt(namText);
+      if (!isNaN(year)) {
+        yearRange = `${year} - ${year + 1}`;
+      }
+    }
+
+    const parts = [];
+    if (truongText) parts.push(truongText);
+    if (khoaText) parts.push(khoaText);
+    if (monText) parts.push(monText);
+    if (namText) parts.push(yearRange);
+
+    infoTitle.value = parts.join(" - ");
+  }
+
+  // Khi chọn trường, cập nhật dropdown "Khoa" và reset "Môn"
+  truongSelect.addEventListener("change", function() {
+    clearSelect(khoaSelect);
+    clearSelect(monSelect);
+
+    const schoolId = this.value;
+    if (!schoolId) {
+      updateInfoTitle();
+      return;
+    }
+
+    fetch(`/api/faculties_v2/${schoolId}`)
+      .then(response => {
+        if (!response.ok) throw new Error("Lỗi khi lấy dữ liệu khoa");
+        return response.json();
+      })
+      .then(data => {
+        console.log("DEBUG: fetched faculties:", data);
+        data.forEach(faculty => {
+          const option = document.createElement("option");
+          option.value = faculty.id;
+          option.textContent = faculty.faculty_name;
+          khoaSelect.appendChild(option);
+        });
+        updateInfoTitle();
+      })
+      .catch(error => console.error("Error fetching faculties:", error));
+
+    updateInfoTitle();
+  });
+
+  // Khi chọn khoa, cập nhật dropdown "Môn"
+  khoaSelect.addEventListener("change", function() {
+    clearSelect(monSelect);
+
+    const facultyId = this.value;
+    if (!facultyId) {
+      updateInfoTitle();
+      return;
+    }
+
+    fetch(`/api/subjects_v2/${facultyId}`)
+      .then(response => {
+        if (!response.ok) throw new Error("Lỗi khi lấy dữ liệu môn học");
+        return response.json();
+      })
+      .then(data => {
+        console.log("DEBUG: fetched subjects:", data);
+        data.forEach(subject => {
+          const option = document.createElement("option");
+          option.value = subject.id;
+          option.textContent = subject.subject_name;
+          monSelect.appendChild(option);
+        });
+        updateInfoTitle();
+      })
+      .catch(error => console.error("Error fetching subjects:", error));
+
+    updateInfoTitle();
+  });
+
+  // Các dropdown còn lại: khi thay đổi, cập nhật luôn Info Title
+  monSelect.addEventListener("change", updateInfoTitle);
+  namSelect.addEventListener("change", updateInfoTitle);
+  loaiSelect.addEventListener("change", updateInfoTitle);
+
+  // Xử lý sự kiện submit form để upload file và dữ liệu
+  uploadForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+    const formData = new FormData(uploadForm);
+    fetch("/api/upload_v2", {
+      method: "POST",
+      body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+      if(data.error){
+        alert("Upload error: " + data.error);
+      } else {
+        alert("Upload successful! Document ID: " + data.document_id);
+      }
+    })
+    .catch(error => {
+      console.error("Error uploading file:", error);
+      alert("Error uploading file.");
+    });
+  });
+});
+</script>
+
+<!-- Tab Nội Dung: Thêm Trường -->
+<div id="addSchool" class="tabcontent">
+  <form id="formAddSchool" action="#" method="post">
+    <div class="form-group">
+      <label for="tenTruong">Tên Trường:</label>
+      <input type="text" id="tenTruong" name="tenTruong" placeholder="Nhập tên trường">
+    </div>
+    <button type="submit" style="color: green;">Thêm Trường</button>
+  </form>
+</div>
+
+<!-- Tab Nội Dung: Thêm Khoa -->
+<div id="addDepartment" class="tabcontent">
+  <form id="formAddDepartment" action="#" method="post">
+    <div class="form-group">
+      <label for="tenKhoa">Tên Khoa:</label>
+      <input type="text" id="tenKhoa" name="tenKhoa" placeholder="Nhập tên khoa">
+    </div>
+    <div class="form-group">
+      <label for="truongKhoa">Chọn Trường:</label>
+      <select id="truongKhoa" name="truongKhoa">
+        <option value="">-- Chọn Trường --</option>
+        <!-- Lưu ý: Giá trị option nên chứa id trường để dễ xử lý -->
+        <option value="1-truong-a">Trường Đại học Khoa học Huế</option>
+        <option value="2-truong-b">Trường B</option>
+        <!-- Thêm các trường khác tại đây -->
+      </select>
+    </div>
+    <button type="submit" style="color: green;">Thêm Khoa</button>
+  </form>
+</div>
+
+<!-- Tab Nội Dung: Thêm Môn Học -->
+<div id="addSubject" class="tabcontent">
+  <form id="formAddSubject" action="#" method="post">
+    <div class="form-group">
+      <label for="tenMon">Tên Môn Học:</label>
+      <input type="text" id="tenMon" name="tenMon" placeholder="Nhập tên môn học">
+    </div>
+    <div class="form-group">
+      <label for="khoaMon">Chọn Khoa:</label>
+      <select id="khoaMon" name="khoaMon">
+        <option value="">-- Chọn Khoa --</option>
+        <!-- Lưu ý: Giá trị option nên chứa id khoa (ví dụ: "khoa1", "khoa2") -->
+        <option value="khoa1">Khoa 1</option>
+        <option value="khoa2">Khoa 2</option>
+        <!-- Thêm các khoa khác tại đây -->
+      </select>
+    </div>
+    <button type="submit" style="color: green;">Thêm Môn Học</button>
+  </form>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  // Form Thêm Trường
+  const formAddSchool = document.getElementById("formAddSchool");
+  formAddSchool.addEventListener("submit", function(event) {
+    event.preventDefault();
+    const formData = new FormData(formAddSchool);
+    fetch("/api/add_school_v2", {
+      method: "POST",
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if(data.error) {
+        alert("Lỗi: " + data.error);
+      } else {
+        alert("Thêm trường thành công. ID: " + data.school_id);
+        formAddSchool.reset();
+      }
+    })
+    .catch(error => {
+      console.error("Error adding school:", error);
+      alert("Có lỗi xảy ra khi thêm trường.");
+    });
+  });
+
+  // Form Thêm Khoa
+  const formAddDepartment = document.getElementById("formAddDepartment");
+  formAddDepartment.addEventListener("submit", function(event) {
+    event.preventDefault();
+    const formData = new FormData(formAddDepartment);
+    fetch("/api/add_department_v2", {
+      method: "POST",
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if(data.error) {
+        alert("Lỗi: " + data.error);
+      } else {
+        alert("Thêm khoa thành công. ID: " + data.faculty_id);
+        formAddDepartment.reset();
+      }
+    })
+    .catch(error => {
+      console.error("Error adding department:", error);
+      alert("Có lỗi xảy ra khi thêm khoa.");
+    });
+  });
+
+  // Form Thêm Môn Học
+  const formAddSubject = document.getElementById("formAddSubject");
+  formAddSubject.addEventListener("submit", function(event) {
+    event.preventDefault();
+    const formData = new FormData(formAddSubject);
+    fetch("/api/add_subject_v2", {
+      method: "POST",
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if(data.error) {
+        alert("Lỗi: " + data.error);
+      } else {
+        alert("Thêm môn học thành công. ID: " + data.subject_id);
+        formAddSubject.reset();
+      }
+    })
+    .catch(error => {
+      console.error("Error adding subject:", error);
+      alert("Có lỗi xảy ra khi thêm môn học.");
+    });
+  });
+});
+</script>
+  
+  <script>
+    // Hàm chuyển đổi giữa các tab
+    function openTab(evt, tabName) {
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      document.getElementById(tabName).style.display = "block";
+      evt.currentTarget.className += " active";
+    }
+    
+    // Xử lý cập nhật danh sách khoa và môn học (phần này giữ nguyên như mã gốc)
+    let fetchedFaculties = [];
+    
+    document.getElementById('truong').addEventListener('change', function() {
+      const schoolValue = this.value;
+      document.getElementById('khoa').innerHTML = '<option value="">-- Chọn Khoa --</option>';
+      document.getElementById('mon').innerHTML  = '<option value="">-- Chọn Môn --</option>';
+      
+      if (!schoolValue) return;
+      
+      fetch('/api/schools/' + schoolValue)
+        .then(response => response.json())
+        .then(data => {
+          if(data.error) {
+            console.error(data.error);
+            return;
+          }
+          fetchedFaculties = data.faculties;
+          const khoaSelect = document.getElementById('khoa');
+          fetchedFaculties.forEach(faculty => {
+            const option = document.createElement('option');
+            option.value = faculty.id;
+            option.textContent = faculty.name;
+            khoaSelect.appendChild(option);
+          });
+          if (fetchedFaculties.length > 0) {
+            updateSubjects(fetchedFaculties[0].id);
+          }
+        })
+        .catch(error => console.error('Lỗi khi lấy dữ liệu trường:', error));
+    });
+    
+    document.getElementById('khoa').addEventListener('change', function() {
+      const facultyId = this.value;
+      updateSubjects(facultyId);
+    });
+    
+    function updateSubjects(facultyId) {
+      const monSelect = document.getElementById('mon');
+      monSelect.innerHTML = '<option value="">-- Chọn Môn --</option>';
+      const selectedFaculty = fetchedFaculties.find(faculty => faculty.id == facultyId);
+      if (selectedFaculty && selectedFaculty.subjects) {
+        selectedFaculty.subjects.forEach(subject => {
+          const option = document.createElement('option');
+          option.value = subject.id;
+          option.textContent = subject.name;
+          monSelect.appendChild(option);
+        });
+      }
+    }
+  </script>
+</body>
+</html>
