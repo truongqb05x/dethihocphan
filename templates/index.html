@@ -435,63 +435,6 @@
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
-<<<<<<< HEAD
-=======
-#subjectSearchModal .modal-dialog {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#subjectSearchModal .modal-content {
-    height: 70%;
-}
-.suggestions {
-    position: absolute;
-    width: 100%;
-    background: white;
-    border: 1px solid #ccc;
-    border-top: none;
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 1050; /* Đảm bảo hiển thị trên modal */
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.suggestion-item {
-    padding: 8px 12px;
-    cursor: pointer;
-    border-bottom: 1px solid #eee;
-}
-
-.suggestion-item:hover {
-    background: #f8f9fa;
-}
-.suggestions {
-    position: absolute;
-    top: calc(100% + 2px); /* Nằm ngay dưới ô input, cách 2px để không dính liền */
-    left: 0;
-    width: 100%;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-top: none;
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 1050; /* Đảm bảo hiển thị trên modal */
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.suggestion-item {
-    padding: 8px 12px;
-    cursor: pointer;
-    border-bottom: 1px solid #eee;
-}
-
-.suggestion-item:hover {
-    background: #f8f9fa;
-}
->>>>>>> d50b286 (upload index succer)
 
   </style>
 
@@ -551,7 +494,6 @@
                 </footer>
               </div>
             </div>
-<<<<<<< HEAD
           </div>
         </div>
       </div>
@@ -633,8 +575,6 @@
           <div id="rotateControls" class="my-3 d-none">
             <button id="rotateLeft" class="btn btn-secondary"><i class="bi bi-arrow-counterclockwise"></i></button>
             <button id="rotateRight" class="btn btn-secondary"><i class="bi bi-arrow-clockwise"></i></button>
-=======
->>>>>>> d50b286 (upload index succer)
           </div>
         </div>
       </div>
@@ -972,14 +912,10 @@
         <!-- Wrapper chứa input và phần gợi ý (với position-relative) -->
         <div class="position-relative">
           <input type="text" id="subjectSearchInput" class="form-control" placeholder="Nhập tên môn học...">
-<<<<<<< HEAD
           <div id="subjectSearchSuggestions" class="suggestions" style="top: 100%; left: 0; display: none;"></div>
         </div>
         <div class="modal-footer">
           <button type="button" id="subjectSearchBtn" class="btn btn-primary">Tìm kiếm</button>
-=======
-          <div id="subjectSearchSuggestions" class="suggestions" style="display: none;"></div>
->>>>>>> d50b286 (upload index succer)
         </div>
       </div>
       <div class="modal-footer border-0">
@@ -1004,7 +940,6 @@
 
   <!-- Bootstrap JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<<<<<<< HEAD
   <script>
 /*=======================
   Biến toàn cục và lưu trạng thái
@@ -1110,120 +1045,6 @@ async function renderDrive(containerId, path, updatePathCallback) {
   }
   container.appendChild(list);
 
-=======
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.13.216/pdf.min.js"></script>
-<script>
-  // Cấu hình đường dẫn worker của PDF.js
-  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.13.216/pdf.worker.min.js';
-</script>
-
-<script>
-/*=======================
-  Biến toàn cục và lưu trạng thái
-========================*/
-let examCurrentPath = [];
-let syllabusCurrentPath = [];
-let currentRotation = 0;
-let adTimer;  // Sẽ lưu timer của modal quảng cáo
-let currentFile = null;
-
-/*=======================
-  Hàm hiển thị drive (thư mục và file)
-========================*/
-async function renderDrive(containerId, path, updatePathCallback) {
-  const documentType = containerId.includes('exam') ? 'exam' : 'syllabus';
-  const container = document.getElementById(containerId);
-  container.innerHTML = ''; // Xóa nội dung cũ
-
-  // Thêm phần tử loading spinner
-  const spinner = document.createElement('div');
-  spinner.className = 'spinner';
-  spinner.textContent = 'Loading...'; // Bạn có thể thay bằng icon hoặc CSS animation
-  container.appendChild(spinner);
-
-  // Lấy dữ liệu từ backend dựa theo cấp của path
-  let data = [];
-  try {
-    if (path.length === 0) {
-      const response = await fetch('/api/schools');
-      data = await response.json();
-    } else if (path.length === 1) {
-      const schoolId = path[0].id;
-      const response = await fetch(`/api/schools/${schoolId}/faculties`);
-      data = await response.json();
-    } else if (path.length === 2) {
-      const facultyId = path[1].id;
-      const response = await fetch(`/api/faculties/${facultyId}/subjects?type=${documentType}`);
-      data = await response.json();
-    } else if (path.length === 3) {
-      const subjectId = path[2].id;
-      const response = await fetch(`/api/subjects/${subjectId}/documents_by_year?type=${documentType}`);
-      const groupedData = await response.json();
-      data = Object.keys(groupedData).map(year => ({
-          id: parseInt(year),
-          name: year,
-          count: groupedData[year].length,
-          documents: groupedData[year]
-      })).sort((a, b) => b.id - a.id);
-    } else if (path.length === 4) {
-      const subjectId = path[2].id;
-      const year = path[3].id;
-      const response = await fetch(`/api/subjects/${subjectId}/documents/${year}?type=${documentType}`);
-      data = await response.json();
-    }
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
-
-  // Sau khi fetch xong, xóa spinner và render lại giao diện
-  container.innerHTML = '';
-
-  // Hiển thị breadcrumb
-  renderBreadcrumb(container, path, updatePathCallback);
-
-  // Tạo container tìm kiếm inline (nếu cần)
-  const inlineSearchContainer = document.createElement('div');
-  inlineSearchContainer.className = 'input-group mb-3';
-  inlineSearchContainer.style.position = 'relative';
-  inlineSearchContainer.innerHTML = `
-      <span class="input-group-text"><i class="bi bi-search"></i></span>
-      <input type="search" class="form-control" placeholder="Tìm kiếm trong thư mục...">
-  `;
-  container.appendChild(inlineSearchContainer);
-  
-  const inlineSuggestions = document.createElement('div');
-  inlineSuggestions.className = 'suggestions';
-  inlineSuggestions.style.display = 'none';
-  inlineSearchContainer.appendChild(inlineSuggestions);
-
-  // Nút "Tìm kiếm theo tên môn học"
-  const advancedSearchBtn = document.createElement('button');
-  advancedSearchBtn.className = 'btn btn-outline-primary mb-3';
-  advancedSearchBtn.textContent = 'Tìm kiếm theo tên môn học';
-  container.appendChild(advancedSearchBtn);
-  advancedSearchBtn.addEventListener('click', () => {
-      const subjectSearchModal = new bootstrap.Modal(document.getElementById('subjectSearchModal'));
-      subjectSearchModal.show();
-  });
-
-  // Hiển thị danh sách folder hoặc file
-  const list = document.createElement('ul');
-  list.className = 'file-list';
-  
-if (Array.isArray(data)) {
-  data.forEach(item => {
-    // Ở cấp môn học (hoặc các cấp khác nếu cần áp dụng riêng)
-    if ((path.length < 3 || path.length === 3) && item.count > 0) {
-      renderFolderItem(list, item.name, path, updatePathCallback, item.count, item.id);
-    }
-    else if (path.length === 4) {
-      renderFileItem(list, item, documentType);
-    }
-  });
-}
-  container.appendChild(list);
-
->>>>>>> d50b286 (upload index succer)
   // Xử lý tìm kiếm inline (giữ nguyên nếu cần)
   const inlineSearchInput = inlineSearchContainer.querySelector('input');
   inlineSearchInput.addEventListener('input', (e) => {
@@ -1260,10 +1081,6 @@ if (Array.isArray(data)) {
       }
   });
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> d50b286 (upload index succer)
 function renderBreadcrumb(container, path, callback) {
   if (path.length === 0) return;
   const breadcrumb = document.createElement('nav');
@@ -1305,10 +1122,6 @@ function renderBreadcrumb(container, path, callback) {
   container.prepend(breadcrumb);
 }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> d50b286 (upload index succer)
 function renderFolderItem(list, name, currentPath, callback, count, itemId) {
   const li = document.createElement('li');
   li.className = 'file-item';
@@ -1320,59 +1133,60 @@ function renderFolderItem(list, name, currentPath, callback, count, itemId) {
   li.addEventListener('click', () => callback([...currentPath, { id: itemId, name: name }]));
   list.appendChild(li);
 }
-<<<<<<< HEAD
 // Hàm render file item
-function renderFileItem(list, file) {
-=======
+// Hàm chuyển đổi Data URL thành Blob
+function dataURLToBlob(dataurl) {
+  const arr = dataurl.split(',');
+  const mimeMatch = arr[0].match(/:(.*?);/);
+  if (!mimeMatch) return null;
+  const mime = mimeMatch[1];
+  const bstr = atob(arr[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new Blob([u8arr], { type: mime });
+}
 
-// Hàm render file item
-function renderFileItem(list, file, documentType) {
->>>>>>> d50b286 (upload index succer)
-  if (!file.file_path) {
-    console.warn("File không có đường dẫn hợp lệ:", file);
-    return;
-  }
-  
-  // Đảm bảo file_path bắt đầu bằng dấu '/'
-  const filePath = file.file_path.startsWith('/') ? file.file_path : '/' + file.file_path;
-  
-  const ext = file.file_path.split('.').pop().toLowerCase();
-  let iconClass = 'bi-file-earmark'; // Mặc định
-  
-  if (ext === 'pdf') {
-    iconClass = 'bi-file-pdf pdf';
-  } else if (['doc', 'docx'].includes(ext)) {
-    iconClass = 'bi-file-earmark-word word';
-  } else if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
-    iconClass = 'bi-file-image';
-  }
-  
+function renderFileItem(list, file) {
   const li = document.createElement('li');
   li.className = 'file-item';
-  
-<<<<<<< HEAD
+
   li.innerHTML = `
-      <i class="bi ${iconClass} file-icon"></i>
-      <div>
-          <div class="file-name">Đề thi ${file.file_name}</div> 
-=======
-  const typeLabel = documentType === 'exam' ? 'Đề Thi' : 'Đề Cương';
-  
-  li.innerHTML = `
-      <i class="bi ${iconClass} file-icon"></i>
-      <div>
-          <div class="file-name">${typeLabel} ${file.file_name}</div> 
->>>>>>> d50b286 (upload index succer)
-          <div class="file-info">${file.file_info || ''}</div>
-      </div>
+    <i class="bi bi-file-image file-icon"></i>
+    <div>
+      <div class="file-name">${file.file_name}</div>
+      <div class="file-info">${file.file_info || ''}</div>
+    </div>
   `;
-  
-  // Khi click vào item, lưu thông tin file vào biến toàn cục và hiển thị modal quảng cáo
+
   li.addEventListener('click', () => {
-    window.currentFile = { ...file, file_path: filePath };
-    showAdModal();
+    if (file.watermarked_image) {
+      // Chuyển Data URL sang Blob
+      const blob = dataURLToBlob(file.watermarked_image);
+      if (blob) {
+        // Tạo blob URL
+        const blobUrl = URL.createObjectURL(blob);
+        // Mở cửa sổ mới và chuyển hướng trực tiếp đến blobUrl
+        const newWindow = window.open();
+        if (newWindow) {
+          newWindow.location.href = blobUrl;
+          // Optionally, giải phóng blob sau một thời gian (nếu cần)
+          // setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
+        } else {
+          console.warn("Popup bị chặn. Vui lòng bật popup cho trang này.");
+        }
+      } else {
+        console.error("Không chuyển đổi được Data URL thành Blob.");
+      }
+    } else if (file.file_path) {
+      window.open(file.file_path, '_blank');
+    } else {
+      console.warn("Không có đường dẫn file hợp lệ để mở file.");
+    }
   });
-  
+
   list.appendChild(li);
 }
 
@@ -1412,7 +1226,6 @@ function openFileFromBackend() {
   }
 }
 
-<<<<<<< HEAD
 
 /*=======================
   Preview File và Lưu Lịch Sử
@@ -1604,65 +1417,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const examContent = document.getElementById('de-thi');
   const syllabusContent = document.getElementById('de-cuong');
 
-=======
-document.getElementById('skipAdBtn').addEventListener('click', () => {
-  clearInterval(adTimer);
-  const adModal = bootstrap.Modal.getInstance(document.getElementById('adModal'));
-  adModal.hide();
-  proceedFileOpen(currentFile);
-});
-
-function getNestedData(data, path) {
-  return path.reduce((obj, key) => obj ? obj[key] : null, data);
-}
-
-function searchFiles(data, term) {
-  let results = [];
-  if (Array.isArray(data)) {
-    data.forEach(file => {
-      if (file.name.toLowerCase().includes(term) || file.info.toLowerCase().includes(term))
-        results.push(file);
-    });
-  } else if (typeof data === "object") {
-    for (const key in data) {
-      results = results.concat(searchFiles(data[key], term));
-    }
-  }
-  return results;
-}
-
-/*=======================
-  Quản lý trạng thái và Resume
-========================*/
-function renderExamDrive(newPath) {
-  examCurrentPath = newPath;
-  localStorage.setItem('examCurrentPath', JSON.stringify(examCurrentPath));
-  renderDrive('exam-drive-container', examCurrentPath, renderExamDrive);
-}
-
-function renderSyllabusDrive(newPath) {
-  syllabusCurrentPath = newPath;
-  localStorage.setItem('syllabusCurrentPath', JSON.stringify(syllabusCurrentPath));
-  renderDrive('syllabus-drive-container', syllabusCurrentPath, renderSyllabusDrive);
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  let activeTab = localStorage.getItem('activeTab') || 'exam';
-  const savedExamPath = localStorage.getItem('examCurrentPath');
-  const savedSyllabusPath = localStorage.getItem('syllabusCurrentPath');
-  if (savedExamPath) {
-    examCurrentPath = JSON.parse(savedExamPath);
-  }
-  if (savedSyllabusPath) {
-    syllabusCurrentPath = JSON.parse(savedSyllabusPath);
-  }
-
-  const examTab = document.getElementById('de-thi-tab');
-  const syllabusTab = document.getElementById('de-cuong-tab');
-  const examContent = document.getElementById('de-thi');
-  const syllabusContent = document.getElementById('de-cuong');
-
->>>>>>> d50b286 (upload index succer)
   function switchTab(tab) {
     if (tab === 'exam') {
       examTab.classList.add('active');
@@ -1723,7 +1477,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-<<<<<<< HEAD
   // Xử lý nút "Lịch sử xem" trong modal Resume
   document.getElementById('viewHistoryBtn').addEventListener('click', () => {
     const resumeModalInstance = bootstrap.Modal.getInstance(document.getElementById('resumeModal'));
@@ -1785,52 +1538,10 @@ subjectSearchInput.addEventListener('input', async () => {
       subjectSearchSuggestions.style.display = 'none';
       return;
     }
-=======
-});
-
-const subjectSearchInput = document.getElementById('subjectSearchInput');
-const subjectSearchSuggestions = document.getElementById('subjectSearchSuggestions');
-// Trong phần xử lý tìm kiếm
-subjectSearchInput.addEventListener('input', async () => {
-  const term = subjectSearchInput.value.trim();
-  if (term.length < 2) {
-    subjectSearchSuggestions.style.display = 'none';
-    return;
-  }
-
-  // Lấy context hiện tại
-  const activeTab = localStorage.getItem('activeTab') || 'exam';
-  const currentPath = activeTab === 'exam' ? examCurrentPath : syllabusCurrentPath;
-  
-  // Lấy school_id và faculty_id từ đường dẫn
-  let schoolId = 0, facultyId = 0;
-  if (currentPath.length >= 1) schoolId = currentPath[0]?.id || 0;
-  if (currentPath.length >= 2) facultyId = currentPath[1]?.id || 0;
-
-  try {
-    const url = new URL('/api/search/subjects', window.location.origin);
-    url.searchParams.append('term', term);
-    if (schoolId > 0) url.searchParams.append('school_id', schoolId);
-    if (facultyId > 0) url.searchParams.append('faculty_id', facultyId);
-
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    
-    const results = await response.json();
-    
-    // Xử lý kết quả
-    subjectSearchSuggestions.innerHTML = "";
-    if (results.error) {
-      console.error("Lỗi từ server:", results.error);
-      return;
-    }
-
->>>>>>> d50b286 (upload index succer)
     if (results.length > 0) {
       results.forEach(subject => {
         const div = document.createElement('div');
         div.className = 'suggestion-item';
-<<<<<<< HEAD
         // Hiển thị tên môn học và thông tin khoa - trường
         div.textContent = `${subject.name} (${subject.faculty_name}, ${subject.school_name})`;
         div.addEventListener('click', () => {
@@ -1842,50 +1553,16 @@ subjectSearchInput.addEventListener('input', async () => {
             { id: subject.faculty_id, name: subject.faculty_name },
             { id: subject.id, name: subject.name }
           ]);
-=======
-        div.innerHTML = `
-          <div class="subject-name">${subject.name}</div>
-          <div class="subject-path">${subject.school_name} → ${subject.faculty_name}</div>
-        `;
-        // Xử lý click
-        div.addEventListener('click', () => {
-          // Điều hướng đến môn học
-          if (activeTab === 'exam') {
-            renderExamDrive([
-              { id: subject.school_id, name: subject.school_name },
-              { id: subject.faculty_id, name: subject.faculty_name },
-              { id: subject.id, name: subject.name }
-            ]);
-          } else {
-            renderSyllabusDrive([
-              { id: subject.school_id, name: subject.school_name },
-              { id: subject.faculty_id, name: subject.faculty_name },
-              { id: subject.id, name: subject.name }
-            ]);
-          }
-          const modal = bootstrap.Modal.getInstance(document.getElementById('subjectSearchModal'));
-          modal.hide();
->>>>>>> d50b286 (upload index succer)
         });
         subjectSearchSuggestions.appendChild(div);
       });
       subjectSearchSuggestions.style.display = 'block';
     } else {
-<<<<<<< HEAD
       subjectSearchSuggestions.style.display = 'none';
     }
   } catch (error) {
     console.error("Error searching subjects:", error);
     subjectSearchSuggestions.style.display = 'none';
-=======
-      subjectSearchSuggestions.innerHTML = '<div class="no-results">Không tìm thấy kết quả</div>';
-      subjectSearchSuggestions.style.display = 'block';
-    }
-  } catch (error) {
-    console.error("Lỗi tìm kiếm:", error);
-    subjectSearchSuggestions.innerHTML = '<div class="error">Lỗi tải kết quả</div>';
-    subjectSearchSuggestions.style.display = 'block';
->>>>>>> d50b286 (upload index succer)
   }
 });
 
@@ -1898,11 +1575,8 @@ document.getElementById('subjectSearchBtn').addEventListener('click', async () =
     renderSearchResults(results);
     const subjectSearchModal = bootstrap.Modal.getInstance(document.getElementById('subjectSearchModal'));
     subjectSearchModal.hide();
-<<<<<<< HEAD
     const searchResultsModal = new bootstrap.Modal(document.getElementById('searchResultsModal'));
     searchResultsModal.show();
-=======
->>>>>>> d50b286 (upload index succer)
   } catch (error) {
     console.error("Error on subject search:", error);
   }
@@ -1910,13 +1584,6 @@ document.getElementById('subjectSearchBtn').addEventListener('click', async () =
 
 function renderSearchResults(results) {
   const container = document.getElementById('searchResultsContent');
-<<<<<<< HEAD
-=======
-  if (!container) {
-    console.error("Không tìm thấy phần tử với id 'searchResultsContent'.");
-    return;
-  }
->>>>>>> d50b286 (upload index succer)
   container.innerHTML = "";
   if (results.length === 0) {
     container.innerHTML = "<p>Không tìm thấy kết quả nào.</p>";
@@ -1928,7 +1595,6 @@ function renderSearchResults(results) {
     const li = document.createElement("li");
     li.className = "list-group-item list-group-item-action";
     li.innerHTML = `<div><strong>${doc.file_name}</strong><br><small>${doc.file_info}</small></div>`;
-<<<<<<< HEAD
     li.addEventListener("click", () => {
       // Ẩn modal kết quả tìm kiếm
       const searchModalEl = document.getElementById('searchResultsModal');
@@ -1937,14 +1603,10 @@ function renderSearchResults(results) {
       // Gọi hàm previewFile để mở file
       previewFile(doc);
     });
-=======
-    // Đã loại bỏ phần xử lý sự kiện click
->>>>>>> d50b286 (upload index succer)
     list.appendChild(li);
   });
   container.appendChild(list);
 }
-<<<<<<< HEAD
 
 
   </script>
@@ -1962,24 +1624,5 @@ function renderSearchResults(results) {
   });
 </script>
 
-=======
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var adModal = document.getElementById('adModal');
-    if (adModal) {
-        adModal.addEventListener('shown.bs.modal', function () {
-            var adIframe = adModal.querySelector('iframe');
-            if (adIframe) {
-                // Thêm timestamp để tránh cache
-                var adUrl = 'https://www.effectiveratecpm.com/pb7fiwbhr?key=27b2a32441ee0c347f6e9fd270bc1a0c&t=' + new Date().getTime();
-                adIframe.setAttribute('src', adUrl);
-            }
-        });
-    }
-});
-</script>
-<script type='text/javascript' src='//pl25940595.effectiveratecpm.com/25/d9/60/25d960e16cc9c046672752fc33de378d.js'></script>
->>>>>>> d50b286 (upload index succer)
 </body>
 </html>
