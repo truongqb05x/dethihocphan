@@ -496,69 +496,117 @@
 <body>
 
 <div class="compact-container my-4">
-    <div class="card card-custom">
-      <div class="card-body">
-        <!-- Tab Navigation -->
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-          <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="de-thi-tab" data-bs-toggle="tab" data-bs-target="#de-thi" type="button" role="tab">Đề Thi</button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="de-cuong-tab" data-bs-toggle="tab" data-bs-target="#de-cuong" type="button" role="tab">Đề Cương</button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="ve-chung-toi-tab" data-bs-toggle="tab" data-bs-target="#ve-chung-toi" type="button" role="tab">Về Chúng Tôi</button>
-          </li>
-        </ul>
-        <div class="tab-content mt-3">
-          <!-- Tab Đề Thi -->
-          <div class="tab-pane fade show active" id="de-thi" role="tabpanel" aria-labelledby="de-thi-tab">
-            <div id="exam-drive-container"></div>
-          </div>
-          <!-- Tab Đề Cương -->
-          <div class="tab-pane fade" id="de-cuong" role="tabpanel" aria-labelledby="de-cuong-tab">
-            <div id="syllabus-drive-container"></div>
-          </div>
-          <!-- Tab Về Chúng Tôi -->
-          <!-- Tab Về Chúng Tôi -->
-<div class="tab-pane fade" id="ve-chung-toi" role="tabpanel" aria-labelledby="ve-chung-toi-tab">
-  <div class="p-3">
-    <p>
-      Các đề thi và tài liệu trên website này đều được đóng góp bởi các cựu sinh viên, mang lại sự gần gũi và trải nghiệm thực tế trong học tập.
-    </p>
-    
-    <!-- Nút "Hoạt động gần đây" chỉ hiển thị trong tab Về Chúng Tôi -->
-<button type="button" class="btn btn-primary recent-activity-btn" data-bs-toggle="modal" data-bs-target="#recentActivityModal">
-  Hoạt động gần đây
-</button>
-    
-    <div class="about-links mt-3">
-      <h3>Các trang web khác:</h3>
-      <ul>
-        <li>
-          <span class="label">
-            <a href="http://info.huehub.fun" style="text-decoration: none;" target="_blank">info.huehub.fun</a>
-          </span>
-          <span class="desc">Tìm kiếm INFO</span>
+  <div class="card card-custom">
+    <div class="card-body">
+      <!-- Tab Navigation -->
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="de-thi-tab" data-bs-toggle="tab" data-bs-target="#de-thi" type="button" role="tab">Đề Thi</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="de-cuong-tab" data-bs-toggle="tab" data-bs-target="#de-cuong" type="button" role="tab">Đề Cương</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="ve-chung-toi-tab" data-bs-toggle="tab" data-bs-target="#ve-chung-toi" type="button" role="tab">Về Chúng Tôi</button>
         </li>
       </ul>
-      <footer class="custom-footer mt-4">
-        <div class="footer-item">
-          <span>Design by Nguyen Ngoc Truong</span>
+      <div class="tab-content mt-3">
+        <!-- Tab Đề Thi -->
+        <div class="tab-pane fade show active" id="de-thi" role="tabpanel" aria-labelledby="de-thi-tab">
+          <div id="exam-drive-container"></div>
         </div>
-        <div class="social-links">
-          <a href="https://www.facebook.com/nntruong05" target="_blank" aria-label="Facebook">
-            <i class="bi bi-facebook"></i>
-          </a>
-          <a href="https://github.com/truongqb05x" target="_blank" aria-label="GitHub">
-            <i class="bi bi-github"></i>
-          </a>
+        <!-- Tab Đề Cương -->
+        <div class="tab-pane fade" id="de-cuong" role="tabpanel" aria-labelledby="de-cuong-tab">
+          <div id="syllabus-drive-container"></div>
         </div>
-      </footer>
+        <!-- Tab Về Chúng Tôi -->
+        <div class="tab-pane fade" id="ve-chung-toi" role="tabpanel" aria-labelledby="ve-chung-toi-tab">
+          <!-- Sử dụng position-relative để định vị phần "Phiên bản" -->
+          <div class="p-3 position-relative">
+            <p>
+              Các đề thi và tài liệu trên website này đều được đóng góp bởi các cựu sinh viên, mang lại sự gần gũi và trải nghiệm thực tế trong học tập.
+            </p>
+
+            <!-- Nút "Hoạt động gần đây" chỉ hiển thị trong tab Về Chúng Tôi -->
+            <button type="button" class="btn btn-primary recent-activity-btn" data-bs-toggle="modal" data-bs-target="#recentActivityModal">
+              Hoạt động gần đây
+            </button>
+
+            <div class="about-links mt-3">
+              <h3>Các trang web khác:</h3>
+              <ul>
+                <li>
+                  <span class="label">
+                    <a href="http://info.huehub.fun" style="text-decoration: none;" target="_blank">info.huehub.fun</a>
+                  </span>
+                  <span class="desc">Tìm kiếm INFO</span>
+                </li>
+              </ul>
+              <footer class="custom-footer mt-4">
+                <div class="footer-item">
+                  <span>Design by Nguyen Ngoc Truong</span>
+                </div>
+                <div class="social-links">
+                  <a href="https://www.facebook.com/nntruong05" target="_blank" aria-label="Facebook">
+                    <i class="bi bi-facebook"></i>
+                  </a>
+                  <a href="https://github.com/truongqb05x" target="_blank" aria-label="GitHub">
+                    <i class="bi bi-github"></i>
+                  </a>
+                </div>
+              </footer>
+            </div>
+
+            <!-- Chữ "Phiên bản 0" được đặt ở góc dưới bên phải, có hiệu ứng nhấn để mở modal lịch sử cập nhật -->
+            <div class="version-info" style="position: absolute; bottom: 0; right: 0; padding: 5px; font-size: 0.9rem; color: #666; cursor: pointer;"
+                 data-bs-toggle="modal" data-bs-target="#updateHistoryModal">
+              Version 2.0
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
-<!-- Modal "Hoạt động gần đây" -->
+
+<!-- Modal Lịch sử cập nhật -->
+<div class="modal fade" id="updateHistoryModal" tabindex="-1" aria-labelledby="updateHistoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateHistoryModalLabel">Lịch sử cập nhật</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <ul class="list-unstyled">
+          <li class="mb-3">
+            <p><strong>01/02/2025</strong></p>
+            <p>Cập nhật giao diện người dùng cho phần tab "Đề Thi", cải thiện tính năng tải dữ liệu và bố cục trực quan.</p>
+          </li>
+          <li class="mb-3">
+            <p><strong>02/02/2025</strong></p>
+            <p>Thêm chức năng đăng ký nhận thông báo, bao gồm modal đăng ký với trường, khoa và email.</p>
+          </li>
+          <li class="mb-3">
+            <p><strong>03/02/2025</strong></p>
+            <p>Tối ưu hóa hiệu năng tải dữ liệu từ API và cập nhật lịch sử hoạt động của hệ thống.</p>
+          </li>
+          <li class="mb-3">
+            <p><strong>04/02/2025</strong></p>
+            <p>Cải thiện trải nghiệm người dùng trên các thiết bị di động và cập nhật thêm nội dung thông thường.</p>
+          </li>
+        </ul>
+      </div>
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Modal "Hoạt động gần đây" -->
 <div class="modal fade" id="recentActivityModal" tabindex="-1" aria-labelledby="recentActivityModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -578,7 +626,7 @@
               <!-- Log hoạt động của người dùng sẽ được chèn vào đây -->
             </ul>
           </div>
-          <!-- Cột hoạt động của Hệ thống (ví dụ) -->
+          <!-- Cột hoạt động của Hệ thống -->
           <div class="activity-box system-activity">
             <h3><i class="fas fa-cogs"></i> Hoạt động của hệ thống</h3>
             <ul class="list-group">
@@ -594,6 +642,12 @@
                 <span class="activity-text">Hệ thống đã upload đề thi mới: <strong>Lịch sử</strong></span>
                 <span class="activity-time">5 giờ trước</span>
               </li>
+              <!-- Nút đăng ký nhận thông báo chỉ hiển thị trong modal này -->
+              <li class="list-group-item text-center">
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#subscribeModal" data-bs-dismiss="modal">
+                  Đăng ký nhận thông báo
+                </button>
+              </li>
             </ul>
           </div>
         </div>
@@ -606,7 +660,119 @@
   </div>
 </div>
 
+<!-- Modal Đăng ký nhận thông báo -->
+<div class="modal fade" id="subscribeModal" tabindex="-1" aria-labelledby="subscribeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="subscribeModalLabel">Đăng ký nhận thông báo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <form id="subscribeForm">
+          <div class="mb-3">
+            <label for="selectSchool" class="form-label">Chọn Trường</label>
+            <select class="form-select" id="selectSchool" required>
+              <option value="">Chọn trường</option>
+              <!-- Các option sẽ được đổ từ API -->
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="selectDepartment" class="form-label">Chọn Khoa</label>
+            <select class="form-select" id="selectDepartment" required>
+              <option value="">Chọn khoa</option>
+              <!-- Các option sẽ được đổ khi chọn trường -->
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="emailInput" class="form-label">Email</label>
+            <input type="email" class="form-control" id="emailInput" placeholder="Nhập email của bạn" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Xác nhận</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
+document.addEventListener("DOMContentLoaded", function() {
+  // Tải danh sách trường khi modal mở (hoặc khi trang load)
+  fetch('/api/get_schools_v2')
+    .then(response => response.json())
+    .then(schools => {
+      const selectSchool = document.getElementById('selectSchool');
+      schools.forEach(school => {
+        const option = document.createElement('option');
+        option.value = school.id;
+        option.textContent = school.school_name;
+        selectSchool.appendChild(option);
+      });
+    })
+    .catch(err => console.error('Lỗi load schools:', err));
+
+  // Khi chọn trường, tải danh sách khoa tương ứng
+  const selectSchool = document.getElementById('selectSchool');
+  selectSchool.addEventListener('change', function() {
+    const schoolId = this.value;
+    const selectFaculty = document.getElementById('selectDepartment');
+    // Xóa các option cũ, giữ lại option mặc định
+    selectFaculty.innerHTML = '<option value="">Chọn khoa</option>';
+    if (schoolId) {
+      fetch(`/api/faculties_v2/${schoolId}`)
+        .then(response => response.json())
+        .then(faculties => {
+          faculties.forEach(faculty => {
+            const option = document.createElement('option');
+            option.value = faculty.id;
+            option.textContent = faculty.faculty_name;
+            selectFaculty.appendChild(option);
+          });
+        })
+        .catch(err => console.error('Lỗi load faculties:', err));
+    }
+  });
+
+  // Xử lý submit form đăng ký nhận thông báo
+  const subscribeForm = document.getElementById('subscribeForm');
+  subscribeForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const schoolId = document.getElementById('selectSchool').value;
+    const facultyId = document.getElementById('selectDepartment').value;
+    const email = document.getElementById('emailInput').value;
+    
+    if (!schoolId || !facultyId || !email) {
+      alert("Vui lòng điền đầy đủ thông tin.");
+      return;
+    }
+    
+    const data = { school_id: schoolId, faculty_id: facultyId, email: email };
+
+    fetch('/api/register_notification', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+      alert(result.message || "Đăng ký thành công!");
+      subscribeForm.reset();
+      // Đóng modal (với Bootstrap 5)
+      const subscribeModalEl = document.getElementById('subscribeModal');
+      const modalInstance = bootstrap.Modal.getInstance(subscribeModalEl);
+      if (modalInstance) modalInstance.hide();
+    })
+    .catch(err => {
+      console.error('Lỗi khi đăng ký:', err);
+      alert("Đã có lỗi xảy ra. Vui lòng thử lại.");
+    });
+  });
+});
+
 // Hàm tính thời gian tương đối từ thời điểm hiện tại (ví dụ: "10 phút trước")
 function timeSince(date) {
   const seconds = Math.floor((new Date() - new Date(date)) / 1000);
@@ -831,6 +997,7 @@ recentActivityModal.addEventListener('shown.bs.modal', function () {
   color: #888;
   font-style: italic;
 } 
+
 </style>
 <p>Bạn có muốn tiếp tục xem từ chỗ dở dang của <strong id="resumeTabName"></strong>?</p>
           <p id="resumePathDisplay"></p>
@@ -1892,46 +2059,74 @@ if (adModal) {
   });
 }
 });
-</script>
-<script>
 document.addEventListener("DOMContentLoaded", function() {
-  // Lấy phần tử nút mở modal
   const recentActivityBtn = document.querySelector('.recent-activity-btn');
 
-  // Lắng nghe sự kiện click trên nút
+  // Hàm parse ngày theo local: loại bỏ " GMT" khỏi chuỗi trước khi tạo Date
+  function parseLocalDate(dateString) {
+    // Loại bỏ phần " GMT" (có thể có khoảng trắng thừa)
+    const localString = dateString.replace(/ GMT$/, "");
+    return new Date(localString);
+  }
+
+  // Hàm tính thời gian tương đối từ thời điểm hiện tại
+  function timeSince(dateString) {
+    const localDate = parseLocalDate(dateString);
+    const seconds = Math.floor((new Date() - localDate) / 1000);
+
+    let interval = Math.floor(seconds / 31536000);
+    if (interval >= 1) return interval + " năm trước";
+    interval = Math.floor(seconds / 2592000);
+    if (interval >= 1) return interval + " tháng trước";
+    interval = Math.floor(seconds / 86400);
+    if (interval >= 1) return interval + " ngày trước";
+    interval = Math.floor(seconds / 3600);
+    if (interval >= 1) return interval + " giờ trước";
+    interval = Math.floor(seconds / 60);
+    if (interval >= 1) return interval + " phút trước";
+    return seconds + " giây trước";
+  }
+
   recentActivityBtn.addEventListener('click', function() {
-    // Gọi API để lấy danh sách đề thi mới nhất của hệ thống
     fetch('/api/latest-exams')
       .then(response => response.json())
       .then(data => {
-          console.log("2")
-        // Lấy phần tử <ul> chứa danh sách hoạt động của hệ thống
         const systemActivityList = document.querySelector('.activity-box.system-activity .list-group');
-        // Xóa nội dung cũ (nếu có)
         systemActivityList.innerHTML = '';
-        
+
         data.forEach(exam => {
-          // Tạo phần tử li cho mỗi đề thi
           const li = document.createElement('li');
           li.classList.add('list-group-item');
           li.innerHTML = `
             <span class="activity-text">
               Hệ thống đã upload đề thi mới: 
-              <a href="${exam.file_path}" target="_blank">
+              <a href="${exam.file_path}" target="_blank" style="text-decoration: none;">
                 <strong>${exam.file_name}</strong>
               </a>
             </span>
-            <span class="activity-time">${exam.created_at}</span>
+            <span class="activity-time">${timeSince(exam.created_at)}</span>
           `;
           systemActivityList.appendChild(li);
         });
+
+        // Thêm nút đăng ký nhận thông báo chỉ một lần, bên ngoài danh sách log
+        if (!document.querySelector('.subscribe-container')) {
+          systemActivityList.insertAdjacentHTML('afterend', `
+        <div class="subscribe-container text-center mt-3"> 
+          <button type="button" class="btn btn-success subscribe-btn" data-bs-toggle="modal" data-bs-target="#subscribeModal">
+            <i class="bi bi-bell-fill me-2"></i> Đăng ký nhận thông báo
+          </button>
+        </div>
+          `);
+        }
       })
       .catch(error => {
         console.error('Lỗi khi lấy dữ liệu đề thi:', error);
       });
   });
 });
-</script>
 
+</script>
+<script type='text/javascript' src='//pl25940595.effectiveratecpm.com/25/d9/60/25d960e16cc9c046672752fc33de378d.js'></script>
 </body>
 </html>

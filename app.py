@@ -1427,6 +1427,37 @@ def get_user_activity():
         print("Error fetching user activity:", e)
         return jsonify({"error": "Internal server error", "details": str(e)}), 500
 
+@app.route('/api/register_notification', methods=['POST'])
+def register_notification():
+    data = request.get_json()
+    school_id = data.get('school_id')
+    faculty_id = data.get('faculty_id')
+    email = data.get('email')
+
+    if not (school_id and faculty_id and email):
+        return jsonify({"error": "Thiếu thông tin yêu cầu"}), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Giả sử bạn đã tạo bảng subscriptions để lưu đăng ký
+    query = """
+        INSERT INTO subscriptions (school_id, faculty_id, email)
+        VALUES (%s, %s, %s)
+    """
+    try:
+        cursor.execute(query, (school_id, faculty_id, email))
+        conn.commit()
+    except Exception as e:
+        app.logger.error("Lỗi khi lưu đăng ký: %s", e)
+        conn.rollback()
+        return jsonify({"error": "Lỗi khi lưu đăng ký"}), 500
+    finally:
+        cursor.close()
+        conn.close()
+    
+    return jsonify({"message": "Đăng ký nhận thông báo thành công!"}), 200
+
 if __name__ == '__main__':
 
     app.run(port=8080, debug=True)
