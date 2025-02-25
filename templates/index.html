@@ -435,6 +435,60 @@
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+#subjectSearchModal .modal-dialog {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#subjectSearchModal .modal-content {
+    height: 70%;
+}
+.suggestions {
+    position: absolute;
+    width: 100%;
+    background: white;
+    border: 1px solid #ccc;
+    border-top: none;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1050; /* Đảm bảo hiển thị trên modal */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.suggestion-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+.suggestion-item:hover {
+    background: #f8f9fa;
+}
+.suggestions {
+    position: absolute;
+    top: calc(100% + 2px); /* Nằm ngay dưới ô input, cách 2px để không dính liền */
+    left: 0;
+    width: 100%;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-top: none;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1050; /* Đảm bảo hiển thị trên modal */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.suggestion-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+.suggestion-item:hover {
+    background: #f8f9fa;
+}
 
   </style>
 
@@ -466,36 +520,229 @@
             <div id="syllabus-drive-container"></div>
           </div>
           <!-- Tab Về Chúng Tôi -->
-          <div class="tab-pane fade" id="ve-chung-toi" role="tabpanel" aria-labelledby="ve-chung-toi-tab">
-            <div class="p-3">
-              <p>
-                Các đề thi và tài liệu trên website này đều được đóng góp bởi các cựu sinh viên, mang lại sự gần gũi và trải nghiệm thực tế trong học tập.
-              </p>
-              <div class="about-links">
-                <h3>Các trang web khác:</h3>
-                <ul>
-                  <li>
-                    <span class="label"><a href="http://info.huehub.fun" style="text-decoration: none;" target="_blank">info.huehub.fun</a></span>
-                    <span class="desc">Tìm kiếm INFO</span>
-                  </li>
-                </ul>
-                <footer class="custom-footer">
-                  <div class="footer-item">
-                    <span>Design by Nguyen Ngoc Truong</span>
-                  </div>
-                  <div class="social-links">
-                    <a href="https://www.facebook.com/nntruong05" target="_blank" aria-label="Facebook">
-                      <i class="bi bi-facebook"></i>
-                    </a>
-                    <a href="https://github.com/truongqb05x" target="_blank" aria-label="GitHub">
-                      <i class="bi bi-github"></i>
-                    </a>
-                  </div>
-                </footer>
-              </div>
-            </div>
+          <!-- Tab Về Chúng Tôi -->
+<div class="tab-pane fade" id="ve-chung-toi" role="tabpanel" aria-labelledby="ve-chung-toi-tab">
+  <div class="p-3">
+    <p>
+      Các đề thi và tài liệu trên website này đều được đóng góp bởi các cựu sinh viên, mang lại sự gần gũi và trải nghiệm thực tế trong học tập.
+    </p>
+    
+    <!-- Nút "Hoạt động gần đây" chỉ hiển thị trong tab Về Chúng Tôi -->
+<button type="button" class="btn btn-primary recent-activity-btn" data-bs-toggle="modal" data-bs-target="#recentActivityModal">
+  Hoạt động gần đây
+</button>
+    
+    <div class="about-links mt-3">
+      <h3>Các trang web khác:</h3>
+      <ul>
+        <li>
+          <span class="label">
+            <a href="http://info.huehub.fun" style="text-decoration: none;" target="_blank">info.huehub.fun</a>
+          </span>
+          <span class="desc">Tìm kiếm INFO</span>
+        </li>
+      </ul>
+      <footer class="custom-footer mt-4">
+        <div class="footer-item">
+          <span>Design by Nguyen Ngoc Truong</span>
+        </div>
+        <div class="social-links">
+          <a href="https://www.facebook.com/nntruong05" target="_blank" aria-label="Facebook">
+            <i class="bi bi-facebook"></i>
+          </a>
+          <a href="https://github.com/truongqb05x" target="_blank" aria-label="GitHub">
+            <i class="bi bi-github"></i>
+          </a>
+        </div>
+      </footer>
+    </div>
+  </div>
+</div>
+<!-- Modal "Hoạt động gần đây" -->
+<!-- Modal "Hoạt động gần đây" -->
+<div class="modal fade" id="recentActivityModal" tabindex="-1" aria-labelledby="recentActivityModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="recentActivityModalLabel">Hoạt động gần đây</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <div class="activity-container">
+          <!-- Cột hoạt động của User -->
+          <div class="activity-box user-activity">
+            <h3><i class="fas fa-user"></i> Hoạt động của người dùng</h3>
+            <ul class="list-group" id="userActivityList">
+              <!-- Log hoạt động của người dùng sẽ được chèn vào đây -->
+            </ul>
+          </div>
+          <!-- Cột hoạt động của Hệ thống (ví dụ) -->
+          <div class="activity-box system-activity">
+            <h3><i class="fas fa-cogs"></i> Hoạt động của hệ thống</h3>
+            <ul class="list-group">
+              <li class="list-group-item">
+                <span class="activity-text">Hệ thống đã upload đề thi mới: <strong>Tiếng Anh</strong></span>
+                <span class="activity-time">3 giờ trước</span>
+              </li>
+              <li class="list-group-item">
+                <span class="activity-text">Hệ thống đã upload đề thi mới: <strong>Sinh học</strong></span>
+                <span class="activity-time">4 giờ trước</span>
+              </li>
+              <li class="list-group-item">
+                <span class="activity-text">Hệ thống đã upload đề thi mới: <strong>Lịch sử</strong></span>
+                <span class="activity-time">5 giờ trước</span>
+              </li>
+            </ul>
           </div>
         </div>
+      </div>
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Hàm tính thời gian tương đối từ thời điểm hiện tại (ví dụ: "10 phút trước")
+function timeSince(date) {
+  const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+  let interval = Math.floor(seconds / 31536000);
+  if (interval >= 1) return interval + " năm trước";
+  interval = Math.floor(seconds / 2592000);
+  if (interval >= 1) return interval + " tháng trước";
+  interval = Math.floor(seconds / 86400);
+  if (interval >= 1) return interval + " ngày trước";
+  interval = Math.floor(seconds / 3600);
+  if (interval >= 1) return interval + " giờ trước";
+  interval = Math.floor(seconds / 60);
+  if (interval >= 1) return interval + " phút trước";
+  return Math.floor(seconds) + " giây trước";
+}
+
+// Hàm tải và hiển thị 3 log hoạt động người dùng
+function loadUserActivity() {
+  fetch('/api/user-activity')
+    .then(response => response.json())
+    .then(data => {
+      const userActivityList = document.getElementById('userActivityList');
+      userActivityList.innerHTML = ''; // Xóa nội dung cũ
+      data.forEach(activity => {
+        const li = document.createElement('li');
+        li.className = 'list-group-item';
+        li.innerHTML = `
+          <span class="activity-text">Người dùng nào đó đã mở đề thi <strong>${activity.file_name}</strong></span>
+          <span class="activity-time">${timeSince(activity.opened_at)}</span>
+        `;
+        userActivityList.appendChild(li);
+      });
+    })
+    .catch(error => {
+      console.error('Error loading user activity:', error);
+    });
+}
+
+// Gọi loadUserActivity mỗi khi modal được hiển thị
+var recentActivityModal = document.getElementById('recentActivityModal');
+recentActivityModal.addEventListener('shown.bs.modal', function () {
+  loadUserActivity();
+});
+</script>
+
+<style>
+    /* Container chứa 2 cột */
+.activity-container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Khung thông báo của mỗi cột */
+.activity-box {
+  flex: 1;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  opacity: 0;
+  animation: fadeIn 0.6s forwards;
+}
+
+/* Hiệu ứng fade-in */
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Tiêu đề mỗi cột */
+.activity-box h3 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: #333;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border-bottom: 2px solid;
+  padding-bottom: 10px;
+}
+
+/* Phân biệt tiêu đề từng cột */
+.user-activity h3 {
+  border-color: #007bff;
+  color: #007bff;
+}
+
+.system-activity h3 {
+  border-color: #28a745;
+  color: #28a745;
+}
+
+/* Các mục trong danh sách */
+.list-group-item {
+  border: none;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+  background-color: transparent !important;
+}
+
+
+.list-group-item:last-child {
+  border-bottom: none;
+}
+.list-group-item {
+  background-color: transparent !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+.list-group-item:hover,
+.list-group-item:focus,
+.list-group-item:active {
+  background-color: transparent !important;
+}
+
+/* Nội dung hoạt động */
+.activity-text {
+  display: block;
+  font-size: 1rem;
+  color: #555;
+}
+
+/* Thời gian hoạt động */
+.activity-time {
+  font-size: 0.9rem;
+  color: #888;
+  font-style: italic;
+  margin-top: 5px;
+}
+
+
+</style>
+</div>
       </div>
     </div>
   </div>
@@ -509,7 +756,83 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
         </div>
         <div class="modal-body">
-          <p>Bạn có muốn tiếp tục xem từ chỗ dở dang của <strong id="resumeTabName"></strong>?</p>
+<style>
+/* Container chứa cả hai cột */
+.activity-container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Cột hoạt động của người dùng và hệ thống */
+.user-activity,
+.system-activity {
+  flex: 1;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Tiêu đề mỗi cột */
+.user-activity h3,
+.system-activity h3 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: #333;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 10px;
+}
+
+/* Phân biệt tiêu đề cột người dùng và hệ thống */
+.user-activity h3 {
+  color: #007bff; /* Màu xanh dương cho người dùng */
+}
+
+.system-activity h3 {
+  color: #28a745; /* Màu xanh lá cho hệ thống */
+}
+
+/* Khung hoạt động */
+.activity-box {
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.activity-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Nội dung trong khung hoạt động */
+.activity-box p {
+  margin: 0;
+  font-size: 1rem;
+  color: #555;
+}
+
+.activity-box strong {
+  color: #333;
+}
+
+/* Thời gian hoạt động */
+.activity-time {
+  display: block;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #888;
+  font-style: italic;
+} 
+</style>
+<p>Bạn có muốn tiếp tục xem từ chỗ dở dang của <strong id="resumeTabName"></strong>?</p>
           <p id="resumePathDisplay"></p>
 
         </div>
@@ -553,8 +876,19 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
       </div>
       <div class="modal-body">
-        <iframe src="about:blank" title="Advertisement" width="100%" height="400" frameborder="0"></iframe>
-        <div class="countdown-overlay">Quảng cáo sẽ tắt sau <span id="countdown">10</span> giây</div>
+        <div class="row">
+          <!-- Iframe cho quảng cáo thứ nhất -->
+          <div class="col-md-6">
+            <iframe id="adIframe1" src="about:blank" title="Advertisement 1" width="100%" height="400" frameborder="0"></iframe>
+          </div>
+          <!-- Iframe cho quảng cáo thứ hai -->
+          <div class="col-md-6">
+            <iframe id="adIframe2" src="about:blank" title="Advertisement 2" width="100%" height="400" frameborder="0"></iframe>
+          </div>
+        </div>
+        <div class="countdown-overlay">
+          Quảng cáo sẽ tắt sau <span id="countdown">10</span> giây
+        </div>
         <button class="skip-ad" id="skipAdBtn">Bỏ qua quảng cáo</button>
       </div>
     </div>
@@ -897,7 +1231,28 @@
   padding: 10px;
   color: #dc3545;
 }
+#schoolSelectionNotice {
+  display: block; /* Đảm bảo hiển thị như block */
+  font-size: 0.9rem; /* Kích thước chữ nhỏ gọn */
+  color: #856404; /* Màu chữ vàng đậm (text-warning đậm hơn của Bootstrap) */
+  background-color: #fff3cd; /* Nền vàng nhạt (bg-warning nhạt của Bootstrap) */
+  border: 1px solid #ffeeba; /* Viền vàng nhạt */
+  padding: 6px 10px; /* Khoảng cách bên trong */
+  border-radius: 0.25rem; /* Bo góc nhẹ */
+  margin-bottom: 8px; /* Khoảng cách với ô input */
+  font-weight: 500; /* Chữ hơi đậm để nhấn mạnh */
+  transition: opacity 0.3s ease; /* Hiệu ứng mượt mà khi hiển thị/ẩn */
+}
 
+/* Khi thông báo ẩn (d-none) */
+#schoolSelectionNotice.d-none {
+  opacity: 0; /* Ẩn mượt mà */
+}
+
+/* Khi thông báo hiển thị */
+#schoolSelectionNotice:not(.d-none) {
+  opacity: 1;
+}
 </style>
 
 <!-- Modal Tìm kiếm theo tên môn học -->
@@ -909,513 +1264,528 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
       </div>
       <div class="modal-body">
-        <!-- Wrapper chứa input và phần gợi ý (với position-relative) -->
+        <!-- Wrapper chứa input và phần gợi ý -->
         <div class="position-relative">
+          <span id="schoolSelectionNotice" class="text-muted d-none" style="font-size: 0.9rem; display: block; margin-bottom: 5px;">
+            Mẹo nhỏ: Chọn trường rồi tìm kiếm để chỉ hiển thị dữ liệu của trường đó.
+          </span>
           <input type="text" id="subjectSearchInput" class="form-control" placeholder="Nhập tên môn học...">
           <div id="subjectSearchSuggestions" class="suggestions" style="top: 100%; left: 0; display: none;"></div>
         </div>
-        <div class="modal-footer">
-          <button type="button" id="subjectSearchBtn" class="btn btn-primary">Tìm kiếm</button>
-        </div>
       </div>
       <div class="modal-footer border-0">
-        <button type="button" id="subjectSearchBtn" class="btn btn-primary">Tìm kiếm</button>
+        <!-- Có thể thêm nút nếu cần -->
       </div>
     </div>
   </div>
 </div>
-
-
+<!-- HTML Imports -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.13.216/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
-  // Cấu hình đường dẫn worker của PDF.js
+  // Cấu hình PDF.js worker (chỉ cần khai báo một lần)
   pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.13.216/pdf.worker.min.js';
-</script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.13.216/pdf.min.js"></script>
-<script>
-  // Cấu hình đường dẫn worker của PDF.js
-  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.13.216/pdf.worker.min.js';
-</script>
+  /*=======================
+    Biến toàn cục
+  =======================*/
+  let examCurrentPath = [];
+  let syllabusCurrentPath = [];
+  let currentRotation = 0;
+  let adTimer = null;
+  let currentFile = null;
 
-  <!-- Bootstrap JS Bundle -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-/*=======================
-  Biến toàn cục và lưu trạng thái
-========================*/
-let examCurrentPath = [];
-let syllabusCurrentPath = [];
-let currentRotation = 0;
-let adTimer;  // Sẽ lưu timer của modal quảng cáo
-let currentFile = null;
-
-/*=======================
-  Hàm hiển thị drive (thư mục và file)
-========================*/
-async function renderDrive(containerId, path, updatePathCallback) {
-  const container = document.getElementById(containerId);
-  container.innerHTML = ''; // Xóa nội dung cũ
-
-  // Thêm phần tử loading spinner
-  const spinner = document.createElement('div');
-  spinner.className = 'spinner';
-  spinner.textContent = 'Loading...'; // Bạn có thể thay bằng icon hoặc CSS animation
-  container.appendChild(spinner);
-
-  // Lấy dữ liệu từ backend dựa theo cấp của path
-  let data = [];
-  try {
-    if (path.length === 0) {
-      const response = await fetch('/api/schools');
-      data = await response.json();
-    } else if (path.length === 1) {
-      const schoolId = path[0].id;
-      const response = await fetch(`/api/schools/${schoolId}/faculties`);
-      data = await response.json();
-    } else if (path.length === 2) {
-      const facultyId = path[1].id;
-      const response = await fetch(`/api/faculties/${facultyId}/subjects`);
-      data = await response.json();
-    } else if (path.length === 3) {
-      const subjectId = path[2].id;
-      const response = await fetch(`/api/subjects/${subjectId}/documents_by_year`);
-      const groupedData = await response.json();
-      data = Object.keys(groupedData).map(year => ({
-          id: parseInt(year),
-          name: year,
-          count: groupedData[year].length,
-          documents: groupedData[year]
-      })).sort((a, b) => b.id - a.id);
-    } else if (path.length === 4) {
-      const subjectId = path[2].id;
-      const year = path[3].id;
-      const response = await fetch(`/api/subjects/${subjectId}/documents/${year}`);
-      data = await response.json();
+  /*=======================
+    Hàm hiển thị Drive
+  =======================*/
+  async function renderDrive(containerId, path, updatePathCallback) {
+    const documentType = containerId.includes('exam') ? 'exam' : 'syllabus';
+    const container = document.getElementById(containerId);
+    if (!container) {
+      console.error(`Không tìm thấy container với ID: ${containerId}`);
+      return;
     }
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
+    container.innerHTML = '';
 
-  // Sau khi fetch xong, xóa spinner và render lại giao diện
-  container.innerHTML = '';
+    // Hiển thị spinner khi tải dữ liệu
+    const spinner = document.createElement('div');
+    spinner.className = 'spinner';
+    spinner.textContent = 'Loading...';
+    container.appendChild(spinner);
 
-  // Hiển thị breadcrumb
-  renderBreadcrumb(container, path, updatePathCallback);
+    // Lấy dữ liệu từ backend
+    let data = [];
+    try {
+      if (path.length === 0) {
+        data = await (await fetch('/api/schools')).json();
+      } else if (path.length === 1) {
+        const schoolId = path[0].id;
+        data = await (await fetch(`/api/schools/${schoolId}/faculties`)).json();
+      } else if (path.length === 2) {
+        const facultyId = path[1].id;
+        data = await (await fetch(`/api/faculties/${facultyId}/subjects?type=${documentType}`)).json();
+      } else if (path.length === 3) {
+        const subjectId = path[2].id;
+        const response = await fetch(`/api/subjects/${subjectId}/documents_by_year?type=${documentType}`);
+        const groupedData = await response.json();
+        data = Object.keys(groupedData)
+          .map(year => ({
+            id: parseInt(year),
+            name: year,
+            count: groupedData[year].length,
+            documents: groupedData[year]
+          }))
+          .sort((a, b) => b.id - a.id);
+      } else if (path.length === 4) {
+        const subjectId = path[2].id;
+        const year = path[3].id;
+        data = await (await fetch(`/api/subjects/${subjectId}/documents/${year}?type=${documentType}`)).json();
+      }
+    } catch (error) {
+      console.error('Lỗi khi lấy dữ liệu:', error);
+    }
 
-  // Tạo container tìm kiếm inline (nếu cần)
-  const inlineSearchContainer = document.createElement('div');
-  inlineSearchContainer.className = 'input-group mb-3';
-  inlineSearchContainer.style.position = 'relative';
-  inlineSearchContainer.innerHTML = `
+    container.innerHTML = ''; // Xóa spinner sau khi tải xong
+
+    // Hiển thị breadcrumb
+    renderBreadcrumb(container, path, updatePathCallback);
+
+    // Thanh tìm kiếm inline
+    const inlineSearchContainer = document.createElement('div');
+    inlineSearchContainer.className = 'input-group mb-3';
+    inlineSearchContainer.style.position = 'relative';
+    inlineSearchContainer.innerHTML = `
       <span class="input-group-text"><i class="bi bi-search"></i></span>
       <input type="search" class="form-control" placeholder="Tìm kiếm trong thư mục...">
-  `;
-  container.appendChild(inlineSearchContainer);
-  
-  const inlineSuggestions = document.createElement('div');
-  inlineSuggestions.className = 'suggestions';
-  inlineSuggestions.style.display = 'none';
-  inlineSearchContainer.appendChild(inlineSuggestions);
+    `;
+    container.appendChild(inlineSearchContainer);
 
-  // Nút "Tìm kiếm theo tên môn học"
-  const advancedSearchBtn = document.createElement('button');
-  advancedSearchBtn.className = 'btn btn-outline-primary mb-3';
-  advancedSearchBtn.textContent = 'Tìm kiếm theo tên môn học';
-  container.appendChild(advancedSearchBtn);
-  advancedSearchBtn.addEventListener('click', () => {
+    const inlineSuggestions = document.createElement('div');
+    inlineSuggestions.className = 'suggestions';
+    inlineSuggestions.style.display = 'none';
+    inlineSearchContainer.appendChild(inlineSuggestions);
+
+    // Nút tìm kiếm nâng cao
+    const advancedSearchBtn = document.createElement('button');
+    advancedSearchBtn.className = 'btn btn-outline-primary mb-3';
+    advancedSearchBtn.textContent = 'Tìm kiếm theo tên môn học';
+    advancedSearchBtn.addEventListener('click', () => {
       const subjectSearchModal = new bootstrap.Modal(document.getElementById('subjectSearchModal'));
       subjectSearchModal.show();
-  });
+    });
+    container.appendChild(advancedSearchBtn);
 
-  // Hiển thị danh sách folder hoặc file
-  const list = document.createElement('ul');
-  list.className = 'file-list';
-  
-  if (Array.isArray(data)) {
-    data.forEach(item => {
-      if (path.length < 3 || path.length === 3) {
-        // Ở cấp: Trường, Khoa, Môn học, Năm => hiển thị folder item
-        renderFolderItem(list, item.name, path, updatePathCallback, item.count || 0, item.id);
-      } else if (path.length === 4) {
-        // Ở cấp File => hiển thị file item
-        renderFileItem(list, item);
+    // Danh sách file/folder
+    const list = document.createElement('ul');
+    list.className = 'file-list';
+    if (Array.isArray(data)) {
+      data.forEach(item => {
+        if ((path.length < 3 || path.length === 3) && item.count > 0) {
+          renderFolderItem(list, item.name, path, updatePathCallback, item.count, item.id);
+        } else if (path.length === 4) {
+          renderFileItem(list, item, documentType);
+        }
+      });
+    }
+    container.appendChild(list);
+
+    // Xử lý tìm kiếm inline
+    const inlineSearchInput = inlineSearchContainer.querySelector('input');
+    inlineSearchInput.addEventListener('input', (e) => {
+      const term = e.target.value.toLowerCase();
+      const suggestions = [];
+      Array.from(list.children).forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(term) ? 'flex' : 'none';
+        if (item.style.display !== 'none') {
+          const name = item.querySelector('.file-name').textContent;
+          if (!suggestions.includes(name)) suggestions.push(name);
+        }
+      });
+
+      inlineSuggestions.innerHTML = '';
+      if (term && suggestions.length > 0) {
+        suggestions.forEach(suggestion => {
+          const div = document.createElement('div');
+          div.className = 'suggestion-item';
+          div.textContent = suggestion;
+          div.addEventListener('click', () => {
+            inlineSearchInput.value = suggestion;
+            inlineSearchInput.dispatchEvent(new Event('input'));
+            inlineSuggestions.style.display = 'none';
+          });
+          inlineSuggestions.appendChild(div);
+        });
+        inlineSuggestions.style.display = 'block';
+      } else {
+        inlineSuggestions.style.display = 'none';
       }
     });
   }
-  container.appendChild(list);
 
-  // Xử lý tìm kiếm inline (giữ nguyên nếu cần)
-  const inlineSearchInput = inlineSearchContainer.querySelector('input');
-  inlineSearchInput.addEventListener('input', (e) => {
-      const term = e.target.value.toLowerCase();
-      Array.from(list.children).forEach(item => {
-          const text = item.textContent.toLowerCase();
-          item.style.display = text.includes(term) ? 'flex' : 'none';
-      });
-      const suggestions = [];
-      Array.from(list.children).forEach(item => {
-          if (item.style.display !== 'none') {
-              const name = item.querySelector('.file-name').textContent;
-              if (!suggestions.includes(name)) {
-                  suggestions.push(name);
-              }
-          }
-      });
-      inlineSuggestions.innerHTML = "";
-      if (term && suggestions.length > 0) {
-          suggestions.forEach(suggestion => {
-              const div = document.createElement('div');
-              div.className = 'suggestion-item';
-              div.textContent = suggestion;
-              div.addEventListener('click', () => {
-                  inlineSearchInput.value = suggestion;
-                  inlineSearchInput.dispatchEvent(new Event('input'));
-                  inlineSuggestions.style.display = 'none';
-              });
-              inlineSuggestions.appendChild(div);
-          });
-          inlineSuggestions.style.display = 'block';
-      } else {
-          inlineSuggestions.style.display = 'none';
-      }
-  });
-}
-function renderBreadcrumb(container, path, callback) {
-  if (path.length === 0) return;
-  const breadcrumb = document.createElement('nav');
-  let html = `
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item">
-        <a href="#" id="back-button"><i class="bi bi-arrow-left"></i> Quay lại</a>
-      </li>
-  `;
-  path.forEach((segment, index) => {
-    if (index === path.length - 1) {
-      html += `<li class="breadcrumb-item active">${segment.name}</li>`;
-    } else {
-      html += `<li class="breadcrumb-item">
-                 <a href="#" class="breadcrumb-link" data-index="${index}">${segment.name}</a>
-               </li>`;
-    }
-  });
-  html += `</ol>`;
-  breadcrumb.innerHTML = html;
-  
-  // Sự kiện cho nút "Quay lại"
-  breadcrumb.querySelector('#back-button').addEventListener('click', (e) => {
-    e.preventDefault();
-    callback(path.slice(0, path.length - 1));
-  });
-  
-  // Gán sự kiện cho các breadcrumb-link
-  const links = breadcrumb.querySelectorAll('.breadcrumb-link');
-  links.forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const index = parseInt(link.getAttribute('data-index'));
-      // Gọi callback với đường dẫn đến phần đã chọn (bao gồm cả phần đang click)
-      callback(path.slice(0, index + 1));
+  /*=======================
+    Hàm phụ trợ
+  =======================*/
+  function renderBreadcrumb(container, path, callback) {
+    if (path.length === 0) return;
+    const breadcrumb = document.createElement('nav');
+    let html = `
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#" id="back-button"><i class="bi bi-arrow-left"></i> Quay lại</a>
+        </li>
+    `;
+    path.forEach((segment, index) => {
+      html += index === path.length - 1
+        ? `<li class="breadcrumb-item active">${segment.name}</li>`
+        : `<li class="breadcrumb-item"><a href="#" class="breadcrumb-link" data-index="${index}">${segment.name}</a></li>`;
     });
-  });
-  
-  container.prepend(breadcrumb);
-}
+    breadcrumb.innerHTML = html + '</ol>';
 
-function renderFolderItem(list, name, currentPath, callback, count, itemId) {
-  const li = document.createElement('li');
-  li.className = 'file-item';
-  li.innerHTML = `
+    breadcrumb.querySelector('#back-button').addEventListener('click', (e) => {
+      e.preventDefault();
+      callback(path.slice(0, -1));
+    });
+
+    breadcrumb.querySelectorAll('.breadcrumb-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const index = parseInt(link.getAttribute('data-index'));
+        callback(path.slice(0, index + 1));
+      });
+    });
+
+    container.prepend(breadcrumb);
+  }
+
+  function renderFolderItem(list, name, currentPath, callback, count, itemId) {
+    const li = document.createElement('li');
+    li.className = 'file-item';
+    li.innerHTML = `
       <i class="bi bi-folder-fill file-icon folder"></i>
       <span class="file-name">${name}</span>
       <span class="file-count">${count}</span>
-  `;
-  li.addEventListener('click', () => callback([...currentPath, { id: itemId, name: name }]));
-  list.appendChild(li);
-}
-// Hàm render file item
-// Hàm chuyển đổi Data URL thành Blob
-function dataURLToBlob(dataurl) {
-  const arr = dataurl.split(',');
-  const mimeMatch = arr[0].match(/:(.*?);/);
-  if (!mimeMatch) return null;
-  const mime = mimeMatch[1];
-  const bstr = atob(arr[1]);
-  let n = bstr.length;
-  const u8arr = new Uint8Array(n);
-  while (n--) {
-    u8arr[n] = bstr.charCodeAt(n);
+    `;
+    li.addEventListener('click', () => callback([...currentPath, { id: itemId, name }]));
+    list.appendChild(li);
   }
-  return new Blob([u8arr], { type: mime });
-}
 
-function renderFileItem(list, file) {
+function renderFileItem(list, file, documentType) {
+  if (!file.file_path) {
+    console.warn('File không có đường dẫn hợp lệ:', file);
+    return;
+  }
+
+  const filePath = file.file_path.startsWith('/') ? file.file_path : `/${file.file_path}`;
+  const ext = filePath.split('.').pop().toLowerCase();
+  const iconClass = {
+    pdf: 'bi-file-pdf pdf',
+    doc: 'bi-file-earmark-word word',
+    docx: 'bi-file-earmark-word word',
+    jpg: 'bi-file-image',
+    jpeg: 'bi-file-image',
+    png: 'bi-file-image',
+    gif: 'bi-file-image'
+  }[ext] || 'bi-file-earmark';
+
   const li = document.createElement('li');
   li.className = 'file-item';
-
+  const typeLabel = documentType === 'exam' ? 'Đề Thi' : 'Đề Cương';
   li.innerHTML = `
-    <i class="bi bi-file-image file-icon"></i>
+    <i class="bi ${iconClass} file-icon"></i>
     <div>
-      <div class="file-name">${file.file_name}</div>
+      <div class="file-name">${typeLabel} ${file.file_name}</div>
       <div class="file-info">${file.file_info || ''}</div>
     </div>
   `;
 
   li.addEventListener('click', () => {
-    if (file.watermarked_image) {
-      // Chuyển Data URL sang Blob
-      const blob = dataURLToBlob(file.watermarked_image);
-      if (blob) {
-        // Tạo blob URL
-        const blobUrl = URL.createObjectURL(blob);
-        // Mở cửa sổ mới và chuyển hướng trực tiếp đến blobUrl
-        const newWindow = window.open();
-        if (newWindow) {
-          newWindow.location.href = blobUrl;
-          // Optionally, giải phóng blob sau một thời gian (nếu cần)
-          // setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
-        } else {
-          console.warn("Popup bị chặn. Vui lòng bật popup cho trang này.");
-        }
-      } else {
-        console.error("Không chuyển đổi được Data URL thành Blob.");
-      }
-    } else if (file.file_path) {
-      window.open(file.file_path, '_blank');
-    } else {
-      console.warn("Không có đường dẫn file hợp lệ để mở file.");
-    }
+    // Gọi API log lượt mở file trước khi hiển thị modal hoặc chuyển hướng
+    fetch('/api/log-file-open', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ documentId: file.id }) // Giả sử file.id chứa ID của tài liệu
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data.message);
+      // Sau khi log thành công, thực hiện hành động tiếp theo, ví dụ: hiển thị modal
+      window.currentFile = { ...file, file_path: filePath };
+      showAdModal();
+    })
+    .catch(error => {
+      console.error('Error logging file open:', error);
+      // Tiếp tục hiển thị file ngay cả khi log thất bại
+      window.currentFile = { ...file, file_path: filePath };
+      showAdModal();
+    });
   });
-
   list.appendChild(li);
 }
 
-// Hàm hiển thị modal quảng cáo với đếm ngược, sau đó mở file thực tế
-function showAdModal() {
-  let countdown = 10; // Đếm ngược 5 giây
-  const countdownElement = document.getElementById('countdown');
-  
-  if (!countdownElement) {
-    console.error("Không tìm thấy phần tử 'countdown' trong DOM.");
-    return;
-  }
-  
-  const adModal = new bootstrap.Modal(document.getElementById('adModal'));
-  adModal.show();
-  countdownElement.textContent = countdown;
+  function showAdModal() {
+    let countdown = 10;
+    const countdownElement = document.getElementById('countdown');
+    if (!countdownElement) {
+      console.error('Không tìm thấy phần tử countdown trong DOM');
+      return;
+    }
 
-  // Lưu interval vào biến toàn cục adTimer
-  adTimer = setInterval(() => {
-    countdown--;
+    const adModal = new bootstrap.Modal(document.getElementById('adModal'));
+    adModal.show();
     countdownElement.textContent = countdown;
 
-    if (countdown === 0) {
-      clearInterval(adTimer);
-      adModal.hide();
-      openFileFromBackend(); // Gọi hàm mở file thực tế
-    }
-  }, 1000);
-}
-
-// Hàm mở file dựa trên thông tin đã lưu ở biến global window.currentFile
-function openFileFromBackend() {
-  if (window.currentFile && window.currentFile.file_path) {
-    window.open(window.currentFile.file_path, '_blank');
-  } else {
-    console.error("Không có file để mở");
+    adTimer = setInterval(() => {
+      countdown--;
+      countdownElement.textContent = countdown;
+      if (countdown <= 0) {
+        clearInterval(adTimer);
+        adModal.hide();
+        openFileFromBackend();
+      }
+    }, 1000);
   }
-}
 
-
-/*=======================
-  Preview File và Lưu Lịch Sử
-========================*/
-function previewFile(file) {
-  currentFile = file;
-  // Lưu lịch sử xem nếu cần
-  let activeTab = document.querySelector('.tab-pane.active').id;
-  let fileType = (activeTab === "de-thi") ? "Đề Thi" : "Đề Cương";
-  addFileToHistory(file, fileType);
-  
-  // Hiển thị modal quảng cáo trước khi mở file
-  showAdModal();
-}
-
-function addFileToHistory(file, fileType) {
-  let history = JSON.parse(localStorage.getItem('viewHistory')) || [];
-  // Thêm file vào lịch sử nếu chưa có (theo tên & loại)
-  if (!history.find(item => item.name === file.name && item.type === fileType)) {
-    history.push({ name: file.name, info: file.info, type: fileType });
-  }
-  localStorage.setItem('viewHistory', JSON.stringify(history));
-}
-function proceedFileOpen(file) {
-  const ext = file.file_path.split('.').pop().toLowerCase();
-  
-  if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
-    const modal = new bootstrap.Modal(document.getElementById('filePreviewModal'));
-    document.getElementById('imgPreview').style.transform = 'rotate(0deg)';
-    document.getElementById('imgPreview').src = file.file_path;
-    document.getElementById('imgPreview').classList.remove('d-none');
-    document.getElementById('rotateControls').classList.remove('d-none');
-    document.getElementById('filePreviewModalLabel').innerText = file.file_name;
-    modal.show();
-  } else if (['doc', 'docx'].includes(ext)) {
-    const link = document.createElement('a');
-    link.href = file.file_path;
-    link.download = file.file_name;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }else if (ext === 'pdf') {
-  const modal = new bootstrap.Modal(document.getElementById('pdfPreviewModal'));
-  const container = document.getElementById('pdfContainer');
-
-  // Xóa nội dung cũ nếu có
-  container.innerHTML = '';
-
-  pdfjsLib.getDocument(file.file_path).promise.then(pdf => {
-    const totalPages = pdf.numPages;
-    const renderPromises = [];
-
-    for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
-      renderPromises.push(
-        pdf.getPage(pageNum).then(page => {
-          const scale = 1.5; // Thay đổi scale nếu cần
-          const viewport = page.getViewport({ scale: scale });
-
-          // Tạo canvas cho trang hiện tại
-          const canvas = document.createElement('canvas');
-          canvas.width = viewport.width;
-          canvas.height = viewport.height;
-          container.appendChild(canvas);
-
-          const context = canvas.getContext('2d');
-          const renderContext = {
-            canvasContext: context,
-            viewport: viewport
-          };
-
-          return page.render(renderContext).promise;
-        })
-      );
+  function openFileFromBackend() {
+    if (window.currentFile?.file_path) {
+      window.open(window.currentFile.file_path, '_blank');
+    } else {
+      console.error('Không có file để mở');
     }
+  }
 
-    Promise.all(renderPromises).then(() => {
+  /*=======================
+    Preview File & Lịch sử
+  =======================*/
+  function previewFile(file) {
+    currentFile = file;
+    const activeTab = document.querySelector('.tab-pane.active').id;
+    const fileType = activeTab === 'de-thi' ? 'Đề Thi' : 'Đề Cương';
+    addFileToHistory(file, fileType);
+    showAdModal();
+  }
+
+  function addFileToHistory(file, fileType) {
+    let history = JSON.parse(localStorage.getItem('viewHistory')) || [];
+    if (!history.find(item => item.name === file.name && item.type === fileType)) {
+      history.push({ name: file.name, info: file.info || '', type: fileType });
+      localStorage.setItem('viewHistory', JSON.stringify(history));
+    }
+  }
+
+  function proceedFileOpen(file) {
+    const ext = file.file_path.split('.').pop().toLowerCase();
+    if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
+      const modal = new bootstrap.Modal(document.getElementById('filePreviewModal'));
+      const imgPreview = document.getElementById('imgPreview');
+      imgPreview.style.transform = 'rotate(0deg)';
+      imgPreview.src = file.file_path;
+      imgPreview.classList.remove('d-none');
+      document.getElementById('rotateControls').classList.remove('d-none');
+      document.getElementById('filePreviewModalLabel').textContent = file.file_name;
       modal.show();
-    });
-  }).catch(error => {
-    console.error('Lỗi khi render PDF:', error);
-    window.open(file.file_path, '_blank');
-  });
-}
+    } else if (['doc', 'docx'].includes(ext)) {
+      const link = document.createElement('a');
+      link.href = file.file_path;
+      link.download = file.file_name;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else if (ext === 'pdf') {
+      const modal = new bootstrap.Modal(document.getElementById('pdfPreviewModal'));
+      const container = document.getElementById('pdfContainer');
+      container.innerHTML = '';
 
-
-   else {
-    window.open(file.file_path, '_blank');
+      pdfjsLib.getDocument(file.file_path).promise.then(pdf => {
+        const totalPages = pdf.numPages;
+        const renderPromises = [];
+        for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+          renderPromises.push(pdf.getPage(pageNum).then(page => {
+            const scale = 1.5;
+            const viewport = page.getViewport({ scale });
+            const canvas = document.createElement('canvas');
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            container.appendChild(canvas);
+            const context = canvas.getContext('2d');
+            return page.render({ canvasContext: context, viewport }).promise;
+          }));
+        }
+        Promise.all(renderPromises).then(() => modal.show());
+      }).catch(error => {
+        console.error('Lỗi khi render PDF:', error);
+        window.open(file.file_path, '_blank');
+      });
+    } else {
+      window.open(file.file_path, '_blank');
+    }
   }
-}
-// Hàm hiển thị modal quảng cáo với đếm ngược, sau đó mở file thực tế
-function showAdModal() {
-  let countdown = 10; // Đếm ngược 5 giây
-  const countdownElement = document.getElementById('countdown');
+
+  /*=======================
+    Quản lý trạng thái
+  =======================*/
+  function renderExamDrive(newPath) {
+    examCurrentPath = newPath;
+    localStorage.setItem('examCurrentPath', JSON.stringify(examCurrentPath));
+    renderDrive('exam-drive-container', examCurrentPath, renderExamDrive);
+  }
+
+  function renderSyllabusDrive(newPath) {
+    syllabusCurrentPath = newPath;
+    localStorage.setItem('syllabusCurrentPath', JSON.stringify(syllabusCurrentPath));
+    renderDrive('syllabus-drive-container', syllabusCurrentPath, renderSyllabusDrive);
+  }
+
+  /*=======================
+    Khởi tạo khi tải trang
+  =======================*/
+  document.addEventListener('DOMContentLoaded', () => {
+    const savedExamPath = localStorage.getItem('examCurrentPath');
+    const savedSyllabusPath = localStorage.getItem('syllabusCurrentPath');
+    if (savedExamPath) examCurrentPath = JSON.parse(savedExamPath);
+    if (savedSyllabusPath) syllabusCurrentPath = JSON.parse(savedSyllabusPath);
+
+    const examTab = document.getElementById('de-thi-tab');
+    const syllabusTab = document.getElementById('de-cuong-tab');
+    const examContent = document.getElementById('de-thi');
+    const syllabusContent = document.getElementById('de-cuong');
+    let activeTab = localStorage.getItem('activeTab') || 'exam';
+
+    function switchTab(tab) {
+      if (tab === 'exam') {
+        examTab.classList.add('active');
+        syllabusTab.classList.remove('active');
+        examContent.classList.add('show', 'active');
+        syllabusContent.classList.remove('show', 'active');
+        localStorage.setItem('activeTab', 'exam');
+        renderExamDrive(examCurrentPath);
+      } else {
+        syllabusTab.classList.add('active');
+        examTab.classList.remove('active');
+        syllabusContent.classList.add('show', 'active');
+        examContent.classList.remove('show', 'active');
+        localStorage.setItem('activeTab', 'syllabus');
+        renderSyllabusDrive(syllabusCurrentPath);
+      }
+    }
+
+    examTab.addEventListener('click', () => switchTab('exam'));
+    syllabusTab.addEventListener('click', () => switchTab('syllabus'));
+    switchTab(activeTab);
+
+    // Xử lý nút quảng cáo và xoay ảnh
+    document.getElementById('skipAdBtn')?.addEventListener('click', () => {
+      clearInterval(adTimer);
+      const adModal = bootstrap.Modal.getInstance(document.getElementById('adModal'));
+      adModal.hide();
+      if (currentFile) proceedFileOpen(currentFile);
+    });
+
+    document.getElementById('rotateLeft')?.addEventListener('click', () => {
+      currentRotation -= 90;
+      document.getElementById('imgPreview').style.transform = `rotate(${currentRotation}deg)`;
+    });
+
+    document.getElementById('rotateRight')?.addEventListener('click', () => {
+      currentRotation += 90;
+      document.getElementById('imgPreview').style.transform = `rotate(${currentRotation}deg)`;
+    });
+
+    // Xử lý quảng cáo trong modal
+    const adModal = document.getElementById('adModal');
+    if (adModal) {
+      adModal.addEventListener('shown.bs.modal', () => {
+        const adIframe = adModal.querySelector('iframe');
+        if (adIframe && adIframe.getAttribute('src') === 'about:blank') {
+          const adUrl = `https://www.effectiveratecpm.com/pb7fiwbhr?key=27b2a32441ee0c347f6e9fd270bc1a0c&t=${Date.now()}`;
+          adIframe.setAttribute('src', adUrl);
+        }
+      });
+    }
+  });
+/*=======================
+  Tìm kiếm môn học
+=======================*/
+const subjectSearchInput = document.getElementById('subjectSearchInput');
+const subjectSearchSuggestions = document.getElementById('subjectSearchSuggestions');
+const schoolSelectionNotice = document.getElementById('schoolSelectionNotice');
+
+subjectSearchInput?.addEventListener('input', async () => {
+  const term = subjectSearchInput.value.trim().toLowerCase();
   
-  if (!countdownElement) {
-    console.error("Không tìm thấy phần tử 'countdown' trong DOM.");
+  // Hiển thị/ẩn thông báo dựa trên việc đã chọn trường hay chưa
+  const activeTab = localStorage.getItem('activeTab') || 'exam';
+  const currentPath = activeTab === 'exam' ? examCurrentPath : syllabusCurrentPath;
+  if (currentPath.length === 0) {
+    schoolSelectionNotice.classList.remove('d-none'); // Hiển thị thông báo
+  } else {
+    schoolSelectionNotice.classList.add('d-none'); // Ẩn thông báo
+  }
+
+  // Nếu term quá ngắn thì ẩn gợi ý và không tìm kiếm
+  if (term.length < 2) {
+    subjectSearchSuggestions.style.display = 'none';
     return;
   }
-  
-  const adModal = new bootstrap.Modal(document.getElementById('adModal'));
-  adModal.show();
-  countdownElement.textContent = countdown;
 
-  // Lưu interval vào biến toàn cục adTimer
-  adTimer = setInterval(() => {
-    countdown--;
-    countdownElement.textContent = countdown;
+  const schoolId = currentPath[0]?.id || 0;
+  const facultyId = currentPath[1]?.id || 0;
 
-    if (countdown === 0) {
-      clearInterval(adTimer);
-      adModal.hide();
-      openFileFromBackend(); // Gọi hàm mở file thực tế
+  try {
+    const url = new URL('/api/search/subjects', window.location.origin);
+    url.searchParams.append('term', term);
+    if (schoolId) url.searchParams.append('school_id', schoolId);
+    if (facultyId) url.searchParams.append('faculty_id', facultyId);
+
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+    const results = await response.json();
+
+    subjectSearchSuggestions.innerHTML = '';
+    if (results.length > 0) {
+      results.forEach(subject => {
+        const div = document.createElement('div');
+        div.className = 'suggestion-item';
+        div.innerHTML = `
+          <div class="subject-name">${subject.name}</div>
+          <div class="subject-path">${subject.school_name} → ${subject.faculty_name}</div>
+        `;
+        div.addEventListener('click', () => {
+          const newPath = [
+            { id: subject.school_id, name: subject.school_name },
+            { id: subject.faculty_id, name: subject.faculty_name },
+            { id: subject.id, name: subject.name }
+          ];
+          if (activeTab === 'exam') renderExamDrive(newPath);
+          else renderSyllabusDrive(newPath);
+          bootstrap.Modal.getInstance(document.getElementById('subjectSearchModal')).hide();
+        });
+        subjectSearchSuggestions.appendChild(div);
+      });
+      subjectSearchSuggestions.style.display = 'block';
+    } else {
+      subjectSearchSuggestions.style.display = 'none';
     }
-  }, 1000);
-}
-
-// Hàm mở file dựa trên thông tin đã lưu ở biến global window.currentFile
-function openFileFromBackend() {
-  if (window.currentFile && window.currentFile.file_path) {
-    window.open(window.currentFile.file_path, '_blank');
-  } else {
-    console.error("Không có file để mở");
+  } catch (error) {
+    console.error('Lỗi tìm kiếm:', error);
+    subjectSearchSuggestions.innerHTML = '<div class="error">Lỗi tải kết quả</div>';
+    subjectSearchSuggestions.style.display = 'block';
   }
-}
-
-document.getElementById('skipAdBtn').addEventListener('click', () => {
-  clearInterval(adTimer);
-  const adModal = bootstrap.Modal.getInstance(document.getElementById('adModal'));
-  adModal.hide();
-  proceedFileOpen(currentFile);
 });
-
-document.getElementById('rotateLeft').addEventListener('click', () => {
-  currentRotation -= 90;
-  document.getElementById('imgPreview').style.transform = `rotate(${currentRotation}deg)`;
-});
-document.getElementById('rotateRight').addEventListener('click', () => {
-  currentRotation += 90;
-  document.getElementById('imgPreview').style.transform = `rotate(${currentRotation}deg)`;
-});
-
-function getNestedData(data, path) {
-  return path.reduce((obj, key) => obj ? obj[key] : null, data);
-}
-
-function searchFiles(data, term) {
-  let results = [];
-  if (Array.isArray(data)) {
-    data.forEach(file => {
-      if (file.name.toLowerCase().includes(term) || file.info.toLowerCase().includes(term))
-        results.push(file);
-    });
-  } else if (typeof data === "object") {
-    for (const key in data) {
-      results = results.concat(searchFiles(data[key], term));
-    }
-  }
-  return results;
-}
-
-/*=======================
-  Quản lý trạng thái và Resume
-========================*/
-function renderExamDrive(newPath) {
-  examCurrentPath = newPath;
-  localStorage.setItem('examCurrentPath', JSON.stringify(examCurrentPath));
-  renderDrive('exam-drive-container', examCurrentPath, renderExamDrive);
-}
-
-function renderSyllabusDrive(newPath) {
-  syllabusCurrentPath = newPath;
-  localStorage.setItem('syllabusCurrentPath', JSON.stringify(syllabusCurrentPath));
-  renderDrive('syllabus-drive-container', syllabusCurrentPath, renderSyllabusDrive);
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  let activeTab = localStorage.getItem('activeTab') || 'exam';
+  document.addEventListener('DOMContentLoaded', () => {
   const savedExamPath = localStorage.getItem('examCurrentPath');
   const savedSyllabusPath = localStorage.getItem('syllabusCurrentPath');
-  if (savedExamPath) {
-    examCurrentPath = JSON.parse(savedExamPath);
-  }
-  if (savedSyllabusPath) {
-    syllabusCurrentPath = JSON.parse(savedSyllabusPath);
-  }
+  if (savedExamPath) examCurrentPath = JSON.parse(savedExamPath);
+  if (savedSyllabusPath) syllabusCurrentPath = JSON.parse(savedSyllabusPath);
 
   const examTab = document.getElementById('de-thi-tab');
   const syllabusTab = document.getElementById('de-cuong-tab');
   const examContent = document.getElementById('de-thi');
   const syllabusContent = document.getElementById('de-cuong');
+  let activeTab = localStorage.getItem('activeTab') || 'exam';
 
   function switchTab(tab) {
     if (tab === 'exam') {
@@ -1437,191 +1807,130 @@ document.addEventListener('DOMContentLoaded', () => {
 
   examTab.addEventListener('click', () => switchTab('exam'));
   syllabusTab.addEventListener('click', () => switchTab('syllabus'));
+  switchTab(activeTab);
 
-  if (activeTab === 'syllabus') {
-    switchTab('syllabus');
-  } else {
-    switchTab('exam');
-  }
-
-  // Nếu có trạng thái lưu thì hiển thị modal gợi ý "Tiếp tục xem"
-  if (activeTab === 'exam' && examCurrentPath.length > 0) {
-    document.getElementById('resumeTabName').textContent = "Đề Thi";
-    document.getElementById('resumePathDisplay').textContent = "Bạn đã dừng tại: " + examCurrentPath.map(item => item.name).join(" > ");
-    var resumeModal = new bootstrap.Modal(document.getElementById('resumeModal'));
-    resumeModal.show();
-  } else if (activeTab === 'syllabus' && syllabusCurrentPath.length > 0) {
-    document.getElementById('resumeTabName').textContent = "Đề Cương";
-    document.getElementById('resumePathDisplay').textContent = "Bạn đã dừng tại: " + syllabusCurrentPath.join(" > ");
-    var resumeModal = new bootstrap.Modal(document.getElementById('resumeModal'));
-    resumeModal.show();
-  }
-
-  // Xử lý nút "Tiếp tục" trong modal Resume
-  document.getElementById('resumeContinueBtn').addEventListener('click', () => {
-    var resumeModal = bootstrap.Modal.getInstance(document.getElementById('resumeModal'));
-    resumeModal.hide();
+  // Xử lý nút quảng cáo và xoay ảnh
+  document.getElementById('skipAdBtn')?.addEventListener('click', () => {
+    clearInterval(adTimer);
+    const adModal = bootstrap.Modal.getInstance(document.getElementById('adModal'));
+    adModal.hide();
+    if (currentFile) proceedFileOpen(currentFile);
   });
 
-  // Xử lý nút "Bắt đầu mới" trong modal Resume: xóa trạng thái đã lưu
-  document.getElementById('resumeCancelBtn').addEventListener('click', () => {
-    let activeTab = localStorage.getItem('activeTab') || 'exam';
-    if (activeTab === 'exam') {
+  document.getElementById('rotateLeft')?.addEventListener('click', () => {
+    currentRotation -= 90;
+    document.getElementById('imgPreview').style.transform = `rotate(${currentRotation}deg)`;
+  });
+
+  document.getElementById('rotateRight')?.addEventListener('click', () => {
+    currentRotation += 90;
+    document.getElementById('imgPreview').style.transform = `rotate(${currentRotation}deg)`;
+  });
+
+  // Khôi phục modal thông báo "Tiếp tục xem"
+  if (activeTab === 'exam' && examCurrentPath.length > 0) {
+    const resumeModal = new bootstrap.Modal(document.getElementById('resumeModal'));
+    document.getElementById('resumeTabName').textContent = 'Đề Thi';
+    document.getElementById('resumePathDisplay').textContent = 'Bạn đã dừng tại: ' + examCurrentPath.map(item => item.name).join(' > ');
+    resumeModal.show();
+
+    document.getElementById('resumeContinueBtn')?.addEventListener('click', () => {
+      resumeModal.hide();
+    });
+
+    document.getElementById('resumeCancelBtn')?.addEventListener('click', () => {
       examCurrentPath = [];
       localStorage.removeItem('examCurrentPath');
       renderExamDrive(examCurrentPath);
-    } else {
+      resumeModal.hide();
+    });
+
+    document.getElementById('viewHistoryBtn')?.addEventListener('click', () => {
+      resumeModal.hide();
+      showHistoryModal();
+    });
+  } else if (activeTab === 'syllabus' && syllabusCurrentPath.length > 0) {
+    const resumeModal = new bootstrap.Modal(document.getElementById('resumeModal'));
+    document.getElementById('resumeTabName').textContent = 'Đề Cương';
+    document.getElementById('resumePathDisplay').textContent = 'Bạn đã dừng tại: ' + syllabusCurrentPath.map(item => item.name).join(' > ');
+    resumeModal.show();
+
+    document.getElementById('resumeContinueBtn')?.addEventListener('click', () => {
+      resumeModal.hide();
+    });
+
+    document.getElementById('resumeCancelBtn')?.addEventListener('click', () => {
       syllabusCurrentPath = [];
       localStorage.removeItem('syllabusCurrentPath');
       renderSyllabusDrive(syllabusCurrentPath);
-    }
-  });
+      resumeModal.hide();
+    });
 
-  // Xử lý nút "Lịch sử xem" trong modal Resume
-  document.getElementById('viewHistoryBtn').addEventListener('click', () => {
-    const resumeModalInstance = bootstrap.Modal.getInstance(document.getElementById('resumeModal'));
-    resumeModalInstance.hide();
-    showHistoryModal();
-  });
-});
-
-/*=======================
-  Lịch sử xem Modal
-========================*/
-function showHistoryModal() {
-  let history = JSON.parse(localStorage.getItem('viewHistory')) || [];
-  let examCount = history.filter(item => item.type === "Đề Thi").length;
-  let syllabusCount = history.filter(item => item.type === "Đề Cương").length;
-  const historyMessage = document.getElementById('historyMessage');
-  historyMessage.innerHTML = `<strong>Bạn đã xem được ${examCount} đề thi và ${syllabusCount} tài liệu rồi!</strong>`;
-  
-  const historyList = document.getElementById('historyList');
-  historyList.innerHTML = "";
-  if (history.length === 0) {
-    historyList.innerHTML = "<li class='list-group-item'>Chưa có lịch sử xem nào.</li>";
-  } else {
-    history.forEach((item, index) => {
-      const li = document.createElement('li');
-      li.className = "list-group-item d-flex justify-content-between align-items-center";
-      li.innerHTML = `<span>${item.name}<br><small class="text-muted">${item.info} (${item.type})</small></span>`;
-      const removeBtn = document.createElement('button');
-      removeBtn.className = "btn btn-sm btn-danger";
-      removeBtn.textContent = "Xóa";
-      removeBtn.addEventListener('click', () => {
-        history.splice(index, 1);
-        localStorage.setItem('viewHistory', JSON.stringify(history));
-        showHistoryModal();
-      });
-      li.appendChild(removeBtn);
-      historyList.appendChild(li);
+    document.getElementById('viewHistoryBtn')?.addEventListener('click', () => {
+      resumeModal.hide();
+      showHistoryModal();
     });
   }
-  const historyModal = new bootstrap.Modal(document.getElementById('historyModal'));
-  historyModal.show();
-}
 
-const subjectSearchInput = document.getElementById('subjectSearchInput');
-const subjectSearchSuggestions = document.getElementById('subjectSearchSuggestions');
-
-subjectSearchInput.addEventListener('input', async () => {
-  const term = subjectSearchInput.value.toLowerCase().trim();
-  subjectSearchSuggestions.innerHTML = "";
-  if (term === "") {
-    subjectSearchSuggestions.style.display = 'none';
-    return;
-  }
-  try {
-    const response = await fetch(`/api/search/subjects?term=${encodeURIComponent(term)}`);
-    const results = await response.json();
-    if (results.error) {
-      console.error(results.error);
-      subjectSearchSuggestions.style.display = 'none';
-      return;
+  // Xử lý quảng cáo trong modal
+const adModal = document.getElementById('adModal');
+if (adModal) {
+  adModal.addEventListener('shown.bs.modal', () => {
+    // Quảng cáo thứ nhất: Luôn cập nhật link mới mỗi khi modal mở
+    const adIframe1 = adModal.querySelector('#adIframe1');
+    if (adIframe1) {
+      const adUrl1 = `https://www.effectiveratecpm.com/pb7fiwbhr?key=27b2a32441ee0c347f6e9fd270bc1a0c&t=${Date.now()}`;
+      adIframe1.setAttribute('src', adUrl1);
     }
-    if (results.length > 0) {
-      results.forEach(subject => {
-        const div = document.createElement('div');
-        div.className = 'suggestion-item';
-        // Hiển thị tên môn học và thông tin khoa - trường
-        div.textContent = `${subject.name} (${subject.faculty_name}, ${subject.school_name})`;
-        div.addEventListener('click', () => {
-          subjectSearchInput.value = subject.name;
-          subjectSearchSuggestions.style.display = 'none';
-          // Chuyển luôn đến trang của môn học (ví dụ: chuyển sang chế độ "Đề Thi")
-          renderExamDrive([
-            { id: subject.school_id, name: subject.school_name },
-            { id: subject.faculty_id, name: subject.faculty_name },
-            { id: subject.id, name: subject.name }
-          ]);
+    
+    // Quảng cáo thứ hai: Luôn cập nhật link mới mỗi khi modal mở
+    const adIframe2 = adModal.querySelector('#adIframe2');
+    if (adIframe2) {
+      const adUrl2 = `https://www.effectiveratecpm.com/wfijh2sa1q?key=a66715025bbe52ddd58f325f993e257e&t=${Date.now()}`;
+      adIframe2.setAttribute('src', adUrl2);
+    }
+  });
+}
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  // Lấy phần tử nút mở modal
+  const recentActivityBtn = document.querySelector('.recent-activity-btn');
+
+  // Lắng nghe sự kiện click trên nút
+  recentActivityBtn.addEventListener('click', function() {
+    // Gọi API để lấy danh sách đề thi mới nhất của hệ thống
+    fetch('/api/latest-exams')
+      .then(response => response.json())
+      .then(data => {
+          console.log("2")
+        // Lấy phần tử <ul> chứa danh sách hoạt động của hệ thống
+        const systemActivityList = document.querySelector('.activity-box.system-activity .list-group');
+        // Xóa nội dung cũ (nếu có)
+        systemActivityList.innerHTML = '';
+        
+        data.forEach(exam => {
+          // Tạo phần tử li cho mỗi đề thi
+          const li = document.createElement('li');
+          li.classList.add('list-group-item');
+          li.innerHTML = `
+            <span class="activity-text">
+              Hệ thống đã upload đề thi mới: 
+              <a href="${exam.file_path}" target="_blank">
+                <strong>${exam.file_name}</strong>
+              </a>
+            </span>
+            <span class="activity-time">${exam.created_at}</span>
+          `;
+          systemActivityList.appendChild(li);
         });
-        subjectSearchSuggestions.appendChild(div);
+      })
+      .catch(error => {
+        console.error('Lỗi khi lấy dữ liệu đề thi:', error);
       });
-      subjectSearchSuggestions.style.display = 'block';
-    } else {
-      subjectSearchSuggestions.style.display = 'none';
-    }
-  } catch (error) {
-    console.error("Error searching subjects:", error);
-    subjectSearchSuggestions.style.display = 'none';
-  }
-});
-
-document.getElementById('subjectSearchBtn').addEventListener('click', async () => {
-  const term = subjectSearchInput.value.toLowerCase().trim();
-  if (term === "") return;
-  try {
-    const response = await fetch(`/api/search/subjects?term=${encodeURIComponent(term)}`);
-    const results = await response.json();
-    renderSearchResults(results);
-    const subjectSearchModal = bootstrap.Modal.getInstance(document.getElementById('subjectSearchModal'));
-    subjectSearchModal.hide();
-    const searchResultsModal = new bootstrap.Modal(document.getElementById('searchResultsModal'));
-    searchResultsModal.show();
-  } catch (error) {
-    console.error("Error on subject search:", error);
-  }
-});
-
-function renderSearchResults(results) {
-  const container = document.getElementById('searchResultsContent');
-  container.innerHTML = "";
-  if (results.length === 0) {
-    container.innerHTML = "<p>Không tìm thấy kết quả nào.</p>";
-    return;
-  }
-  const list = document.createElement("ul");
-  list.className = "list-group";
-  results.forEach(doc => {
-    const li = document.createElement("li");
-    li.className = "list-group-item list-group-item-action";
-    li.innerHTML = `<div><strong>${doc.file_name}</strong><br><small>${doc.file_info}</small></div>`;
-    li.addEventListener("click", () => {
-      // Ẩn modal kết quả tìm kiếm
-      const searchModalEl = document.getElementById('searchResultsModal');
-      const searchModalInstance = bootstrap.Modal.getInstance(searchModalEl);
-      searchModalInstance.hide();
-      // Gọi hàm previewFile để mở file
-      previewFile(doc);
-    });
-    list.appendChild(li);
   });
-  container.appendChild(list);
-}
-
-
-  </script>
-  <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    var adModal = document.getElementById('adModal');
-    if (adModal) {
-      adModal.addEventListener('shown.bs.modal', function () {
-        var adIframe = adModal.querySelector('iframe');
-        if (adIframe && adIframe.getAttribute('src') === 'about:blank') {
-          adIframe.setAttribute('src', 'https://www.effectiveratecpm.com/pb7fiwbhr?key=27b2a32441ee0c347f6e9fd270bc1a0c');
-        }
-      });
-    }
-  });
+});
 </script>
 
 </body>

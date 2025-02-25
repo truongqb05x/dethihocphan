@@ -2,12 +2,8 @@ import sys
 from flask import Flask, request, jsonify, session, render_template
 import mysql.connector
 from flask import Flask, render_template, session, redirect, url_for
-# from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, request, abort, send_from_directory
-import base64
-from io import BytesIO
-from flask import Flask, jsonify
-from PIL import Image, ImageDraw, ImageFont
+from datetime import datetime, timezone
 
 app = Flask(__name__, static_folder='static', static_url_path='/static')
 
@@ -78,9 +74,6 @@ def get_db_connection():
     return pool.get_connection()
 # Thiết lập secret key cho session
 app.secret_key = 'your_secret_key'
-@app.route('/ads.txt')
-def ads_txt():
-    return send_from_directory('static', 'ads.txt')
 
 
 # Đường dẫn thư mục lưu ảnh (static/exams)
@@ -893,6 +886,85 @@ def clean_filename(text):
     text = text.lower().replace(" ", "_")
     return "".join(c for c in text if c.isalnum() or c in {"_", "."})
 
+@app.route('/add_data', methods=['POST'])
+def add_data():
+    """ Thêm khóa học mới vào cơ sở dữ liệu """
+    department_name = request.form.get('department_name')
+    category_name = request.form.get('category_name')
+    course_title = request.form.get('course_title')
+    course_description = request.form.get('course_description')
+    course_price = request.form.get('course_price')
+    course_link = request.form.get('course_link')
+    file = request.files.get('course_image_file')
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("SET NAMES utf8mb4;")
+        cursor.execute("SET CHARACTER SET utf8mb4;")
+        cursor.execute("SET character_set_connection=utf8mb4;")
+
+        cursor.execute("SELECT id FROM departments_group WHERE name = %s", (department_name,))
+        department = cursor.fetchone()
+
+        if not department:
+            cursor.execute("INSERT INTO departments_group (name) VALUES (%s)", (department_name,))
+            conn.commit()
+            department_id = cursor.lastrowid
+        else:
+            department_id = department[0]
+
+        image_url = None
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            filename = generate_unique_filename(f"{clean_filename(course_title)}_{clean_filename(department_name)}_{filename}")
+            file_path = os.path.join(app.config['IMAGE_UPLOAD_FOLDER'], filename).replace('\\', '/')
+            file.save(file_path)
+            image_url = f"/{file_path}"
+
+        cursor.execute("""
+            INSERT INTO courses_group (title, description, price, department_id, image_url, drive_link)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """, (course_title, course_description, course_price, department_id, image_url, course_link))
+        conn.commit()
+
+        course_id = cursor.lastrowid
+
+        cursor.execute("SELECT id FROM categories_group WHERE name = %s", (category_name,))
+        category = cursor.fetchone()
+
+        if not category:
+            cursor.execute("INSERT INTO categories_group (name) VALUES (%s)", (category_name,))
+            conn.commit()
+            category_id = cursor.lastrowid
+        else:
+            category_id = category[0]
+
+        cursor.execute("""
+            INSERT INTO course_categories_group (course_id, category_id)
+            VALUES (%s, %s)
+        """, (course_id, category_id))
+        conn.commit()
+
+        return jsonify({
+            'status': 'success',
+            'message': 'Khóa học đã được thêm thành công!',
+            'image_url': image_url
+        })
+    
+    except Exception as e:
+        conn.rollback()
+        return jsonify({'status': 'error', 'message': f'Đã xảy ra lỗi: {str(e)}'}), 400
+    finally:
+        cursor.close()
+        conn.close()
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1006,89 +1078,26 @@ def get_documents_by_subject_grouped(subject_id):
             cursor.close()
         if conn:
             conn.close()
-def add_watermark_to_image_bytes(input_image_path, text="Bản quyền dữ liệu thuộc về huehub.fun"):
-    """
-    Mở file ảnh gốc, thêm watermark và trả về ảnh kết quả dưới dạng BytesIO.
-    File gốc không bị thay đổi.
-    """
-    image = Image.open(input_image_path).convert("RGBA")
-    
-    # Tạo layer watermark trong suốt
-    watermark_layer = Image.new("RGBA", image.size, (255, 255, 255, 0))
-    draw = ImageDraw.Draw(watermark_layer)
-    
-    # Tải font hỗ trợ Unicode, ví dụ: DejaVuSans.ttf
-    try:
-        font = ImageFont.truetype("DejaVuSans.ttf", 20)
-    except IOError:
-        font = ImageFont.load_default()
-    
-    # Lấy kích thước chữ bằng textbbox
-    bbox = draw.textbbox((0, 0), text, font=font)
-    text_width = bbox[2] - bbox[0]
-    text_height = bbox[3] - bbox[1]
-    
-    # Tính vị trí đặt watermark: góc dưới bên phải, cách mép 10px
-    x = image.size[0] - text_width - 10
-    y = image.size[1] - text_height - 10
-    
-    # Vẽ watermark (màu trắng, độ trong suốt 128/255)
-    draw.text((x, y), text, font=font, fill=(255, 255, 255, 128))
-    
-    # Kết hợp ảnh gốc với watermark
-    watermarked = Image.alpha_composite(image, watermark_layer)
-    
-    # Lưu ảnh kết quả vào BytesIO (không ghi vào file hệ thống)
-    img_io = BytesIO()
-    watermarked.convert("RGB").save(img_io, "JPEG")
-    img_io.seek(0)
-    return img_io
-
-
 @app.route('/api/subjects/<int:subject_id>/documents/<int:year>', methods=['GET'])
 def get_documents_by_subject_and_year(subject_id, year):
     conn = None
     cursor = None
     try:
-        conn = get_db_connection()
+        conn = pool.get_connection()
         cursor = conn.cursor(dictionary=True)
         cursor.execute("""
           SELECT * FROM documents
           WHERE subject_id = %s AND year = %s
         """, (subject_id, year))
         documents = cursor.fetchall()
-
-        # Với mỗi tài liệu, nếu file_path là ảnh, tạo ra ảnh đã watermark
-        for doc in documents:
-            file_path = doc.get("file_path")
-            # Kiểm tra định dạng file (ở đây giả sử các file ảnh có đuôi jpg, jpeg, png, gif)
-            if file_path and file_path.lower().endswith(('.jpg', '.jpeg', '.png', '.gif')):
-                img_io = add_watermark_to_image_bytes(file_path)
-                # Chuyển đổi nội dung ảnh thành chuỗi base64
-                encoded_img = base64.b64encode(img_io.getvalue()).decode('utf-8')
-                # Thêm key watermarked_image chứa dữ liệu ảnh đã xử lý
-                doc["watermarked_image"] = f"data:image/jpeg;base64,{encoded_img}"
-                # Nếu không cần thiết, bạn có thể loại bỏ key file_path
-                doc.pop("file_path", None)
-        
         return jsonify(documents)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     finally:
         if cursor:
-            try:
-                cursor.close()
-            except Exception as e:
-                app.logger.error(f"Error closing cursor: {e}")
+            cursor.close()
         if conn:
-            try:
-                # Kiểm tra nếu kết nối vẫn còn hoạt động trước khi đóng
-                if conn.is_connected():
-                    conn.close()
-            except Exception as e:
-                # Log lỗi nhưng không gây crash cho ứng dụng
-                app.logger.error(f"Error closing connection: {e}")
-
+            conn.close()
 @app.route('/api/search/subjects', methods=['GET'])
 def search_subjects():
     term = request.args.get('term', '')
@@ -1342,6 +1351,81 @@ def add_subject_v2():
     conn.close()
 
     return jsonify({"message": "Thêm môn học thành công", "subject_id": subject_id}), 200
+def get_latest_exams():
+    try:
+        conn = get_db_connection()  # Lấy kết nối từ pool
+        cursor = conn.cursor(dictionary=True)
+        
+        query = """
+        SELECT file_name, file_path, created_at
+        FROM documents
+        WHERE document_type = 'exam'
+        ORDER BY created_at DESC
+        LIMIT 3
+        """
+        cursor.execute(query)
+        exams = cursor.fetchall()
+        
+        cursor.close()
+        conn.close()
+        return exams
+    
+    except Exception as e:
+        app.logger.debug("Lỗi khi truy vấn database: %s", e)
+        return []
+
+@app.route('/api/latest-exams', methods=['GET'])
+def latest_exams():
+    exams = get_latest_exams()
+    return jsonify(exams)
+@app.route('/api/log-file-open', methods=['POST'])
+def log_file_open():
+    data = request.get_json()
+    if not data or 'documentId' not in data:
+        return jsonify({"error": "documentId is required"}), 400
+
+    document_id = data['documentId']
+    
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        sql = "INSERT INTO file_open_logs (document_id) VALUES (%s)"
+        cursor.execute(sql, (document_id,))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return jsonify({"message": "Log recorded successfully"}), 200
+    except Exception as e:
+        # Ghi log lỗi nếu cần
+        print("Error logging file open:", e)
+        return jsonify({"error": "Internal server error", "details": str(e)}), 500
+@app.route('/api/user-activity', methods=['GET'])
+def get_user_activity():
+    try:
+        conn = get_db_connection()
+        # Sử dụng cursor dạng dictionary để lấy dữ liệu dưới dạng dict
+        cursor = conn.cursor(dictionary=True)
+        sql = """
+            SELECT d.file_name, fol.opened_at
+            FROM file_open_logs AS fol
+            JOIN documents AS d ON fol.document_id = d.id
+            ORDER BY fol.opened_at DESC
+            LIMIT 3
+        """
+        cursor.execute(sql)
+        activities = cursor.fetchall()
+        cursor.close()
+        conn.close()
+
+        # Chuyển đổi đối tượng datetime sang chuỗi ISO nếu cần
+        for activity in activities:
+            if isinstance(activity['opened_at'], datetime):
+                activity['opened_at'] = activity['opened_at'].isoformat()
+
+        return jsonify(activities), 200
+    except Exception as e:
+        print("Error fetching user activity:", e)
+        return jsonify({"error": "Internal server error", "details": str(e)}), 500
 
 if __name__ == '__main__':
 
