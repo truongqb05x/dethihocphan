@@ -606,7 +606,41 @@
     </div>
   </div>
 </div>
+<style>
+    /* CSS cho thiết bị di động */
+@media (max-width: 576px) {
+  /* Điều chỉnh kích thước modal */
+  .modal-dialog {
+    max-width: 95%;
+    margin: 1rem auto;
+  }
 
+  /* Điều chỉnh padding cho modal */
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    padding: 1rem;
+  }
+
+  /* Điều chỉnh tiêu đề modal */
+  .modal-title {
+    font-size: 1.25rem;
+  }
+
+  /* Sắp xếp lại các cột hoạt động theo dạng dọc */
+  .activity-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Cho mỗi hộp hoạt động chiếm toàn bộ chiều rộng */
+  .activity-box {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+}
+
+</style>
 <!-- Modal "Hoạt động gần đây" -->
 <div class="modal fade" id="recentActivityModal" tabindex="-1" aria-labelledby="recentActivityModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -1668,7 +1702,7 @@ function renderFileItem(list, file, documentType) {
   `;
 
   li.addEventListener('click', () => {
-    // Gọi API log lượt mở file trước khi hiển thị modal hoặc chuyển hướng
+    // Gọi API log lượt mở file trước khi mở file
     fetch('/api/log-file-open', {
       method: 'POST',
       headers: {
@@ -1679,17 +1713,16 @@ function renderFileItem(list, file, documentType) {
     .then(response => response.json())
     .then(data => {
       console.log(data.message);
-      // Sau khi log thành công, thực hiện hành động tiếp theo, ví dụ: hiển thị modal
-      window.currentFile = { ...file, file_path: filePath };
-      showAdModal();
+      // Mở file ngay sau khi log thành công
+      window.open(filePath, '_blank');
     })
     .catch(error => {
       console.error('Error logging file open:', error);
-      // Tiếp tục hiển thị file ngay cả khi log thất bại
-      window.currentFile = { ...file, file_path: filePath };
-      showAdModal();
+      // Mở file ngay cả khi log thất bại
+      window.open(filePath, '_blank');
     });
   });
+
   list.appendChild(li);
 }
 
@@ -2127,6 +2160,5 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 </script>
-<script type='text/javascript' src='//pl25940595.effectiveratecpm.com/25/d9/60/25d960e16cc9c046672752fc33de378d.js'></script>
 </body>
 </html>
