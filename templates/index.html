@@ -1708,22 +1708,39 @@ function renderFileItem(list, file, documentType) {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ documentId: file.id }) // Giả sử file.id chứa ID của tài liệu
+      body: JSON.stringify({ documentId: file.id })
     })
     .then(response => response.json())
     .then(data => {
       console.log(data.message);
-      // Mở file ngay sau khi log thành công
-      window.open(filePath, '_blank');
+      openFile(filePath);
     })
     .catch(error => {
       console.error('Error logging file open:', error);
-      // Mở file ngay cả khi log thất bại
-      window.open(filePath, '_blank');
+      openFile(filePath);
     });
   });
 
   list.appendChild(li);
+}
+
+function openFile(filePath) {
+  if (isInAppBrowser()) {
+    // Với trình duyệt in-app, chuyển hướng trong cùng tab
+    window.location.href = filePath;
+  } else {
+    // Các trình duyệt thông thường mở link trong tab mới
+    window.open(filePath, '_blank');
+  }
+}
+
+function isInAppBrowser() {
+  const ua = navigator.userAgent || navigator.vendor || window.opera;
+  // Kiểm tra dấu hiệu của in-app browser: FBAN, FBAV cho Facebook; Messenger; Zalo
+  return ua.indexOf("FBAN") > -1 ||
+         ua.indexOf("FBAV") > -1 ||
+         ua.indexOf("Messenger") > -1 ||
+         ua.indexOf("Zalo") > -1;
 }
 
   function showAdModal() {
