@@ -57,3 +57,10 @@ CREATE TABLE subscriptions (
   FOREIGN KEY (faculty_id) REFERENCES faculties(id)
 );
 
+CREATE TABLE exam_donggop (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    school_id INT NOT NULL,
+    filename VARCHAR(255) NOT NULL,
+    filepath VARCHAR(255) NOT NULL,
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

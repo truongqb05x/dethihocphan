@@ -264,7 +264,6 @@
       background: linear-gradient(135deg, #28a745, #70db70);
     }
     .about-links {
-  background-color: #fff;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -533,15 +532,6 @@
             </button>
 
             <div class="about-links mt-3">
-              <h3>Các trang web khác:</h3>
-              <ul>
-                <li>
-                  <span class="label">
-                    <a href="http://info.huehub.fun" style="text-decoration: none;" target="_blank">info.huehub.fun</a>
-                  </span>
-                  <span class="desc">Tìm kiếm INFO</span>
-                </li>
-              </ul>
               <footer class="custom-footer mt-4">
                 <div class="footer-item">
                   <span>Design by Nguyen Ngoc Truong</span>
@@ -568,6 +558,147 @@
     </div>
   </div>
 </div>
+<!-- Nút đóng góp đề thi -->
+<button type="button" class="btn btn-primary contribute-btn" 
+        style="position: fixed; bottom: 0; right: 0; margin: 10px; z-index: 1050;"
+        data-bs-toggle="modal" data-bs-target="#contributeExamModal">
+  <i class="bi bi-pencil-square"></i> Đóng góp đề thi
+</button>
+<!-- Modal Đóng góp Đề thi -->
+<div class="modal fade" id="contributeExamModal" tabindex="-1" aria-labelledby="contributeExamModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="contributeExamModalLabel">Đóng góp đề thi</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Thông báo thành công, ẩn mặc định -->
+        <div id="successAlert" class="alert alert-success" role="alert" style="display: none;">
+          Upload thành công!
+        </div>
+        <!-- Form upload -->
+        <form id="contributeExamForm" action="/api/upload_exam" method="POST" enctype="multipart/form-data">
+          <!-- Chọn trường -->
+          <div class="mb-3">
+            <label for="fieldSelect" class="form-label">Chọn trường</label>
+            <select class="form-select" id="fieldSelect" name="field">
+              <option selected>Đang tải...</option>
+            </select>
+          </div>
+          <!-- Tải file đề thi -->
+          <div id="fileInputsContainer">
+            <div class="file-input-group mb-3">
+              <label class="form-label">Tải file</label>
+              <input type="file" class="form-control" name="examFile[]" accept="*/*">
+              <p class="form-text mt-2">
+                Bạn có thể chọn file đề thi hoặc đề cương!
+              </p>
+            </div>
+          </div>
+          <button type="button" class="btn btn-outline-primary" id="addFileInput">
+            <i class="bi bi-plus-circle"></i> Thêm file
+          </button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <!-- Nút gửi và nút đóng được đặt trong modal footer như cũ -->
+        <button type="submit" form="contributeExamForm" class="btn btn-primary">Gửi đóng góp</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Load danh sách trường từ API /api/schools
+document.addEventListener('DOMContentLoaded', function(){
+  var fieldSelect = document.getElementById('fieldSelect');
+  fetch('/api/schools')
+    .then(response => response.json())
+    .then(data => {
+      fieldSelect.innerHTML = '';
+      if (data.error) {
+        let errorOption = document.createElement('option');
+        errorOption.text = 'Lỗi khi tải trường';
+        fieldSelect.appendChild(errorOption);
+      } else {
+        let defaultOption = document.createElement('option');
+        defaultOption.text = 'Chọn trường của bạn';
+        defaultOption.selected = true;
+        fieldSelect.appendChild(defaultOption);
+        data.forEach(function(school) {
+          let option = document.createElement('option');
+          option.value = school.id;
+          option.text = school.name + " (" + school.count + ")";
+          fieldSelect.appendChild(option);
+        });
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      fieldSelect.innerHTML = '<option>Lỗi khi tải trường</option>';
+    });
+});
+
+// Script thêm file upload mới không kèm ghi chú
+document.getElementById('addFileInput').addEventListener('click', function() {
+  var fileGroup = document.createElement('div');
+  fileGroup.className = 'file-input-group mb-3';
+
+  var fileLabel = document.createElement('label');
+  fileLabel.className = 'form-label';
+  fileLabel.innerText = 'Tải file đề thi';
+  fileGroup.appendChild(fileLabel);
+
+  var fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.className = 'form-control';
+  fileInput.name = 'examFile[]';
+  fileInput.accept = '*/*';
+  fileGroup.appendChild(fileInput);
+
+  document.getElementById('fileInputsContainer').appendChild(fileGroup);
+});
+
+// Xử lý submit form bằng AJAX để hiển thị thông báo thành công trong modal
+document.getElementById('contributeExamForm').addEventListener('submit', function(e) {
+  e.preventDefault(); // Ngăn form submit mặc định
+  let form = this;
+  let formData = new FormData(form);
+
+  fetch(form.action, {
+      method: 'POST',
+      body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+      if (data.message) {
+          // Hiển thị thông báo thành công
+          document.getElementById('successAlert').style.display = 'block';
+          // Reset form sau khi upload thành công
+          form.reset();
+          // Cập nhật lại container file với một input mặc định
+          document.getElementById('fileInputsContainer').innerHTML = `
+            <div class="file-input-group mb-3">
+              <label class="form-label">Tải file</label>
+              <input type="file" class="form-control" name="examFile[]" accept="*/*">
+              <p class="form-text mt-2">
+                Bạn có thể chọn file đề thi hoặc đề cương!
+              </p>
+            </div>
+          `;
+      } else if (data.error) {
+          // Thông báo lỗi nếu có
+          alert("Lỗi: " + data.error);
+      }
+  })
+  .catch(error => {
+      console.error(error);
+      alert("Có lỗi xảy ra khi upload.");
+  });
+});
+</script>
 
 <!-- Modal Lịch sử cập nhật -->
 <div class="modal fade" id="updateHistoryModal" tabindex="-1" aria-labelledby="updateHistoryModalLabel" aria-hidden="true">
