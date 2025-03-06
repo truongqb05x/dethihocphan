@@ -4,10 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Kho Học Liệu</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+      <!-- Thêm CDN Bootstrap và icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
   <link rel="shortcut icon" href="../static/logo.png" type="image/x-icon">
+  <link rel="stylesheet" href="../static/css/index.css">
   <style>
     :root {
       --primary-color: #007bff;
@@ -489,10 +505,62 @@
     background: #f8f9fa;
 }
 
+
+/* Trên mobile (chiều rộng nhỏ hơn 576px), tăng padding-top để bù navbar */
+@media (max-width: 576px) {
+  body {
+    padding-top: 100px; /* Tăng khoảng cách để tránh bị đè nội dung */
+  }
+}
+
   </style>
 
 </head>
 <body>
+<!-- Thêm navbar vào trước phần content chính -->
+<nav id="navbar" class="navbar navbar-expand-lg navbar-light border-bottom py-3 fixed-top" style="display: none;">
+  <div class="container-fluid">
+    <!-- Tên trang web bên trái -->
+    <a class="navbar-brand me-5" href="#">
+      <span class="text-primary fw-bold fs-4">StudyHub</span>
+    </a>
+
+    <!-- Các chức năng bên phải -->
+    <div class="d-flex align-items-center gap-3">      
+      <!-- Nút chức năng với icons -->
+<button id="openModalBtn" class="btn btn-light rounded-pill px-3">
+  <i class="bi bi-person-circle me-2"></i>
+</button>
+      
+      <button class="btn btn-light rounded-pill px-3">
+        <i class="bi bi-bell me-2"></i>
+      </button>
+      
+      <button class="btn btn-light rounded-pill px-3">
+        <i class="bi bi-gear me-2"></i>
+      </button>
+
+      <!-- Nút đăng xuất -->
+      <button class="btn btn-outline-danger rounded-pill px-3" id="logoutBtn">
+        <i class="bi bi-box-arrow-right me-2"></i>
+        Đăng xuất
+      </button>
+    </div>
+  </div>
+</nav>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+  fetch("/api/check-login")
+    .then(response => response.json())
+    .then(data => {
+      if (data.loggedIn) {
+        document.getElementById("navbar").style.display = "block"; // Hiển thị navbar nếu đã đăng nhập
+      }
+    })
+    .catch(error => console.error("Lỗi kiểm tra đăng nhập:", error));
+});
+
+</script>
 
 <div class="compact-container my-4">
   <div class="card card-custom">
@@ -550,7 +618,7 @@
             <!-- Chữ "Phiên bản 0" được đặt ở góc dưới bên phải, có hiệu ứng nhấn để mở modal lịch sử cập nhật -->
             <div class="version-info" style="position: absolute; bottom: 0; right: 0; padding: 5px; font-size: 0.9rem; color: #666; cursor: pointer;"
                  data-bs-toggle="modal" data-bs-target="#updateHistoryModal">
-              Version 2.0
+              Version 2.0.1
             </div>
           </div>
         </div>
@@ -701,42 +769,633 @@ document.getElementById('contributeExamForm').addEventListener('submit', functio
 </script>
 
 <!-- Modal Lịch sử cập nhật -->
+<!-- Modal -->
 <div class="modal fade" id="updateHistoryModal" tabindex="-1" aria-labelledby="updateHistoryModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
-      <!-- Modal Header -->
-      <div class="modal-header">
-        <h5 class="modal-title" id="updateHistoryModalLabel">Lịch sử cập nhật</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="updateHistoryModalLabel">Lịch sử Cập nhật</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <!-- Modal Body -->
       <div class="modal-body">
-        <ul class="list-unstyled">
-          <li class="mb-3">
-            <p><strong>01/02/2025</strong></p>
-            <p>Cập nhật giao diện người dùng cho phần tab "Đề Thi", cải thiện tính năng tải dữ liệu và bố cục trực quan.</p>
-          </li>
-          <li class="mb-3">
-            <p><strong>02/02/2025</strong></p>
-            <p>Thêm chức năng đăng ký nhận thông báo, bao gồm modal đăng ký với trường, khoa và email.</p>
-          </li>
-          <li class="mb-3">
-            <p><strong>03/02/2025</strong></p>
-            <p>Tối ưu hóa hiệu năng tải dữ liệu từ API và cập nhật lịch sử hoạt động của hệ thống.</p>
-          </li>
-          <li class="mb-3">
-            <p><strong>04/02/2025</strong></p>
-            <p>Cải thiện trải nghiệm người dùng trên các thiết bị di động và cập nhật thêm nội dung thông thường.</p>
-          </li>
-        </ul>
+        <div class="timeline">
+          <!-- Update Item 1 -->
+          <div class="timeline-item" style="position: relative; padding-left: 30px; margin-bottom: 20px;">
+            <div style="content: ''; position: absolute; left: 0; top: 5px; width: 15px; height: 15px; background: #0d6efd; border-radius: 50%;"></div>
+            <div class="timeline-header d-flex justify-content-between align-items-center">
+              <span class="badge bg-success">v2.0.1</span>
+              <small class="text-muted">2024-03-5</small>
+            </div>
+            <div class="timeline-body" style="background: #f8f9fa; border-radius: 8px; padding: 15px; margin-left: 20px;">
+              <p class="mb-0">
+                <i class="fas fa-plus-circle text-success me-2"></i>
+                Thêm tính năng quản lý hồ sơ người dùng
+              </p>
+              <ul style="margin-bottom: 0; padding-left: 20px;">
+                <li>Cải tiến giao diện người dùng</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Update Item 2 -->
+          <div class="timeline-item" style="position: relative; padding-left: 30px; margin-bottom: 20px; border-top: 1px solid #ddd; padding-top: 15px;">
+            <div style="content: ''; position: absolute; left: 0; top: 5px; width: 15px; height: 15px; background: #0d6efd; border-radius: 50%;"></div>
+            <div class="timeline-header d-flex justify-content-between align-items-center">
+              <span class="badge bg-info">v2.0.3</span>
+              <small class="text-muted">2024-02-28</small>
+            </div>
+            <div class="timeline-body" style="background: #f8f9fa; border-radius: 8px; padding: 15px; margin-left: 20px;">
+              <p class="mb-0">
+                <i class="fas fa-bug text-danger me-2"></i>
+                Sửa lỗi và cải tiến hiệu năng
+              </p>
+              <ul style="margin-bottom: 0; padding-left: 20px;">
+                <li>Sửa lỗi đăng nhập không xác thực</li>
+                <li>Tối ưu hóa tốc độ tải trang</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Update Item 3 -->
+          <div class="timeline-item" style="position: relative; padding-left: 30px; margin-bottom: 20px; border-top: 1px solid #ddd; padding-top: 15px;">
+            <div style="content: ''; position: absolute; left: 0; top: 5px; width: 15px; height: 15px; background: #0d6efd; border-radius: 50%;"></div>
+            <div class="timeline-header d-flex justify-content-between align-items-center">
+              <span class="badge bg-warning text-dark">v1.9.5</span>
+              <small class="text-muted">2024-01-10</small>
+            </div>
+            <div class="timeline-body" style="background: #f8f9fa; border-radius: 8px; padding: 15px; margin-left: 20px;">
+              <p class="mb-0">
+                <i class="fas fa-shield-alt text-primary me-2"></i>
+                Nâng cấp bảo mật hệ thống
+              </p>
+              <ul style="margin-bottom: 0; padding-left: 20px;">
+                <li>Thêm xác thực 2 yếu tố</li>
+                <li>Cập nhật chính sách bảo mật mới</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
-      <!-- Modal Footer -->
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
       </div>
     </div>
   </div>
 </div>
+    <style>
+        .modal-dialog-v3 { 
+            max-width: 420px; 
+        }
+        .modal-content-v3 { 
+            background: #f8f9fa; /* Nền modal sáng nhẹ */
+            border: 1px solid #e0e0e0; /* Viền sáng hơn */
+            border-radius: 15px; 
+            transform: perspective(1000px) rotateX(5deg); 
+            transition: transform 0.3s; 
+            animation: popIn-v3 0.5s ease-out; 
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Bóng nhẹ */
+        }
+        .modal-content-v3:hover { 
+            transform: perspective(1000px) rotateX(0deg); 
+        }
+        .modal-header-v3 { 
+            border-bottom: none; 
+            padding: 2rem 2rem 0; 
+        }
+        .modal-title-v3 { 
+            font-family: 'Montserrat', sans-serif; 
+            font-weight: 700; 
+            color: #333; /* Màu chữ tối để nổi trên nền sáng */
+        }
+        .modal-body-v3 { 
+            padding: 1.5rem 2rem 2rem; 
+            text-align: center; 
+            color: #555; /* Màu chữ nhạt hơn cho nội dung */
+            font-family: 'Montserrat', sans-serif; 
+        }
+        .btn-custom-v3 { 
+            padding: 12px 30px; 
+            border-radius: 8px; 
+            font-weight: 700; 
+            transition: all 0.3s; 
+        }
+        .btn-login-v3 { 
+            background: #007bff; /* Màu xanh dương tươi sáng */
+            color: #fff; 
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3); 
+        }
+        .btn-register-v3 { 
+            background: #ff4d4d; /* Màu đỏ nhẹ nhàng */
+            color: #fff; 
+            box-shadow: 0 5px 15px rgba(255, 77, 77, 0.3); 
+        }
+        .btn-custom-v3:hover { 
+            transform: translateZ(10px); 
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Bóng đậm hơn khi hover */
+        }
+        @keyframes popIn-v3 { 
+            from { opacity: 0; transform: perspective(1000px) rotateX(20deg); } 
+            to { opacity: 1; transform: perspective(1000px) rotateX(5deg); } 
+        }
+    </style>
+
+<div class="modal fade" id="loginModal-v3" tabindex="-1" aria-labelledby="loginModalLabel-v3" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-v3 modal-dialog-centered">
+        <div class="modal-content modal-content-v3">
+            <div class="modal-header modal-header-v3">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body modal-body-v3">
+                <p class="fs-5 mb-3">Hình như bạn chưa đăng nhập!</p>
+                <p class="fs-6 mb-4">Vui lòng đăng nhập hoặc đăng ký để tiếp tục.</p>
+                <div class="d-flex justify-content-center gap-3">
+                    <button type="button" class="btn btn-custom-v3 btn-login-v3" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#authModal" onclick="toggleForm('loginForm')">Đăng nhập</button>
+                    <button type="button" class="btn btn-custom-v3 btn-register-v3" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#authModal" onclick="toggleForm('registerForm')">Đăng ký</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding-bottom: 1rem;">
+
+            <!-- Đăng Nhập -->
+            <div id="loginForm" style="display: block;">
+                <div class="modal-header text-center" style="background: #fff; padding: 1.5rem; border-bottom: 1px solid #eee;">
+<h5 class="modal-title" id="authModalLabel" style="font-size: 1.5rem; font-weight: bold; color: #333; margin: 0;">Đăng Nhập</h5>
+                </div>
+                <div class="modal-body" style="padding: 2rem; background: #f8f9fa;">
+                    <form id="formLogin">
+                        <div class="mb-3">
+                            <label for="loginUsername" class="form-label">Tên đăng nhập</label>
+                            <input type="text" class="form-control" id="loginUsername" placeholder="Nhập tên đăng nhập" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="loginPassword" class="form-label">Mật khẩu</label>
+                            <input type="password" class="form-control" id="loginPassword" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="btn" style="background: #6366f1; color: white; padding: 0.75rem 2rem; border-radius: 8px; width: 100%; transition: 0.3s;">
+                            Đăng Nhập
+                        </button>
+                    </form>
+                    <div class="text-center mt-3" style="display: flex; justify-content: center; align-items: center;">
+                        <span class="text-muted" style="margin-right: 5px;">Chưa có tài khoản?</span>
+                        <button onclick="toggleForm('registerForm')" class="btn btn-link p-0" 
+                            style="text-decoration: none; color: #007bff; font-weight: 500;">
+                            Đăng ký ngay
+                        </button>
+                    </div>
+                                    </div>
+            </div>
+
+            <!-- Đăng Ký -->
+            <div id="registerForm" style="display: none;">
+                <div class="modal-header text-center" style="background: #fff; padding: 1.5rem; border-bottom: 1px solid #eee;">
+<h5 class="modal-title" style="font-size: 1.5rem; font-weight: bold; color: #333; margin: 0;">Đăng Ký</h5>
+                </div>
+                <div class="modal-body" style="padding: 2rem; background: #f8f9fa;">
+                    <form id="formRegister">
+                        <div class="mb-3">
+                            <label for="registerFullname" class="form-label">Họ và tên</label>
+                            <input type="text" class="form-control" id="registerFullname" placeholder="Nguyễn Văn A" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerUsername" class="form-label">Tên đăng nhập</label>
+                            <input type="text" class="form-control" id="registerUsername" placeholder="Tên đăng nhập" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="registerPassword" class="form-label">Mật khẩu</label>
+                            <input type="password" class="form-control" id="registerPassword" placeholder="••••••••" required>
+                        </div>
+<div class="mb-3">
+    <label for="registerUniversity" class="form-label">Trường Đại Học</label>
+    <select class="form-control" id="registerUniversity" required>
+        <option value="" disabled selected>Chọn trường đại học</option>
+    </select>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    fetch("/api/schools")
+        .then(response => response.json())
+        .then(data => {
+            const selectElement = document.getElementById("registerUniversity");
+            data.forEach(school => {
+                const option = document.createElement("option");
+                option.value = school.id;  // Giá trị là ID của trường
+                option.textContent = school.name;  // Hiển thị tên trường
+                selectElement.appendChild(option);
+            });
+        })
+        .catch(error => console.error("Lỗi khi tải danh sách trường:", error));
+});
+
+</script>
+                        <button type="submit" class="btn" style="background: #6366f1; color: white; padding: 0.75rem 2rem; border-radius: 8px; width: 100%; transition: 0.3s;">
+                            Đăng Ký
+                        </button>
+                    </form>
+                    <div class="text-center mt-3" style="display: flex; justify-content: center; align-items: center;">
+                        <span class="text-muted" style="margin-right: 5px;">Đã có tài khoản?</span>
+                        <button onclick="toggleForm('loginForm')" class="btn btn-link p-0" 
+                            style="text-decoration: none; color: #007bff; font-weight: 500;">
+                            Đăng nhập ngay
+                        </button>
+                    </div>
+                                    </div>
+            </div>
+
+            <!-- Footer chứa nút Đóng -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Hàm toggleForm để chuyển đổi giữa loginForm và registerForm
+    function toggleForm(formId) {
+        document.getElementById('loginForm').style.display = formId === 'loginForm' ? 'block' : 'none';
+        document.getElementById('registerForm').style.display = formId === 'registerForm' ? 'block' : 'none';
+    }
+
+    // Reset form và hiển thị loginForm khi modal đóng
+    document.getElementById('authModal').addEventListener('hidden.bs.modal', function () {
+        toggleForm('loginForm');
+        document.getElementById('formLogin').reset();
+        document.getElementById('formRegister').reset();
+    });
+
+// Xử lý form đăng nhập
+document.getElementById('formLogin').addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  const username = document.getElementById('loginUsername').value;
+  const password = document.getElementById('loginPassword').value;
+
+  // Kiểm tra username: chỉ cho phép chữ (không dấu) và số, không khoảng trắng
+  const usernameRegex = /^[a-zA-Z0-9]+$/;
+  if (!usernameRegex.test(username)) {
+    alert("Vui lòng tuân thủ quy tắc đặt user name: không dấu, không cách.");
+    return;
+  }
+
+  fetch('/api/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ username, password })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.error) {
+      alert(data.error);
+    } else {
+      alert(data.message);
+      // Đóng modal sau khi đăng nhập thành công
+      const authModal = bootstrap.Modal.getInstance(document.getElementById('authModal'));
+      authModal.hide();
+      // Load lại trang sau khi đăng nhập thành công
+      location.reload();
+    }
+  })
+  .catch(error => {
+    console.error('Lỗi:', error);
+    alert('Đã xảy ra lỗi khi đăng nhập');
+  });
+});
+
+// Xử lý form đăng ký
+document.getElementById('formRegister').addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  const fullname = document.getElementById('registerFullname').value;
+  const username = document.getElementById('registerUsername').value;
+  const password = document.getElementById('registerPassword').value;
+  const university = document.getElementById('registerUniversity').value;
+
+  // Kiểm tra username: chỉ cho phép chữ (không dấu) và số, không khoảng trắng
+  const usernameRegex = /^[a-zA-Z0-9]+$/;
+  if (!usernameRegex.test(username)) {
+    alert("Vui lòng tuân thủ quy tắc đặt user name: không dấu, không cách.");
+    return;
+  }
+
+  fetch('/api/register', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ fullname, username, password, university })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.error) {
+      alert(data.error);
+    } else {
+      alert(data.message);
+      // Chuyển sang tab đăng nhập sau khi đăng ký thành công
+      toggleForm('loginForm');
+      // Reset form đăng ký
+      document.getElementById('formRegister').reset();
+    }
+  })
+  .catch(error => {
+    console.error('Lỗi:', error);
+    alert('Đã xảy ra lỗi khi đăng ký');
+  });
+});
+
+    document.getElementById("logoutBtn").addEventListener("click", function () {
+  fetch("/api/logout", {
+    method: "POST",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+    .then(response => response.json())
+    .then(data => {
+      alert(data.message);  // Hiển thị thông báo đăng xuất thành công
+      window.location.href = "/";  // Chuyển hướng về trang chủ
+    })
+    .catch(error => console.error("Lỗi:", error));
+});
+
+</script>
+
+<!-- Modal Xác thực -->
+<div class="modal fade" id="verificationModal-v2" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg rounded-3">
+      <!-- Header sử dụng Shadow DOM với hậu tố _v2 -->
+      <modal-header-v2></modal-header-v2>
+      
+      <!-- Body -->
+      <div class="modal-body pt-0">
+        <p class="text-muted mb-4">
+          Tài khoản của bạn chưa được xác thực. Bạn cần chọn 1 trong 2 cách sau nhé! 😊
+        </p>
+
+        <!-- Phương thức 1: Đóng góp ảnh đề thi -->
+        <div class="card mb-3 border-primary card-method-v2">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <i class="bi bi-cloud-upload fs-3 text-primary me-2"></i>
+              <div>
+                <h6 class="mb-1">Đóng góp ảnh đề thi</h6>
+                <p class="text-muted small mb-0">
+                  Chia sẻ ảnh đề thi bất kỳ để cộng đồng cùng học tập
+                </p>
+              </div>
+            </div>
+            <div class="position-relative">
+              <!-- File input cho ảnh đề thi -->
+              <input type="file" 
+                     id="examImageUpload_v2" 
+                     accept="image/*" 
+                     class="d-none"
+                     data-container="fileNameExamImage_v2"
+                     onchange="handleFileUpload_v2(event, 'exam')">
+              <label for="examImageUpload_v2" 
+                     class="btn btn-primary btn-sm mt-3 btn-contribute-v2 cursor-pointer">
+                <i class="bi bi-upload me-2"></i>Chọn ảnh đề thi
+              </label>
+              <div id="fileNameExamImage_v2" class="text-muted small mt-2"></div>
+            </div>
+            <!-- Nút gửi file -->
+            <button class="btn btn-success btn-sm mt-2" onclick="submitExamImage_v2()">
+              <i class="bi bi-send me-2"></i>Gửi ảnh đề thi
+            </button>
+          </div>
+        </div>
+
+        <!-- Phương thức 2: Chia sẻ với bạn bè -->
+        <div class="card border-success card-method-v2">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+              <i class="bi bi-share fs-3 text-success me-2"></i>
+              <div>
+                <h6 class="mb-1">Chia sẻ với bạn bè</h6>
+                <p class="text-muted small mb-0">
+                  Share trang web cho 2 người bạn để xác thực
+                </p>
+              </div>
+            </div>
+            
+            <div class="input-group mb-3">
+              <div id="copyContent_v2" class="form-control bg-light">
+                Kho lưu trữ đề thi và đề cương qua các năm, tại: huehub.fun
+              </div>
+              <button class="btn btn-success btn-copy-v2" onclick="copyText_v2()">
+                <i class="bi bi-clipboard"></i>
+              </button>
+            </div>
+            <div id="copySuccess_v2" class="text-success small mt-2" style="display:none;">
+              <i class="bi bi-check2"></i> Đã sao chép!
+            </div>
+
+            <!-- Ghi chú hướng dẫn chụp màn hình -->
+            <div class="mt-2">
+              <small class="text-muted">
+                Ghi chú: Vui lòng coppy rồi gửi cho bạn bè rồi chụp lại màn hình sau khi chia sẻ, sau đó ấn "Xác nhận đã chia sẻ".
+              </small>
+            </div>
+            <div class="position-relative">
+              <!-- File input cho ảnh chụp màn hình -->
+              <input type="file" 
+                     id="shareScreenshotUpload_v2" 
+                     accept="image/*" 
+                     class="d-none"
+                     data-container="fileNameShareScreenshot_v2"
+                     onchange="handleFileUpload_v2(event, 'share')">
+              <label for="shareScreenshotUpload_v2" 
+                     class="btn btn-primary btn-sm mt-3 btn-contribute-v2 cursor-pointer">
+                <i class="bi bi-upload me-2"></i>Chọn ảnh màn hình
+              </label>
+              <div id="fileNameShareScreenshot_v2" class="text-muted small mt-2"></div>
+            </div>
+            
+            <!-- Nút xác nhận đã chia sẻ -->
+            <button class="btn btn-outline-success w-100 btn-confirm-share-v2 mt-2" onclick="confirmShare_v2()">
+              <i class="bi bi-check-circle me-2"></i>Xác nhận đã chia sẻ
+            </button>
+            <div id="confirmSuccess_v2" class="text-success small mt-2 text-center" style="display:none;">
+              <i class="bi bi-check2-circle"></i> Đã xác nhận chia sẻ!
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer border-0">
+        <button type="button" class="btn btn-outline-secondary btn-close-v2" data-bs-dismiss="modal">
+          Để sau đi
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Định nghĩa custom element sử dụng Shadow DOM cho header, với tên có hậu tố _v2 -->
+<script>
+  class ModalHeaderV2 extends HTMLElement {
+    constructor() {
+      super();
+      const shadow = this.attachShadow({ mode: 'open' });
+      shadow.innerHTML = `
+        <style>
+          .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 0;
+            padding: 1rem;
+            padding-bottom: 0;
+            background-color: transparent;
+          }
+          .header h5 {
+            color: #0d6efd;
+            margin: 0;
+            font-size: 1.25rem;
+          }
+          .header button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+          }
+        </style>
+        <div class="header">
+          <h5 class="modal-title">
+            <i class="bi bi-patch-exclamation me-2"></i> Xác thực tài khoản
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+      `;
+    }
+  }
+  customElements.define('modal-header-v2', ModalHeaderV2);
+</script>
+
+<script>
+  // Biến toàn cục lưu file ảnh đề thi (hậu tố _v2)
+  let examFile_v2 = null;
+
+  // Hàm xử lý khi chọn file (hậu tố _v2)
+  function handleFileUpload_v2(event, type) {
+    const file = event.target.files[0];
+    if (file) {
+      const containerId = event.target.getAttribute('data-container');
+      document.getElementById(containerId).innerHTML = 
+        `<i class="bi bi-file-image"></i> Đã chọn: ${file.name}`;
+
+      if (type === 'exam') {
+        examFile_v2 = file;
+      } else if (type === 'share') {
+        // Gọi hàm uploadFile_v2 trực tiếp đối với file share
+        uploadFile_v2(file, type);
+      }
+    }
+  }
+
+  // Hàm gửi ảnh đề thi khi người dùng nhấn nút "Gửi ảnh đề thi" (hậu tố _v2)
+  function submitExamImage_v2() {
+    if (!examFile_v2) {
+      alert("Vui lòng chọn ảnh đề thi trước khi gửi.");
+      return;
+    }
+    uploadFile_v2(examFile_v2, 'exam');
+    examFile_v2 = null;
+    document.getElementById('fileNameExamImage_v2').innerHTML = "";
+  }
+
+  // Hàm upload file lên server với route /upload_v2 (hậu tố _v2)
+// Hàm upload file lên server với route /upload_v2 (hậu tố _v2)
+// Hàm upload file lên server với route /upload_v2 (hậu tố _v2)
+function uploadFile_v2(file, type) {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('type', type);
+  
+  fetch('/upload_v2', {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Upload thành công:', data);
+    // Sau khi upload file thành công, gọi route cập nhật trạng thái tài khoản
+    fetch('/update_account_status_v2', {
+      method: 'POST',
+      credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(statusData => {
+      // Đóng modal verification nếu đang mở
+      const modalEl = document.getElementById('verificationModal-v2');
+      const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+      modalInstance.hide();
+      // Hiển thị thông báo cho người dùng
+      alert("Tài khoản của bạn đang được xét duyệt, vui lòng đợi");
+    })
+    .catch(err => {
+      console.error("Error updating account status:", err);
+      alert("Đã upload file, nhưng không thể cập nhật trạng thái tài khoản.");
+    });
+  })
+  .catch(error => {
+    console.error('Lỗi khi upload file:', error);
+  });
+}
+
+  function copyText_v2() {
+    const text = document.getElementById('copyContent_v2').innerText;
+    navigator.clipboard.writeText(text);
+    
+    const successMsg = document.getElementById('copySuccess_v2');
+    successMsg.style.display = 'block';
+    setTimeout(() => successMsg.style.display = 'none', 2000);
+  }
+
+  function confirmShare_v2() {
+    const confirmMsg = document.getElementById('confirmSuccess_v2');
+    confirmMsg.style.display = 'block';
+    setTimeout(() => confirmMsg.style.display = 'none', 2000);
+  }
+</script>
+
+<style>
+  .cursor-pointer {
+    cursor: pointer;
+  }
+  .modal-content {
+    background: linear-gradient(145deg, #ffffff, #f8f9fa);
+  }
+  .card-method-v2 {
+    transition: transform 0.2s;
+  }
+  .btn-success {
+    background: #28a745;
+    border-color: #28a745;
+  }
+  .btn-confirm-share-v2 {
+    transition: background-color 0.2s, color 0.2s;
+  }
+  .btn-confirm-share-v2:hover {
+    background-color: #28a745;
+    color: white;
+  }
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
 <style>
     /* CSS cho thiết bị di động */
 @media (max-width: 576px) {
@@ -981,6 +1640,23 @@ var recentActivityModal = document.getElementById('recentActivityModal');
 recentActivityModal.addEventListener('shown.bs.modal', function () {
   loadUserActivity();
 });
+document.addEventListener("DOMContentLoaded", function () {
+    fetch("/api/check-login")
+        .then(response => response.json())
+        .then(data => {
+            if (data.loggedIn) {
+                console.log("Đã đăng nhập:", data.username);
+                document.getElementById("navBar").style.display = "block"; // Hiển thị navbar
+                document.getElementById("loginForm").style.display = "none"; // Ẩn form đăng nhập nếu có
+            } else {
+                console.log("Chưa đăng nhập");
+                document.getElementById("navBar").style.display = "none"; // Ẩn navbar nếu chưa đăng nhập
+                document.getElementById("loginForm").style.display = "block"; // Hiển thị form đăng nhập
+            }
+        })
+        .catch(error => console.error("Lỗi kiểm tra đăng nhập:", error));
+});
+
 </script>
 
 <style>
@@ -1369,6 +2045,20 @@ recentActivityModal.addEventListener('shown.bs.modal', function () {
   .skip-ad:hover {
     background-color: #c82333;
   }
+  @keyframes combinedGlow {
+  0%, 100% {
+    filter: brightness(1.3);
+    text-shadow: 0 0 8px #ffc107, 0 0 16px #ffc107;
+  }
+  50% {
+    filter: brightness(0.9);
+    text-shadow: none;
+  }
+}
+.icon-combined {
+  animation: combinedGlow 2s infinite;
+}
+
 </style>
 
 <!-- Modal quảng cáo -->
@@ -1391,226 +2081,101 @@ recentActivityModal.addEventListener('shown.bs.modal', function () {
 </div>
 
 
-
-<!-- Modal nhập từ khóa tìm kiếm theo tên môn học (nâng cao) -->
-<!-- CSS bổ sung -->
-<style>
-  /* Tùy chỉnh giao diện Modal */
-  .modal-content {
-    border-radius: 1rem;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-    border: none;
-  }
-  .modal-header, .modal-footer {
-    border: none;
-  }
-  .modal-title {
-    font-weight: 600;
-    font-size: 1.5rem;
-  }
-  .btn-close {
-    font-size: 1.25rem;
-  }
-  .modal-body p {
-    font-size: 1rem;
-    margin-bottom: 1rem;
-    color: #333;
-  }
-  .btn-primary {
-    background-color: #007bff;
-    border: none;
-    transition: background-color 0.3s ease;
-  }
-  .btn-primary:hover {
-    background-color: #0056b3;
-  }
-  .btn-secondary {
-    background-color: #6c757d;
-    border: none;
-    transition: background-color 0.3s ease;
-  }
-  .btn-secondary:hover {
-    background-color: #565e64;
-  }
-  /* CSS cho phần gợi ý tìm kiếm môn học */
-  .suggestions {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    z-index: 1050;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    max-height: 200px;
-    overflow-y: auto;
-  }
-  .suggestions div {
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-  }
-  .suggestions div:hover {
-    background-color: #f8f9fa;
-  }
-  /* Container chứa các gợi ý */
-.suggestions {
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  max-height: 300px;
-  overflow-y: auto;
-  z-index: 1000;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-top: 5px;
-}
-
-/* Mỗi mục trong danh sách gợi ý */
-.suggestion-item {
-  padding: 12px 15px;
-  cursor: pointer;
-  transition: background 0.2s;
-  border-bottom: 1px solid #eee; /* Đường kẻ ngăn cách giữa các mục */
-}
-
-/* Loại bỏ đường kẻ cuối cùng */
-.suggestion-item:last-child {
-  border-bottom: none;
-}
-
-/* Hiệu ứng khi di chuột qua */
-.suggestion-item:hover {
-  background: #f8f9fa;
-}
-
-/* Tên môn học */
-.subject-name {
-  font-weight: 500;
-  color: #333;
-  margin-bottom: 4px; /* Khoảng cách giữa tên và đường dẫn */
-}
-
-/* Đường dẫn (trường → khoa) */
-.subject-path {
-  font-size: 0.9em;
-  color: #666;
-}
-
-/* Khi không có kết quả */
-.no-results {
-  padding: 15px;
-  color: #666;
-  font-style: italic;
-  text-align: center;
-  border-bottom: 1px solid #eee;
-}
-
-/* Khi có lỗi */
-.error {
-  padding: 15px;
-  color: #dc3545;
-  text-align: center;
-  border-bottom: 1px solid #eee;
-}
-
-/* Hiệu ứng khi click */
-.suggestion-item:active {
-  background: #e9ecef;
-}
-.suggestions {
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  max-height: 300px;
-  overflow-y: auto;
-  z-index: 1000;
-}
-
-.suggestion-item {
-  padding: 10px;
-  cursor: pointer;
-  transition: background 0.2s;
-  border-bottom: 1px solid #ddd; /* Thêm đường kẻ phân cách */
-}
-
-.suggestion-item:last-child {
-  border-bottom: none; /* Loại bỏ đường kẻ cuối cùng */
-}
-
-.suggestion-item:hover {
-  background: #f8f9fa;
-  text-decoration: underline;
-  text-decoration-color: black; /* Gạch chân màu đen */
-}
-
-.subject-name {
-  font-weight: 500;
-  color: #333;
-}
-
-.subject-path {
-  font-size: 0.9em;
-  color: #666;
-}
-
-.no-results {
-  padding: 10px;
-  color: #666;
-  font-style: italic;
-}
-
-.error {
-  padding: 10px;
-  color: #dc3545;
-}
-#schoolSelectionNotice {
-  display: block; /* Đảm bảo hiển thị như block */
-  font-size: 0.9rem; /* Kích thước chữ nhỏ gọn */
-  color: #856404; /* Màu chữ vàng đậm (text-warning đậm hơn của Bootstrap) */
-  background-color: #fff3cd; /* Nền vàng nhạt (bg-warning nhạt của Bootstrap) */
-  border: 1px solid #ffeeba; /* Viền vàng nhạt */
-  padding: 6px 10px; /* Khoảng cách bên trong */
-  border-radius: 0.25rem; /* Bo góc nhẹ */
-  margin-bottom: 8px; /* Khoảng cách với ô input */
-  font-weight: 500; /* Chữ hơi đậm để nhấn mạnh */
-  transition: opacity 0.3s ease; /* Hiệu ứng mượt mà khi hiển thị/ẩn */
-}
-
-/* Khi thông báo ẩn (d-none) */
-#schoolSelectionNotice.d-none {
-  opacity: 0; /* Ẩn mượt mà */
-}
-
-/* Khi thông báo hiển thị */
-#schoolSelectionNotice:not(.d-none) {
-  opacity: 1;
-}
-</style>
-
-<!-- Modal Tìm kiếm theo tên môn học -->
-<div class="modal fade" id="subjectSearchModal" tabindex="-1" aria-labelledby="subjectSearchModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content rounded-4 shadow-lg">
-      <div class="modal-header border-0">
-        <h5 class="modal-title" id="subjectSearchModalLabel">Tìm kiếm theo tên môn học</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+<!-- Modal Tìm kiếm Môn học -->
+<div class="modal fade" id="customSearchModal" tabindex="-1" aria-labelledby="customSearchModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="border-radius: 12px; border: none; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
+      <!-- Modal Header -->
+      <div class="custom-modal-header" style="background-color: #f8f9fa; border-bottom: 1px solid #e9ecef; padding: 16px;">
+        <h5 class="custom-modal-title" id="customSearchModalLabel" style="font-size: 1.25rem; font-weight: 600; color: #0d6efd;">
+          <i class="fas fa-book-open me-2"></i>Tìm kiếm Môn học
+        </h5>
       </div>
+
+      <!-- Modal Body -->
       <div class="modal-body">
-        <!-- Wrapper chứa input và phần gợi ý -->
-        <div class="position-relative">
-          <span id="schoolSelectionNotice" class="text-muted d-none" style="font-size: 0.9rem; display: block; margin-bottom: 5px;">
-            Mẹo nhỏ: Chọn trường rồi tìm kiếm để chỉ hiển thị dữ liệu của trường đó.
-          </span>
-          <input type="text" id="subjectSearchInput" class="form-control" placeholder="Nhập tên môn học...">
-          <div id="subjectSearchSuggestions" class="suggestions" style="top: 100%; left: 0; display: none;"></div>
+        <!-- Search Input Group -->
+        <div class="custom-search-input-group" style="position: relative; margin-bottom: 1rem;">
+          <input type="text" id="subjectSearchInput" class="form-control form-control-lg" 
+                 placeholder="Nhập tên môn học..." aria-label="Search input"
+                 style="border-radius: 8px; padding-right: 50px; border: 1px solid #ced4da;">
+          <button type="button" 
+                  style="position: absolute; right: 0; top: 0; height: 100%; border-radius: 0 8px 8px 0; background-color: #0d6efd; border: none; color: #fff;"
+                  onmouseover="this.style.backgroundColor='#0b5ed7'" 
+                  onmouseout="this.style.backgroundColor='#0d6efd'">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+
+        <!-- Tip Text (Thông báo chọn trường) -->
+<div id="schoolSelectionNotice" class="custom-tip-text d-none" 
+     style="display: flex; align-items: center; padding: 10px 15px; background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%); border-radius: 4px; font-size: 0.9em; color: #333; margin-top: 8px; margin-bottom: 16px;">
+<i class="fas fa-lightbulb icon-combined" style="font-size: 1em; margin-right: 10px;"></i>
+  Mẹo nhỏ: Chọn trường rồi tìm kiếm để chỉ hiển thị dữ liệu của trường đó.
+</div>
+
+        <!-- Kết quả tìm kiếm -->
+        <h6 id="searchResultCount" class="text-muted mb-3">Kết quả tìm kiếm (0)</h6>
+        <div id="subjectSearchSuggestions" class="custom-scrollable-results" 
+             style="max-height: 60vh; overflow-y: auto; padding-right: 10px;">
+          <!-- Các kết quả tìm kiếm sẽ được chèn vào đây qua JS -->
         </div>
       </div>
-      <div class="modal-footer border-0">
-        <!-- Có thể thêm nút nếu cần -->
-      </div>
+
+      <!-- Modal Footer -->
+<div class="custom-modal-footer" style="background-color: #f8f9fa; border-top: 1px solid #e9ecef; padding: 16px; display: flex; justify-content: flex-end;">
+  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+</div>
     </div>
   </div>
-</div>
+</div>  
+
+<!-- Bootstrap JS (bao gồm Popper) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Custom JS để mở modal khi nhấn nút -->
+<script>
+
+  document.addEventListener("DOMContentLoaded", function() {
+    // Tạo instance modal từ phần tử có id "modernProfileModal"
+    const modalElement = document.getElementById("modernProfileModal");
+    const modernModal = new bootstrap.Modal(modalElement);
+    
+    // Thêm sự kiện click cho nút mở modal
+    document.getElementById("openModalBtn").addEventListener("click", function() {
+      modernModal.show();
+    });
+  });
+
+  // Các hàm liên quan tới chỉnh sửa trong modal (đã có sẵn)
+  function modernToggleEdit() {
+    const textElement = document.getElementById('modernUniversityText');
+    const selectElement = document.getElementById('modernUniversitySelect');
+    const saveButton = document.getElementById('modernSaveBtn');
+
+    if (selectElement.style.display === 'none' || selectElement.style.display === '') {
+      textElement.style.display = 'none';
+      selectElement.style.display = 'block';
+      selectElement.focus();
+      saveButton.style.display = 'inline-block';
+    } else {
+      textElement.style.display = 'block';
+      selectElement.style.display = 'none';
+      saveButton.style.display = 'none';
+      selectElement.value = textElement.innerText;
+    }
+  }
+
+  function modernSaveChanges() {
+    const textElement = document.getElementById('modernUniversityText');
+    const selectElement = document.getElementById('modernUniversitySelect');
+    
+    textElement.innerText = selectElement.value;
+    modernToggleEdit();
+    console.log('Đã cập nhật trường đại học:', selectElement.value);
+  }
+</script>
+
 <!-- HTML Imports -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.13.216/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -1702,10 +2267,11 @@ recentActivityModal.addEventListener('shown.bs.modal', function () {
     const advancedSearchBtn = document.createElement('button');
     advancedSearchBtn.className = 'btn btn-outline-primary mb-3';
     advancedSearchBtn.textContent = 'Tìm kiếm theo tên môn học';
-    advancedSearchBtn.addEventListener('click', () => {
-      const subjectSearchModal = new bootstrap.Modal(document.getElementById('subjectSearchModal'));
-      subjectSearchModal.show();
-    });
+advancedSearchBtn.addEventListener('click', () => {
+  const subjectSearchModal = new bootstrap.Modal(document.getElementById('customSearchModal'));
+  subjectSearchModal.show();
+  
+});
     container.appendChild(advancedSearchBtn);
 
     // Danh sách file/folder
@@ -1833,22 +2399,61 @@ function renderFileItem(list, file, documentType) {
   `;
 
   li.addEventListener('click', () => {
-    // Gọi API log lượt mở file trước khi mở file
-    fetch('/api/log-file-open', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ documentId: file.id })
+    fetch('/api/check-login', {
+      method: 'GET',
+      credentials: 'include' // Đảm bảo gửi cookie session
     })
     .then(response => response.json())
     .then(data => {
-      console.log(data.message);
-      openFile(filePath);
+      if (data.loggedIn) {
+        // Nếu đã đăng nhập, kiểm tra trạng thái tài khoản
+        fetch('/api/account_status', {
+          method: 'GET',
+          credentials: 'include'
+        })
+        .then(response => response.json())
+        .then(statusData => {
+          if (statusData.account_status === 'đã duyệt') {
+            // Nếu trạng thái là "đã duyệt", thực hiện logic cũ: log file mở và mở file
+            fetch('/api/log-file-open', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'include',
+              body: JSON.stringify({ documentId: file.id })
+            })
+            .then(() => {
+              window.open(filePath, '_blank'); // Mở file trong tab mới
+            })
+            .catch(error => {
+              console.error('Lỗi khi log file:', error);
+              window.open(filePath, '_blank'); // Vẫn mở file ngay cả khi log lỗi
+            });
+          } else if (statusData.account_status === 'bình thường') {
+            // Nếu trạng thái là "bình thường", hiển thị modal xác thực
+            const modal = new bootstrap.Modal(document.getElementById('verificationModal-v2'));
+            modal.show();
+          } else if (statusData.account_status === 'đang duyệt') {
+            // Nếu trạng thái là "đang xét duyệt", hiển thị thông báo và không hiển thị modal
+            alert("Tài khoản của bạn đang được xét duyệt, vui lòng đợi");
+          }
+        })
+        .catch(error => {
+          console.error('Lỗi khi kiểm tra trạng thái tài khoản:', error);
+          // Fallback: hiển thị modal xác thực nếu có lỗi
+          const modal = new bootstrap.Modal(document.getElementById('verificationModal-v2'));
+          modal.show();
+        });
+      } else {
+        // Nếu chưa đăng nhập, hiển thị modal đăng nhập
+        const modal = new bootstrap.Modal(document.getElementById('loginModal-v3'));
+        modal.show();
+      }
     })
     .catch(error => {
-      console.error('Error logging file open:', error);
-      openFile(filePath);
+      console.error('Lỗi kiểm tra đăng nhập:', error);
+      // Hiển thị modal đăng nhập nếu có lỗi trong quá trình kiểm tra
+      const modal = new bootstrap.Modal(document.getElementById('loginModal-v3'));
+      modal.show();
     });
   });
 
@@ -2054,75 +2659,203 @@ function isInAppBrowser() {
       });
     }
   });
-/*=======================
-  Tìm kiếm môn học
-=======================*/
-const subjectSearchInput = document.getElementById('subjectSearchInput');
-const subjectSearchSuggestions = document.getElementById('subjectSearchSuggestions');
-const schoolSelectionNotice = document.getElementById('schoolSelectionNotice');
+document.addEventListener("DOMContentLoaded", function () {
+  /*=======================
+    Tìm kiếm Môn học
+  =======================*/
+  // Lấy các phần tử cần thiết từ modal
+  const subjectSearchInput = document.getElementById("subjectSearchInput");
+  const subjectSearchSuggestions = document.getElementById("subjectSearchSuggestions");
+  const schoolSelectionNotice = document.getElementById("schoolSelectionNotice");
+  const searchResultCount = document.getElementById("searchResultCount");
+  const modalEl = document.getElementById("customSearchModal");
 
-subjectSearchInput?.addEventListener('input', async () => {
-  const term = subjectSearchInput.value.trim().toLowerCase();
-  
-  // Hiển thị/ẩn thông báo dựa trên việc đã chọn trường hay chưa
-  const activeTab = localStorage.getItem('activeTab') || 'exam';
-  const currentPath = activeTab === 'exam' ? examCurrentPath : syllabusCurrentPath;
-  if (currentPath.length === 0) {
-    schoolSelectionNotice.classList.remove('d-none'); // Hiển thị thông báo
-  } else {
-    schoolSelectionNotice.classList.add('d-none'); // Ẩn thông báo
-  }
-
-  // Nếu term quá ngắn thì ẩn gợi ý và không tìm kiếm
-  if (term.length < 2) {
-    subjectSearchSuggestions.style.display = 'none';
+  if (!modalEl) {
+    console.error('Không tìm thấy phần tử modal với id "customSearchModal"');
     return;
   }
 
-  const schoolId = currentPath[0]?.id || 0;
-  const facultyId = currentPath[1]?.id || 0;
+  // Ẩn ban đầu tiêu đề kết quả và vùng gợi ý
+  searchResultCount.style.display = "none";
+  subjectSearchSuggestions.style.display = "none";
 
-  try {
-    const url = new URL('/api/search/subjects', window.location.origin);
-    url.searchParams.append('term', term);
-    if (schoolId) url.searchParams.append('school_id', schoolId);
-    if (facultyId) url.searchParams.append('faculty_id', facultyId);
-
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
-    const results = await response.json();
-
-    subjectSearchSuggestions.innerHTML = '';
-    if (results.length > 0) {
-      results.forEach(subject => {
-        const div = document.createElement('div');
-        div.className = 'suggestion-item';
-        div.innerHTML = `
-          <div class="subject-name">${subject.name}</div>
-          <div class="subject-path">${subject.school_name} → ${subject.faculty_name}</div>
-        `;
-        div.addEventListener('click', () => {
-          const newPath = [
-            { id: subject.school_id, name: subject.school_name },
-            { id: subject.faculty_id, name: subject.faculty_name },
-            { id: subject.id, name: subject.name }
-          ];
-          if (activeTab === 'exam') renderExamDrive(newPath);
-          else renderSyllabusDrive(newPath);
-          bootstrap.Modal.getInstance(document.getElementById('subjectSearchModal')).hide();
-        });
-        subjectSearchSuggestions.appendChild(div);
-      });
-      subjectSearchSuggestions.style.display = 'block';
-    } else {
-      subjectSearchSuggestions.style.display = 'none';
-    }
-  } catch (error) {
-    console.error('Lỗi tìm kiếm:', error);
-    subjectSearchSuggestions.innerHTML = '<div class="error">Lỗi tải kết quả</div>';
-    subjectSearchSuggestions.style.display = 'block';
+  // Khởi tạo instance của modal nếu chưa có
+  let modalInstance = bootstrap.Modal.getInstance(modalEl);
+  if (!modalInstance) {
+    modalInstance = new bootstrap.Modal(modalEl);
   }
+
+  // Sự kiện nhập liệu cho ô tìm kiếm
+  subjectSearchInput?.addEventListener("input", async () => {
+    const term = subjectSearchInput.value.trim().toLowerCase();
+
+    // Nếu từ khóa ít hơn 2 ký tự thì ẩn vùng gợi ý và tiêu đề kết quả
+    if (term.length < 2) {
+      subjectSearchSuggestions.style.display = "none";
+      searchResultCount.style.display = "none";
+      return;
+    } else {
+      searchResultCount.style.display = "block";
+    }
+
+    // Xác định activeTab và currentPath (các biến toàn cục examCurrentPath, syllabusCurrentPath cần được định nghĩa)
+    const activeTab = localStorage.getItem("activeTab") || "exam";
+    const currentPath = activeTab === "exam" ? examCurrentPath : syllabusCurrentPath;
+
+    // Nếu chưa chọn trường thì hiển thị thông báo
+    if (!currentPath || currentPath.length === 0) {
+      schoolSelectionNotice.classList.remove("d-none");
+    } else {
+      schoolSelectionNotice.classList.add("d-none");
+    }
+
+    // Lấy các tham số từ currentPath (nếu có)
+    const schoolId = currentPath[0]?.id || 0;
+    const facultyId = currentPath[1]?.id || 0;
+
+    try {
+      const url = new URL("/api/search/subjects", window.location.origin);
+      url.searchParams.append("term", term);
+      if (schoolId) url.searchParams.append("school_id", schoolId);
+      if (facultyId) url.searchParams.append("faculty_id", facultyId);
+
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+      const results = await response.json();
+
+      // Cập nhật tiêu đề đếm kết quả với số lượng kết quả trả về
+      searchResultCount.textContent = "Kết quả tìm kiếm (" + results.length + ")";
+
+      // Xóa nội dung gợi ý cũ
+      subjectSearchSuggestions.innerHTML = "";
+
+      if (results.length > 0) {
+        results.forEach(subject => {
+          // Tạo card kết quả theo định dạng đã cho
+          const card = document.createElement("div");
+          card.className = "card mb-3";
+          card.style.border = "none";
+          card.style.borderRadius = "12px";
+          card.style.boxShadow = "0 2px 8px rgba(0,0,0,0.1)";
+          card.style.transition = "all 0.3s ease";
+          card.style.backgroundColor = "#ffffff";
+          card.style.cursor = "pointer";
+          card.onmouseover = function() {
+            this.style.transform = "translateY(-3px)";
+            this.style.boxShadow = "0 4px 12px rgba(0,0,0,0.15)";
+            this.style.backgroundColor = "#f8f9fa";
+          };
+          card.onmouseout = function() {
+            this.style.transform = "none";
+            this.style.boxShadow = "0 2px 8px rgba(0,0,0,0.1)";
+            this.style.backgroundColor = "#ffffff";
+          };
+
+          // Tạo phần card body
+          const cardBody = document.createElement("div");
+          cardBody.className = "card-body";
+
+          // Tạo container nội dung sử dụng d-flex
+          const contentDiv = document.createElement("div");
+          contentDiv.className = "d-flex justify-content-between align-items-start";
+
+          // Phần thông tin môn học (bên trái)
+          const infoDiv = document.createElement("div");
+
+          const h5 = document.createElement("h5");
+          h5.className = "custom-card-title";
+          h5.style.color = "#0d6efd";
+          h5.style.fontWeight = "600";
+          h5.style.marginBottom = "8px";
+          h5.textContent = subject.name;
+
+          const schoolDiv = document.createElement("div");
+          schoolDiv.style.color = "#6c757d";
+          schoolDiv.style.marginBottom = "0.5rem";
+          schoolDiv.innerHTML = `<i class="fas fa-university me-1"></i> ${subject.school_name}`;
+
+          const facultySpan = document.createElement("span");
+          facultySpan.className = "custom-university-label";
+          facultySpan.style.fontSize = "0.9em";
+          facultySpan.style.backgroundColor = "#e9ecef";
+          facultySpan.style.borderRadius = "20px";
+          facultySpan.style.padding = "5px 15px";
+          facultySpan.style.display = "inline-block";
+          facultySpan.style.color = "#495057";
+          facultySpan.style.marginTop = "8px";
+          facultySpan.innerHTML = `<i class="fas fa-graduation-cap me-1"></i> ${subject.faculty_name}`;
+
+          infoDiv.appendChild(h5);
+          infoDiv.appendChild(schoolDiv);
+          infoDiv.appendChild(facultySpan);
+
+          // Phần nút "Xem" (bên phải)
+          const viewButton = document.createElement("button");
+          viewButton.type = "button";
+          viewButton.style.fontSize = "0.875rem";
+          viewButton.style.border = "1px solid #0d6efd";
+          viewButton.style.color = "#0d6efd";
+          viewButton.style.backgroundColor = "transparent";
+          viewButton.style.padding = "0.375rem 0.75rem";
+          viewButton.style.borderRadius = "0.25rem";
+          viewButton.onmouseover = function() {
+            this.style.backgroundColor = "#0d6efd";
+            this.style.color = "#fff";
+          };
+          viewButton.onmouseout = function() {
+            this.style.backgroundColor = "transparent";
+            this.style.color = "#0d6efd";
+          };
+          viewButton.innerHTML = `<i class="fas fa-eye me-1"></i> Xem`;
+
+          // Ghép thông tin và nút vào container d-flex
+          contentDiv.appendChild(infoDiv);
+          contentDiv.appendChild(viewButton);
+
+          // Ghép container d-flex vào card body, sau đó vào card
+          cardBody.appendChild(contentDiv);
+          card.appendChild(cardBody);
+
+          // Khi click vào card (hoặc nút "Xem"), cập nhật currentPath, gọi hàm render tương ứng, reset thanh tìm kiếm và đóng modal
+          card.addEventListener("click", () => {
+            const newPath = [
+              { id: subject.school_id, name: subject.school_name },
+              { id: subject.faculty_id, name: subject.faculty_name },
+              { id: subject.id, name: subject.name }
+            ];
+            if (activeTab === "exam") {
+              renderExamDrive(newPath);
+            } else {
+              renderSyllabusDrive(newPath);
+            }
+            // Reset thanh tìm kiếm
+            subjectSearchInput.value = "";
+            subjectSearchSuggestions.innerHTML = "";
+            subjectSearchSuggestions.style.display = "none";
+            searchResultCount.textContent = "Kết quả tìm kiếm (0)";
+            // Đóng modal: luôn gọi getInstance để lấy instance hiện hành
+            const modal = bootstrap.Modal.getInstance(document.getElementById("customSearchModal"));
+            if (modal) {
+              modal.hide();
+            } else {
+              new bootstrap.Modal(document.getElementById("customSearchModal")).hide();
+            }
+          });
+
+          subjectSearchSuggestions.appendChild(card);
+        });
+        subjectSearchSuggestions.style.display = "block";
+      } else {
+        subjectSearchSuggestions.style.display = "none";
+      }
+    } catch (error) {
+      console.error("Lỗi tìm kiếm:", error);
+      subjectSearchSuggestions.innerHTML = '<div class="error">Lỗi tải kết quả</div>';
+      subjectSearchSuggestions.style.display = "block";
+    }
+  });
 });
+
   document.addEventListener('DOMContentLoaded', () => {
   const savedExamPath = localStorage.getItem('examCurrentPath');
   const savedSyllabusPath = localStorage.getItem('syllabusCurrentPath');
@@ -2308,5 +3041,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

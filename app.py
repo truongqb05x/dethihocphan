@@ -2,10 +2,10 @@ import sys
 import os
 import logging
 from datetime import datetime, timezone
-
+import hashlib
 from flask import Flask, request, jsonify, session, render_template, redirect, url_for, abort, send_from_directory
 from flask_cors import CORS
-
+from werkzeug.utils import secure_filename
 import mysql.connector
 from mysql.connector import pooling, Error
 
@@ -56,6 +56,138 @@ def get_db_connection():
     return pool.get_connection()
 # Thiết lập secret key cho session
 app.secret_key = 'your_secret_key'
+# Hàm mã hóa mật khẩu (sử dụng SHA-256)
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+from datetime import timedelta
+from flask import make_response
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+
+    if not username or not password:
+        return jsonify({"error": "Tên đăng nhập và mật khẩu là bắt buộc"}), 400
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        query = "SELECT * FROM users WHERE username = %s AND password = %s"
+        cursor.execute(query, (username, hash_password(password)))
+        user = cursor.fetchone()
+
+        if user:
+            session['user_id'] = user['id']
+            session['username'] = user['username']
+            session.permanent = True  # Lưu phiên vĩnh viễn
+            
+            resp = make_response(jsonify({"message": "Đăng nhập thành công", "user": {"username": user['username']}}))
+            resp.set_cookie('login_token', str(user['id']), max_age=30*24*60*60)  # Lưu cookie 30 ngày
+            return resp, 200
+        else:
+            return jsonify({"error": "Tên đăng nhập hoặc mật khẩu không đúng"}), 401
+
+    except mysql.connector.Error as err:
+        return jsonify({"error": f"Lỗi cơ sở dữ liệu: {str(err)}"}), 500
+    finally:
+        cursor.close()
+        conn.close()
+
+# Route xử lý đăng ký
+@app.route('/api/register', methods=['POST'])
+def register():
+    data = request.get_json()
+    fullname = data.get('fullname')
+    username = data.get('username')
+    password = data.get('password')
+    university = data.get('university')
+
+    if not all([fullname, username, password, university]):
+        return jsonify({"error": "Tất cả các trường là bắt buộc"}), 400
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Kiểm tra xem username đã tồn tại chưa
+        cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
+        if cursor.fetchone():
+            return jsonify({"error": "Tên đăng nhập đã tồn tại"}), 409
+
+        # Thêm người dùng mới
+        query = "INSERT INTO users (fullname, username, password, university) VALUES (%s, %s, %s, %s)"
+        cursor.execute(query, (fullname, username, hash_password(password), university))
+        conn.commit()
+
+        return jsonify({"message": "Đăng ký thành công"}), 201
+
+    except mysql.connector.Error as err:
+        return jsonify({"error": f"Lỗi cơ sở dữ liệu: {str(err)}"}), 500
+    finally:
+        cursor.close()
+        conn.close()
+# Route kiểm tra trạng thái đăng nhập
+@app.route('/api/check-login', methods=['GET'])
+def check_login():
+    if 'user_id' in session:
+        return jsonify({"loggedIn": True, "username": session['username']})
+
+    # Nếu không có session, kiểm tra cookie
+    user_id = request.cookies.get('login_token')
+    if user_id:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT username FROM users WHERE id = %s", (user_id,))
+        user = cursor.fetchone()
+        cursor.close()
+        conn.close()
+
+        if user:
+            session['user_id'] = user_id  # Phục hồi session từ cookie
+            session['username'] = user['username']
+            return jsonify({"loggedIn": True, "username": user['username']})
+
+    return jsonify({"loggedIn": False})
+@app.route('/api/account_status', methods=['GET'])
+def get_account_status():
+    # Kiểm tra xem user đã đăng nhập hay chưa (user_id lưu trong session)
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({"error": "User chưa đăng nhập"}), 401
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        query = "SELECT account_status FROM users WHERE id = %s"
+        cursor.execute(query, (user_id,))
+        result = cursor.fetchone()
+
+        if result:
+            return jsonify({
+                "user_id": user_id,
+                "account_status": result['account_status']
+            }), 200
+        else:
+            return jsonify({"error": "User không tồn tại"}), 404
+
+    except mysql.connector.Error as err:
+        return jsonify({"error": f"Lỗi cơ sở dữ liệu: {str(err)}"}), 500
+    finally:
+        cursor.close()
+        conn.close()
+
+@app.route('/api/logout', methods=['POST'])
+def logout():
+    session.pop('user_id', None)
+    session.pop('username', None)
+    
+    resp = make_response(jsonify({"message": "Đăng xuất thành công"}))
+    resp.set_cookie('login_token', '', expires=0)  # Xóa cookie
+    return resp, 200
+
 @app.route('/api/schools', methods=['GET'])
 def get_schools():
     conn = None
@@ -67,6 +199,7 @@ def get_schools():
           SELECT s.id, s.name,
             (SELECT COUNT(*) FROM faculties f WHERE f.school_id = s.id) AS count
           FROM schools s
+          WHERE s.id IN (1, 2)
           ORDER BY s.name
         """)
         schools = cursor.fetchall()
@@ -582,6 +715,70 @@ def upload_exam():
         saved_files.append({'filename': filename, 'filepath': file_path})
     
     return jsonify({'message': 'Upload thành công', 'files': saved_files})
+upload_folder_v2 = os.path.join(app.root_path, 'static', 'xacthuctaikhoan')
+app.config['UPLOAD_FOLDER_V2'] = upload_folder_v2
+os.makedirs(upload_folder_v2, exist_ok=True)
+
+@app.route('/upload_v2', methods=['POST'])
+def upload_file_v2():
+    # Kiểm tra file có trong request hay không
+    if 'file' not in request.files:
+        return jsonify({"error": "Không tìm thấy file upload"}), 400
+
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"error": "Không có file nào được chọn"}), 400
+
+    try:
+        # Tạo tên file an toàn, thêm tiền tố theo type nếu có
+        filename = secure_filename(file.filename)
+        file_type = request.form.get('type', '')
+        if file_type:
+            filename = f"{file_type}_{filename}"
+        
+        # Lưu file vào thư mục đã chỉ định
+        file_path = os.path.join(app.config['UPLOAD_FOLDER_V2'], filename)
+        file.save(file_path)
+        
+        # Tạo đường dẫn tương đối để sử dụng trên web
+        relative_path = f"/static/xacthuctaikhoan/{filename}"
+
+        # Lưu thông tin file vào DB nếu người dùng đã đăng nhập (lấy user_id từ session)
+        user_id = session.get('user_id')
+        if user_id:
+            conn = get_db_connection()
+            # Sử dụng buffered cursor để tránh lỗi "Commands out of sync"
+            cursor = conn.cursor(buffered=True)
+            query = "INSERT INTO user_images (user_id, image_path) VALUES (%s, %s)"
+            cursor.execute(query, (user_id, relative_path))
+            conn.commit()
+            cursor.close()
+            conn.close()
+
+        return jsonify({
+            "message": "Upload thành công",
+            "filepath": relative_path
+        }), 200
+
+    except Exception as e:
+        return jsonify({"error": f"Lỗi khi lưu file: {str(e)}"}), 500
+@app.route('/update_account_status_v2', methods=['POST'])
+def update_account_status_v2():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({"error": "User chưa đăng nhập"}), 401
+    try:
+        conn = get_db_connection()
+        # Sử dụng buffered cursor để tránh lỗi "Commands out of sync"
+        cursor = conn.cursor(buffered=True)
+        query = "UPDATE users SET account_status = %s WHERE id = %s"
+        cursor.execute(query, ("đang duyệt", user_id))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return jsonify({"message": "Trạng thái tài khoản đã được cập nhật thành 'đang duyệt'"}), 200
+    except Exception as e:
+        return jsonify({"error": f"Lỗi khi cập nhật trạng thái tài khoản: {str(e)}"}), 500
 
 if __name__ == '__main__':
 
