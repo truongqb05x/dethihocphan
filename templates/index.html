@@ -628,6 +628,64 @@
     });
 
   </script>
+  <style>
+    /* Định dạng cho nav chung */
+.nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+.nav-item {
+  margin-right: 20px;
+}
+/* Định dạng cho nút nav */
+.nav-link {
+  position: relative;
+  font-family: 'Roboto', sans-serif;
+  color: #777777;
+  text-decoration: none;
+  padding: 10px 15px;
+  transition: all 0.3s ease;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+/* Hiệu ứng underline ẩn ban đầu */
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background-color: #007bff;
+  transition: width 0.3s ease;
+}
+/* Hiệu ứng khi hover (áp dụng cho các nav-link không active) */
+.nav-link:hover {
+  color: #007bff;
+  transform: translateY(-2px);
+}
+.nav-link:hover::after {
+  width: 100%;
+}
+/* Style cho nút active */
+.nav-link.active {
+  color: #007bff;
+}
+/* Không áp dụng hiệu ứng hover cho nav-link đang active */
+.nav-link.active:hover {
+  color: #007bff;
+  transform: none;
+}
+.nav-link.active:hover::after {
+  width: 0;
+}
+
+    
+  </style>
 
   <div class="compact-container my-4">
     <div class="card card-custom">
@@ -636,15 +694,15 @@
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item" role="presentation">
             <button class="nav-link active" id="de-thi-tab" data-bs-toggle="tab" data-bs-target="#de-thi" type="button"
-              role="tab">Đề Thi</button>
+              role="tab" style = "color:#777777">Đề Thi</button>
           </li>
           <li class="nav-item" role="presentation">
             <button class="nav-link" id="de-cuong-tab" data-bs-toggle="tab" data-bs-target="#de-cuong" type="button"
-              role="tab">Đề Cương</button>
+              role="tab"  style = "color:#777777">Đề Cương</button>
           </li>
           <li class="nav-item" role="presentation">
             <button class="nav-link" id="ve-chung-toi-tab" data-bs-toggle="tab" data-bs-target="#ve-chung-toi"
-              type="button" role="tab">Về Chúng Tôi</button>
+              type="button" role="tab"  style = "color:#777777">Về Chúng Tôi</button>
           </li>
         </ul>
         <div class="tab-content mt-3">
@@ -1717,125 +1775,207 @@
     </div>
   </div>
   <!-- Modal -->
-  <div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content"
-        style="border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding-bottom: 1rem;">
+<div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content"
+      style="border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding-bottom: 1rem;">
 
-        <!-- Đăng Nhập -->
-        <div id="loginForm" style="display: block;">
-          <div class="modal-header text-center"
-            style="background: #fff; padding: 1.5rem; border-bottom: 1px solid #eee;">
-            <h5 class="modal-title" id="authModalLabel"
-              style="font-size: 1.5rem; font-weight: bold; color: #333; margin: 0;">Đăng Nhập</h5>
-          </div>
-          <div class="modal-body" style="padding: 2rem; background: #f8f9fa;">
-            <form id="formLogin">
-              <div class="mb-3">
-                <label for="loginUsername" class="form-label">Tên đăng nhập</label>
-                <input type="text" class="form-control" id="loginUsername" placeholder="Nhập tên đăng nhập" required>
-              </div>
-              <div class="mb-4">
-                <label for="loginPassword" class="form-label">Mật khẩu</label>
-                <input type="password" class="form-control" id="loginPassword" placeholder="••••••••" required>
-              </div>
-              <button type="submit" class="btn"
-                style="background: #6366f1; color: white; padding: 0.75rem 2rem; border-radius: 8px; width: 100%; transition: 0.3s;">
-                Đăng Nhập
-              </button>
-            </form>
-            <div class="text-center mt-3" style="display: flex; justify-content: center; align-items: center;">
-              <span class="text-muted" style="margin-right: 5px;">Chưa có tài khoản?</span>
-              <button onclick="toggleForm('registerForm')" class="btn btn-link p-0"
-                style="text-decoration: none; color: #007bff; font-weight: 500;">
-                Đăng ký ngay
-              </button>
+      <!-- Đăng Nhập -->
+      <div id="loginForm" style="display: block;">
+        <div class="modal-header text-center"
+          style="background: #fff; padding: 1.5rem; border-bottom: 1px solid #eee;">
+          <h5 class="modal-title" id="authModalLabel"
+            style="font-size: 1.5rem; font-weight: bold; color: #333; margin: 0;">Đăng Nhập</h5>
+        </div>
+        <div class="modal-body" style="padding: 2rem; background: #f8f9fa;">
+          <form id="formLogin">
+            <div class="mb-3">
+              <label for="loginUsername" class="form-label">Tên đăng nhập</label>
+              <input type="text" class="form-control" id="loginUsername" placeholder="Nhập tên đăng nhập" required>
             </div>
-          </div>
-        </div>
-
-        <!-- Đăng Ký -->
-        <div id="registerForm" style="display: none;">
-          <div class="modal-header text-center"
-            style="background: #fff; padding: 1.5rem; border-bottom: 1px solid #eee;">
-            <h5 class="modal-title" style="font-size: 1.5rem; font-weight: bold; color: #333; margin: 0;">Đăng Ký</h5>
-          </div>
-          <div class="modal-body" style="padding: 2rem; background: #f8f9fa;">
-            <form id="formRegister">
-              <div class="mb-3">
-                <label for="registerFullname" class="form-label">Họ và tên</label>
-                <input type="text" class="form-control" id="registerFullname" placeholder="Nguyễn Văn A" required>
-              </div>
-              <small id="fullnameNote" class="form-note"
-                style="display: none; color: #d9534f; font-size: 0.875rem; font-style: italic;">
-                Vui lòng sử dụng tên thật, chúng tôi sẽ tự động xóa những tài khoản tên giả và chặn bạn vĩnh viễn khỏi
-                hệ thống!
-              </small>
-              <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                  const fullnameInput = document.getElementById("registerFullname");
-                  const fullnameNote = document.getElementById("fullnameNote");
-
-                  fullnameInput.addEventListener("input", function () {
-                    fullnameNote.style.display = "block";
-                  });
-                });
-              </script>
-
-              <div class="mb-3">
-                <label for="registerUsername" class="form-label">Tên đăng nhập</label>
-                <input type="text" class="form-control" id="registerUsername" placeholder="Tên đăng nhập" required>
-              </div>
-              <div class="mb-4">
-                <label for="registerPassword" class="form-label">Mật khẩu</label>
-                <input type="password" class="form-control" id="registerPassword" placeholder="••••••••" required>
-              </div>
-              <div class="mb-3">
-                <label for="registerUniversity" class="form-label">Trường Đại Học</label>
-                <select class="form-control" id="registerUniversity" required>
-                  <option value="" disabled selected>Chọn trường đại học</option>
-                </select>
-              </div>
-              <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                  fetch("/api/schools")
-                    .then(response => response.json())
-                    .then(data => {
-                      const selectElement = document.getElementById("registerUniversity");
-                      data.forEach(school => {
-                        const option = document.createElement("option");
-                        option.value = school.id;  // Giá trị là ID của trường
-                        option.textContent = school.name;  // Hiển thị tên trường
-                        selectElement.appendChild(option);
-                      });
-                    })
-                    .catch(error => console.error("Lỗi khi tải danh sách trường:", error));
-                });
-
-              </script>
-              <button type="submit" class="btn"
-                style="background: #6366f1; color: white; padding: 0.75rem 2rem; border-radius: 8px; width: 100%; transition: 0.3s;">
-                Đăng Ký
-              </button>
-            </form>
-            <div class="text-center mt-3" style="display: flex; justify-content: center; align-items: center;">
-              <span class="text-muted" style="margin-right: 5px;">Đã có tài khoản?</span>
-              <button onclick="toggleForm('loginForm')" class="btn btn-link p-0"
-                style="text-decoration: none; color: #007bff; font-weight: 500;">
-                Đăng nhập ngay
-              </button>
+            <div class="mb-4">
+              <label for="loginPassword" class="form-label">Mật khẩu</label>
+              <input type="password" class="form-control" id="loginPassword" placeholder="••••••••" required>
             </div>
+            <button type="submit" class="btn"
+              style="background: #6366f1; color: white; padding: 0.75rem 2rem; border-radius: 8px; width: 100%; transition: 0.3s;">
+              Đăng Nhập
+            </button>
+          </form>
+          <div class="text-center mt-3" style="display: flex; justify-content: center; align-items: center;">
+            <span class="text-muted" style="margin-right: 5px;">Chưa có tài khoản?</span>
+            <button onclick="toggleForm('registerForm')" class="btn btn-link p-0"
+              style="text-decoration: none; color: #007bff; font-weight: 500;">
+              Đăng ký ngay
+            </button>
           </div>
         </div>
-
-        <!-- Footer chứa nút Đóng -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
-        </div>
-
       </div>
+
+      <!-- Đăng Ký -->
+      <div id="registerForm" style="display: none;">
+        <div class="modal-header text-center" style="background: #fff; padding: 1.5rem; border-bottom: 1px solid #eee;">
+          <h5 class="modal-title" style="font-size: 1.5rem; font-weight: bold; color: #333; margin: 0;">Đăng Ký</h5>
+        </div>
+        <div class="modal-body" style="padding: 2rem; background: #f8f9fa;">
+          <form id="formRegister">
+            <!-- Họ và tên -->
+            <div class="mb-3">
+              <label for="registerFullname" class="form-label">Họ và tên</label>
+              <input type="text" class="form-control" id="registerFullname" placeholder="Nguyễn Văn A" required>
+            </div>
+            <small id="fullnameNote" class="form-note" style="display: none; color: #d9534f; font-size: 0.875rem; font-style: italic;">
+              Vui lòng sử dụng tên thật, chúng tôi sẽ tự động xóa những tài khoản tên giả và chặn bạn vĩnh viễn khỏi hệ thống!
+            </small>
+            <script>
+              document.addEventListener("DOMContentLoaded", function () {
+                const fullnameInput = document.getElementById("registerFullname");
+                const fullnameNote = document.getElementById("fullnameNote");
+                fullnameInput.addEventListener("input", function () {
+                  fullnameNote.style.display = "block";
+                });
+              });
+            </script>
+
+            <!-- Tên đăng nhập -->
+            <div class="mb-3">
+              <label for="registerUsername" class="form-label">Tên đăng nhập</label>
+              <input type="text" class="form-control" id="registerUsername" placeholder="Tên đăng nhập" required>
+            </div>
+
+            <!-- Mật khẩu với toggle icon -->
+            <div class="mb-4">
+              <label for="registerPassword" class="form-label">Mật khẩu</label>
+              <div class="input-group">
+                <input type="password" class="form-control" id="registerPassword" placeholder="••••••••" required>
+                <span class="input-group-text" id="togglePassword" style="cursor: pointer;">
+                  <i class="fa fa-eye"></i>
+                </span>
+              </div>
+            </div>
+
+            <!-- Xác nhận mật khẩu với toggle icon -->
+            <div class="mb-4">
+              <label for="confirmPassword" class="form-label">Xác nhận mật khẩu</label>
+              <div class="input-group">
+                <input type="password" class="form-control" id="confirmPassword" placeholder="••••••••" required>
+                <span class="input-group-text" id="toggleConfirmPassword" style="cursor: pointer;">
+                  <i class="fa fa-eye"></i>
+                </span>
+              </div>
+            </div>
+            <!-- Thông báo lỗi nếu mật khẩu không khớp -->
+            <div id="passwordError" style="color: #d9534f; font-size: 0.875rem; display: none;">
+              Mật khẩu không khớp
+            </div>
+
+            <!-- Chọn trường Đại Học -->
+            <div class="mb-3">
+              <label for="registerUniversity" class="form-label">Trường Đại Học</label>
+              <select class="form-control" id="registerUniversity" required>
+                <option value="" disabled selected>Chọn trường đại học</option>
+              </select>
+            </div>
+            <script>
+              document.addEventListener("DOMContentLoaded", function () {
+                // Tải danh sách trường
+                fetch("/api/schools")
+                  .then(response => response.json())
+                  .then(data => {
+                    const selectElement = document.getElementById("registerUniversity");
+                    data.forEach(school => {
+                      const option = document.createElement("option");
+                      option.value = school.id;
+                      option.textContent = school.name;
+                      selectElement.appendChild(option);
+                    });
+                  })
+                  .catch(error => console.error("Lỗi khi tải danh sách trường:", error));
+
+                // Toggle hiển thị mật khẩu cho ô Mật khẩu
+                const togglePassword = document.getElementById("togglePassword");
+                const passwordInput = document.getElementById("registerPassword");
+                togglePassword.addEventListener("click", function () {
+                  const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+                  passwordInput.setAttribute("type", type);
+                  this.innerHTML = type === "password" ? '<i class="fa fa-eye"></i>' : '<i class="fa fa-eye-slash"></i>';
+                });
+
+                // Toggle hiển thị mật khẩu cho ô Xác nhận mật khẩu
+                const toggleConfirmPassword = document.getElementById("toggleConfirmPassword");
+                const confirmPasswordInput = document.getElementById("confirmPassword");
+                toggleConfirmPassword.addEventListener("click", function () {
+                  const type = confirmPasswordInput.getAttribute("type") === "password" ? "text" : "password";
+                  confirmPasswordInput.setAttribute("type", type);
+                  this.innerHTML = type === "password" ? '<i class="fa fa-eye"></i>' : '<i class="fa fa-eye-slash"></i>';
+                });
+
+                // Kiểm tra xem mật khẩu có khớp hay không
+                const passwordError = document.getElementById("passwordError");
+                confirmPasswordInput.addEventListener("input", function () {
+                  if (confirmPasswordInput.value !== passwordInput.value) {
+                    passwordError.style.display = "block";
+                  } else {
+                    passwordError.style.display = "none";
+                  }
+                });
+              });
+            </script>
+
+            <!-- Nút đăng ký -->
+            <button type="submit" class="btn" style="background: #6366f1; color: white; padding: 0.75rem 2rem; border-radius: 8px; width: 100%; transition: 0.3s;">
+              Đăng Ký
+            </button>
+          </form>
+          <div class="text-center mt-3" style="display: flex; justify-content: center; align-items: center;">
+            <span class="text-muted" style="margin-right: 5px;">Đã có tài khoản?</span>
+            <button onclick="toggleForm('loginForm')" class="btn btn-link p-0" style="text-decoration: none; color: #007bff; font-weight: 500;">
+              Đăng nhập ngay
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Script xử lý chuyển đổi form và tự động điền thông tin đăng nhập sau đăng ký -->
+      <script>
+        // Hàm chuyển đổi giữa form đăng nhập và đăng ký
+        function toggleForm(formId) {
+          const loginForm = document.getElementById("loginForm");
+          const registerForm = document.getElementById("registerForm");
+          if(formId === "loginForm") {
+            loginForm.style.display = "block";
+            registerForm.style.display = "none";
+          } else {
+            loginForm.style.display = "none";
+            registerForm.style.display = "block";
+          }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+          // Xử lý sự kiện submit cho form đăng ký
+          document.getElementById("formRegister").addEventListener("submit", function (e) {
+            e.preventDefault();
+            // Sau khi đăng ký thành công, lấy giá trị tên đăng nhập và mật khẩu từ form đăng ký
+            const username = document.getElementById("registerUsername").value;
+            const password = document.getElementById("registerPassword").value;
+            // Tự động điền tên đăng nhập và mật khẩu vào form đăng nhập
+            document.getElementById("loginUsername").value = username;
+            document.getElementById("loginPassword").value = password;
+            // Chuyển sang hiển thị form đăng nhập
+            toggleForm("loginForm");
+          });
+        });
+      </script>
+
+      <!-- Footer chứa nút Đóng -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
+      </div>
+
     </div>
   </div>
+</div>
+
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -2627,135 +2767,198 @@
          @path                : Mảng đường dẫn hiện tại
          @updatePathCallback  : Hàm callback cập nhật đường dẫn khi người dùng click chọn folder
        ================================================== */
-    async function renderDrive(containerId, path, updatePathCallback) {
-      const documentType = containerId.includes('exam') ? 'exam' : 'syllabus';
-      const container = document.getElementById(containerId);
-      if (!container) {
-        console.error(`Không tìm thấy container với ID: ${containerId}`);
-        return;
-      }
-      container.innerHTML = '';
+// Hàm renderFolderItem: Tạo mục folder và hiển thị số đếm nếu count > 0
+function renderFolderItem(list, name, currentPath, callback, count, itemId) {
+  const li = document.createElement('li');
+  li.className = 'file-item';
 
-      // Hiển thị spinner khi tải dữ liệu
-      const spinner = document.createElement('div');
-      spinner.className = 'spinner';
-      spinner.textContent = 'Loading...';
-      container.appendChild(spinner);
+  // Nếu count > 0 thì hiển thị số đếm, nếu count = 0 thì không hiển thị
+  const countHTML = count > 0 ? `<span class="file-count">${count}</span>` : '';
 
-      // Lấy dữ liệu từ backend dựa trên độ dài của path
-      let data = [];
-      try {
-        if (path.length === 0) {
-          data = await (await fetch('/api/schools')).json();
-        } else if (path.length === 1) {
-          const schoolId = path[0].id;
-          data = await (await fetch(`/api/schools/${schoolId}/faculties`)).json();
-        } else if (path.length === 2) {
-          const facultyId = path[1].id;
-          data = await (await fetch(`/api/faculties/${facultyId}/subjects?type=${documentType}`)).json();
-        } else if (path.length === 3) {
-          const subjectId = path[2].id;
-          const response = await fetch(`/api/subjects/${subjectId}/documents_by_year?type=${documentType}`);
-          const groupedData = await response.json();
-          data = Object.keys(groupedData)
-            .map(year => ({
-              id: parseInt(year),
-              name: year,
-              count: groupedData[year].length,
-              documents: groupedData[year]
-            }))
-            .sort((a, b) => b.id - a.id);
-        } else if (path.length === 4) {
-          const subjectId = path[2].id;
-          const year = path[3].id;
-          data = await (await fetch(`/api/subjects/${subjectId}/documents/${year}?type=${documentType}`)).json();
+  li.innerHTML = `
+    <i class="bi bi-folder-fill file-icon folder"></i>
+    <span class="file-name">${name}</span>
+    ${countHTML}
+  `;
+
+  li.addEventListener('click', () => {
+    callback([...currentPath, { id: itemId, name }]);
+  });
+
+  list.appendChild(li);
+}
+
+// Hàm renderDrive: Hiển thị danh sách file/folder dựa theo đường dẫn (path)
+// Cho phép duyệt theo cấu trúc: Trường → Khoa → Môn → Năm → File
+async function renderDrive(containerId, path, updatePathCallback) {
+  const documentType = containerId.includes('exam') ? 'exam' : 'syllabus';
+  const container = document.getElementById(containerId);
+  if (!container) {
+    console.error(`Không tìm thấy container với ID: ${containerId}`);
+    return;
+  }
+  container.innerHTML = '';
+
+  // Hiển thị spinner khi tải dữ liệu
+  const spinner = document.createElement('div');
+  spinner.className = 'spinner';
+  spinner.textContent = 'Loading...';
+  container.appendChild(spinner);
+
+  let data = [];
+  try {
+    if (path.length === 0) {
+      // Khi path rỗng, lấy thông tin trường của user từ API /user/university
+      console.log("Path length is 0. Attempting to fetch school info from /user/university");
+      let res = await fetch('/user/university', { credentials: 'include' });
+      console.log("Response status:", res.status);
+      if (res.ok) {
+        const userSchool = await res.json();
+        console.log("User school data:", userSchool);
+        window.userSchoolId = userSchool.university; // Lưu school_id toàn cục
+        // Chỉ hiển thị trường của user, không cần count
+        data = [{
+          id: userSchool.university,
+          name: userSchool.school_name
+        }];
+        console.log("Data array:", data);
+      } else {
+        // Fallback: Nếu không có thông tin user, lấy tất cả trường nhưng không hiển thị count
+        console.log("User info not available, fallback to fetch all schools");
+        const allSchoolsRes = await fetch('/api/schools');
+        if (allSchoolsRes.ok) {
+          data = await allSchoolsRes.json();
+          console.log("Data from /api/schools:", data);
+          alert("Vui lòng đăng nhập để chỉ xem dữ liệu của trường bạn!");
+        } else {
+          throw new Error("Không thể lấy danh sách trường");
         }
-      } catch (error) {
-        console.error('Lỗi khi lấy dữ liệu:', error);
       }
+    } else if (path.length === 1) {
+      // Khi đã chọn trường, lấy danh sách khoa của trường đó
+      const schoolId = path[0].id;
+      console.log("Path length is 1. Fetching faculties for school:", schoolId);
+      data = await (await fetch(`/api/schools/${schoolId}/faculties`)).json();
+    } else if (path.length === 2) {
+      // Khi đã chọn khoa, lấy danh sách môn của khoa đó
+      const facultyId = path[1].id;
+      console.log("Path length is 2. Fetching subjects for faculty:", facultyId);
+      data = await (await fetch(`/api/faculties/${facultyId}/subjects?type=${documentType}`)).json();
+    } else if (path.length === 3) {
+      // Khi đã chọn môn, lấy danh sách năm có tài liệu theo môn đó
+      const subjectId = path[2].id;
+      console.log("Path length is 3. Fetching documents by year for subject:", subjectId);
+      const response = await fetch(`/api/subjects/${subjectId}/documents_by_year?type=${documentType}`);
+      const groupedData = await response.json();
+      data = Object.keys(groupedData)
+        .map(year => ({
+          id: parseInt(year),
+          name: year,
+          count: groupedData[year].length,
+          documents: groupedData[year]
+        }))
+        .sort((a, b) => b.id - a.id);
+    } else if (path.length === 4) {
+      // Khi đã chọn năm, lấy danh sách file (tài liệu) của môn theo năm đó
+      const subjectId = path[2].id;
+      const year = path[3].id;
+      console.log("Path length is 4. Fetching documents for subject:", subjectId, "year:", year);
+      data = await (await fetch(`/api/subjects/${subjectId}/documents/${year}?type=${documentType}`)).json();
+    }
+  } catch (error) {
+    console.error('Lỗi khi lấy dữ liệu:', error);
+  }
 
-      // Xóa spinner sau khi tải xong
-      container.innerHTML = '';
+  // Xóa spinner sau khi tải xong
+  container.innerHTML = '';
 
-      // Hiển thị breadcrumb dựa trên đường dẫn hiện tại
-      renderBreadcrumb(container, path, updatePathCallback);
+  // Hiển thị breadcrumb dựa trên đường dẫn hiện tại
+  renderBreadcrumb(container, path, updatePathCallback);
 
-      // Tạo thanh tìm kiếm inline
-      const inlineSearchContainer = document.createElement('div');
-      inlineSearchContainer.className = 'input-group mb-3';
-      inlineSearchContainer.style.position = 'relative';
-      inlineSearchContainer.innerHTML = `
+  // Tạo thanh tìm kiếm inline
+  const inlineSearchContainer = document.createElement('div');
+  inlineSearchContainer.className = 'input-group mb-3';
+  inlineSearchContainer.style.position = 'relative';
+  inlineSearchContainer.innerHTML = `
     <span class="input-group-text"><i class="bi bi-search"></i></span>
     <input type="search" class="form-control" placeholder="Tìm kiếm trong thư mục...">
   `;
-      container.appendChild(inlineSearchContainer);
+  container.appendChild(inlineSearchContainer);
 
-      const inlineSuggestions = document.createElement('div');
-      inlineSuggestions.className = 'suggestions';
-      inlineSuggestions.style.display = 'none';
-      inlineSearchContainer.appendChild(inlineSuggestions);
+  const inlineSuggestions = document.createElement('div');
+  inlineSuggestions.className = 'suggestions';
+  inlineSuggestions.style.display = 'none';
+  inlineSearchContainer.appendChild(inlineSuggestions);
 
-      // Nút tìm kiếm nâng cao: mở modal tìm kiếm môn học
-      const advancedSearchBtn = document.createElement('button');
-      advancedSearchBtn.className = 'btn btn-outline-primary mb-3';
-      advancedSearchBtn.textContent = 'Tìm kiếm theo tên môn học';
-      advancedSearchBtn.addEventListener('click', () => {
-        const subjectSearchModal = new bootstrap.Modal(document.getElementById('customSearchModal'));
-        subjectSearchModal.show();
-      });
-      container.appendChild(advancedSearchBtn);
+  // Nút tìm kiếm nâng cao: mở modal tìm kiếm môn học
+  const advancedSearchBtn = document.createElement('button');
+  advancedSearchBtn.className = 'btn btn-outline-primary mb-3';
+  advancedSearchBtn.textContent = 'Tìm kiếm theo tên môn học';
+  advancedSearchBtn.addEventListener('click', () => {
+    const subjectSearchModal = new bootstrap.Modal(document.getElementById('customSearchModal'));
+    subjectSearchModal.show();
+  });
+  container.appendChild(advancedSearchBtn);
 
-      // Tạo danh sách file/folder
-      const list = document.createElement('ul');
-      list.className = 'file-list';
-      if (Array.isArray(data)) {
-        data.forEach(item => {
-          if ((path.length < 3 || path.length === 3) && item.count > 0) {
-            // Hiển thị folder
-            renderFolderItem(list, item.name, path, updatePathCallback, item.count, item.id);
-          } else if (path.length === 4) {
-            // Hiển thị file
-            renderFileItem(list, item, documentType);
-          }
-        });
-      }
-      container.appendChild(list);
-
-      // Xử lý tìm kiếm inline: lọc danh sách theo từ khóa nhập vào
-      const inlineSearchInput = inlineSearchContainer.querySelector('input');
-      inlineSearchInput.addEventListener('input', (e) => {
-        const term = e.target.value.toLowerCase();
-        const suggestions = [];
-        Array.from(list.children).forEach(item => {
-          const text = item.textContent.toLowerCase();
-          item.style.display = text.includes(term) ? 'flex' : 'none';
-          if (item.style.display !== 'none') {
-            const name = item.querySelector('.file-name').textContent;
-            if (!suggestions.includes(name)) suggestions.push(name);
-          }
-        });
-
-        inlineSuggestions.innerHTML = '';
-        if (term && suggestions.length > 0) {
-          suggestions.forEach(suggestion => {
-            const div = document.createElement('div');
-            div.className = 'suggestion-item';
-            div.textContent = suggestion;
-            div.addEventListener('click', () => {
-              inlineSearchInput.value = suggestion;
-              inlineSearchInput.dispatchEvent(new Event('input'));
-              inlineSuggestions.style.display = 'none';
-            });
-            inlineSuggestions.appendChild(div);
-          });
-          inlineSuggestions.style.display = 'block';
+  // Tạo danh sách file/folder
+  const list = document.createElement('ul');
+  list.className = 'file-list';
+  if (Array.isArray(data)) {
+    data.forEach(item => {
+      if (path.length === 0) {
+        // Khi hiển thị trường học, không hiển thị count
+        renderFolderItem(list, item.name, path, updatePathCallback, 0, item.id); // count = 0 để không hiển thị
+      } else if (path.length < 3) {
+        // Các cấp khác (Khoa) vẫn hiển thị count nếu có
+        if (typeof item.count !== 'undefined') {
+          renderFolderItem(list, item.name, path, updatePathCallback, item.count, item.id);
         } else {
-          inlineSuggestions.style.display = 'none';
+          renderFolderItem(list, item.name, path, updatePathCallback, 0, item.id);
         }
+      } else if (path.length === 3) {
+        // Cấp năm hiển thị count
+        renderFolderItem(list, item.name, path, updatePathCallback, item.count || 0, item.id);
+      } else if (path.length === 4) {
+        // Cấp file không cần count
+        renderFileItem(list, item, documentType);
+      }
+    });
+  }
+  container.appendChild(list);
+
+  // Xử lý tìm kiếm inline
+  const inlineSearchInput = inlineSearchContainer.querySelector('input');
+  inlineSearchInput.addEventListener('input', (e) => {
+    const term = e.target.value.toLowerCase();
+    const suggestions = [];
+    Array.from(list.children).forEach(item => {
+      const text = item.textContent.toLowerCase();
+      item.style.display = text.includes(term) ? 'flex' : 'none';
+      if (item.style.display !== 'none') {
+        const name = item.querySelector('.file-name').textContent;
+        if (!suggestions.includes(name)) suggestions.push(name);
+      }
+    });
+
+    inlineSuggestions.innerHTML = '';
+    if (term && suggestions.length > 0) {
+      suggestions.forEach(suggestion => {
+        const div = document.createElement('div');
+        div.className = 'suggestion-item';
+        div.textContent = suggestion;
+        div.addEventListener('click', () => {
+          inlineSearchInput.value = suggestion;
+          inlineSearchInput.dispatchEvent(new Event('input'));
+          inlineSuggestions.style.display = 'none';
+        });
+        inlineSuggestions.appendChild(div);
       });
+      inlineSuggestions.style.display = 'block';
+    } else {
+      inlineSuggestions.style.display = 'none';
     }
-
-
+  });
+}
     /* ==================================================
        Function: renderBreadcrumb
        Mô tả:
@@ -2814,18 +3017,25 @@
          @count       : Số lượng file/folder con
          @itemId      : ID của folder
        ================================================== */
-    function renderFolderItem(list, name, currentPath, callback, count, itemId) {
-      const li = document.createElement('li');
-      li.className = 'file-item';
-      li.innerHTML = `
+function renderFolderItem(list, name, currentPath, callback, count, itemId) {
+  const li = document.createElement('li');
+  li.className = 'file-item';
+
+  // Chỉ hiển thị count nếu count > 0 (đối với các cấp khác ngoài trường học)
+  const countHTML = count > 0 ? `<span class="file-count">${count}</span>` : '';
+
+  li.innerHTML = `
     <i class="bi bi-folder-fill file-icon folder"></i>
     <span class="file-name">${name}</span>
-    <span class="file-count">${count}</span>
+    ${countHTML}
   `;
-      li.addEventListener('click', () => callback([...currentPath, { id: itemId, name }]));
-      list.appendChild(li);
-    }
 
+  li.addEventListener('click', () => {
+    callback([...currentPath, { id: itemId, name }]);
+  });
+
+  list.appendChild(li);
+}
 
     /* ==================================================
        Function: renderFileItem
@@ -2837,28 +3047,39 @@
          @file         : Đối tượng file chứa thông tin file
          @documentType : Loại tài liệu ('exam' hoặc 'syllabus')
        ================================================== */
-    function renderFileItem(list, file, documentType) {
-      if (!file.file_path) {
-        console.warn('File không có đường dẫn hợp lệ:', file);
-        return;
-      }
+function renderFileItem(list, file, documentType) {
+  if (!file.file_path) {
+    console.warn('File không có đường dẫn hợp lệ:', file);
+    return;
+  }
 
-      const filePath = file.file_path.startsWith('/') ? file.file_path : `/${file.file_path}`;
-      const ext = filePath.split('.').pop().toLowerCase();
-      const iconClass = {
-        pdf: 'bi-file-pdf pdf',
-        doc: 'bi-file-earmark-word word',
-        docx: 'bi-file-earmark-word word',
-        jpg: 'bi-file-image',
-        jpeg: 'bi-file-image',
-        png: 'bi-file-image',
-        gif: 'bi-file-image'
-      }[ext] || 'bi-file-earmark';
+  // Debug: In ra thông tin trường của file và trường của user
+  console.log("File school_id:", file.school_id);
+  console.log("User's school id (global):", window.userSchoolId);
 
-      const li = document.createElement('li');
-      li.className = 'file-item';
-      const typeLabel = documentType === 'exam' ? 'Đề Thi' : 'Đề Cương';
-      li.innerHTML = `
+  // Kiểm tra trường của file có khớp với trường của user không
+  if (file.school_id && window.userSchoolId && file.school_id != window.userSchoolId) {
+    console.warn("File không thuộc trường của user! File school_id:", file.school_id, "User's school id:", window.userSchoolId);
+    alert("Bạn không được phép mở file của trường khác!");
+    return;
+  }
+
+  const filePath = file.file_path.startsWith('/') ? file.file_path : `/${file.file_path}`;
+  const ext = filePath.split('.').pop().toLowerCase();
+  const iconClass = {
+    pdf: 'bi-file-pdf pdf',
+    doc: 'bi-file-earmark-word word',
+    docx: 'bi-file-earmark-word word',
+    jpg: 'bi-file-image',
+    jpeg: 'bi-file-image',
+    png: 'bi-file-image',
+    gif: 'bi-file-image'
+  }[ext] || 'bi-file-earmark';
+
+  const li = document.createElement('li');
+  li.className = 'file-item';
+  const typeLabel = documentType === 'exam' ? 'Đề Thi' : 'Đề Cương';
+  li.innerHTML = `
     <i class="bi ${iconClass} file-icon"></i>
     <div>
       <div class="file-name">${typeLabel} ${file.file_name}</div>
@@ -2866,81 +3087,72 @@
     </div>
   `;
 
-      // Xử lý sự kiện click vào file: kiểm tra đăng nhập và trạng thái tài khoản
-      li.addEventListener('click', () => {
-        fetch('/api/check-login', {
-          method: 'GET',
-          credentials: 'include' // Gửi cookie session
-        })
-          .then(response => response.json())
-          .then(data => {
-            if (data.loggedIn) {
-              // Kiểm tra trạng thái tài khoản
-              fetch('/api/account_status', {
-                method: 'GET',
-                credentials: 'include'
-              })
-                .then(response => response.json())
-                .then(statusData => {
-                  if (statusData.account_status === 'đã duyệt') {
-                    // Log file mở và mở file
-                    fetch('/api/log-file-open', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      credentials: 'include',
-                      body: JSON.stringify({ documentId: file.id })
-                    })
-                      .then(() => {
-                        // --- Logic mới: Nếu là đề thi, lưu hoạt động "xem đề thi" vào bảng log ---
-                        if (documentType === 'exam') {
-                          fetch('/api/log-view-exam', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            credentials: 'include',
-                            body: JSON.stringify({ documentId: file.id })
-                          })
-                            .catch(error => {
-                              console.error('Lỗi khi log view exam:', error);
-                            });
-                        }
-                        // ------------------------------------------------------------
-                        window.open(filePath, '_blank'); // Mở file trong tab mới
-                      })
-                      .catch(error => {
-                        console.error('Lỗi khi log file:', error);
-                        window.open(filePath, '_blank'); // Vẫn mở file ngay cả khi log lỗi
-                      });
-                  } else if (statusData.account_status === 'bình thường') {
-                    // Hiển thị modal xác thực nếu trạng thái là "bình thường"
-                    const modal = new bootstrap.Modal(document.getElementById('verificationModal-v2'));
-                    modal.show();
-                  } else if (statusData.account_status === 'đang duyệt') {
-                    // Hiển thị thông báo nếu tài khoản đang xét duyệt
-                    triggerNotification('warning', 'Thông báo', 'Tài khoản của bạn đang được xét duyệt, vui lòng đợi');
-                  }
-
-                })
-                .catch(error => {
-                  console.error('Lỗi khi kiểm tra trạng thái tài khoản:', error);
-                  const modal = new bootstrap.Modal(document.getElementById('verificationModal-v2'));
-                  modal.show();
-                });
-            } else {
-              // Nếu chưa đăng nhập, hiển thị modal đăng nhập
-              const modal = new bootstrap.Modal(document.getElementById('loginModal-v3'));
-              modal.show();
-            }
+  // Xử lý sự kiện click vào file
+  li.addEventListener('click', () => {
+    fetch('/api/check-login', {
+      method: 'GET',
+      credentials: 'include'
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.loggedIn) {
+          fetch('/api/account_status', {
+            method: 'GET',
+            credentials: 'include'
           })
-          .catch(error => {
-            console.error('Lỗi kiểm tra đăng nhập:', error);
-            const modal = new bootstrap.Modal(document.getElementById('loginModal-v3'));
-            modal.show();
-          });
+            .then(response => response.json())
+            .then(statusData => {
+              if (statusData.account_status === 'đã duyệt') {
+                fetch('/api/log-file-open', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  credentials: 'include',
+                  body: JSON.stringify({ documentId: file.id })
+                })
+                  .then(() => {
+                    if (documentType === 'exam') {
+                      fetch('/api/log-view-exam', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({ documentId: file.id })
+                      })
+                        .catch(error => {
+                          console.error('Lỗi khi log view exam:', error);
+                        });
+                    }
+                    window.open(filePath, '_blank');
+                  })
+                  .catch(error => {
+                    console.error('Lỗi khi log file:', error);
+                    window.open(filePath, '_blank');
+                  });
+              } else if (statusData.account_status === 'bình thường') {
+                const modal = new bootstrap.Modal(document.getElementById('verificationModal-v2'));
+                modal.show();
+              } else if (statusData.account_status === 'đang duyệt') {
+                triggerNotification('warning', 'Thông báo', 'Tài khoản của bạn đang được xét duyệt, vui lòng đợi');
+              }
+            })
+            .catch(error => {
+              console.error('Lỗi khi kiểm tra trạng thái tài khoản:', error);
+              const modal = new bootstrap.Modal(document.getElementById('verificationModal-v2'));
+              modal.show();
+            });
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('loginModal-v3'));
+          modal.show();
+        }
+      })
+      .catch(error => {
+        console.error('Lỗi kiểm tra đăng nhập:', error);
+        const modal = new bootstrap.Modal(document.getElementById('loginModal-v3'));
+        modal.show();
       });
+  });
 
-      list.appendChild(li);
-    }
-
+  list.appendChild(li);
+}
 
     /* ==================================================
        Function: openFile
@@ -3094,200 +3306,178 @@
          - Thiết lập chức năng tìm kiếm môn học trong modal tìm kiếm
          - Xử lý hiển thị kết quả và gợi ý tìm kiếm theo từ khóa nhập vào
        ================================================== */
-    document.addEventListener("DOMContentLoaded", function () {
-      // Lấy các phần tử cần thiết từ modal tìm kiếm môn học
-      const subjectSearchInput = document.getElementById("subjectSearchInput");
-      const subjectSearchSuggestions = document.getElementById("subjectSearchSuggestions");
-      const schoolSelectionNotice = document.getElementById("schoolSelectionNotice");
-      const searchResultCount = document.getElementById("searchResultCount");
-      const modalEl = document.getElementById("customSearchModal");
+document.addEventListener("DOMContentLoaded", function () {
+  const subjectSearchInput = document.getElementById("subjectSearchInput");
+  const subjectSearchSuggestions = document.getElementById("subjectSearchSuggestions");
+  const schoolSelectionNotice = document.getElementById("schoolSelectionNotice");
+  const searchResultCount = document.getElementById("searchResultCount");
+  const modalEl = document.getElementById("customSearchModal");
 
-      if (!modalEl) {
-        console.error('Không tìm thấy phần tử modal với id "customSearchModal"');
-        return;
-      }
+  if (!modalEl) {
+    console.error('Không tìm thấy phần tử modal với id "customSearchModal"');
+    return;
+  }
 
-      // Ẩn tiêu đề kết quả và vùng gợi ý ban đầu
-      searchResultCount.style.display = "none";
+  searchResultCount.style.display = "none";
+  subjectSearchSuggestions.style.display = "none";
+
+  let modalInstance = bootstrap.Modal.getInstance(modalEl);
+  if (!modalInstance) {
+    modalInstance = new bootstrap.Modal(modalEl);
+  }
+
+  subjectSearchInput?.addEventListener("input", async () => {
+    const term = subjectSearchInput.value.trim().toLowerCase();
+
+    if (term.length < 2) {
       subjectSearchSuggestions.style.display = "none";
+      searchResultCount.style.display = "none";
+      return;
+    } else {
+      searchResultCount.style.display = "block";
+    }
 
-      // Lấy instance của modal (nếu chưa có thì tạo mới)
-      let modalInstance = bootstrap.Modal.getInstance(modalEl);
-      if (!modalInstance) {
-        modalInstance = new bootstrap.Modal(modalEl);
-      }
+    const activeTab = localStorage.getItem("activeTab") || "exam";
+    const currentPath = activeTab === "exam" ? examCurrentPath : syllabusCurrentPath;
 
-      // Sự kiện nhập liệu cho ô tìm kiếm môn học
-      subjectSearchInput?.addEventListener("input", async () => {
-        const term = subjectSearchInput.value.trim().toLowerCase();
+    if (!currentPath || currentPath.length === 0) {
+      schoolSelectionNotice.classList.remove("d-none");
+    } else {
+      schoolSelectionNotice.classList.add("d-none");
+    }
 
-        // Nếu từ khóa ít hơn 2 ký tự, ẩn gợi ý và tiêu đề kết quả
-        if (term.length < 2) {
-          subjectSearchSuggestions.style.display = "none";
-          searchResultCount.style.display = "none";
-          return;
-        } else {
-          searchResultCount.style.display = "block";
-        }
+    const schoolId = window.userSchoolId || (currentPath[0]?.id); // Ưu tiên school_id của user
+    const facultyId = currentPath[1]?.id || 0;
 
-        // Xác định activeTab và đường dẫn hiện tại
-        const activeTab = localStorage.getItem("activeTab") || "exam";
-        const currentPath = activeTab === "exam" ? examCurrentPath : syllabusCurrentPath;
+    try {
+      const url = new URL("/api/search/subjects", window.location.origin);
+      url.searchParams.append("term", term);
+      if (schoolId) url.searchParams.append("school_id", schoolId);
+      if (facultyId) url.searchParams.append("faculty_id", facultyId);
 
-        // Nếu chưa chọn trường, hiển thị thông báo
-        if (!currentPath || currentPath.length === 0) {
-          schoolSelectionNotice.classList.remove("d-none");
-        } else {
-          schoolSelectionNotice.classList.add("d-none");
-        }
+      const response = await fetch(url, { credentials: 'include' });
+      if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+      const results = await response.json();
 
-        // Lấy các tham số school_id và faculty_id từ currentPath
-        const schoolId = currentPath[0]?.id || 0;
-        const facultyId = currentPath[1]?.id || 0;
+      searchResultCount.textContent = "Kết quả tìm kiếm (" + results.length + ")";
 
-        try {
-          const url = new URL("/api/search/subjects", window.location.origin);
-          url.searchParams.append("term", term);
-          if (schoolId) url.searchParams.append("school_id", schoolId);
-          if (facultyId) url.searchParams.append("faculty_id", facultyId);
+      subjectSearchSuggestions.innerHTML = "";
+      if (results.length > 0) {
+        results.forEach(subject => {
+          const card = document.createElement("div");
+          card.className = "card mb-3";
+          card.style.border = "none";
+          card.style.borderRadius = "12px";
+          card.style.boxShadow = "0 2px 8px rgba(0,0,0,0.1)";
+          card.style.transition = "all 0.3s ease";
+          card.style.backgroundColor = "#ffffff";
+          card.style.cursor = "pointer";
+          card.onmouseover = function () {
+            this.style.transform = "translateY(-3px)";
+            this.style.boxShadow = "0 4px 12px rgba(0,0,0,0.15)";
+            this.style.backgroundColor = "#f8f9fa";
+          };
+          card.onmouseout = function () {
+            this.style.transform = "none";
+            this.style.boxShadow = "0 2px 8px rgba(0,0,0,0.1)";
+            this.style.backgroundColor = "#ffffff";
+          };
 
-          const response = await fetch(url);
-          if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
-          const results = await response.json();
+          const cardBody = document.createElement("div");
+          cardBody.className = "card-body";
 
-          // Cập nhật tiêu đề kết quả với số lượng kết quả trả về
-          searchResultCount.textContent = "Kết quả tìm kiếm (" + results.length + ")";
+          const contentDiv = document.createElement("div");
+          contentDiv.className = "d-flex justify-content-between align-items-start";
 
-          // Xóa nội dung gợi ý cũ
-          subjectSearchSuggestions.innerHTML = "";
+          const infoDiv = document.createElement("div");
 
-          if (results.length > 0) {
-            results.forEach(subject => {
-              // Tạo card cho mỗi kết quả tìm kiếm môn học
-              const card = document.createElement("div");
-              card.className = "card mb-3";
-              card.style.border = "none";
-              card.style.borderRadius = "12px";
-              card.style.boxShadow = "0 2px 8px rgba(0,0,0,0.1)";
-              card.style.transition = "all 0.3s ease";
-              card.style.backgroundColor = "#ffffff";
-              card.style.cursor = "pointer";
-              card.onmouseover = function () {
-                this.style.transform = "translateY(-3px)";
-                this.style.boxShadow = "0 4px 12px rgba(0,0,0,0.15)";
-                this.style.backgroundColor = "#f8f9fa";
-              };
-              card.onmouseout = function () {
-                this.style.transform = "none";
-                this.style.boxShadow = "0 2px 8px rgba(0,0,0,0.1)";
-                this.style.backgroundColor = "#ffffff";
-              };
+          const h5 = document.createElement("h5");
+          h5.className = "custom-card-title";
+          h5.style.color = "#0d6efd";
+          h5.style.fontWeight = "600";
+          h5.style.marginBottom = "8px";
+          h5.textContent = subject.name;
 
-              // Tạo card body chứa thông tin môn học
-              const cardBody = document.createElement("div");
-              cardBody.className = "card-body";
+          const schoolDiv = document.createElement("div");
+          schoolDiv.style.color = "#6c757d";
+          schoolDiv.style.marginBottom = "0.5rem";
+          schoolDiv.innerHTML = `<i class="fas fa-university me-1"></i> ${subject.school_name}`;
 
-              // Container d-flex để chia layout giữa thông tin và nút "Xem"
-              const contentDiv = document.createElement("div");
-              contentDiv.className = "d-flex justify-content-between align-items-start";
+          const facultySpan = document.createElement("span");
+          facultySpan.className = "custom-university-label";
+          facultySpan.style.fontSize = "0.9em";
+          facultySpan.style.backgroundColor = "#e9ecef";
+          facultySpan.style.borderRadius = "20px";
+          facultySpan.style.padding = "5px 15px";
+          facultySpan.style.display = "inline-block";
+          facultySpan.style.color = "#495057";
+          facultySpan.style.marginTop = "8px";
+          facultySpan.innerHTML = `<i class="fas fa-graduation-cap me-1"></i> ${subject.faculty_name}`;
 
-              // Phần thông tin môn học (bên trái)
-              const infoDiv = document.createElement("div");
+          infoDiv.appendChild(h5);
+          infoDiv.appendChild(schoolDiv);
+          infoDiv.appendChild(facultySpan);
 
-              const h5 = document.createElement("h5");
-              h5.className = "custom-card-title";
-              h5.style.color = "#0d6efd";
-              h5.style.fontWeight = "600";
-              h5.style.marginBottom = "8px";
-              h5.textContent = subject.name;
+          const viewButton = document.createElement("button");
+          viewButton.type = "button";
+          viewButton.style.fontSize = "0.875rem";
+          viewButton.style.border = "1px solid #0d6efd";
+          viewButton.style.color = "#0d6efd";
+          viewButton.style.backgroundColor = "transparent";
+          viewButton.style.padding = "0.375rem 0.75rem";
+          viewButton.style.borderRadius = "0.25rem";
+          viewButton.onmouseover = function () {
+            this.style.backgroundColor = "#0d6efd";
+            this.style.color = "#fff";
+          };
+          viewButton.onmouseout = function () {
+            this.style.backgroundColor = "transparent";
+            this.style.color = "#0d6efd";
+          };
+          viewButton.innerHTML = `<i class="fas fa-eye me-1"></i> Xem`;
 
-              const schoolDiv = document.createElement("div");
-              schoolDiv.style.color = "#6c757d";
-              schoolDiv.style.marginBottom = "0.5rem";
-              schoolDiv.innerHTML = `<i class="fas fa-university me-1"></i> ${subject.school_name}`;
+          contentDiv.appendChild(infoDiv);
+          contentDiv.appendChild(viewButton);
 
-              const facultySpan = document.createElement("span");
-              facultySpan.className = "custom-university-label";
-              facultySpan.style.fontSize = "0.9em";
-              facultySpan.style.backgroundColor = "#e9ecef";
-              facultySpan.style.borderRadius = "20px";
-              facultySpan.style.padding = "5px 15px";
-              facultySpan.style.display = "inline-block";
-              facultySpan.style.color = "#495057";
-              facultySpan.style.marginTop = "8px";
-              facultySpan.innerHTML = `<i class="fas fa-graduation-cap me-1"></i> ${subject.faculty_name}`;
+          cardBody.appendChild(contentDiv);
+          card.appendChild(cardBody);
 
-              infoDiv.appendChild(h5);
-              infoDiv.appendChild(schoolDiv);
-              infoDiv.appendChild(facultySpan);
-
-              // Phần nút "Xem" (bên phải)
-              const viewButton = document.createElement("button");
-              viewButton.type = "button";
-              viewButton.style.fontSize = "0.875rem";
-              viewButton.style.border = "1px solid #0d6efd";
-              viewButton.style.color = "#0d6efd";
-              viewButton.style.backgroundColor = "transparent";
-              viewButton.style.padding = "0.375rem 0.75rem";
-              viewButton.style.borderRadius = "0.25rem";
-              viewButton.onmouseover = function () {
-                this.style.backgroundColor = "#0d6efd";
-                this.style.color = "#fff";
-              };
-              viewButton.onmouseout = function () {
-                this.style.backgroundColor = "transparent";
-                this.style.color = "#0d6efd";
-              };
-              viewButton.innerHTML = `<i class="fas fa-eye me-1"></i> Xem`;
-
-              // Ghép thông tin và nút "Xem" vào container d-flex
-              contentDiv.appendChild(infoDiv);
-              contentDiv.appendChild(viewButton);
-
-              // Ghép container d-flex vào card body, sau đó vào card
-              cardBody.appendChild(contentDiv);
-              card.appendChild(cardBody);
-
-              // Xử lý sự kiện click: cập nhật currentPath, render drive mới, reset thanh tìm kiếm và đóng modal
-              card.addEventListener("click", () => {
-                const newPath = [
-                  { id: subject.school_id, name: subject.school_name },
-                  { id: subject.faculty_id, name: subject.faculty_name },
-                  { id: subject.id, name: subject.name }
-                ];
-                if (activeTab === "exam") {
-                  renderExamDrive(newPath);
-                } else {
-                  renderSyllabusDrive(newPath);
-                }
-                // Reset thanh tìm kiếm
-                subjectSearchInput.value = "";
-                subjectSearchSuggestions.innerHTML = "";
-                subjectSearchSuggestions.style.display = "none";
-                searchResultCount.textContent = "Kết quả tìm kiếm (0)";
-                // Đóng modal tìm kiếm
-                const modal = bootstrap.Modal.getInstance(document.getElementById("customSearchModal"));
-                if (modal) {
-                  modal.hide();
-                } else {
-                  new bootstrap.Modal(document.getElementById("customSearchModal")).hide();
-                }
-              });
-
-              subjectSearchSuggestions.appendChild(card);
-            });
-            subjectSearchSuggestions.style.display = "block";
-          } else {
+          card.addEventListener("click", () => {
+            const newPath = [
+              { id: subject.school_id, name: subject.school_name },
+              { id: subject.faculty_id, name: subject.faculty_name },
+              { id: subject.id, name: subject.name }
+            ];
+            if (activeTab === "exam") {
+              renderExamDrive(newPath);
+            } else {
+              renderSyllabusDrive(newPath);
+            }
+            subjectSearchInput.value = "";
+            subjectSearchSuggestions.innerHTML = "";
             subjectSearchSuggestions.style.display = "none";
-          }
-        } catch (error) {
-          console.error("Lỗi tìm kiếm:", error);
-          subjectSearchSuggestions.innerHTML = '<div class="error">Lỗi tải kết quả</div>';
-          subjectSearchSuggestions.style.display = "block";
-        }
-      });
-    });
+            searchResultCount.textContent = "Kết quả tìm kiếm (0)";
+            const modal = bootstrap.Modal.getInstance(document.getElementById("customSearchModal"));
+            if (modal) {
+              modal.hide();
+            } else {
+              new bootstrap.Modal(document.getElementById("customSearchModal")).hide();
+            }
+          });
 
+          subjectSearchSuggestions.appendChild(card);
+        });
+        subjectSearchSuggestions.style.display = "block";
+      } else {
+        subjectSearchSuggestions.style.display = "none";
+      }
+    } catch (error) {
+      console.error("Lỗi tìm kiếm:", error);
+      subjectSearchSuggestions.innerHTML = '<div class="error">Lỗi tải kết quả</div>';
+      subjectSearchSuggestions.style.display = "block";
+    }
+  });
+});
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

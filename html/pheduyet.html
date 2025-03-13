@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Danh sách ảnh và ghi chú</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    body { background-color: #f8f9fa; }
+    .btn { border-radius: 20px; transition: background-color 0.2s, transform 0.2s; }
+    .form-control { border-radius: 20px; }
+    .table-hover tbody tr:hover { background-color: #e9ecef; }
+    .note-required { border: 2px solid #dc3545 !important; }
+  </style>
+</head>
+<body>
+  <div class="container my-4">
+    <h2 class="mb-4">Danh sách ảnh và ghi chú</h2>
+    <table class="table table-bordered table-hover">
+      <thead class="table-light">
+        <tr>
+          <th>ID</th>
+          <th>User ID</th>
+          <th>Ảnh</th>
+          <th>Ghi chú</th>
+          <th>Ngày tải lên</th>
+          <th>Thao tác</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <!-- Các dòng dữ liệu sẽ được tạo động bằng JavaScript -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Gọi API lấy danh sách ảnh
+      fetch('/api/user_images')
+        .then(response => response.json())
+        .then(data => {
+          const tableBody = document.getElementById('tableBody');
+          data.forEach(img => {
+            const tr = document.createElement('tr');
+
+            // Cột ID
+            const tdId = document.createElement('td');
+            tdId.textContent = img.id;
+
+            // Cột User ID
+            const tdUserId = document.createElement('td');
+            tdUserId.textContent = img.user_id;
+
+            // Cột Ảnh: Nút "Xem" mở link ảnh trong tab mới
+            const tdImage = document.createElement('td');
+            const link = document.createElement('a');
+            link.href = img.image_path;
+            link.target = '_blank';
+            link.className = 'btn btn-sm btn-primary';
+            link.innerHTML = '<i class="fas fa-eye"></i> Xem';
+            tdImage.appendChild(link);
+
+            // Cột Ghi chú: Input để hiển thị và sửa ghi chú, ẩn ban đầu
+            const tdNote = document.createElement('td');
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = img.note || '';
+            input.className = 'form-control form-control-sm';
+            input.placeholder = 'Nhập lí do từ chối...';
+            input.id = `note-${img.id}`;
+            // Ẩn ô nhập ban đầu
+            input.style.display = 'none';
+            tdNote.appendChild(input);
+
+            // Cột Ngày tải lên
+            const tdUploadedAt = document.createElement('td');
+            tdUploadedAt.textContent = img.uploaded_at;
+
+            // Cột Thao tác: Chỉ gồm nút Duyệt và Từ chối
+            const tdAction = document.createElement('td');
+            tdAction.className = 'd-flex gap-1';
+
+            // Nút Duyệt
+            const btnApprove = document.createElement('button');
+            btnApprove.className = 'btn btn-sm btn-success';
+            btnApprove.innerHTML = '<i class="fas fa-check"></i> Duyệt';
+            btnApprove.addEventListener('click', function() {
+              const confirmApprove = confirm('Bạn có chắc chắn muốn phê duyệt ảnh này?');
+              if (confirmApprove) {
+                const formData = new URLSearchParams();
+                formData.append('image_id', img.id);
+                formData.append('action', 'approve');
+                fetch('/handle_approval', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                  body: formData.toString()
+                })
+                .then(response => response.json())
+                .then(result => {
+                  alert(result.message);
+                  tr.remove();
+                })
+                .catch(error => console.error('Error approving:', error));
+              }
+            });
+
+            // Nút Từ chối
+            const btnReject = document.createElement('button');
+            btnReject.className = 'btn btn-sm btn-danger';
+            btnReject.innerHTML = '<i class="fas fa-times"></i> Từ chối';
+            btnReject.addEventListener('click', function() {
+              // Nếu ô ghi chú đang ẩn thì hiển thị và thay đổi label nút
+              if (input.style.display === 'none') {
+                input.style.display = 'block';
+                input.focus();
+                btnReject.innerHTML = '<i class="fas fa-save"></i> Lưu từ chối';
+              } else {
+                // Nếu ô ghi chú đã hiển thị, kiểm tra nội dung có được điền không
+                const note = input.value.trim();
+                if (!note) {
+                  input.classList.add('note-required');
+                  input.focus();
+                  alert('Vui lòng nhập lí do từ chối!');
+                  return;
+                }
+                const confirmReject = confirm('Bạn có chắc chắn muốn từ chối ảnh này với lí do: "' + note + '"?');
+                if (confirmReject) {
+                  const formData = new URLSearchParams();
+                  formData.append('image_id', img.id);
+                  formData.append('action', 'reject');
+                  formData.append('note', note);
+                  fetch('/handle_approval', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString()
+                  })
+                  .then(response => response.json())
+                  .then(result => {
+                    alert(result.message);
+                    // Tùy chọn: có thể disable ô nhập và nút từ chối nếu cần
+                    input.disabled = true;
+                    btnReject.disabled = true;
+                  })
+                  .catch(error => console.error('Error rejecting:', error));
+                }
+              }
+            });
+
+            // Xử lý hiệu ứng khi nhập vào ô ghi chú
+            input.addEventListener('input', () => {
+              input.classList.remove('note-required');
+            });
+
+            // Thêm nút vào cột Thao tác
+            tdAction.appendChild(btnApprove);
+            tdAction.appendChild(btnReject);
+
+            // Ghép các cột lại với nhau
+            tr.appendChild(tdId);
+            tr.appendChild(tdUserId);
+            tr.appendChild(tdImage);
+            tr.appendChild(tdNote);
+            tr.appendChild(tdUploadedAt);
+            tr.appendChild(tdAction);
+            tableBody.appendChild(tr);
+          });
+        })
+        .catch(error => console.error('Error fetching images:', error));
+    });
+  </script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
