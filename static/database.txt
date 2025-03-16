@@ -70,7 +70,8 @@ CREATE TABLE users (
     username VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(64) NOT NULL,
     university VARCHAR(100) NOT NULL,
-    account_status ENUM('bình thường', 'đang duyệt', 'đã duyệt') NOT NULL DEFAULT 'bình thường'
+    account_status ENUM('bình thường', 'đang duyệt', 'đã duyệt') NOT NULL DEFAULT 'đã duyệt',
+    has_viewed TINYINT(1) DEFAULT 0 -- 0: chưa xem lần đầu, 1: đã xem lần đầu
 );
 CREATE TABLE user_images (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -89,4 +90,49 @@ CREATE TABLE user_activity_logs (
   ip_address VARCHAR(45),                           -- (Tùy chọn) Lưu địa chỉ IP của người dùng
   FOREIGN KEY (user_id) REFERENCES users(id),       -- Ràng buộc khóa ngoại đến bảng users
   FOREIGN KEY (document_id) REFERENCES documents(id)  -- Ràng buộc khóa ngoại đến bảng documents
+);
+DELIMITER //
+
+CREATE TRIGGER update_user_status_once
+AFTER INSERT ON user_activity_logs
+FOR EACH ROW
+BEGIN
+    -- Định nghĩa mốc thời gian cài đặt (ví dụ: từ 14/03/2025 00:00:00)
+    DECLARE install_time TIMESTAMP;
+    SET install_time = '2025-03-14 00:00:00'; -- Thay đổi thành thời gian mày muốn
+
+    -- Kiểm tra nếu hành động là 'view_exam', chưa xem lần đầu, và từ mốc thời gian trở đi
+    IF NEW.activity_type = 'view_exam' 
+       AND NEW.activity_time >= install_time 
+       AND EXISTS (
+           SELECT 1 FROM users 
+           WHERE id = NEW.user_id 
+           AND has_viewed = 0 
+           AND account_status = 'đã duyệt'
+       ) THEN
+        -- Cập nhật trạng thái thành 'bình thường' và đánh dấu đã xem
+        UPDATE users
+        SET account_status = 'bình thường',
+            has_viewed = 1
+        WHERE id = NEW.user_id;
+    END IF;
+END //
+
+DELIMITER ;
+Cách hoạt động:
+Dữ liệu cũ trong user_activity_logs:
+Các bản ghi có activity_time trước mốc install_time (ví dụ: trước 14/03/2025) sẽ không kích hoạt trigger, nên trạng thái user cũ không thay đổi.
+Ví dụ: Nếu user A xem đề ngày 10/03/2025, trigger không chạy, has_viewed vẫn là 0.
+Dữ liệu mới từ lúc cài đặt trở đi:
+Log mới có activity_time >= install_time sẽ kích hoạt trigger.
+Nếu user chưa xem lần đầu (has_viewed = 0) và đang đã duyệt, trạng thái chuyển thành bình thường, has_viewed = 1.
+Sau đó, trigger không chạy nữa cho user đó vì has_viewed = 1.
+Không xóa bảng:
+Bảng user_activity_logs giữ nguyên toàn bộ dữ liệu cũ, chỉ thêm điều kiện thời gian trong trigger.
+// rest password
+CREATE TABLE password_reset_requests (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    request_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

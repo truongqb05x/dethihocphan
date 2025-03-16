@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng ký tài khoản</title>
+  
+  <!-- Import Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Import Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- Modal -->
+<div class="modal fade" id="accountModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header gradient-bg text-white">
+        <h5 class="modal-title">
+          <i class="bi bi-shield-lock-fill me-2"></i>
+          Đăng ký tài khoản
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      
+      <div class="modal-body">
+        <!-- Thông báo IP -->
+        <div class="alert alert-warning small d-flex align-items-center">
+          <i class="bi bi-info-circle-fill me-2"></i>
+          <div>
+            Địa chỉ IP của bạn: <span id="userIP" class="fw-bold">...</span>
+            <br>Mỗi IP chỉ được tạo tối đa 1 tài khoản
+          </div>
+        </div>
+
+        <!-- Danh sách tài khoản -->
+        <div id="accountList" class="mb-4 d-none">
+          <h6 class="mb-3 fw-bold text-muted">
+            <i class="bi bi-person-lines-fill me-2"></i>
+            Tài khoản đã đăng ký:
+          </h6>
+          <div class="row g-3" id="accountCards"></div>
+        </div>
+
+        <!-- Form bước 1 -->
+        <form id="step1Form">
+          <div class="instruction-box">
+            <h6 class="fw-bold mb-3">
+              <i class="bi bi-info-circle me-2"></i>
+              Hướng dẫn nhập username:
+            </h6>
+            <p class="small mb-0">
+              Nhập username của bạn vào ô bên dưới. Chúng tôi sẽ giúp bạn kiểm tra và lấy lại mật khẩu nếu tài khoản đã tồn tại.
+            </p>
+          </div>
+          
+          <div class="mb-4">
+            <label class="form-label fw-bold">Nhập username:</label>
+            <div class="input-group">
+              <span class="input-group-text">
+                <i class="bi bi-person-fill"></i>
+              </span>
+              <input type="text" 
+                     class="form-control" 
+                     name="username" 
+                     required
+                     placeholder="Nhập username..."
+                     pattern="[A-Za-z0-9]{4,20}">
+            </div>
+            <div class="form-text">Username từ 4-20 ký tự, chỉ chứa chữ và số</div>
+          </div>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-custom">
+              <span class="submit-text">Tiếp tục</span>
+              <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Form bước 2 -->
+        <form id="step2Form" class="d-none">
+          <div class="instruction-box">
+            <h6 class="fw-bold mb-3">
+              <i class="bi bi-info-circle me-2"></i>
+              Hướng dẫn nhập email:
+            </h6>
+            <p class="small mb-0">
+              Vui lòng nhập địa chỉ email của bạn. Chúng tôi sẽ gửi mật khẩu mới nhất về email này.
+              <br>Đảm bảo email chính xác để nhận được thông tin tài khoản.
+            </p>
+          </div>
+          
+          <div class="mb-4">
+            <label class="form-label fw-bold">Nhập email nhận mật khẩu mới:</label>
+            <div class="input-group">
+              <span class="input-group-text">
+                <i class="bi bi-envelope-fill"></i>
+              </span>
+              <input type="email" 
+                     class="form-control" 
+                     name="email" 
+                     required
+                     placeholder="Nhập email...">
+            </div>
+            <div class="form-text">Vui lòng kiểm tra cả hộp thư spam nếu không thấy email</div>
+          </div>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-custom">
+              <span class="submit-text">Gửi mật khẩu</span>
+              <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Thông báo lỗi -->
+        <div id="errorMessage" class="alert alert-danger mt-3 d-none"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Import Bootstrap JS và dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // 1. Chèn CSS mới bằng JS để tránh xung đột với các CSS cũ
+  const dynamicStyle = document.createElement('style');
+  dynamicStyle.textContent = `
+    :root {
+      --primary-color: #6a11cb;
+      --secondary-color: #2575fc;
+      --success-color: #28a745;
+      --error-color: #dc3545;
+      --warning-color: #ffc107;
+    }
+
+    .gradient-bg {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    }
+
+    .custom-card {
+      border: none;
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .custom-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-custom {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border: none;
+      color: white;
+      padding: 12px 30px;
+      border-radius: 30px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-custom:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(106, 17, 203, 0.4);
+    }
+
+    .form-control {
+      border-radius: 10px;
+      padding: 12px 20px;
+      border: 2px solid #e9ecef;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
+    }
+
+    .instruction-box {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 25px;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .modal-content {
+      border-radius: 20px;
+      overflow: hidden;
+      border: none;
+    }
+
+    .error-shake {
+      animation: shake 0.5s;
+    }
+
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      50% { transform: translateX(10px); }
+      75% { transform: translateX(-5px); }
+      100% { transform: translateX(0); }
+    }
+
+    .input-group-text {
+      background: white;
+      border: 2px solid #e9ecef;
+      border-right: none;
+      border-radius: 10px 0 0 10px;
+    }
+
+    .form-text {
+      font-size: 0.85rem;
+      color: #6c757d !important;
+    }
+
+    .alert {
+      border-radius: 10px;
+      padding: 15px 20px;
+    }
+  `;
+  document.head.appendChild(dynamicStyle);
+
+  // 2. Các xử lý DOM khác (modal, form, v.v...)
+  const modal = new bootstrap.Modal('#accountModal');
+  const userIP = document.getElementById('userIP');
+  const accountCards = document.getElementById('accountCards');
+  const step1Form = document.getElementById('step1Form');
+  const step2Form = document.getElementById('step2Form');
+  const errorMessage = document.getElementById('errorMessage');
+  
+  // Danh sách username đã đăng ký (giả lập)
+  const registeredUsernames = ['user123', 'testaccount', 'demo2023'];
+  
+  // Lấy IP thực tế qua ipify
+  fetch('https://api.ipify.org?format=json')
+    .then(response => response.json())
+    .then(data => {
+      userIP.textContent = data.ip;
+      checkIPLimit(data.ip);
+    })
+    .catch(error => {
+      console.error('Lỗi khi lấy IP:', error);
+      userIP.textContent = 'Không lấy được IP';
+    });
+
+  // Hàm format username
+  function formatUsername(username) {
+    if (username.length <= 4) return username;
+    return username.substr(0, 2) +
+           '*'.repeat(username.length - 4) +
+           username.substr(-2);
+  }
+
+  // Kiểm tra IP và hiển thị danh sách tài khoản nếu có
+  function checkIPLimit(ip) {
+    if (registeredUsernames.length > 0) {
+      document.getElementById('accountList').classList.remove('d-none');
+      accountCards.innerHTML = registeredUsernames
+        .map(acc => `
+          <div class="col-md-6">
+            <div class="custom-card p-3 bg-light">
+              <div class="d-flex align-items-center">
+                <i class="bi bi-person-circle me-3 fs-4 text-primary"></i>
+                <div>
+                  <div class="fw-bold">${formatUsername(acc)}</div>
+                  <small class="text-muted">Đã đăng ký</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        `).join('');
+    }
+  }
+
+  // Xử lý form bước 1
+  step1Form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const btn = this.querySelector('button');
+    const spinner = btn.querySelector('.spinner-border');
+    const text = btn.querySelector('.submit-text');
+    const usernameInput = this.querySelector('input[name="username"]');
+    const username = usernameInput.value.trim();
+    
+    // Hiển thị loading
+    text.classList.add('d-none');
+    spinner.classList.remove('d-none');
+    btn.disabled = true;
+    errorMessage.classList.add('d-none');
+    
+    // Giả lập kiểm tra username
+    setTimeout(() => {
+      const isUsernameValid = registeredUsernames.includes(username);
+      
+      if (isUsernameValid) {
+        step1Form.classList.add('d-none');
+        step2Form.classList.remove('d-none');
+      } else {
+        errorMessage.innerHTML = `
+          <i class="bi bi-exclamation-circle-fill me-2"></i>
+          Vui lòng nhập đúng username bạn đã đăng ký!
+        `;
+        errorMessage.classList.remove('d-none');
+        usernameInput.classList.add('error-shake');
+        setTimeout(() => usernameInput.classList.remove('error-shake'), 500);
+        usernameInput.focus();
+      }
+      
+      // Ẩn loading
+      text.classList.remove('d-none');
+      spinner.classList.add('d-none');
+      btn.disabled = false;
+    }, 1000);
+  });
+
+  // Xử lý form bước 2
+  step2Form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    // Xử lý gửi email...
+    modal.hide();
+  });
+  
+  // Hiển thị modal khi DOM đã sẵn sàng
+  modal.show();
+});
+</script>
+
+</body>
+</html>

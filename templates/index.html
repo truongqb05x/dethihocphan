@@ -13,6 +13,10 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+  <!-- Import Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Import Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
   <!-- Bootstrap CSS -->
@@ -585,7 +589,6 @@
 
       <!-- Các chức năng bên phải -->
       <div class="d-flex align-items-center gap-3">
-
         <!-- Nút "Nhật ký hoạt động hệ thống" -->
         <button id="activityBtn" class="btn btn-light rounded-pill px-3 btn-hover-tooltip"
           data-tooltip="Nhật ký hoạt động hệ thống">
@@ -629,16 +632,7 @@
 
   </script>
   <style>
-    /* Định dạng cho nav chung */
-.nav {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-}
-.nav-item {
-  margin-right: 20px;
-}
+  
 /* Định dạng cho nút nav */
 .nav-link {
   position: relative;
@@ -742,7 +736,7 @@
               <div class="version-info"
                 style="position: absolute; bottom: 0; right: 0; padding: 5px; font-size: 0.9rem; color: #666;"
                 data-bs-toggle="modal" data-bs-target="#updateHistoryModal">
-                Version 2.0.2
+                Version 2.0.4
               </div>
             </div>
           </div>
@@ -929,246 +923,166 @@
   </script>
 
   <!-- Modal Structure -->
-  <!-- Modal: Lịch sử hoạt động -->
-  <div class="modal fade" id="activityModal" tabindex="-1" aria-labelledby="activityModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">
-            <i class="fas fa-history me-2"></i>Lịch sử hoạt động
-          </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
-        </div>
-        <div class="modal-body">
-          <!-- Timeline: Hoạt động người dùng -->
-          <div class="section-divider">
-            <i class="fas fa-user"></i>
-            <span>Hoạt động người dùng</span>
-          </div>
-          <!-- Nhóm "Mở đề thi" với nhiều môn khác nhau -->
-          <div class="timeline-group user-group" id="openExamGroup">
-            <div class="timeline-group-header">
-              <div class="timeline-icon">
-                <i class="fas fa-book-open"></i>
-              </div>
-              <div class="group-title">
-                <h6>Mở đề thi</h6>
-              </div>
+<!-- Modal: Lịch sử hoạt động -->
+<div class="modal fade" id="activityModal" tabindex="-1" aria-labelledby="activityModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg"><!-- .modal-dialog -->
+    <div class="modal-content"><!-- .modal-content -->
+      <div class="modal-header"><!-- .modal-header -->
+        <h5 class="modal-title">
+          <i class="fas fa-history me-2"></i>Lịch sử hoạt động
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div><!-- End .modal-header -->
+      <div class="modal-body"><!-- .modal-body -->
+        <!-- Timeline: Hoạt động người dùng -->
+        <div class="section-divider"><!-- .section-divider -->
+          <i class="fas fa-user"></i>
+          <span>Hoạt động người dùng</span>
+        </div><!-- End .section-divider -->
+        <!-- Nhóm "Mở đề thi" với nhiều môn khác nhau -->
+        <div class="timeline-group user-group" id="openExamGroup"><!-- #openExamGroup -->
+          <div class="timeline-group-header"><!-- .timeline-group-header -->
+            <div class="timeline-icon"><!-- .timeline-icon -->
+              <i class="fas fa-book-open"></i>
+            </div><!-- End .timeline-icon -->
+            <div class="group-title"><!-- .group-title -->
+              <h6>Mở đề thi</h6>
+            </div><!-- End .group-title -->
+          </div><!-- End .timeline-group-header -->
+          <div class="timeline-group-items"><!-- .timeline-group-items -->
+            <!-- Nội dung mẫu ban đầu (sẽ được thay thế bởi dữ liệu backend) -->
+            <div class="timeline-item"><!-- .timeline-item -->
+              <div class="timeline-content"><!-- .timeline-content -->
+                <small>39 phút trước</small>
+                <strong>Mở đề thi Java Cơ Bản</strong>
+                <div class="d-flex flex-wrap gap-2 mt-1"><!-- .d-flex -->
+                  <span class="info-badge">
+                    <i class="fas fa-user-circle text-purple"></i> Nguyễn Văn A
+                  </span>
+                  <span class="info-badge">
+                    <img src="logo-hue.png" alt="ĐH Khoa học Huế" class="university-logo" /> ĐH Khoa học Huế
+                  </span>
+                </div><!-- End .d-flex -->
+              </div><!-- End .timeline-content -->
+            </div><!-- End .timeline-item -->
+          </div><!-- End .timeline-group-items -->
+        </div><!-- End #openExamGroup -->
+        <!-- Nhóm "Đăng nhập" -->
+        <div class="timeline-group user-group" id="loginGroup"><!-- #loginGroup -->
+          <div class="timeline-group-header"><!-- .timeline-group-header -->
+            <div class="timeline-icon"><!-- .timeline-icon -->
+              <i class="fas fa-sign-in-alt"></i>
+            </div><!-- End .timeline-icon -->
+            <div class="group-title"><!-- .group-title -->
+              <h6>Đăng nhập vào hệ thống</h6>
+            </div><!-- End .group-title -->
+          </div><!-- End .timeline-group-header -->
+          <div class="timeline-group-items"><!-- .timeline-group-items -->
+            <!-- Nội dung mẫu ban đầu (sẽ được thay thế bởi dữ liệu backend) -->
+            <div class="timeline-item"><!-- .timeline-item -->
+              <div class="timeline-content"><!-- .timeline-content -->
+                <small>2 giờ trước</small>
+                <strong>Đăng nhập thành công</strong>
+                <div class="d-flex flex-wrap gap-2 mt-1"><!-- .d-flex -->
+                  <span class="info-badge">
+                    <i class="fas fa-user-circle text-purple"></i> Lê Văn C
+                  </span>
+                  <span class="info-badge">
+                    <img src="logo-dhkt.png" alt="ĐH Kinh Tế" class="university-logo" /> ĐH Kinh Tế
+                  </span>
+                </div><!-- End .d-flex -->
+              </div><!-- End .timeline-content -->
+            </div><!-- End .timeline-item -->
+          </div><!-- End .timeline-group-items -->
+        </div><!-- End #loginGroup -->
+        <!-- Nhóm "Đăng kí tài khoản" -->
+        <div class="timeline-group user-group" id="registerGroup"><!-- #registerGroup -->
+          <div class="timeline-group-header"><!-- .timeline-group-header -->
+            <div class="timeline-icon"><!-- .timeline-icon -->
+              <i class="fas fa-user-plus"></i>
+            </div><!-- End .timeline-icon -->
+            <div class="group-title"><!-- .group-title -->
+              <h6>Đăng kí tài khoản</h6>
+            </div><!-- End .group-title -->
+          </div><!-- End .timeline-group-header -->
+          <div class="timeline-group-items"><!-- .timeline-group-items -->
+            <div class="timeline-item"><!-- .timeline-item -->
+              <div class="timeline-content"><!-- .timeline-content -->
+                <small>1 giờ trước</small>
+                <strong>Đăng kí thành công</strong>
+                <div class="d-flex flex-wrap gap-2 mt-1"><!-- .d-flex -->
+                  <span class="info-badge">
+                    <i class="fas fa-user-circle text-purple"></i> Trần Thị D
+                  </span>
+                  <span class="info-badge">
+                    <img src="logo-dhct.png" alt="ĐH Công nghệ" class="university-logo" /> ĐH Công nghệ
+                  </span>
+                </div><!-- End .d-flex -->
+              </div><!-- End .timeline-content -->
+            </div><!-- End .timeline-item -->
+          </div><!-- End .timeline-group-items -->
+        </div><!-- End #registerGroup -->
+        <!-- Timeline: Hoạt động hệ thống -->
+        <div class="section-divider"><!-- .section-divider -->
+          <i class="fas fa-server"></i>
+          <span>Hoạt động hệ thống</span>
+        </div><!-- End .section-divider -->
+        <!-- Nhóm "Đã upload đề thi mới" -->
+        <div class="timeline-group system-group" id="uploadGroup"><!-- #uploadGroup -->
+          <div class="timeline-group-header"><!-- .timeline-group-header -->
+            <div class="timeline-icon"><!-- .timeline-icon -->
+              <i class="fas fa-cloud-upload-alt"></i>
+            </div><!-- End .timeline-icon -->
+            <div class="group-title"><!-- .group-title -->
+              <h6>Đã upload đề thi mới</h6>
+            </div><!-- End .group-title -->
+          </div><!-- End .timeline-group-header -->
+          <div class="timeline-group-items"><!-- .timeline-group-items -->
+            <div class="timeline-item"><!-- .timeline-item -->
+              <div class="timeline-content"><!-- .timeline-content -->
+                <small>24 phút trước</small>
+                <strong>Upload đề thi Đại Số Đồ Thị</strong>
+                <div class="d-flex flex-wrap gap-2 mt-1"><!-- .d-flex -->
+                  <span class="info-badge">
+                    <i class="fas fa-tag text-success"></i> Đề thi
+                  </span>
+                  <span class="info-badge">
+                    <i class="fas fa-database text-info"></i> 2.4 MB
+                  </span>
+                </div><!-- End .d-flex -->
+              </div><!-- End .timeline-content -->
+            </div><!-- End .timeline-item -->
+          </div><!-- End .timeline-group-items -->
+        </div><!-- End #uploadGroup -->
+        <!-- (Đã xóa nhóm "Bảo trì hệ thống" và "Cập nhật hệ thống") -->
+        <!-- Thống kê thành viên -->
+        <div class="section-divider"><!-- .section-divider -->
+          <i class="fas fa-chart-bar"></i>
+          <span>Thống kê thành viên</span>
+        </div><!-- End .section-divider -->
+        <div class="statistics-list"><!-- .statistics-list -->
+          <div class="statistics-item d-flex justify-content-between"><!-- .statistics-item -->
+            <div>
+              <img src="logo-dhtn.png" alt="ĐH Khoa học Tự nhiên" class="university-logo me-2" />
+              ĐH Khoa học Tự nhiên
             </div>
-            <div class="timeline-group-items">
-              <!-- Nội dung mẫu ban đầu (sẽ được thay thế bởi dữ liệu backend) -->
-              <div class="timeline-item">
-                <div class="timeline-content">
-                  <small>39 phút trước</small>
-                  <strong>Mở đề thi Java Cơ Bản</strong>
-                  <div class="d-flex flex-wrap gap-2 mt-1">
-                    <span class="info-badge">
-                      <i class="fas fa-user-circle text-purple"></i> Nguyễn Văn A
-                    </span>
-                    <span class="info-badge">
-                      <img src="logo-hue.png" alt="ĐH Khoa học Huế" class="university-logo" /> ĐH Khoa học Huế
-                    </span>
-                  </div>
-                </div>
-              </div>
+            <span class="badge bg-primary rounded-pill">150</span>
+          </div><!-- End .statistics-item -->
+          <div class="statistics-item d-flex justify-content-between"><!-- .statistics-item -->
+            <div>
+              <img src="logo-dhct.png" alt="ĐH Công nghệ" class="university-logo me-2" />
+              ĐH Công nghệ
             </div>
-          </div>
-          <!-- Nhóm "Đăng nhập" -->
-          <div class="timeline-group user-group" id="loginGroup">
-            <div class="timeline-group-header">
-              <div class="timeline-icon">
-                <i class="fas fa-sign-in-alt"></i>
-              </div>
-              <div class="group-title">
-                <h6>Đăng nhập vào hệ thống</h6>
-              </div>
-            </div>
-            <div class="timeline-group-items">
-              <!-- Nội dung mẫu ban đầu (sẽ được thay thế bởi dữ liệu backend) -->
-              <div class="timeline-item">
-                <div class="timeline-content">
-                  <small>2 giờ trước</small>
-                  <strong>Đăng nhập thành công</strong>
-                  <div class="d-flex flex-wrap gap-2 mt-1">
-                    <span class="info-badge">
-                      <i class="fas fa-user-circle text-purple"></i> Lê Văn C
-                    </span>
-                    <span class="info-badge">
-                      <img src="logo-dhkt.png" alt="ĐH Kinh Tế" class="university-logo" /> ĐH Kinh Tế
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Nhóm "Đăng kí tài khoản" -->
-          <div class="timeline-group user-group" id="registerGroup">
-            <div class="timeline-group-header">
-              <div class="timeline-icon">
-                <i class="fas fa-user-plus"></i>
-              </div>
-              <div class="group-title">
-                <h6>Đăng kí tài khoản</h6>
-              </div>
-            </div>
-            <div class="timeline-group-items">
-              <div class="timeline-item">
-                <div class="timeline-content">
-                  <small>1 giờ trước</small>
-                  <strong>Đăng kí thành công</strong>
-                  <div class="d-flex flex-wrap gap-2 mt-1">
-                    <span class="info-badge">
-                      <i class="fas fa-user-circle text-purple"></i> Trần Thị D
-                    </span>
-                    <span class="info-badge">
-                      <img src="logo-dhct.png" alt="ĐH Công nghệ" class="university-logo" /> ĐH Công nghệ
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Timeline: Hoạt động hệ thống -->
-          <div class="section-divider">
-            <i class="fas fa-server"></i>
-            <span>Hoạt động hệ thống</span>
-          </div>
-          <!-- Nhóm "Đã upload đề thi mới" -->
-          <div class="timeline-group system-group" id="uploadGroup">
-            <div class="timeline-group-header">
-              <div class="timeline-icon">
-                <i class="fas fa-cloud-upload-alt"></i>
-              </div>
-              <div class="group-title">
-                <h6>Đã upload đề thi mới</h6>
-              </div>
-            </div>
-            <div class="timeline-group-items">
-              <div class="timeline-item">
-                <div class="timeline-content">
-                  <small>24 phút trước</small>
-                  <strong>Upload đề thi Đại Số Đồ Thị</strong>
-                  <div class="d-flex flex-wrap gap-2 mt-1">
-                    <span class="info-badge">
-                      <i class="fas fa-tag text-success"></i> Đề thi
-                    </span>
-                    <span class="info-badge">
-                      <i class="fas fa-database text-info"></i> 2.4 MB
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Nhóm "Bảo trì hệ thống" -->
-          <div class="timeline-group system-group" id="maintenanceGroup">
-            <div class="timeline-group-header">
-              <div class="timeline-icon">
-                <i class="fas fa-tools"></i>
-              </div>
-              <div class="group-title">
-                <h6>Bảo trì hệ thống</h6>
-              </div>
-            </div>
-            <div class="timeline-group-items">
-              <div class="timeline-item">
-                <div class="timeline-content">
-                  <small>3 giờ trước</small>
-                  <strong>Bảo trì định kỳ</strong>
-                  <div class="d-flex flex-wrap gap-2 mt-1">
-                    <span class="info-badge">
-                      <i class="fas fa-cog text-info"></i> Bảo trì
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Nhóm "Cập nhật hệ thống" -->
-          <!-- Nhóm "Cập nhật hệ thống" -->
-          <div class="timeline-group system-group" id="updateGroup">
-            <div class="timeline-group-header">
-              <div class="timeline-icon">
-                <i class="fas fa-sync-alt"></i>
-              </div>
-              <div class="group-title">
-                <h6>Cập nhật hệ thống</h6>
-              </div>
-            </div>
-            <div class="timeline-group-items">
-              <div class="timeline-item">
-                <div class="timeline-content">
-                  <small>45 phút trước</small>
-                  <strong>Cập nhật tự động</strong>
-                  <div class="d-flex flex-wrap gap-2 mt-1">
-                    <span class="info-badge">
-                      <i class="fas fa-cogs text-info"></i> Tự động
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div class="timeline-item">
-                <div class="timeline-content">
-                  <small>15 phút trước</small>
-                  <strong>Sao lưu dữ liệu</strong>
-                  <div class="d-flex flex-wrap gap-2 mt-1">
-                    <span class="info-badge">
-                      <i class="fas fa-cloud-download-alt text-info"></i> Sao lưu
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <!-- Tính năng con "Cập nhật phiên bản" với icon phù hợp -->
-              <div class="timeline-item">
-                <div class="timeline-content">
-                  <small>5 phút trước</small>
-                  <strong>Cập nhật phiên bản</strong>
-                  <div class="d-flex flex-wrap gap-2 mt-1">
-                    <span class="info-badge">
-                      <i class="fas fa-code-branch text-info"></i> Phiên bản mới
-                    </span>
-                  </div>
-                  <p>Các tính năng thêm:</p>
-                  <ul>
-                    <li>Tối ưu hóa hiệu suất hệ thống</li>
-                    <li>Nâng cao bảo mật người dùng</li>
-                    <li>Cải thiện giao diện người dùng</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-          <!-- Thống kê thành viên -->
-          <div class="section-divider">
-            <i class="fas fa-chart-bar"></i>
-            <span>Thống kê thành viên</span>
-          </div>
-          <div class="statistics-list">
-            <div class="statistics-item d-flex justify-content-between">
-              <div>
-                <img src="logo-dhtn.png" alt="ĐH Khoa học Tự nhiên" class="university-logo me-2" />
-                ĐH Khoa học Tự nhiên
-              </div>
-              <span class="badge bg-primary rounded-pill">150</span>
-            </div>
-            <div class="statistics-item d-flex justify-content-between">
-              <div>
-                <img src="logo-dhct.png" alt="ĐH Công nghệ" class="university-logo me-2" />
-                ĐH Công nghệ
-              </div>
-              <span class="badge bg-primary rounded-pill">200</span>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-        </div>
-      </div>
-    </div>
-  </div>
+            <span class="badge bg-primary rounded-pill">200</span>
+          </div><!-- End .statistics-item -->
+        </div><!-- End .statistics-list -->
+      </div><!-- End .modal-body -->
+      <div class="modal-footer"><!-- .modal-footer -->
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+      </div><!-- End .modal-footer -->
+    </div><!-- End .modal-content -->
+  </div><!-- End .modal-dialog -->
+</div><!-- End .modal -->
 
 
   <!-- Chèn CSS động: Giữ nguyên form CSS cũ -->
@@ -1253,13 +1167,6 @@
         font-size: 1rem;
         font-weight: 600;
         color: var(--text-primary);
-      }
-      .timeline-group-items {
-        padding-left: 50px;
-        border-left: 2px solid var(--border-color);
-        position: relative;
-        width: 100%;
-        white-space: normal;
       }
       .timeline-item {
         margin-bottom: 1rem;
@@ -1358,6 +1265,17 @@
       .modal-body .section-divider:first-of-type {
         margin-top: 0;
       }
+
+/* Thêm pseudo-element để tạo đường dọc */
+.timeline-group-items::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 39px; /* Vị trí này khớp với vị trí vòng tròn ở .timeline-item::before */
+  border-left: 2px dashed var(--border-color); /* Có thể đổi thành solid nếu thích */
+}
+
     `;
       document.head.appendChild(style);
     });
@@ -1936,36 +1854,7 @@
         </div>
       </div>
 
-      <!-- Script xử lý chuyển đổi form và tự động điền thông tin đăng nhập sau đăng ký -->
-      <script>
-        // Hàm chuyển đổi giữa form đăng nhập và đăng ký
-        function toggleForm(formId) {
-          const loginForm = document.getElementById("loginForm");
-          const registerForm = document.getElementById("registerForm");
-          if(formId === "loginForm") {
-            loginForm.style.display = "block";
-            registerForm.style.display = "none";
-          } else {
-            loginForm.style.display = "none";
-            registerForm.style.display = "block";
-          }
-        }
 
-        document.addEventListener("DOMContentLoaded", function () {
-          // Xử lý sự kiện submit cho form đăng ký
-          document.getElementById("formRegister").addEventListener("submit", function (e) {
-            e.preventDefault();
-            // Sau khi đăng ký thành công, lấy giá trị tên đăng nhập và mật khẩu từ form đăng ký
-            const username = document.getElementById("registerUsername").value;
-            const password = document.getElementById("registerPassword").value;
-            // Tự động điền tên đăng nhập và mật khẩu vào form đăng nhập
-            document.getElementById("loginUsername").value = username;
-            document.getElementById("loginPassword").value = password;
-            // Chuyển sang hiển thị form đăng nhập
-            toggleForm("loginForm");
-          });
-        });
-      </script>
 
       <!-- Footer chứa nút Đóng -->
       <div class="modal-footer">
@@ -1979,234 +1868,345 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
-  <script>
-    // Hàm toggleForm để chuyển đổi giữa loginForm và registerForm
-    function toggleForm(formId) {
-      document.getElementById('loginForm').style.display = formId === 'loginForm' ? 'block' : 'none';
-      document.getElementById('registerForm').style.display = formId === 'registerForm' ? 'block' : 'none';
+<script>
+  /*************************************
+   * Các hàm hỗ trợ chuyển đổi giữa form *
+   *************************************/
+  // Hàm toggleForm: Chuyển đổi hiển thị giữa form đăng nhập và đăng ký
+  function toggleForm(formId) {
+    const loginForm = document.getElementById("loginForm");
+    const registerForm = document.getElementById("registerForm");
+    if (formId === "loginForm") {
+      loginForm.style.display = "block";
+      registerForm.style.display = "none";
+    } else {
+      loginForm.style.display = "none";
+      registerForm.style.display = "block";
     }
+  }
 
-    // Reset form và hiển thị loginForm khi modal đóng
-    document.getElementById('authModal').addEventListener('hidden.bs.modal', function () {
-      toggleForm('loginForm');
-      document.getElementById('formLogin').reset();
-      document.getElementById('formRegister').reset();
-    });
+  // Khi modal xác thực (authModal) đóng, reset form và hiển thị form đăng nhập
+  document.getElementById('authModal').addEventListener('hidden.bs.modal', function () {
+    toggleForm('loginForm');
+    document.getElementById('formLogin').reset();
+    document.getElementById('formRegister').reset();
+  });
 
-    // Xử lý form đăng nhập
-    document.getElementById('formLogin').addEventListener('submit', function (e) {
-      e.preventDefault();
+  /*************************************
+   * Hàm kiểm tra và reset lịch sử      *
+   *************************************/
+  // Hàm checkAndResetHistory: Kiểm tra thông tin trường của user qua API /user/university,
+  // so sánh với lịch sử truy cập (examCurrentPath, syllabusCurrentPath) và reset nếu không khớp.
+  async function checkAndResetHistory() {
+    try {
+      const res = await fetch('/user/university', { credentials: 'include' });
+      if (res.ok) {
+        const userSchool = await res.json();
+        window.userSchoolId = userSchool.university;
+        console.log("User school id:", window.userSchoolId);
+        console.log("Exam history school id:", examCurrentPath.length > 0 ? examCurrentPath[0].id : 'none');
+        console.log("Syllabus history school id:", syllabusCurrentPath.length > 0 ? syllabusCurrentPath[0].id : 'none');
 
-      const username = document.getElementById('loginUsername').value;
-      const password = document.getElementById('loginPassword').value;
-
-      // Kiểm tra username: chỉ cho phép chữ (không dấu) và số, không khoảng trắng
-      const usernameRegex = /^[a-zA-Z0-9]+$/;
-      if (!usernameRegex.test(username)) {
-        triggerNotification('warning', 'Cảnh báo', 'Vui lòng tuân thủ quy tắc đặt user name: không dấu, không cách.');
-        return;
-      }
-
-      fetch('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password })
-      })
-        .then(response => response.json())
-        .then(data => {
-          if (data.error) {
-            triggerNotification('danger', 'Lỗi', data.error);
-          } else {
-            triggerNotification('success', 'Thành công', data.message);
-            // Đóng modal sau khi đăng nhập thành công
-            const authModal = bootstrap.Modal.getInstance(document.getElementById('authModal'));
-            authModal.hide();
-            // Chờ 5 giây (thời gian đếm ngược của thông báo) rồi mới load lại trang
-            setTimeout(() => {
-              window.parent.location.href = window.parent.location.href;
-            }, 3000);
-          }
-        })
-        .catch(error => {
-          console.error('Lỗi:', error);
-          triggerNotification('danger', 'Lỗi', 'Đã xảy ra lỗi khi đăng nhập');
-        });
-    });
-
-    // Xử lý form đăng ký
-    document.getElementById('formRegister').addEventListener('submit', function (e) {
-      e.preventDefault();
-
-      const fullname = document.getElementById('registerFullname').value;
-      const username = document.getElementById('registerUsername').value;
-      const password = document.getElementById('registerPassword').value;
-      const university = document.getElementById('registerUniversity').value;
-
-      // Kiểm tra username: chỉ cho phép chữ (không dấu) và số, không khoảng trắng
-      const usernameRegex = /^[a-zA-Z0-9]+$/;
-      if (!usernameRegex.test(username)) {
-        triggerNotification('warning', 'Cảnh báo', 'Vui lòng tuân thủ quy tắc đặt user name: không dấu, không cách.');
-        return;
-      }
-
-      fetch('/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ fullname, username, password, university })
-      })
-        .then(response => response.json())
-        .then(data => {
-          if (data.error) {
-            triggerNotification('danger', 'Lỗi', data.error);
-          } else {
-            triggerNotification('success', 'Thành công', data.message);
-            // Chuyển sang tab đăng nhập sau khi đăng ký thành công
-            toggleForm('loginForm');
-            // Reset form đăng ký
-            document.getElementById('formRegister').reset();
-          }
-        })
-        .catch(error => {
-          console.error('Lỗi:', error);
-          triggerNotification('danger', 'Lỗi', 'Đã xảy ra lỗi khi đăng ký');
-        });
-    });
-
-    document.getElementById('logoutBtn').addEventListener('click', function () {
-      fetch("/api/logout", {
-        method: "POST",
-        credentials: "same-origin",
-        headers: {
-          "Content-Type": "application/json"
+        // Nếu lịch sử của Đề Thi không khớp, reset nó
+        if (examCurrentPath.length > 0 && String(examCurrentPath[0].id) !== String(window.userSchoolId)) {
+          console.log("Reset exam history");
+          examCurrentPath = [];
+          localStorage.removeItem('examCurrentPath');
         }
-      })
-        .then(response => response.json())
-        .then(data => {
-          // Hiển thị thông báo đăng xuất thành công
-          triggerNotification('success', 'Thành công', data.message);
-          // Chuyển hướng về trang chủ sau 2 giây để người dùng có thời gian xem thông báo
-          setTimeout(() => {
-            window.location.href = "/";
-          }, 2000);
-        })
-        .catch(error => {
-          // Hiển thị thông báo lỗi nếu đăng xuất không thành công
-          triggerNotification('error', 'Lỗi', 'Có lỗi khi đăng xuất.');
-          console.error("Lỗi:", error);
-        });
+        // Nếu lịch sử của Đề Cương không khớp, reset nó
+        if (syllabusCurrentPath.length > 0 && String(syllabusCurrentPath[0].id) !== String(window.userSchoolId)) {
+          console.log("Reset syllabus history");
+          syllabusCurrentPath = [];
+          localStorage.removeItem('syllabusCurrentPath');
+        }
+      } else {
+        console.warn("Không thể lấy thông tin trường của user");
+      }
+    } catch (error) {
+      console.error("Lỗi khi kiểm tra lịch sử trường:", error);
+    }
+  }
+
+  /*************************************
+   * Xử lý đăng nhập                   *
+   *************************************/
+document.getElementById('formLogin').addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  const username = document.getElementById('loginUsername').value;
+  const password = document.getElementById('loginPassword').value;
+
+  // Kiểm tra username: chỉ cho phép chữ (không dấu) và số, không có khoảng trắng
+  const usernameRegex = /^[a-zA-Z0-9]+$/;
+  if (!usernameRegex.test(username)) {
+    triggerNotification('warning', 'Cảnh báo', 'Vui lòng tuân thủ quy tắc đặt user name: không dấu, không cách.');
+    return;
+  }
+
+  fetch('/api/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password })
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) {
+        triggerNotification('danger', 'Lỗi', data.error);
+      } else {
+        triggerNotification('success', 'Thành công', data.message);
+        // Đóng modal sau khi đăng nhập thành công
+        const authModal = bootstrap.Modal.getInstance(document.getElementById('authModal'));
+        authModal.hide();
+        // Giữ nguyên logic check lịch sử, sau đó delay 5s rồi reload trang
+        checkAndResetHistory()
+          .then(() => new Promise(resolve => setTimeout(resolve, 5000)))
+          .then(() => {
+            window.parent.location.reload();
+          });
+      }
+    })
+    .catch(error => {
+      console.error('Lỗi:', error);
+      triggerNotification('danger', 'Lỗi', 'Đã xảy ra lỗi khi đăng nhập');
     });
+});
 
-  </script>
+/*************************************
+ * Xử lý đăng ký                     *
+ *************************************/
+document.getElementById('formRegister').addEventListener('submit', function (e) {
+  e.preventDefault();
 
-  <!-- Modal Xác thực -->
-  <div class="modal fade" id="verificationModal-v2" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content shadow-lg rounded-3">
-        <!-- Header sử dụng Shadow DOM với hậu tố _v2 -->
-        <modal-header-v2></modal-header-v2>
+  const fullname = document.getElementById('registerFullname').value;
+  const username = document.getElementById('registerUsername').value;
+  const password = document.getElementById('registerPassword').value;
+  const university = document.getElementById('registerUniversity').value;
 
-        <!-- Body -->
-        <div class="modal-body pt-0">
-          <p class="text-muted mb-4">
-            Tài khoản của bạn chưa được xác thực. Bạn cần chọn 1 trong 2 cách sau nhé! 😊
+  // Kiểm tra username: chỉ cho phép chữ (không dấu) và số, không có khoảng trắng
+  const usernameRegex = /^[a-zA-Z0-9]+$/;
+  if (!usernameRegex.test(username)) {
+    triggerNotification('warning', 'Cảnh báo', 'Vui lòng tuân thủ quy tắc đặt user name: không dấu, không cách.');
+    return;
+  }
+
+  fetch('/api/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ fullname, username, password, university })
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) {
+        triggerNotification('danger', 'Lỗi', data.error);
+        // Nếu lỗi do IP đã tồn tại thì tự mở modal có id "accountModal"
+        if (data.error.includes("IP đã được sử dụng")) {
+          // Đóng modal hiện tại (giả sử modal đăng nhập/đăng ký có id "authModal")
+          var authModalEl = document.getElementById('authModal');
+          var authModalInstance = bootstrap.Modal.getInstance(authModalEl);
+          if (authModalInstance) {
+            authModalInstance.hide();
+          }
+          // Mở modal mới có id "accountModal"
+          var accountModal = new bootstrap.Modal(document.getElementById("accountModal"));
+          accountModal.show();
+        }
+      } else {
+        triggerNotification('success', 'Thành công', data.message);
+        // Sau khi đăng ký thành công, chuyển sang form đăng nhập
+        toggleForm('loginForm');
+        // Reset form đăng ký
+        document.getElementById('formRegister').reset();
+        // Tự động điền thông tin đăng nhập vừa đăng ký vào form đăng nhập
+        document.getElementById('loginUsername').value = username;
+        document.getElementById('loginPassword').value = password;
+      }
+    })
+    .catch(error => {
+      console.error('Lỗi:', error);
+      triggerNotification('danger', 'Lỗi', 'Đã xảy ra lỗi khi đăng ký');
+    });
+});
+
+  /*************************************
+   * Xử lý đăng xuất                   *
+   *************************************/
+  document.getElementById('logoutBtn').addEventListener('click', function () {
+    fetch("/api/logout", {
+      method: "POST",
+      credentials: "same-origin",
+      headers: { "Content-Type": "application/json" }
+    })
+      .then(response => response.json())
+      .then(data => {
+        // Hiển thị thông báo đăng xuất thành công
+        triggerNotification('success', 'Thành công', data.message);
+        // Chuyển hướng về trang chủ sau 2000ms
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 2000);
+      })
+      .catch(error => {
+        triggerNotification('error', 'Lỗi', 'Có lỗi khi đăng xuất.');
+        console.error("Lỗi:", error);
+      });
+  });
+
+  /*************************************
+   * DOMContentLoaded: Các sự kiện bổ sung *
+   *************************************/
+  document.addEventListener("DOMContentLoaded", function () {
+    // Các sự kiện hoặc thao tác DOM bổ sung có thể đặt tại đây.
+    // Ví dụ: Tự động điền thông tin đăng nhập sau đăng ký đã được xử lý ở formRegister.
+  });
+</script>
+
+<!-- Modal Xác thực -->
+<div class="modal fade" id="verificationModal-v2" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg rounded-3">
+      <!-- Header sử dụng Shadow DOM với hậu tố _v2 -->
+      <modal-header-v2></modal-header-v2>
+
+      <!-- Body -->
+      <div class="modal-body pt-0">
+        <p class="text-muted mb-4">
+          Tài khoản của bạn chưa được xác thực. Bạn cần chọn 1 trong 2 cách sau nhé! 😊
+        </p>
+
+        <!-- Phương thức 1: Đóng góp ảnh đề thi -->
+        <div class="card mb-3 border-primary card-method-v2">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <i class="bi bi-cloud-upload fs-3 text-primary me-2"></i>
+              <div>
+                <h6 class="mb-1">Đóng góp ảnh đề thi</h6>
+                <p class="text-muted small mb-0">
+                  Chia sẻ ảnh đề thi bất kỳ để cộng đồng cùng học tập
+                </p>
+              </div>
+            </div>
+            <div class="position-relative">
+              <!-- File input cho ảnh đề thi -->
+              <input type="file" id="examImageUpload_v2" accept="image/*" class="d-none" multiple
+                     data-container="fileNameExamImage_v2" onchange="handleFileUpload_v2(event, 'exam')">
+              <label for="examImageUpload_v2" class="btn btn-primary btn-sm mt-3 btn-contribute-v2 cursor-pointer">
+                <i class="bi bi-upload me-2"></i>Chọn ảnh đề thi
+              </label>
+              <div id="fileNameExamImage_v2" class="text-muted small mt-2"></div>
+            </div>
+            <!-- Nút gửi file -->
+            <button class="btn btn-success btn-sm mt-2" onclick="submitExamImage_v2()">
+              <i class="bi bi-send me-2"></i>Gửi ảnh đề thi
+            </button>
+          </div>
+        </div>
+
+        <!-- Phương thức 2: Chia sẻ với bạn bè -->
+        <div class="card border-success card-method-v2">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+              <i class="bi bi-share fs-3 text-success me-2"></i>
+              <div>
+                <h6 class="mb-1">Chia sẻ với bạn bè</h6>
+                <p class="text-muted small mb-0">
+                  Share trang web cho 2 người bạn để xác thực
+                </p>
+              </div>
+            </div>
+
+            <div class="input-group mb-3">
+              <div id="copyContent_v2" class="form-control bg-light">
+                Kho lưu trữ đề thi và đề cương qua các năm, tại: huehub.fun
+              </div>
+              <button class="btn btn-success btn-copy-v2" onclick="copyText_v2()">
+                <i class="bi bi-clipboard"></i>
+              </button>
+            </div>
+            <div id="copySuccess_v2" class="text-success small mt-2" style="display:none;">
+              <i class="bi bi-check2"></i> Đã sao chép!
+            </div>
+
+            <!-- Ghi chú hướng dẫn chụp màn hình -->
+            <div class="mt-2">
+              <small class="text-muted">
+                Ghi chú: Vui lòng coppy rồi gửi cho bạn bè đảm bảo có sự tương tác của họ rồi chụp lại màn hình sau khi chia sẻ, sau đó ấn "Xác nhận đã chia sẻ"!
+              </small>
+            </div>
+            <div class="position-relative">
+              <!-- File input cho ảnh chụp màn hình -->
+              <input type="file" id="shareScreenshotUpload_v2" accept="image/*" class="d-none"
+                     data-container="fileNameShareScreenshot_v2" onchange="handleFileUpload_v2(event, 'share')">
+              <label for="shareScreenshotUpload_v2" class="btn btn-primary btn-sm mt-3 btn-contribute-v2 cursor-pointer">
+                <i class="bi bi-upload me-2"></i>Chọn ảnh màn hình
+              </label>
+              <div id="fileNameShareScreenshot_v2" class="text-muted small mt-2"></div>
+            </div>
+
+            <!-- Nút xác nhận đã chia sẻ -->
+            <button class="btn btn-outline-success w-100 btn-confirm-share-v2 mt-2" onclick="confirmShare_v2()">
+              <i class="bi bi-check-circle me-2"></i>Xác nhận đã chia sẻ
+            </button>
+            <div id="confirmSuccess_v2" class="text-success small mt-2 text-center" style="display:none;">
+              <i class="bi bi-check2-circle"></i> Đã xác nhận chia sẻ!
+            </div>
+          </div>
+        </div>
+
+        <!-- Khu vực hiển thị thông tin xác thực -->
+        <div id="verification-alert" class="alert alert-danger mt-3" style="display: none;">
+          <p class="mb-1">
+            <strong>Lần xác thực gần nhất:</strong> <span id="last-rejected-time">12/03/2025 09:45</span>
           </p>
-
-          <!-- Phương thức 1: Đóng góp ảnh đề thi -->
-          <div class="card mb-3 border-primary card-method-v2">
-            <div class="card-body">
-              <div class="d-flex align-items-center">
-                <i class="bi bi-cloud-upload fs-3 text-primary me-2"></i>
-                <div>
-                  <h6 class="mb-1">Đóng góp ảnh đề thi</h6>
-                  <p class="text-muted small mb-0">
-                    Chia sẻ ảnh đề thi bất kỳ để cộng đồng cùng học tập
-                  </p>
-                </div>
-              </div>
-              <div class="position-relative">
-                <!-- File input cho ảnh đề thi -->
-                <input type="file" id="examImageUpload_v2" accept="image/*" class="d-none"
-                  data-container="fileNameExamImage_v2" onchange="handleFileUpload_v2(event, 'exam')">
-                <label for="examImageUpload_v2" class="btn btn-primary btn-sm mt-3 btn-contribute-v2 cursor-pointer">
-                  <i class="bi bi-upload me-2"></i>Chọn ảnh đề thi
-                </label>
-                <div id="fileNameExamImage_v2" class="text-muted small mt-2"></div>
-              </div>
-              <!-- Nút gửi file -->
-              <button class="btn btn-success btn-sm mt-2" onclick="submitExamImage_v2()">
-                <i class="bi bi-send me-2"></i>Gửi ảnh đề thi
-              </button>
-            </div>
-          </div>
-
-          <!-- Phương thức 2: Chia sẻ với bạn bè -->
-          <div class="card border-success card-method-v2">
-            <div class="card-body">
-              <div class="d-flex align-items-center mb-3">
-                <i class="bi bi-share fs-3 text-success me-2"></i>
-                <div>
-                  <h6 class="mb-1">Chia sẻ với bạn bè</h6>
-                  <p class="text-muted small mb-0">
-                    Share trang web cho 2 người bạn để xác thực
-                  </p>
-                </div>
-              </div>
-
-              <div class="input-group mb-3">
-                <div id="copyContent_v2" class="form-control bg-light">
-                  Kho lưu trữ đề thi và đề cương qua các năm, tại: huehub.fun
-                </div>
-                <button class="btn btn-success btn-copy-v2" onclick="copyText_v2()">
-                  <i class="bi bi-clipboard"></i>
-                </button>
-              </div>
-              <div id="copySuccess_v2" class="text-success small mt-2" style="display:none;">
-                <i class="bi bi-check2"></i> Đã sao chép!
-              </div>
-
-              <!-- Ghi chú hướng dẫn chụp màn hình -->
-              <div class="mt-2">
-                <small class="text-muted">
-                  Ghi chú: Vui lòng coppy rồi gửi cho bạn bè rồi chụp lại màn hình sau khi chia sẻ, sau đó ấn "Xác nhận
-                  đã chia sẻ".
-                </small>
-              </div>
-              <div class="position-relative">
-                <!-- File input cho ảnh chụp màn hình -->
-                <input type="file" id="shareScreenshotUpload_v2" accept="image/*" class="d-none"
-                  data-container="fileNameShareScreenshot_v2" onchange="handleFileUpload_v2(event, 'share')">
-                <label for="shareScreenshotUpload_v2"
-                  class="btn btn-primary btn-sm mt-3 btn-contribute-v2 cursor-pointer">
-                  <i class="bi bi-upload me-2"></i>Chọn ảnh màn hình
-                </label>
-                <div id="fileNameShareScreenshot_v2" class="text-muted small mt-2"></div>
-              </div>
-
-              <!-- Nút xác nhận đã chia sẻ -->
-              <button class="btn btn-outline-success w-100 btn-confirm-share-v2 mt-2" onclick="confirmShare_v2()">
-                <i class="bi bi-check-circle me-2"></i>Xác nhận đã chia sẻ
-              </button>
-              <div id="confirmSuccess_v2" class="text-success small mt-2 text-center" style="display:none;">
-                <i class="bi bi-check2-circle"></i> Đã xác nhận chia sẻ!
-              </div>
-            </div>
-          </div>
+          <p class="mb-0">
+            <strong>Lý do từ chối:</strong> <span id="rejection-note">Thông tin xác thực không hợp lệ, vui lòng kiểm tra lại</span>
+          </p>
         </div>
+      </div>
 
-        <!-- Footer -->
-        <div class="modal-footer border-0">
-          <button type="button" class="btn btn-outline-secondary btn-close-v2" data-bs-dismiss="modal">
-            Để sau đi
-          </button>
-        </div>
+      <!-- Footer -->
+      <div class="modal-footer border-0">
+        <button type="button" class="btn btn-outline-secondary btn-close-v2" data-bs-dismiss="modal">
+          Để sau đi
+        </button>
       </div>
     </div>
   </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    fetch('https://huehub.fun/get_verification_info', {
+        method: 'GET',
+        credentials: 'include', // Gửi cookie session để server nhận diện người dùng
+        headers: {
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        const alertDiv = document.getElementById('verification-alert');
+        const lastRejectedTimeSpan = document.getElementById('last-rejected-time');
+        const rejectionNoteSpan = document.getElementById('rejection-note');
 
+        if (data.status === 'rejected') {
+            // Cập nhật nội dung từ API
+            lastRejectedTimeSpan.textContent = data.last_rejected_time || 'Không có dữ liệu';
+            rejectionNoteSpan.textContent = data.note || 'Không có ghi chú';
+            alertDiv.style.display = 'block'; // Hiển thị khi có dữ liệu
+        } else {
+            alertDiv.style.display = 'none'; // Ẩn nếu không có bản ghi bị từ chối
+        }
+    })
+    .catch(error => {
+        console.error('Lỗi khi gọi API:', error);
+        document.getElementById('verification-alert').style.display = 'none'; // Ẩn nếu có lỗi
+    });
+});
+</script>
   <!-- Định nghĩa custom element sử dụng Shadow DOM cho header, với tên có hậu tố _v2 -->
   <script>
     class ModalHeaderV2 extends HTMLElement {
@@ -2248,74 +2248,208 @@
   </script>
 
   <script>
-    // Biến toàn cục lưu file ảnh đề thi (hậu tố _v2)
-    let examFile_v2 = null;
+// Biến lưu file riêng cho từng phương thức
+let examFiles_v2 = [];
+let shareFile_v2 = null;
 
-    // Hàm xử lý khi chọn file (hậu tố _v2)
-    function handleFileUpload_v2(event, type) {
-      const file = event.target.files[0];
-      if (file) {
-        const containerId = event.target.getAttribute('data-container');
-        document.getElementById(containerId).innerHTML =
-          `<i class="bi bi-file-image"></i> Đã chọn: ${file.name}`;
+// Hàm xử lý khi chọn file (hậu tố _v2)
+function handleFileUpload_v2(event, type) {
+  const newFiles = Array.from(event.target.files);
+  const containerId = event.target.getAttribute('data-container');
+  let fileListHtml = '';
 
-        if (type === 'exam') {
-          examFile_v2 = file;
-        } else if (type === 'share') {
-          // Gọi hàm uploadFile_v2 trực tiếp đối với file share
-          uploadFile_v2(file, type);
-        }
-      }
-    }
+  if (type === 'exam') {
+    // Với ảnh đề thi: cộng dồn vào mảng examFiles_v2
+    examFiles_v2 = examFiles_v2.concat(newFiles);
+    examFiles_v2.forEach(file => {
+      fileListHtml += `<div><i class="bi bi-file-image"></i> Đã chọn: ${file.name}</div>`;
+    });
+  } else if (type === 'share') {
+    // Với ảnh share: chỉ lưu file đầu tiên được chọn
+    shareFile_v2 = newFiles[0];
+    fileListHtml += `<div><i class="bi bi-file-image"></i> Đã chọn: ${shareFile_v2.name}</div>`;
+  }
+  document.getElementById(containerId).innerHTML = fileListHtml;
+  // Reset giá trị của input để cho phép chọn lại file nếu cần
+  event.target.value = '';
+}
 
-    // Hàm gửi ảnh đề thi khi người dùng nhấn nút "Gửi ảnh đề thi" (hậu tố _v2)
-    function submitExamImage_v2() {
-      if (!examFile_v2) {
-        alert("Vui lòng chọn ảnh đề thi trước khi gửi.");
+// Hàm gửi ảnh đề thi khi nhấn "Gửi ảnh đề thi" (không thay đổi)
+function submitExamImage_v2() {
+    console.log("DEBUG: Hàm submitExamImage_v2 được gọi");
+
+    // Kiểm tra file được chọn (ảnh đề thi)
+    if (!examFiles_v2 || examFiles_v2.length === 0) {
+        console.error("ERROR: Không có ảnh đề thi được chọn.", { examFiles_v2 });
+        triggerNotification('error', 'Lỗi', 'Vui lòng chọn ảnh đề thi trước khi gửi.');
         return;
-      }
-      uploadFile_v2(examFile_v2, 'exam');
-      examFile_v2 = null;
-      document.getElementById('fileNameExamImage_v2').innerHTML = "";
     }
+    console.log("DEBUG: Số lượng file được chọn:", examFiles_v2.length);
 
-    // Hàm upload file lên server với route /upload_v2 (hậu tố _v2)
-    function uploadFile_v2(file, type) {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('type', type);
-
-      fetch('/upload_v2', {
-        method: 'POST',
-        body: formData
-      })
-        .then(response => response.json())
-        .then(data => {
-          console.log('Upload thành công:', data);
-          // Sau khi upload file thành công, gọi route cập nhật trạng thái tài khoản
-          fetch('/update_account_status_v2', {
-            method: 'POST',
-            credentials: 'include'
-          })
-            .then(response => response.json())
-            .then(statusData => {
-              // Đóng modal verification nếu đang mở
-              const modalEl = document.getElementById('verificationModal-v2');
-              const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-              modalInstance.hide();
-              // Hiển thị thông báo cho người dùng
-              triggerNotification('warning', 'Thông báo', 'Tài khoản của bạn đang được xét duyệt, vui lòng đợi');
+    // Tạo mảng các promise để upload file
+    const uploadPromises = examFiles_v2.map(file => {
+        console.log("DEBUG: Bắt đầu upload file:", file.name);
+        return uploadFile_v2(file, 'exam')
+            .then(response => {
+                console.log("DEBUG: Upload file thành công:", response);
+                return response;
             })
-            .catch(err => {
-              console.error("Error updating account status:", err);
-              triggerNotification('error', 'Thông báo', 'Đã upload file, nhưng không thể cập nhật trạng thái tài khoản.');
+            .catch(error => {
+                console.error("ERROR: Lỗi khi upload file:", error);
+                throw error;
+            });
+    });
+
+    // Thực hiện upload tất cả file
+    Promise.all(uploadPromises)
+        .then(results => {
+            console.log("DEBUG: Kết quả upload file:", results);
+
+            // Kiểm tra kết quả upload
+            const uploadedFilePaths = results.map(result => {
+                if (!result || !result.filepath) {
+                    console.error("ERROR: Upload file không trả về filepath hợp lệ", result);
+                    throw new Error("Upload file không trả về filepath hợp lệ");
+                }
+                return result.filepath;
+            });
+            console.log("DEBUG: Danh sách file path sau upload:", uploadedFilePaths);
+
+            // Reset giao diện sau khi upload thành công
+            examFiles_v2 = [];
+            document.getElementById('fileNameExamImage_v2').innerHTML = "";
+
+            // Gọi API cập nhật trạng thái tài khoản
+            console.log("DEBUG: Gọi API cập nhật trạng thái tài khoản...");
+            return fetch('/update_account_status_v2', {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
             });
         })
+        .then(response => {
+            console.log("DEBUG: Response status của update_account_status_v2:", response.status);
+            if (!response.ok) {
+                throw new Error(`Lỗi HTTP! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(statusData => {
+            console.log("DEBUG: Response từ update_account_status_v2:", statusData);
+
+            // Hiển thị thông báo thành công chung
+            triggerNotification('warning', 'Thông báo', 'Tài khoản của bạn đang được xét duyệt, vui lòng đợi');
+
+            // Đóng modal sau 2 giây
+            setTimeout(() => {
+                const modalElement = document.getElementById('verificationModal-v2');
+                let modalInstance = bootstrap.Modal.getInstance(modalElement);
+                if (!modalInstance) {
+                    modalInstance = new bootstrap.Modal(modalElement);
+                }
+                modalInstance.hide();
+            }, 2000);
+        })
         .catch(error => {
-          console.error('Lỗi khi upload file:', error);
+            console.error('ERROR: Lỗi trong quá trình upload hoặc cập nhật:', error);
+            // Hiển thị thông báo lỗi chung
+            triggerNotification('error', 'Lỗi', 'Đã xảy ra lỗi. Vui lòng thử lại.');
         });
+}
+function uploadFile_v2(file, type) {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('type', type);
+
+  return fetch('/upload_v2', {
+    method: 'POST',
+    body: formData
+  })
+    .then(response => {
+      console.log(`Response từ uploadFile_v2 (${type}):`, response);
+      return response.json();
+    })
+    .then(data => {
+      console.log('Upload thành công:', data);
+      return data;
+    })
+    .catch(error => {
+      console.error(`ERROR: Lỗi khi upload file (${type}):`, error);
+      throw error;
+    });
+}
+
+function copyText_v2() {
+  const text = document.getElementById('copyContent_v2').innerText;
+  navigator.clipboard.writeText(text);
+
+  const successMsg = document.getElementById('copySuccess_v2');
+  successMsg.style.display = 'block';
+  setTimeout(() => successMsg.style.display = 'none', 2000);
+}
+
+// Hàm xác nhận đã chia sẻ: chỉ upload ảnh màn hình khi người dùng ấn nút xác nhận
+function confirmShare_v2() {
+    // Kiểm tra xem người dùng đã chọn ảnh chưa
+    if (!shareFile_v2) {
+        alert("Vui lòng chọn ảnh màn hình trước khi xác nhận.");
+        return;
     }
 
+    // Upload ảnh chia sẻ
+    uploadFile_v2(shareFile_v2, 'share')
+        .then(data => {
+            console.log("Upload ảnh chia sẻ thành công:", data);
+
+            // Reset file và giao diện sau khi upload thành công
+            shareFile_v2 = null;
+            document.getElementById('fileNameShareScreenshot_v2').innerHTML = "";
+
+            // Gọi API cập nhật trạng thái tài khoản
+            console.log("Gọi API cập nhật trạng thái tài khoản...");
+            return fetch('/update_account_status_v2', {
+                method: 'POST',
+                credentials: 'include', // Server sẽ lấy user_id từ session
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            });
+        })
+        .then(response => {
+            console.log("Response status của update_account_status_v2:", response.status);
+            if (!response.ok) {
+                throw new Error(`Lỗi HTTP! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(statusData => {
+            console.log("Response từ update_account_status_v2:", statusData);
+
+            // Hiển thị thông báo thành công
+            triggerNotification('success', 'Thành công', 'Ảnh chia sẻ đã được upload và trạng thái tài khoản đã được cập nhật.');
+
+            // Đóng modal sau 2 giây
+            setTimeout(() => {
+                const modalElement = document.getElementById('verificationModal-v2');
+                let modalInstance = bootstrap.Modal.getInstance(modalElement);
+                if (!modalInstance) {
+                    modalInstance = new bootstrap.Modal(modalElement);
+                }
+                modalInstance.hide();
+            }, 2000);
+        })
+        .catch(error => {
+            console.error("Lỗi khi upload ảnh chia sẻ hoặc cập nhật trạng thái:", error);
+            // Hiển thị thông báo lỗi
+            triggerNotification('error', 'Lỗi', 'Đã xảy ra lỗi. Vui lòng thử lại.');
+        });
+}
     function copyText_v2() {
       const text = document.getElementById('copyContent_v2').innerText;
       navigator.clipboard.writeText(text);
@@ -2325,11 +2459,6 @@
       setTimeout(() => successMsg.style.display = 'none', 2000);
     }
 
-    function confirmShare_v2() {
-      const confirmMsg = document.getElementById('confirmSuccess_v2');
-      confirmMsg.style.display = 'block';
-      setTimeout(() => confirmMsg.style.display = 'none', 2000);
-    }
   </script>
 
   <style>
@@ -2675,9 +2804,360 @@
     </div>
   </div>
 
+<!-- Modal -->
+  <!-- Modal đăng ký tài khoản & cấp lại mật khẩu -->
+  <div class="modal fade" id="accountModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg">
+        <div class="modal-header gradient-bg text-white">
+          <h5 class="modal-title">
+            <i class="bi bi-shield-lock-fill me-2"></i>
+            Đăng ký tài khoản & Cấp lại mật khẩu
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        
+        <div class="modal-body">
+          <!-- Thông báo IP -->
+          <div class="alert alert-warning small d-flex align-items-center">
+            <i class="bi bi-info-circle-fill me-2"></i>
+            <div>
+              Địa chỉ IP của bạn: <span id="userIP" class="fw-bold">...</span>
+              <br>Mỗi IP chỉ được tạo tối đa 1 tài khoản
+            </div>
+          </div>
 
+          <!-- Danh sách tài khoản -->
+          <div id="accountList" class="mb-4 d-none">
+            <h6 class="mb-3 fw-bold text-muted">
+              <i class="bi bi-person-lines-fill me-2"></i>
+              Tài khoản đã đăng ký:
+            </h6>
+            <div class="row g-3" id="accountCards"></div>
+          </div>
 
+          <!-- Form bước 1: Nhập username (kiểm tra xem đã đăng ký hay chưa) -->
+          <form id="step1Form">
+            <div class="instruction-box">
+              <h6 class="fw-bold mb-3">
+                <i class="bi bi-info-circle me-2"></i>
+                Hướng dẫn nhập username:
+              </h6>
+              <p class="small mb-0">
+                Nhập username của bạn vào ô bên dưới. Chúng tôi sẽ kiểm tra và cho phép cấp lại mật khẩu nếu tài khoản đã đăng ký.
+              </p>
+            </div>
+            
+            <div class="mb-4">
+              <label class="form-label fw-bold">Nhập username:</label>
+              <div class="input-group">
+                <span class="input-group-text">
+                  <i class="bi bi-person-fill"></i>
+                </span>
+                <input type="text" 
+                       class="form-control" 
+                       name="username" 
+                       required
+                       placeholder="Nhập username..."
+                       pattern="[A-Za-z0-9]{4,20}">
+              </div>
+              <div class="form-text">Username từ 4-20 ký tự, chỉ chứa chữ và số</div>
+            </div>
+            <div class="d-grid">
+              <button type="submit" class="btn btn-custom">
+                <span class="submit-text">Tiếp tục</span>
+                <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+              </button>
+            </div>
+          </form>
 
+          <!-- Form bước 2: Nhập email để nhận mật khẩu mới -->
+          <form id="step2Form" class="d-none">
+            <div class="instruction-box">
+              <h6 class="fw-bold mb-3">
+                <i class="bi bi-info-circle me-2"></i>
+                Hướng dẫn nhập email:
+              </h6>
+              <p class="small mb-0">
+                Vui lòng nhập địa chỉ email của bạn. Chúng tôi sẽ gửi mật khẩu mới nhất về email này.
+                <br>Đảm bảo email chính xác để nhận được thông tin tài khoản.
+              </p>
+            </div>
+            
+            <div class="mb-4">
+              <label class="form-label fw-bold">Nhập email nhận mật khẩu mới:</label>
+              <div class="input-group">
+                <span class="input-group-text">
+                  <i class="bi bi-envelope-fill"></i>
+                </span>
+                <input type="email" 
+                       class="form-control" 
+                       name="email" 
+                       required
+                       placeholder="Nhập email...">
+              </div>
+              <div class="form-text">Vui lòng kiểm tra cả hộp thư spam nếu không thấy email</div>
+            </div>
+            <div class="d-grid">
+              <button type="submit" class="btn btn-custom">
+                <span class="submit-text">Gửi mật khẩu</span>
+                <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+              </button>
+            </div>
+          </form>
+
+          <!-- Thông báo (lỗi hoặc thành công) -->
+          <div id="responseMessage" class="mt-3 d-none"></div>
+          <!-- Thông báo lỗi riêng cho form kiểm tra username -->
+          <div id="errorMessage" class="alert alert-danger mt-3 d-none"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Import Bootstrap JS và dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 1. Chèn CSS mới, scope chỉ cho modal #accountModal
+      const dynamicStyle = document.createElement('style');
+      dynamicStyle.textContent = `
+        /* Các biến CSS nếu cần thiết */
+        #accountModal .gradient-bg {
+          background: linear-gradient(135deg, #6a11cb, #2575fc);
+        }
+        #accountModal .custom-card {
+          border: none;
+          border-radius: 15px;
+          background: rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(10px);
+          box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+          transition: all 0.3s ease;
+        }
+        #accountModal .custom-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+        }
+        #accountModal .btn-custom {
+          background: linear-gradient(135deg, #6a11cb, #2575fc);
+          border: none;
+          color: white;
+          padding: 12px 30px;
+          border-radius: 30px;
+          font-weight: 500;
+          letter-spacing: 0.5px;
+          transition: all 0.3s ease;
+        }
+        #accountModal .btn-custom:hover {
+          transform: scale(1.05);
+          box-shadow: 0 8px 25px rgba(106, 17, 203, 0.4);
+        }
+        #accountModal .form-control {
+          border-radius: 10px;
+          padding: 12px 20px;
+          border: 2px solid #e9ecef;
+          transition: all 0.3s ease;
+        }
+        #accountModal .form-control:focus {
+          border-color: #6a11cb;
+          box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
+        }
+        #accountModal .instruction-box {
+          background: rgba(255, 255, 255, 0.9);
+          border-radius: 15px;
+          padding: 25px;
+          margin-bottom: 25px;
+          border: 1px solid rgba(0, 0, 0, 0.05);
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+        #accountModal .modal-content {
+          border-radius: 20px;
+          overflow: hidden;
+          border: none;
+        }
+        #accountModal .error-shake {
+          animation: shake 0.5s;
+        }
+        @keyframes shake {
+          0% { transform: translateX(0); }
+          25% { transform: translateX(-10px); }
+          50% { transform: translateX(10px); }
+          75% { transform: translateX(-5px); }
+          100% { transform: translateX(0); }
+        }
+        #accountModal .input-group-text {
+          background: white;
+          border: 2px solid #e9ecef;
+          border-right: none;
+          border-radius: 10px 0 0 10px;
+        }
+        #accountModal .form-text {
+          font-size: 0.85rem;
+          color: #6c757d !important;
+        }
+        #accountModal .alert {
+          border-radius: 10px;
+          padding: 15px 20px;
+        }
+      `;
+      document.head.appendChild(dynamicStyle);
+      
+      // 2. Các xử lý DOM bên trong modal
+      // Khởi tạo modal với backdrop tắt (không có nền đen)
+      const modal = new bootstrap.Modal(document.getElementById('accountModal'), { backdrop: false });
+      const userIP = document.getElementById('userIP');
+      const accountCards = document.getElementById('accountCards');
+      const step1Form = document.getElementById('step1Form');
+      const step2Form = document.getElementById('step2Form');
+      const errorMessage = document.getElementById('errorMessage');
+      const responseMessage = document.getElementById('responseMessage');
+      
+      // Biến chứa danh sách username đã đăng ký (được cập nhật từ API)
+      let registeredUsernames = [];
+      // Biến toàn cục lưu username hợp lệ đã kiểm tra ở bước 1
+      let validatedUsername = "";
+      
+      // Lấy IP thực tế qua ipify
+      fetch('https://api.ipify.org?format=json')
+        .then(response => response.json())
+        .then(data => {
+          userIP.textContent = data.ip;
+          checkIPLimit(data.ip);
+        })
+        .catch(error => {
+          console.error('Lỗi khi lấy IP:', error);
+          userIP.textContent = 'Không lấy được IP';
+        });
+      
+      // Hàm format username: ẩn phần giữa (ví dụ: "us****23")
+      function formatUsername(username) {
+        if (username.length <= 4) return username;
+        return username.substr(0, 2) +
+               '*'.repeat(username.length - 4) +
+               username.substr(-2);
+      }
+      
+      // Kiểm tra IP và hiển thị danh sách tài khoản nếu có
+      function checkIPLimit(ip) {
+        fetch('/api/accounts_by_ip')
+          .then(response => response.json())
+          .then(data => {
+            registeredUsernames = data.usernames || [];
+            if (registeredUsernames.length > 0) {
+              document.getElementById('accountList').classList.remove('d-none');
+              accountCards.innerHTML = registeredUsernames
+                .map(acc => `
+                  <div class="col-md-6">
+                    <div class="custom-card p-3 bg-light">
+                      <div class="d-flex align-items-center">
+                        <i class="bi bi-person-circle me-3 fs-4 text-primary"></i>
+                        <div>
+                          <div class="fw-bold">${formatUsername(acc)}</div>
+                          <small class="text-muted">Đã đăng ký</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                `).join('');
+            }
+          })
+          .catch(error => {
+            console.error('Lỗi khi lấy danh sách tài khoản:', error);
+          });
+      }
+      
+      // Xử lý form bước 1: Kiểm tra username
+      step1Form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = this.querySelector('button');
+        const spinner = btn.querySelector('.spinner-border');
+        const text = btn.querySelector('.submit-text');
+        const usernameInput = this.querySelector('input[name="username"]');
+        const username = usernameInput.value.trim();
+        
+        // Hiển thị loading
+        text.classList.add('d-none');
+        spinner.classList.remove('d-none');
+        btn.disabled = true;
+        errorMessage.classList.add('d-none');
+        
+        // Kiểm tra username dựa trên danh sách lấy từ API
+        setTimeout(() => {
+          const isUsernameValid = registeredUsernames.includes(username);
+          
+          if (isUsernameValid) {
+            validatedUsername = username; // lưu username đã được kiểm tra
+            step1Form.classList.add('d-none');
+            step2Form.classList.remove('d-none');
+          } else {
+            errorMessage.innerHTML = `
+              <i class="bi bi-exclamation-circle-fill me-2"></i>
+              Vui lòng nhập đúng username bạn đã đăng ký!
+            `;
+            errorMessage.classList.remove('d-none');
+            usernameInput.classList.add('error-shake');
+            setTimeout(() => usernameInput.classList.remove('error-shake'), 500);
+            usernameInput.focus();
+          }
+          
+          // Ẩn loading
+          text.classList.remove('d-none');
+          spinner.classList.add('d-none');
+          btn.disabled = false;
+        }, 1000);
+      });
+      
+      // Xử lý form bước 2: Gửi yêu cầu cấp lại mật khẩu (lưu email và username)
+      step2Form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = this.querySelector('button');
+        const spinner = btn.querySelector('.spinner-border');
+        const text = btn.querySelector('.submit-text');
+        const emailInput = this.querySelector('input[name="email"]');
+        const email = emailInput.value.trim();
+        
+        // Hiển thị loading
+        text.classList.add('d-none');
+        spinner.classList.remove('d-none');
+        btn.disabled = true;
+        responseMessage.classList.add('d-none');
+        responseMessage.innerHTML = "";
+        
+        // Gửi yêu cầu qua API
+        fetch('/api/request_password_reset', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: validatedUsername, email: email })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            responseMessage.innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+          } else {
+            responseMessage.innerHTML = `<div class="alert alert-success">${data.message}</div>`;
+          }
+          responseMessage.classList.remove('d-none');
+        })
+        .catch(error => {
+          console.error('Lỗi:', error);
+          responseMessage.innerHTML = `<div class="alert alert-danger">Đã xảy ra lỗi khi gửi yêu cầu.</div>`;
+          responseMessage.classList.remove('d-none');
+        })
+        .finally(() => {
+          text.classList.remove('d-none');
+          spinner.classList.add('d-none');
+          btn.disabled = false;
+          // Ẩn modal sau vài giây (nếu muốn)
+          setTimeout(() => modal.hide(), 3000);
+        });
+      });
+      
+      // Nếu muốn tự động mở modal khi DOM đã sẵn sàng, bỏ comment dòng sau:
+      // modal.show();
+    });
+  </script>
   <!-- Modal Tìm kiếm Môn học -->
   <div class="modal fade" id="customSearchModal" tabindex="-1" aria-labelledby="customSearchModalLabel"
     aria-hidden="true">
@@ -2710,7 +3190,7 @@
           <div id="schoolSelectionNotice" class="custom-tip-text d-none"
             style="display: flex; align-items: center; padding: 10px 15px; background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%); border-radius: 4px; font-size: 0.9em; color: #333; margin-top: 8px; margin-bottom: 16px;">
             <i class="fas fa-lightbulb icon-combined" style="font-size: 1em; margin-right: 10px;"></i>
-            Mẹo nhỏ: Chọn trường rồi tìm kiếm để chỉ hiển thị dữ liệu của trường đó.
+            Thứ bạn cần là thứ người khác có, cho nên đừng ngần ngại đóng góp dữ liệu để xây dựng cộng đồng nhé!
           </div>
 
           <!-- Kết quả tìm kiếm -->
@@ -2829,7 +3309,6 @@ async function renderDrive(containerId, path, updatePathCallback) {
         if (allSchoolsRes.ok) {
           data = await allSchoolsRes.json();
           console.log("Data from /api/schools:", data);
-          alert("Vui lòng đăng nhập để chỉ xem dữ liệu của trường bạn!");
         } else {
           throw new Error("Không thể lấy danh sách trường");
         }
@@ -2867,6 +3346,11 @@ async function renderDrive(containerId, path, updatePathCallback) {
     }
   } catch (error) {
     console.error('Lỗi khi lấy dữ liệu:', error);
+    container.innerHTML = `<div class="alert alert-danger">
+      Có lỗi khi tải dữ liệu: ${error.message || error}.<br>
+      Vui lòng <a href="#" onclick="window.location.reload()">nhấn vào đây</a> để thử lại (F5).
+    </div>`;
+    return;
   }
 
   // Xóa spinner sau khi tải xong
@@ -2907,7 +3391,7 @@ async function renderDrive(containerId, path, updatePathCallback) {
     data.forEach(item => {
       if (path.length === 0) {
         // Khi hiển thị trường học, không hiển thị count
-        renderFolderItem(list, item.name, path, updatePathCallback, 0, item.id); // count = 0 để không hiển thị
+        renderFolderItem(list, item.name, path, updatePathCallback, 0, item.id);
       } else if (path.length < 3) {
         // Các cấp khác (Khoa) vẫn hiển thị count nếu có
         if (typeof item.count !== 'undefined') {
@@ -3053,11 +3537,7 @@ function renderFileItem(list, file, documentType) {
     return;
   }
 
-  // Debug: In ra thông tin trường của file và trường của user
-  console.log("File school_id:", file.school_id);
-  console.log("User's school id (global):", window.userSchoolId);
-
-  // Kiểm tra trường của file có khớp với trường của user không
+  // Kiểm tra file thuộc trường của user không
   if (file.school_id && window.userSchoolId && file.school_id != window.userSchoolId) {
     console.warn("File không thuộc trường của user! File school_id:", file.school_id, "User's school id:", window.userSchoolId);
     alert("Bạn không được phép mở file của trường khác!");
@@ -3087,8 +3567,8 @@ function renderFileItem(list, file, documentType) {
     </div>
   `;
 
-  // Xử lý sự kiện click vào file
   li.addEventListener('click', () => {
+    // Kiểm tra đăng nhập
     fetch('/api/check-login', {
       method: 'GET',
       credentials: 'include'
@@ -3096,6 +3576,7 @@ function renderFileItem(list, file, documentType) {
       .then(response => response.json())
       .then(data => {
         if (data.loggedIn) {
+          // Kiểm tra trạng thái tài khoản
           fetch('/api/account_status', {
             method: 'GET',
             credentials: 'include'
@@ -3103,29 +3584,48 @@ function renderFileItem(list, file, documentType) {
             .then(response => response.json())
             .then(statusData => {
               if (statusData.account_status === 'đã duyệt') {
-                fetch('/api/log-file-open', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  credentials: 'include',
-                  body: JSON.stringify({ documentId: file.id })
+                // Kiểm tra thời gian mở file trước đó
+                fetch('/api/check-file-open-timer', {
+                  method: 'GET',
+                  credentials: 'include'
                 })
-                  .then(() => {
-                    if (documentType === 'exam') {
-                      fetch('/api/log-view-exam', {
+                  .then(response => response.json())
+                  .then(timerData => {
+                    if (timerData.can_open) {
+                      // Log file mở và mở file nếu đủ thời gian
+                      fetch('/api/log-file-open', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         credentials: 'include',
                         body: JSON.stringify({ documentId: file.id })
                       })
+                        .then(() => {
+                          if (documentType === 'exam') {
+                            fetch('/api/log-view-exam', {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              credentials: 'include',
+                              body: JSON.stringify({ documentId: file.id })
+                            })
+                              .catch(error => {
+                                console.error('Lỗi khi log view exam:', error);
+                              });
+                          }
+                          window.open(filePath, '_blank');
+                        })
                         .catch(error => {
-                          console.error('Lỗi khi log view exam:', error);
+                          console.error('Lỗi khi log file:', error);
+                          window.open(filePath, '_blank');
                         });
+                    } else {
+                      // Nếu chưa đủ 15 giây, thông báo và không mở file
+triggerNotification('warning', 'Thông báo', `Thao tác quá nhanh, đợi ${Math.ceil(timerData.seconds_left)} giây.`);
                     }
-                    window.open(filePath, '_blank');
                   })
                   .catch(error => {
-                    console.error('Lỗi khi log file:', error);
-                    window.open(filePath, '_blank');
+                    console.error('Lỗi khi kiểm tra thời gian mở file:', error);
+                    // Nếu có lỗi khi kiểm tra, bạn có thể chọn không mở file hoặc mở file
+                    // window.open(filePath, '_blank');
                   });
               } else if (statusData.account_status === 'bình thường') {
                 const modal = new bootstrap.Modal(document.getElementById('verificationModal-v2'));
@@ -3299,6 +3799,31 @@ function renderFileItem(list, file, documentType) {
       }
     });
 
+async function checkAndResetHistory() {
+  try {
+    const res = await fetch('/user/university', { credentials: 'include' });
+    if (res.ok) {
+      const userSchool = await res.json();
+      window.userSchoolId = userSchool.university;
+      
+      // So sánh kiểu dữ liệu nếu cần: chuyển sang string để đảm bảo so sánh đúng
+      if (examCurrentPath.length > 0 && String(examCurrentPath[0].id) !== String(window.userSchoolId)) {
+        examCurrentPath = [];
+        localStorage.removeItem('examCurrentPath');
+        // Tùy chọn: chuyển hướng về trang chủ
+        window.location.href = '/';
+      }
+      if (syllabusCurrentPath.length > 0 && String(syllabusCurrentPath[0].id) !== String(window.userSchoolId)) {
+        syllabusCurrentPath = [];
+        localStorage.removeItem('syllabusCurrentPath');
+        // Tùy chọn: chuyển hướng về trang chủ
+        window.location.href = '/';
+      }
+    }
+  } catch (error) {
+    console.error("Lỗi khi kiểm tra lịch sử trường:", error);
+  }
+}
 
     /* ==================================================
        Initialization: Subject Search Modal
@@ -3346,14 +3871,17 @@ document.addEventListener("DOMContentLoaded", function () {
       schoolSelectionNotice.classList.add("d-none");
     }
 
-    const schoolId = window.userSchoolId || (currentPath[0]?.id); // Ưu tiên school_id của user
-    const facultyId = currentPath[1]?.id || 0;
+    // Lấy school_id từ user hoặc từ currentPath[0]
+    const schoolId = window.userSchoolId || (currentPath[0]?.id);
+    // Lưu ý: bỏ qua faculty_id để tìm kiếm toàn bộ khoa trong cùng trường
+    // const facultyId = currentPath[1]?.id || 0;
 
     try {
       const url = new URL("/api/search/subjects", window.location.origin);
       url.searchParams.append("term", term);
       if (schoolId) url.searchParams.append("school_id", schoolId);
-      if (facultyId) url.searchParams.append("faculty_id", facultyId);
+      // Bỏ dòng thêm faculty_id để cho phép tìm kiếm trong toàn bộ các khoa cùng trường
+      // if (facultyId) url.searchParams.append("faculty_id", facultyId);
 
       const response = await fetch(url, { credentials: 'include' });
       if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
@@ -3443,11 +3971,13 @@ document.addEventListener("DOMContentLoaded", function () {
           card.appendChild(cardBody);
 
           card.addEventListener("click", () => {
+            // Khi click vào kết quả tìm kiếm, thiết lập đường dẫn mới dựa trên thông tin của môn
             const newPath = [
               { id: subject.school_id, name: subject.school_name },
               { id: subject.faculty_id, name: subject.faculty_name },
               { id: subject.id, name: subject.name }
             ];
+            const activeTab = localStorage.getItem("activeTab") || "exam";
             if (activeTab === "exam") {
               renderExamDrive(newPath);
             } else {

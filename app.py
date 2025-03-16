@@ -137,14 +137,24 @@ def register():
     if not all([fullname, username, password, university]):
         return jsonify({"error": "Tất cả các trường là bắt buộc"}), 400
 
+    conn = None
+    cursor = None
     try:
         conn = get_db_connection()
-        cursor = conn.cursor()
+        # Sử dụng buffered cursor để tự động lấy hết các kết quả
+        cursor = conn.cursor(buffered=True)
 
         # Kiểm tra xem username đã tồn tại chưa
         cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
         if cursor.fetchone():
             return jsonify({"error": "Tên đăng nhập đã tồn tại"}), 409
+
+        # --- Phần kiểm tra IP ---
+        ip_addr = request.remote_addr
+        cursor.execute("SELECT * FROM user_activity_logs WHERE ip_address = %s", (ip_addr,))
+        if cursor.fetchone():
+            return jsonify({"error": "Đăng ký không thành công: IP đã được sử dụng"}), 409
+        # --------------------------
 
         # Thêm người dùng mới vào bảng users (hash password để bảo mật)
         query = "INSERT INTO users (fullname, username, password, university) VALUES (%s, %s, %s, %s)"
@@ -157,7 +167,7 @@ def register():
             INSERT INTO user_activity_logs (user_id, activity_type, ip_address)
             VALUES (%s, %s, %s)
         """
-        cursor.execute(log_query, (user_id, 'register', request.remote_addr))
+        cursor.execute(log_query, (user_id, 'register', ip_addr))
         conn.commit()
 
         return jsonify({"message": "Đăng ký thành công"}), 201
@@ -165,8 +175,10 @@ def register():
     except mysql.connector.Error as err:
         return jsonify({"error": f"Lỗi cơ sở dữ liệu: {str(err)}"}), 500
     finally:
-        cursor.close()
-        conn.close()
+        if cursor is not None:
+            cursor.close()
+        if conn is not None:
+            conn.close()
 
 
 # -----------------------------------------------------------------
@@ -282,7 +294,7 @@ def get_schools():
           SELECT s.id, s.name,
             (SELECT COUNT(*) FROM faculties f WHERE f.school_id = s.id) AS count
           FROM schools s
-          WHERE s.id IN (1, 2,4,5)
+          WHERE s.id IN (1, 2,3,4,5)
           ORDER BY s.name
         """)
         schools = cursor.fetchall()
@@ -1103,6 +1115,44 @@ def log_view_exam():
     finally:
         cursor.close()
         conn.close()
+import datetime
+from flask import jsonify, session, request
+
+@app.route('/api/check-file-open-timer', methods=['GET'])
+def check_file_open_timer():
+    if 'user_id' not in session:
+        return jsonify({"error": "User chưa đăng nhập"}), 401
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True, buffered=True)
+        query = """
+            SELECT MAX(activity_time) AS last_open
+            FROM user_activity_logs
+            WHERE user_id = %s AND activity_type = 'view_exam'
+        """
+        cursor.execute(query, (session['user_id'],))
+        result = cursor.fetchone()
+        if result and result['last_open']:
+            last_open = result['last_open']  # datetime object
+            now = datetime.datetime.now(last_open.tzinfo) if last_open.tzinfo else datetime.datetime.now()
+            diff = (now - last_open).total_seconds()
+            if diff >= 15:
+                return jsonify({"can_open": True})
+            else:
+                return jsonify({"can_open": False, "seconds_left": 15 - diff})
+        else:
+            # Nếu chưa có log nào thì cho phép mở file
+            return jsonify({"can_open": True})
+    except mysql.connector.Error as err:
+        return jsonify({"error": f"Lỗi cơ sở dữ liệu: {str(err)}"}), 500
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if conn is not None:
+            conn.close()
+
 # get pr5
 @app.route('/api/profile', methods=['GET'])
 def profile():
@@ -1321,7 +1371,7 @@ def user_statistics():
             FROM schools s
             LEFT JOIN users u ON u.university = s.id
             GROUP BY s.id
-            HAVING COUNT(u.id) > 1
+            HAVING COUNT(u.id) >= 1
             ORDER BY user_count DESC
         """
         cursor.execute(query)
@@ -1389,10 +1439,12 @@ def handle_approval():
     elif action == 'reject':
         # Cập nhật trạng thái của yêu cầu thành 'rejected' và cập nhật ghi chú
         cursor.execute("UPDATE user_images SET status = 'rejected', note = %s WHERE id = %s", (note, image_id))
+        # Chuyển trạng thái của user trong bảng users về 'bình thường'
+        cursor.execute("UPDATE users SET account_status = 'bình thường' WHERE id = %s", (user_id,))
         conn.commit()
         cursor.close()
         conn.close()
-        return jsonify({'status': 'success', 'message': 'Yêu cầu đã bị từ chối và lí do đã được lưu.'})
+        return jsonify({'status': 'success', 'message': 'Yêu cầu đã bị từ chối, lí do đã được lưu và trạng thái user đã chuyển về bình thường.'})
     else:
         cursor.close()
         conn.close()
@@ -1480,6 +1532,63 @@ def get_user_university():
     finally:
         cursor.close()
         conn.close()
+@app.route('/api/accounts_by_ip', methods=['GET'])
+def accounts_by_ip():
+    ip_addr = request.remote_addr
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True, buffered=True)
+        # Lấy danh sách username từ các tài khoản có log tương ứng với IP hiện tại
+        query = """
+            SELECT DISTINCT u.username
+            FROM users u
+            JOIN user_activity_logs l ON u.id = l.user_id
+            WHERE l.ip_address = %s
+        """
+        cursor.execute(query, (ip_addr,))
+        results = cursor.fetchall()
+        # Chỉ lấy username từ kết quả
+        usernames = [row['username'] for row in results]
+        return jsonify({
+            "ip": ip_addr,
+            "usernames": usernames
+        }), 200
+
+    except mysql.connector.Error as err:
+        return jsonify({"error": f"Lỗi cơ sở dữ liệu: {str(err)}"}), 500
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if conn is not None:
+            conn.close()
+@app.route('/api/request_password_reset', methods=['POST'])
+def request_password_reset():
+    data = request.get_json()
+    username = data.get('username')
+    email = data.get('email')
+    
+    # Kiểm tra các trường bắt buộc
+    if not username or not email:
+        return jsonify({"error": "Username và email là bắt buộc"}), 400
+
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()  # Hàm kết nối cơ sở dữ liệu của bạn
+        cursor = conn.cursor()
+        query = "INSERT INTO password_reset_requests (username, email) VALUES (%s, %s)"
+        cursor.execute(query, (username, email))
+        conn.commit()
+        return jsonify({"message": "Yêu cầu cấp lại mật khẩu đã được ghi nhận. Vui lòng kiểm tra email."}), 200
+    except mysql.connector.Error as err:
+        return jsonify({"error": f"Lỗi cơ sở dữ liệu: {str(err)}"}), 500
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if conn is not None:
+            conn.close()
 
 if __name__ == '__main__':
 
