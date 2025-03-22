@@ -2,40 +2,25 @@
 <html lang="vi">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Kho Học Liệu</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Thêm CDN Bootstrap và icons -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
-  <!-- Import Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Import Bootstrap Icons -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kho Học Liệu</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
-  <link rel="shortcut icon" href="../static/logo.png" type="image/x-icon">
-  <link rel="stylesheet" href="../static/css/index.css">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Inter:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<!-- Custom CSS -->
+<link rel="shortcut icon" href="../static/logo.png" type="image/x-icon">
+<link rel="stylesheet" href="../static/css/index.css">
   <style>
     :root {
       --primary-color: #007bff;
@@ -69,23 +54,6 @@
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
-    .nav-tabs .nav-link {
-      font-weight: 500;
-      color: var(--secondary-color);
-      border: none;
-      padding: 0.75rem 1rem;
-      transition: color 0.3s ease;
-    }
-
-    .nav-tabs .nav-link.active {
-      color: var(--primary-color);
-      font-weight: 600;
-      border-bottom: 3px solid var(--primary-color);
-    }
-
-    .nav-tabs .nav-link:hover {
-      color: var(--primary-color);
-    }
 
     .breadcrumb {
       background: transparent;
@@ -579,6 +547,7 @@
 </head>
 
 <body>
+  <!-- Bọc toàn bộ nội dung trong 1 container -->
   <!-- Thêm navbar vào trước phần content chính -->
   <nav id="navbar" class="navbar navbar-expand-lg navbar-light border-bottom py-3 fixed-top" style="display: none;">
     <div class="container-fluid">
@@ -589,11 +558,6 @@
 
       <!-- Các chức năng bên phải -->
       <div class="d-flex align-items-center gap-3">
-        <!-- Nút "Nhật ký hoạt động hệ thống" -->
-        <button id="activityBtn" class="btn btn-light rounded-pill px-3 btn-hover-tooltip"
-          data-tooltip="Nhật ký hoạt động hệ thống">
-          <i class="bi bi-clock-history me-2"></i>
-        </button>
         <script>
           document.addEventListener("DOMContentLoaded", function () {
             // Lấy nút theo ID
@@ -681,6 +645,7 @@
     
   </style>
 
+
   <div class="compact-container my-4">
     <div class="card card-custom">
       <div class="card-body">
@@ -747,713 +712,204 @@
   <!-- Container chứa thông báo, sẽ được tạo tự động nếu chưa có -->
   <div class="my-notification-container"></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
-  <script>
-    /**
-     * Hàm triggerNotification: Kích hoạt thông báo bằng cách tạo CSS, container và thông báo mới.
-     * @param {string} type - Loại thông báo: 'success', 'warning', 'danger'
-     * @param {string} title - Tiêu đề thông báo
-     * @param {string} message - Nội dung thông báo
-     */
-    function triggerNotification(type, title, message) {
-      // Chèn CSS động nếu chưa có
-      if (!document.getElementById('my-notification-style')) {
-        const css = `
-          .my-notification-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-            min-width: 320px;
-          }
-          
-          .my-notification {
-            position: relative;
-            padding: 15px 20px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+<script>
+  /**
+   * Hàm triggerNotification: Kích hoạt thông báo bằng cách tạo CSS, container và thông báo mới.
+   * @param {string} type - Loại thông báo: 'success', 'warning', 'danger'
+   * @param {string} title - Tiêu đề thông báo
+   * @param {string} message - Nội dung thông báo
+   */
+  function triggerNotification(type, title, message) {
+    // Chèn CSS động nếu chưa có
+    if (!document.getElementById('my-notification-style')) {
+      const css = `
+        .my-notification-container {
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          z-index: 9999;
+          min-width: 320px;
+        }
+        
+        .my-notification {
+          position: relative;
+          padding: 15px 20px;
+          margin-bottom: 15px;
+          border-radius: 8px;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+          opacity: 0;
+          transform: translateX(120%);
+          animation: slideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+          display: flex;
+          align-items: center;
+          transition: all 0.3s ease;
+          border-left: 4px solid;
+          background: #fff !important;  /* Đặt background ưu tiên */
+        }
+
+        /* Các màu nền riêng theo loại thông báo */
+        .alert-success {
+          background: #d4edda !important;
+          border-color: #28a745;
+        }
+        
+        .alert-warning {
+          background: #fff3cd !important;
+          border-color: #ffc107;
+        }
+        
+        .alert-danger {
+          background: #f8d7da !important;
+          border-color: #dc3545;
+        }
+    
+        .my-notification.hide {
+          animation: slideOut 0.4s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
+        }
+    
+        .my-notification:hover {
+          transform: translateX(-5px);
+          box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+    
+        .my-notification-icon {
+          font-size: 1.5rem;
+          margin-right: 15px;
+          flex-shrink: 0;
+        }
+    
+        .my-notification-content {
+          flex-grow: 1;
+        }
+    
+        .my-notification-close {
+          opacity: 0.6;
+          margin-left: 15px;
+          transition: opacity 0.2s;
+        }
+    
+        .my-notification-close:hover {
+          opacity: 1;
+        }
+    
+        .my-progress-bar {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          height: 3px;
+          background: rgba(255,255,255,0.3);
+          width: 100%;
+          overflow: hidden;
+          border-radius: 0 0 8px 8px;
+        }
+    
+        .my-progress-bar::after {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 0;
+          height: 100%;
+          width: 100%;
+          background: currentColor;
+          animation: progress 5s linear forwards;
+        }
+    
+        @keyframes slideIn {
+          from {
             opacity: 0;
             transform: translateX(120%);
-            animation: slideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-            display: flex;
-            align-items: center;
-            transition: all 0.3s ease;
-            border-left: 4px solid;
           }
-      
-          .my-notification.hide {
-            animation: slideOut 0.4s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
-          }
-      
-          .my-notification:hover {
-            transform: translateX(-5px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-          }
-      
-          .my-notification-icon {
-            font-size: 1.5rem;
-            margin-right: 15px;
-            flex-shrink: 0;
-          }
-      
-          .my-notification-content {
-            flex-grow: 1;
-          }
-      
-          .my-notification-close {
-            opacity: 0.6;
-            margin-left: 15px;
-            transition: opacity 0.2s;
-          }
-      
-          .my-notification-close:hover {
+          to {
             opacity: 1;
+            transform: translateX(0);
           }
-      
-          .my-progress-bar {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            height: 3px;
-            background: rgba(255,255,255,0.3);
-            width: 100%;
-            overflow: hidden;
-            border-radius: 0 0 8px 8px;
+        }
+    
+        @keyframes slideOut {
+          from {
+            opacity: 1;
+            transform: translateX(0);
           }
-      
-          .my-progress-bar::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 100%;
-            background: currentColor;
-            animation: progress 5s linear forwards;
+          to {
+            opacity: 0;
+            transform: translateX(120%);
           }
-      
-          @keyframes slideIn {
-            from {
-              opacity: 0;
-              transform: translateX(120%);
-            }
-            to {
-              opacity: 1;
-              transform: translateX(0);
-            }
-          }
-      
-          @keyframes slideOut {
-            from {
-              opacity: 1;
-              transform: translateX(0);
-            }
-            to {
-              opacity: 0;
-              transform: translateX(120%);
-            }
-          }
-      
-          @keyframes progress {
-            from { transform: translateX(-100%); }
-            to { transform: translateX(0); }
-          }
-        `;
-        const styleEl = document.createElement('style');
-        styleEl.type = 'text/css';
-        styleEl.id = 'my-notification-style';
-        styleEl.appendChild(document.createTextNode(css));
-        document.head.appendChild(styleEl);
-      }
-
-      // Đảm bảo container thông báo tồn tại
-      let container = document.querySelector('.my-notification-container');
-      if (!container) {
-        container = document.createElement('div');
-        container.className = 'my-notification-container';
-        document.body.appendChild(container);
-      }
-
-      // Tạo phần tử thông báo mới
-      const notification = document.createElement('div');
-      notification.classList.add('my-notification', `alert-${type}`);
-
-      // Chọn icon tương ứng theo loại thông báo
-      let iconClass = '';
-      if (type === 'success') {
-        iconClass = 'bi-check-circle-fill';
-      } else if (type === 'warning') {
-        iconClass = 'bi-hourglass-split';
-      } else if (type === 'danger') {
-        iconClass = 'bi-x-octagon-fill';
-      }
-
-      notification.innerHTML = `
-        <i class="bi ${iconClass} my-notification-icon"></i>
-        <div class="my-notification-content">
-          <h6 class="mb-1 fw-semibold">${title}</h6>
-          <p class="mb-0 small">${message}</p>
-        </div>
-        <div class="my-progress-bar"></div>
-        <button class="my-notification-close btn btn-link p-0">
-          <i class="bi bi-x"></i>
-        </button>
+        }
+    
+        @keyframes progress {
+          from { transform: translateX(-100%); }
+          to { transform: translateX(0); }
+        }
       `;
-
-      // Sự kiện đóng thông báo khi nhấn nút close
-      notification.querySelector('.my-notification-close').addEventListener('click', () => {
-        notification.classList.add('hide');
-        notification.addEventListener('animationend', () => notification.remove());
-      });
-
-      container.appendChild(notification);
-
-      // Tự động ẩn thông báo sau 5 giây
-      setTimeout(() => {
-        notification.classList.add('hide');
-        notification.addEventListener('animationend', () => notification.remove());
-      }, 3000);
+      const styleEl = document.createElement('style');
+      styleEl.type = 'text/css';
+      styleEl.id = 'my-notification-style';
+      styleEl.appendChild(document.createTextNode(css));
+      document.head.appendChild(styleEl);
     }
 
-    // Bạn có thể gọi triggerNotification bất cứ lúc nào, ví dụ:
-    // triggerNotification('warning', 'Cảnh báo!', 'Vui lòng kiểm tra lại dữ liệu.');
-    // triggerNotification('danger', 'Lỗi!', 'Không thể kết nối đến máy chủ.');
-  </script>
+    // Đảm bảo container thông báo tồn tại
+    let container = document.querySelector('.my-notification-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.className = 'my-notification-container';
+      document.body.appendChild(container);
+    }
 
-  <!-- Modal Structure -->
-<!-- Modal: Lịch sử hoạt động -->
-<div class="modal fade" id="activityModal" tabindex="-1" aria-labelledby="activityModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg"><!-- .modal-dialog -->
-    <div class="modal-content"><!-- .modal-content -->
-      <div class="modal-header"><!-- .modal-header -->
-        <h5 class="modal-title">
-          <i class="fas fa-history me-2"></i>Lịch sử hoạt động
-        </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
-      </div><!-- End .modal-header -->
-      <div class="modal-body"><!-- .modal-body -->
-        <!-- Timeline: Hoạt động người dùng -->
-        <div class="section-divider"><!-- .section-divider -->
-          <i class="fas fa-user"></i>
-          <span>Hoạt động người dùng</span>
-        </div><!-- End .section-divider -->
-        <!-- Nhóm "Mở đề thi" với nhiều môn khác nhau -->
-        <div class="timeline-group user-group" id="openExamGroup"><!-- #openExamGroup -->
-          <div class="timeline-group-header"><!-- .timeline-group-header -->
-            <div class="timeline-icon"><!-- .timeline-icon -->
-              <i class="fas fa-book-open"></i>
-            </div><!-- End .timeline-icon -->
-            <div class="group-title"><!-- .group-title -->
-              <h6>Mở đề thi</h6>
-            </div><!-- End .group-title -->
-          </div><!-- End .timeline-group-header -->
-          <div class="timeline-group-items"><!-- .timeline-group-items -->
-            <!-- Nội dung mẫu ban đầu (sẽ được thay thế bởi dữ liệu backend) -->
-            <div class="timeline-item"><!-- .timeline-item -->
-              <div class="timeline-content"><!-- .timeline-content -->
-                <small>39 phút trước</small>
-                <strong>Mở đề thi Java Cơ Bản</strong>
-                <div class="d-flex flex-wrap gap-2 mt-1"><!-- .d-flex -->
-                  <span class="info-badge">
-                    <i class="fas fa-user-circle text-purple"></i> Nguyễn Văn A
-                  </span>
-                  <span class="info-badge">
-                    <img src="logo-hue.png" alt="ĐH Khoa học Huế" class="university-logo" /> ĐH Khoa học Huế
-                  </span>
-                </div><!-- End .d-flex -->
-              </div><!-- End .timeline-content -->
-            </div><!-- End .timeline-item -->
-          </div><!-- End .timeline-group-items -->
-        </div><!-- End #openExamGroup -->
-        <!-- Nhóm "Đăng nhập" -->
-        <div class="timeline-group user-group" id="loginGroup"><!-- #loginGroup -->
-          <div class="timeline-group-header"><!-- .timeline-group-header -->
-            <div class="timeline-icon"><!-- .timeline-icon -->
-              <i class="fas fa-sign-in-alt"></i>
-            </div><!-- End .timeline-icon -->
-            <div class="group-title"><!-- .group-title -->
-              <h6>Đăng nhập vào hệ thống</h6>
-            </div><!-- End .group-title -->
-          </div><!-- End .timeline-group-header -->
-          <div class="timeline-group-items"><!-- .timeline-group-items -->
-            <!-- Nội dung mẫu ban đầu (sẽ được thay thế bởi dữ liệu backend) -->
-            <div class="timeline-item"><!-- .timeline-item -->
-              <div class="timeline-content"><!-- .timeline-content -->
-                <small>2 giờ trước</small>
-                <strong>Đăng nhập thành công</strong>
-                <div class="d-flex flex-wrap gap-2 mt-1"><!-- .d-flex -->
-                  <span class="info-badge">
-                    <i class="fas fa-user-circle text-purple"></i> Lê Văn C
-                  </span>
-                  <span class="info-badge">
-                    <img src="logo-dhkt.png" alt="ĐH Kinh Tế" class="university-logo" /> ĐH Kinh Tế
-                  </span>
-                </div><!-- End .d-flex -->
-              </div><!-- End .timeline-content -->
-            </div><!-- End .timeline-item -->
-          </div><!-- End .timeline-group-items -->
-        </div><!-- End #loginGroup -->
-        <!-- Nhóm "Đăng kí tài khoản" -->
-        <div class="timeline-group user-group" id="registerGroup"><!-- #registerGroup -->
-          <div class="timeline-group-header"><!-- .timeline-group-header -->
-            <div class="timeline-icon"><!-- .timeline-icon -->
-              <i class="fas fa-user-plus"></i>
-            </div><!-- End .timeline-icon -->
-            <div class="group-title"><!-- .group-title -->
-              <h6>Đăng kí tài khoản</h6>
-            </div><!-- End .group-title -->
-          </div><!-- End .timeline-group-header -->
-          <div class="timeline-group-items"><!-- .timeline-group-items -->
-            <div class="timeline-item"><!-- .timeline-item -->
-              <div class="timeline-content"><!-- .timeline-content -->
-                <small>1 giờ trước</small>
-                <strong>Đăng kí thành công</strong>
-                <div class="d-flex flex-wrap gap-2 mt-1"><!-- .d-flex -->
-                  <span class="info-badge">
-                    <i class="fas fa-user-circle text-purple"></i> Trần Thị D
-                  </span>
-                  <span class="info-badge">
-                    <img src="logo-dhct.png" alt="ĐH Công nghệ" class="university-logo" /> ĐH Công nghệ
-                  </span>
-                </div><!-- End .d-flex -->
-              </div><!-- End .timeline-content -->
-            </div><!-- End .timeline-item -->
-          </div><!-- End .timeline-group-items -->
-        </div><!-- End #registerGroup -->
-        <!-- Timeline: Hoạt động hệ thống -->
-        <div class="section-divider"><!-- .section-divider -->
-          <i class="fas fa-server"></i>
-          <span>Hoạt động hệ thống</span>
-        </div><!-- End .section-divider -->
-        <!-- Nhóm "Đã upload đề thi mới" -->
-        <div class="timeline-group system-group" id="uploadGroup"><!-- #uploadGroup -->
-          <div class="timeline-group-header"><!-- .timeline-group-header -->
-            <div class="timeline-icon"><!-- .timeline-icon -->
-              <i class="fas fa-cloud-upload-alt"></i>
-            </div><!-- End .timeline-icon -->
-            <div class="group-title"><!-- .group-title -->
-              <h6>Đã upload đề thi mới</h6>
-            </div><!-- End .group-title -->
-          </div><!-- End .timeline-group-header -->
-          <div class="timeline-group-items"><!-- .timeline-group-items -->
-            <div class="timeline-item"><!-- .timeline-item -->
-              <div class="timeline-content"><!-- .timeline-content -->
-                <small>24 phút trước</small>
-                <strong>Upload đề thi Đại Số Đồ Thị</strong>
-                <div class="d-flex flex-wrap gap-2 mt-1"><!-- .d-flex -->
-                  <span class="info-badge">
-                    <i class="fas fa-tag text-success"></i> Đề thi
-                  </span>
-                  <span class="info-badge">
-                    <i class="fas fa-database text-info"></i> 2.4 MB
-                  </span>
-                </div><!-- End .d-flex -->
-              </div><!-- End .timeline-content -->
-            </div><!-- End .timeline-item -->
-          </div><!-- End .timeline-group-items -->
-        </div><!-- End #uploadGroup -->
-        <!-- (Đã xóa nhóm "Bảo trì hệ thống" và "Cập nhật hệ thống") -->
-        <!-- Thống kê thành viên -->
-        <div class="section-divider"><!-- .section-divider -->
-          <i class="fas fa-chart-bar"></i>
-          <span>Thống kê thành viên</span>
-        </div><!-- End .section-divider -->
-        <div class="statistics-list"><!-- .statistics-list -->
-          <div class="statistics-item d-flex justify-content-between"><!-- .statistics-item -->
-            <div>
-              <img src="logo-dhtn.png" alt="ĐH Khoa học Tự nhiên" class="university-logo me-2" />
-              ĐH Khoa học Tự nhiên
-            </div>
-            <span class="badge bg-primary rounded-pill">150</span>
-          </div><!-- End .statistics-item -->
-          <div class="statistics-item d-flex justify-content-between"><!-- .statistics-item -->
-            <div>
-              <img src="logo-dhct.png" alt="ĐH Công nghệ" class="university-logo me-2" />
-              ĐH Công nghệ
-            </div>
-            <span class="badge bg-primary rounded-pill">200</span>
-          </div><!-- End .statistics-item -->
-        </div><!-- End .statistics-list -->
-      </div><!-- End .modal-body -->
-      <div class="modal-footer"><!-- .modal-footer -->
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-      </div><!-- End .modal-footer -->
-    </div><!-- End .modal-content -->
-  </div><!-- End .modal-dialog -->
-</div><!-- End .modal -->
+    // Tạo phần tử thông báo mới
+    const notification = document.createElement('div');
+    notification.classList.add('my-notification', `alert-${type}`);
 
+    // Chọn icon tương ứng theo loại thông báo
+    let iconClass = '';
+    if (type === 'success') {
+      iconClass = 'bi-check-circle-fill';
+    } else if (type === 'warning') {
+      iconClass = 'bi-hourglass-split';
+    } else if (type === 'danger') {
+      iconClass = 'bi-x-octagon-fill';
+    }
 
-  <!-- Chèn CSS động: Giữ nguyên form CSS cũ -->
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      // Chèn CSS động để đảm bảo biến và keyframes được định nghĩa
-      var style = document.createElement("style");
-      style.innerHTML = `
-      :root {
-        --primary-color: #6366f1;
-        --secondary-color: #3b82f6;
-        --accent-color: #10b981;
-        --text-primary: #1e293b;
-        --text-secondary: #64748b;
-        --border-color: #e9ecef;
-        --bg-light: #f8f9fa;
-        --card-bg: #ffffff;
-      }
-      .modal-content {
-        border-radius: 12px;
-        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
-        border: none;
-        overflow: hidden;
-      }
-      .modal-header {
-        background: var(--primary-color);
-        color: #fff;
-        padding: 1rem 1.5rem;
-      }
-      .modal-title {
-        font-size: 1.2rem;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-      }
-      .modal-title i { margin-right: 8px; }
-      .section-divider {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        margin: 1.5rem 0 1rem;
-        font-weight: 600;
-        font-size: 1rem;
-        color: var(--text-primary);
-      }
-      .section-divider::after {
-        content: "";
-        flex: 1;
-        height: 1px;
-        background: var(--border-color);
-      }
-      .timeline-group {
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        padding: 1rem;
-        margin-bottom: 1.5rem;
-      }
-      .timeline-group-header {
-        display: flex;
-        align-items: center;
-        margin-bottom: 0.75rem;
-      }
-      .timeline-icon {
-        flex: 0 0 40px;
-        width: 40px;
-        height: 40px;
-        background: var(--primary-color);
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #fff;
-        font-size: 20px;
-        margin-right: 10px;
-      }
-      .system-group .timeline-icon {
-        background: var(--secondary-color);
-      }
-      .group-title h6 {
-        margin: 0;
-        font-size: 1rem;
-        font-weight: 600;
-        color: var(--text-primary);
-      }
-      .timeline-item {
-        margin-bottom: 1rem;
-        opacity: 0;
-        position: relative;
-      }
-      .timeline-item:last-child {
-        margin-bottom: 0;
-      }
-      .timeline-item::before {
-        content: "";
-        position: absolute;
-        left: -11px;
-        top: 4px;
-        width: 12px;
-        height: 12px;
-        background: #fff;
-        border: 2px solid var(--primary-color);
-        border-radius: 50%;
-      }
-      .system-group .timeline-item::before {
-        border-color: var(--secondary-color);
-      }
-      .timeline-content {
-        margin-left: 10px;
-        width: 100%;
-        display: block;
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-      }
-      .timeline-content small {
-        display: block;
-        font-size: 0.8rem;
-        color: var(--text-secondary);
-      }
-      .timeline-content .info-badge {
-        font-size: 0.85rem;
-        padding: 0.35rem 0.7rem;
-        border-radius: 6px;
-        background: var(--bg-light);
-        border: 1px solid var(--border-color);
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        margin-top: 0.25rem;
-      }
-      .university-logo {
-        width: 24px;
-        height: 24px;
-        object-fit: contain;
-        border-radius: 50%;
-        margin-right: 0.5rem;
-        vertical-align: middle;
-      }
-      @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-      .timeline-item.animate {
-        animation: fadeInUp 0.5s ease-out forwards;
-      }
-      .subscription-container {
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        padding: 1rem;
-        margin-bottom: 1.5rem;
-      }
-      .subscribe-btn {
-        background: var(--primary-color);
-        color: #fff;
-        border: none;
-        padding: 0.5rem 1.25rem;
-        border-radius: 6px;
-        transition: all 0.2s ease;
-        display: flex;
-        align-items: center;
-      }
-      .subscribe-btn:hover {
-        opacity: 0.9;
-        transform: translateY(-1px);
-      }
-      .statistics-item {
-        padding: 0.75rem;
-        background: var(--card-bg);
-        border-radius: 8px;
-        margin: 0.5rem 0;
-      }
-      @media (max-width: 576px) {
-        .timeline-icon {
-          width: 36px;
-          height: 36px;
-          font-size: 18px;
-        }
-      }
-      .modal-body .section-divider:first-of-type {
-        margin-top: 0;
-      }
-
-/* Thêm pseudo-element để tạo đường dọc */
-.timeline-group-items::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 39px; /* Vị trí này khớp với vị trí vòng tròn ở .timeline-item::before */
-  border-left: 2px dashed var(--border-color); /* Có thể đổi thành solid nếu thích */
-}
-
+    notification.innerHTML = `
+      <i class="bi ${iconClass} my-notification-icon"></i>
+      <div class="my-notification-content">
+        <h6 class="mb-1 fw-semibold">${title}</h6>
+        <p class="mb-0 small">${message}</p>
+      </div>
+      <div class="my-progress-bar"></div>
+      <button class="my-notification-close btn btn-link p-0">
+        <i class="bi bi-x"></i>
+      </button>
     `;
-      document.head.appendChild(style);
+
+    // Sự kiện đóng thông báo khi nhấn nút close
+    notification.querySelector('.my-notification-close').addEventListener('click', () => {
+      notification.classList.add('hide');
+      notification.addEventListener('animationend', () => notification.remove());
     });
-  </script>
 
-  <!-- Script xử lý sự kiện và chèn data backend vào nhóm "Mở đề thi" và "Đăng nhập" -->
-  <!-- Script xử lý sự kiện và chèn data backend vào các nhóm -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      // Hàm chuyển đổi thời gian ISO sang dạng relative (vài giây, phút, giờ, ngày, tháng, năm trước)
-      function timeAgo(timeStr) {
-        const past = new Date(timeStr);
-        if (isNaN(past.getTime())) return timeStr;
-        const now = new Date();
-        const diff = now - past;
-        const diffSeconds = Math.floor(diff / 1000);
-        const diffMinutes = Math.floor(diff / (1000 * 60));
-        const diffHours = Math.floor(diff / (1000 * 60 * 60));
-        const diffDays = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const diffMonths = Math.floor(diffDays / 30);
-        const diffYears = Math.floor(diffDays / 365);
-        if (diffSeconds < 60) return 'vài giây trước';
-        else if (diffMinutes < 60) return diffMinutes + ' phút trước';
-        else if (diffHours < 24) return diffHours + ' giờ trước';
-        else if (diffDays < 30) return diffDays + ' ngày trước';
-        else if (diffMonths < 12) return diffMonths + ' tháng trước';
-        else return diffYears + ' năm trước';
-      }
+    container.appendChild(notification);
 
-      // Mapping giữa tên trường và logo
-      const schoolLogos = {
-        'Trường Đại học Khoa học - Đại Học Huế': 'static/logo_uni/favicon_husc.ico',
-        'Trường Đại học Sư phạm - Đại Học Huế': 'static/logo_uni/logo_dhsp2.ico',
-        'Trường Đại học Khoa học Tự nhiên - Đại học Quốc gia TP. HCM': 'static/logo_uni/iconhcm.ico',
-        'ĐH Khoa học Tự nhiên': 'logo-dhtn.png',
-        'ĐH Công nghệ': 'logo-dhct.png'
-      };
+    // Tự động ẩn thông báo sau 3 giây
+    setTimeout(() => {
+      notification.classList.add('hide');
+      notification.addEventListener('animationend', () => notification.remove());
+    }, 3000);
+  }
 
-      // Hàm dùng chung để chèn các timeline item
-      function insertTimelineItems(selector, activities, isActivity = true) {
-        const container = document.querySelector(selector);
-        if (container) {
-          container.innerHTML = '';
-          activities.forEach(activity => {
-            const logoURL = schoolLogos[activity.school] || 'logo-placeholder.png';
-            const relativeTime = timeAgo(activity.activity_time || activity.created_at);
-            let contentHTML = '';
+  // Ví dụ sử dụng:
+  // triggerNotification('warning', 'Cảnh báo!', 'Vui lòng kiểm tra lại dữ liệu.');
+  // triggerNotification('danger', 'Lỗi!', 'Không thể kết nối đến máy chủ.');
+</script>
 
-            if (isActivity) {
-              contentHTML = `
-            <small>${relativeTime}</small>
-            <strong>${activity.description}</strong>
-            <div class="d-flex flex-wrap gap-2 mt-1">
-              <span class="info-badge">
-                <i class="fas fa-user-circle text-purple"></i> ${activity.fullname}
-              </span>
-              <span class="info-badge">
-                <img src="${logoURL}" alt="${activity.school}" class="university-logo" />
-                ${activity.school}
-              </span>
-            </div>
-          `;
-            } else {
-              // Trường hợp upload tài liệu
-              contentHTML = `
-            <small>${relativeTime}</small>
-            <strong>Upload đề thi ${activity.file_name}</strong>
-            <div class="d-flex flex-wrap gap-2 mt-1">
-              <span class="info-badge">
-                <i class="fas fa-tag text-success"></i> ${activity.document_type === 'exam' ? 'Đề thi' : 'Đề cương'}
-              </span>
-              <span class="info-badge">
-                <i class="fas fa-database text-info"></i> ${activity.file_size_mb} MB
-              </span>
-            </div>
-          `;
-            }
-
-            const timelineHTML = `
-          <div class="timeline-item">
-            <div class="timeline-content">
-              ${contentHTML}
-            </div>
-          </div>
-        `;
-            container.insertAdjacentHTML('beforeend', timelineHTML);
-          });
-          // Áp dụng hiệu ứng animation cho từng item
-          container.querySelectorAll('.timeline-item').forEach(function (item, index) {
-            item.style.animationDelay = (index * 0.2) + 's';
-            item.classList.add('animate');
-          });
-        }
-      }
-
-      // Xử lý khi modal hoạt động được hiển thị
-      var activityModal = document.getElementById('activityModal');
-      activityModal.addEventListener('shown.bs.modal', function () {
-        // Áp dụng animation cho các timeline-item đã có
-        activityModal.querySelectorAll('.timeline-item').forEach(function (item, index) {
-          item.style.animationDelay = (index * 0.2) + 's';
-          item.classList.add('animate');
-        });
-
-        // Lấy log hoạt động hệ thống
-        fetch('/api/system-activities', { method: 'GET' })
-          .then(response => response.json())
-          .then(data => {
-            if (data.error) {
-              console.error("Lỗi khi tải log từ backend:", data.error);
-              return;
-            }
-            const viewExamActivities = data.filter(activity => activity.activity_type === 'view_exam');
-            const loginActivities = data.filter(activity => activity.activity_type === 'login');
-            const registerActivities = data.filter(activity => activity.activity_type === 'register');
-
-            insertTimelineItems('#openExamGroup .timeline-group-items', viewExamActivities);
-            insertTimelineItems('#loginGroup .timeline-group-items', loginActivities);
-            insertTimelineItems('#registerGroup .timeline-group-items', registerActivities);
-          })
-          .catch(error => {
-            console.error("Lỗi khi tải log từ backend:", error);
-          });
-
-        // Lấy danh sách tài liệu mới nhất
-        fetch('/api/documents/latest', { method: 'GET' })
-          .then(response => response.json())
-          .then(docs => {
-            insertTimelineItems('#uploadGroup .timeline-group-items', docs, false);
-          })
-          .catch(error => {
-            console.error("Lỗi khi tải tài liệu mới:", error);
-          });
-
-        // Lấy thống kê người dùng theo trường
-        fetch('/api/users/statistics', { method: 'GET' })
-          .then(response => response.json())
-          .then(stats => {
-            const statisticsList = document.querySelector('.statistics-list');
-            if (statisticsList) {
-              statisticsList.innerHTML = '';
-              stats.forEach(stat => {
-                const logoURL = schoolLogos[stat.school] || 'logo-placeholder.png';
-                const statHTML = `
-              <div class="statistics-item d-flex justify-content-between">
-                <div>
-                  <img src="${logoURL}" alt="${stat.school}" class="university-logo me-2" />
-                  ${stat.school}
-                </div>
-                <span class="badge bg-primary rounded-pill">${stat.user_count}</span>
-              </div>
-            `;
-                statisticsList.insertAdjacentHTML('beforeend', statHTML);
-              });
-            }
-          })
-          .catch(error => {
-            console.error("Lỗi khi tải thống kê người dùng:", error);
-          });
-      });
-
-      // Các xử lý sự kiện khác
-      document.getElementById('subscribeBtn').addEventListener('click', function () {
-        var form = document.getElementById('notificationForm');
-        form.style.display = (form.style.display === 'none') ? 'block' : 'none';
-      });
-
-      document.getElementById('activateFormBtn').addEventListener('click', function () {
-        document.getElementById('additionalForm').style.display = 'block';
-      });
-    });
-  </script>
   <!-- Nút đóng góp đề thi -->
   <button type="button" class="btn btn-primary contribute-btn"
     style="position: fixed; bottom: 0; right: 0; margin: 10px; z-index: 1050;" data-bs-toggle="modal"
     data-bs-target="#contributeExamModal">
     <i class="bi bi-pencil-square"></i> Đóng góp đề thi
   </button>
+  
   <!-- Modal Đóng góp Đề thi -->
   <div class="modal fade" id="contributeExamModal" data-bs-backdrop="false" tabindex="-1"
     aria-labelledby="contributeExamModalLabel" aria-hidden="true">
@@ -3153,9 +2609,6 @@ function confirmShare_v2() {
           setTimeout(() => modal.hide(), 3000);
         });
       });
-      
-      // Nếu muốn tự động mở modal khi DOM đã sẵn sàng, bỏ comment dòng sau:
-      // modal.show();
     });
   </script>
   <!-- Modal Tìm kiếm Môn học -->
@@ -3217,6 +2670,299 @@ function confirmShare_v2() {
   <!-- HTML Imports -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.13.216/pdf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+    /* Khi modal đang hoạt động, ẩn các phần tử khác ngoài #modalContainer */
+    body.modal-active > :not(#modalContainer) {
+      display: none !important;
+    }
+  </style>
+
+  <!-- Bao bọc toàn bộ HTML của modal trong container có ID riêng -->
+  <!-- Modal Container -->
+  <div id="modalContainer">
+    <div class="modal" id="welcomeModal">
+      <div class="modal-content" id="welcomeCard">
+        <i class="fas fa-star badge" id="badgeIcon"></i>
+        <h1 class="title" id="titleText">Chào mừng thành viên!</h1>
+        <p class="message" id="messageText">Cảm ơn bạn đã tham gia cộng đồng của chúng tôi!</p>
+        <button class="continue-btn" id="continueBtn">Tiếp tục</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Tạo thẻ style và chèn CSS vào container #modalContainer
+    const style = document.createElement('style');
+    style.textContent = `
+      /* Modal */
+      #modalContainer .modal {
+          display: none;
+          position: fixed;
+          z-index: 1000;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0,0,0,0.5);
+          backdrop-filter: blur(5px);
+          justify-content: center;
+          align-items: center;
+          opacity: 0;
+          animation: fadeIn 1s ease-in forwards;
+      }
+      #modalContainer .modal-content {
+          background: white;
+          padding: 2.5rem;
+          border-radius: 20px;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+          text-align: center;
+          max-width: 500px;
+          width: 90%;
+          position: relative;
+          overflow: hidden;
+          transform: scale(0);
+          animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+      }
+      @keyframes fadeIn {
+          to { opacity: 1; }
+      }
+      @keyframes fadeOut {
+          to { opacity: 0; }
+      }
+      #modalContainer .badge {
+          font-size: 3rem;
+          margin-bottom: 1.5rem;
+          animation: float 3s ease-in-out infinite, twinkle 1.5s infinite;
+          display: block !important;
+      }
+      #modalContainer .title {
+          color: #333;
+          font-size: 1.8rem;
+          margin-bottom: 1rem;
+          font-weight: 700;
+          animation: slideIn 1s ease-in-out;
+      }
+      #modalContainer .message {
+          color: #666;
+          line-height: 1.6;
+          margin-bottom: 1.5rem;
+          animation: slideIn 1.5s ease-in-out;
+      }
+      #modalContainer .highlight {
+          color: #e91e63;
+          font-weight: 700;
+      }
+      #modalContainer .continue-btn {
+          background: linear-gradient(135deg, #6a11cb, #2575fc);
+          color: white;
+          border: none;
+          padding: 0.8rem 2rem;
+          border-radius: 25px;
+          font-size: 1rem;
+          cursor: pointer;
+          transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+          margin-top: 1rem;
+          animation: slideIn 2s ease-in-out;
+      }
+      #modalContainer .continue-btn:hover {
+          background: linear-gradient(135deg, #2575fc, #6a11cb);
+          transform: translateY(-2px) scale(1.05);
+          box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      }
+      #modalContainer .continue-btn:active {
+          transform: translateY(0);
+          box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      }
+      /* Các lớp tùy biến cho từng loại thành viên */
+      #modalContainer .first-member {
+          background: linear-gradient(135deg, #fff9c4, #ffecb3);
+          border: 2px solid #ffd54f;
+      }
+      #modalContainer .first-member .badge {
+          color: #ffd54f;
+      }
+      #modalContainer .milestone {
+          background: linear-gradient(135deg, #b3e5fc, #81d4fa);
+          border: 2px solid #29b6f6;
+      }
+      #modalContainer .milestone .badge {
+          color: #29b6f6;
+      }
+      #modalContainer .regular-member {
+          background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+          border: 2px solid #ba68c8;
+      }
+      #modalContainer .regular-member .badge {
+          color: #9c27b0;
+      }
+      /* Confetti */
+      #modalContainer .confetti {
+          position: absolute;
+          width: 10px;
+          height: 10px;
+          background: #ffeb3b;
+          border-radius: 50%;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          animation: confetti 3s linear;
+      }
+      @keyframes popIn {
+          to { transform: scale(1); }
+      }
+      @keyframes float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-15px); }
+      }
+      @keyframes confetti {
+          0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+          100% { transform: translateY(-500px) rotate(720deg); opacity: 0; }
+      }
+      @keyframes slideIn {
+          0% { transform: translateY(-20px); opacity: 0; }
+          100% { transform: translateY(0); opacity: 1; }
+      }
+      @keyframes twinkle {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.5; }
+      }
+      @media (max-width: 600px) {
+          #modalContainer .modal-content {
+              padding: 1.5rem;
+          }
+          #modalContainer .title {
+              font-size: 1.5rem;
+          }
+          #modalContainer .message {
+              font-size: 0.9rem;
+          }
+          #modalContainer .continue-btn {
+              padding: 0.6rem 1.5rem;
+              font-size: 0.9rem;
+          }
+      }
+    `;
+    document.getElementById('modalContainer').appendChild(style);
+
+    // Hàm hiển thị modal và ẩn các giao diện khác bằng cách thêm class "modal-active" vào body
+    function showWelcomeModal() {
+      document.body.classList.add("modal-active");
+      const modal = document.getElementById('welcomeModal');
+      modal.style.display = 'flex';
+    }
+
+    // Hàm ẩn modal, xóa hiệu ứng và hiển thị lại các giao diện khác
+    function hideWelcomeModal() {
+      const modal = document.getElementById('welcomeModal');
+      modal.style.animation = 'fadeOut 0.6s ease-in forwards';
+      setTimeout(() => {
+        modal.style.display = 'none';
+        document.body.classList.remove("modal-active");
+      }, 600);
+    }
+
+    // Hàm cập nhật thông điệp modal dựa trên dữ liệu thành viên từ backend
+    function updateWelcomeMessage(memberNumber, universityName) {
+      const container = document.getElementById('welcomeCard');
+      const message = document.getElementById('messageText');
+      const icon = document.getElementById('badgeIcon');
+      const title = document.getElementById('titleText');
+
+      // Reset các class cũ
+      container.className = 'modal-content';
+      icon.className = 'badge';
+      // Thêm class mặc định cho icon
+      icon.classList.add('fas', 'fa-star');
+
+      if (memberNumber === 1) {
+        container.classList.add('first-member');
+        icon.classList.add('fas', 'fa-crown');
+        title.textContent = 'Khởi đầu vĩ đại!';
+        message.innerHTML = `👑 Chào mừng <span class="highlight">thành viên đầu tiên</span> của ${universityName}!<br>
+          Bạn là người tiên phong, mở ra một chương mới đầy hứa hẹn cho cộng đồng của chúng tôi. Hãy cùng nhau tạo nên những điều kỳ diệu!`;
+      } else if (memberNumber % 100 === 0) {
+        container.classList.add('milestone');
+        icon.classList.add('fas', 'fa-trophy');
+        title.textContent = 'Cột mốc đáng nhớ!';
+        message.innerHTML = `🎉 Chào mừng <span class="highlight">thành viên thứ ${memberNumber}</span> của ${universityName}!<br>
+          Cột mốc này không chỉ là con số mà còn là minh chứng cho sự phát triển mạnh mẽ của cộng đồng chúng ta. Hãy tiếp tục lan tỏa năng lượng tích cực!`;
+        createConfetti();
+      } else {
+        container.classList.add('regular-member');
+        icon.classList.add('fas', 'fa-user-plus');
+        title.textContent = 'Thành viên mới!';
+        message.innerHTML = `🤝 Chào mừng <span class="highlight">thành viên thứ ${memberNumber}</span> của ${universityName}!<br>
+          Sự hiện diện của bạn là một phần quan trọng giúp cộng đồng chúng ta ngày càng phát triển. Hãy cùng nhau xây dựng những giá trị tuyệt vời!`;
+      }
+
+      container.style.animation = 'none';
+      void container.offsetWidth; // Reset animation
+      container.style.animation = 'popIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards';
+      showWelcomeModal();
+    }
+
+    // Hàm tạo hiệu ứng confetti
+    function createConfetti() {
+      const colors = ['#ffeb3b', '#e91e63', '#4caf50', '#2196f3', '#ff9800'];
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.animationDelay = Math.random() * 1 + 's';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.width = Math.random() * 10 + 5 + 'px';
+        confetti.style.height = Math.random() * 10 + 5 + 'px';
+        document.getElementById('modalContainer').appendChild(confetti);
+
+        setTimeout(() => {
+          confetti.remove();
+        }, 3000);
+      }
+    }
+
+    // Hàm gọi API cập nhật trạng thái welcome_checked (chuyển từ 0 thành 1)
+    function updateWelcomeStatus() {
+      fetch('/api/update_welcome', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ welcome_checked: 1 })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
+          console.error('Error updating welcome status:', data.error);
+        } else {
+          console.log('Welcome status updated:', data);
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    }
+
+    // Xử lý sự kiện nút "Tiếp tục"
+    const continueBtn = document.getElementById('continueBtn');
+    continueBtn.addEventListener('click', () => {
+      // Gọi API cập nhật trạng thái thông báo (chuyển từ 0 thành 1)
+      updateWelcomeStatus();
+      // Ẩn modal và hiển thị lại các giao diện khác
+      hideWelcomeModal();
+    });
+
+    // Hàm lấy dữ liệu từ backend và cập nhật modal chào mừng
+    function fetchMembershipData() {
+      fetch('/membership_number') // Đảm bảo endpoint này khớp với backend của bạn
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            console.error(data.error);
+          } else {
+            updateWelcomeMessage(data.membership_number, data.university);
+          }
+        })
+        .catch(error => console.error('Error fetching membership data:', error));
+    }
+  </script>
 
   <script>
     /* ==================================================
@@ -3356,8 +3102,24 @@ async function renderDrive(containerId, path, updatePathCallback) {
   // Xóa spinner sau khi tải xong
   container.innerHTML = '';
 
-  // Hiển thị breadcrumb dựa trên đường dẫn hiện tại
-  renderBreadcrumb(container, path, updatePathCallback);
+  // Chỉ hiển thị breadcrumb nếu không phải ở trang chủ (path không rỗng)
+  if (path.length > 0) {
+    renderBreadcrumb(container, path, updatePathCallback);
+  }
+  // >>>>> CHỈNH SỬA: Gọi modal chào mừng khi ở trang chủ <<<<<
+if (path.length === 0) {
+  // Nếu có user đã đăng nhập, kiểm tra trạng thái welcome_checked
+  fetch('/api/welcome_checked')
+    .then(response => response.json())
+    .then(data => {
+      // Nếu không có lỗi và welcome_checked bằng 0 (chưa xem thông báo)
+      if (!data.error && data.welcome_checked === 0) {
+        fetchMembershipData();
+      }
+    })
+    .catch(error => console.error('Error checking welcome status:', error));
+}
+  // <<< END CHỈNH SỬA
 
   // Tạo thanh tìm kiếm inline
   const inlineSearchContainer = document.createElement('div');
@@ -3540,7 +3302,7 @@ function renderFileItem(list, file, documentType) {
   // Kiểm tra file thuộc trường của user không
   if (file.school_id && window.userSchoolId && file.school_id != window.userSchoolId) {
     console.warn("File không thuộc trường của user! File school_id:", file.school_id, "User's school id:", window.userSchoolId);
-    alert("Bạn không được phép mở file của trường khác!");
+    triggerNotification('danger', 'Lỗi', "Bạn không được phép mở file của trường khác!");
     return;
   }
 
@@ -3592,7 +3354,7 @@ function renderFileItem(list, file, documentType) {
                   .then(response => response.json())
                   .then(timerData => {
                     if (timerData.can_open) {
-                      // Log file mở và mở file nếu đủ thời gian
+                      // Log file mở
                       fetch('/api/log-file-open', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -3601,37 +3363,49 @@ function renderFileItem(list, file, documentType) {
                       })
                         .then(() => {
                           if (documentType === 'exam') {
-                            fetch('/api/log-view-exam', {
+                            // Sử dụng route mới với hậu tố _v2 để log view exam và kiểm tra giới hạn view
+                            fetch('/api/log-view-exam-v2', {
                               method: 'POST',
                               headers: { 'Content-Type': 'application/json' },
                               credentials: 'include',
                               body: JSON.stringify({ documentId: file.id })
                             })
+                              .then(response => {
+                                if (!response.ok) {
+                                  return response.json().then(data => {
+                                    triggerNotification('danger', 'Lỗi', data.error);
+                                    throw new Error(data.error);
+                                  });
+                                }
+                                return response.json();
+                              })
+                              .then(() => {
+                                window.open(filePath, '_blank');
+                              })
                               .catch(error => {
                                 console.error('Lỗi khi log view exam:', error);
                               });
+                          } else {
+                            window.open(filePath, '_blank');
                           }
-                          window.open(filePath, '_blank');
                         })
                         .catch(error => {
                           console.error('Lỗi khi log file:', error);
                           window.open(filePath, '_blank');
                         });
                     } else {
-                      // Nếu chưa đủ 15 giây, thông báo và không mở file
-triggerNotification('warning', 'Thông báo', `Thao tác quá nhanh, đợi ${Math.ceil(timerData.seconds_left)} giây.`);
+                      // Nếu chưa đủ thời gian mở file, thông báo và không mở file
+                      triggerNotification('warning', 'Thông báo', `Thao tác quá nhanh, đợi ${Math.ceil(timerData.seconds_left)} giây.`);
                     }
                   })
                   .catch(error => {
                     console.error('Lỗi khi kiểm tra thời gian mở file:', error);
-                    // Nếu có lỗi khi kiểm tra, bạn có thể chọn không mở file hoặc mở file
-                    // window.open(filePath, '_blank');
                   });
               } else if (statusData.account_status === 'bình thường') {
                 const modal = new bootstrap.Modal(document.getElementById('verificationModal-v2'));
                 modal.show();
               } else if (statusData.account_status === 'đang duyệt') {
-                triggerNotification('warning', 'Thông báo', 'Tài khoản của bạn đang được xét duyệt, vui lòng đợi');
+                triggerNotification('danger', 'Lỗi', 'Tài khoản của bạn đang được xét duyệt, vui lòng đợi');
               }
             })
             .catch(error => {

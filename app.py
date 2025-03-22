@@ -49,6 +49,12 @@ def home():
 @app.route('/exam')
 def dethi():
     return send_from_directory('html', 'dethi.html')
+# Xử lý lỗi 404
+@app.errorhandler(404)
+def page_not_found(e):
+    return send_from_directory('html', '404.html'),404
+
+
 
 # Tạo kết nối pool đến cơ sở dữ liệu
 pool = pooling.MySQLConnectionPool(
@@ -141,8 +147,8 @@ def register():
     cursor = None
     try:
         conn = get_db_connection()
-        # Sử dụng buffered cursor để tự động lấy hết các kết quả
-        cursor = conn.cursor(buffered=True)
+        # Sử dụng buffered cursor với dictionary=True để truy xuất theo key
+        cursor = conn.cursor(dictionary=True, buffered=True)
 
         # Kiểm tra xem username đã tồn tại chưa
         cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
@@ -170,7 +176,25 @@ def register():
         cursor.execute(log_query, (user_id, 'register', ip_addr))
         conn.commit()
 
-        return jsonify({"message": "Đăng ký thành công"}), 201
+        # Tính thứ tự gia nhập theo id: đếm số user có cùng trường và có id <= user_id
+        cursor.execute("""
+            SELECT COUNT(*) AS member_number 
+            FROM users 
+            WHERE university = %s AND id <= %s
+        """, (university, user_id))
+        result = cursor.fetchone()
+        membership_number = result['member_number']
+
+        # Lấy tên trường từ bảng schools
+        cursor.execute("SELECT name FROM schools WHERE id = %s", (university,))
+        school = cursor.fetchone()
+        university_name = school['name'] if school else "Unknown"
+
+        return jsonify({
+            "message": "Đăng ký thành công",
+            "membership_number": membership_number,
+            "university": university_name
+        }), 201
 
     except mysql.connector.Error as err:
         return jsonify({"error": f"Lỗi cơ sở dữ liệu: {str(err)}"}), 500
@@ -1589,6 +1613,144 @@ def request_password_reset():
             cursor.close()
         if conn is not None:
             conn.close()
+# view của user
+@app.route('/api/log-view-exam-v2', methods=['POST'])
+def log_view_exam_v2():
+    # Kiểm tra người dùng đã đăng nhập chưa
+    if 'user_id' not in session:
+        return jsonify({'error': 'User not logged in'}), 401
+    user_id = session['user_id']
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Đếm số lượt xem trong 24h của người dùng
+    query = (
+        "SELECT COUNT(*) AS views_last_24h FROM user_activity_logs "
+        "WHERE activity_type = 'view_exam' AND user_id = %s "
+        "AND activity_time >= NOW() - INTERVAL 24 HOUR"
+    )
+    cursor.execute(query, (user_id,))
+    views_last_24h = cursor.fetchone()[0]
+    
+    # Nếu số lượt xem đã đạt giới hạn (>= 10) thì trả về thông báo lỗi
+    if views_last_24h >= 10:
+        cursor.close()
+        conn.close()
+        return jsonify({'error': 'Bạn đã đạt đến giới hạn hôm nay'}), 403
+    
+    # Nếu chưa đạt giới hạn, thực hiện log lượt xem
+    data = request.get_json()
+    document_id = data.get('documentId')
+    
+    insert_query = (
+        "INSERT INTO user_activity_logs (user_id, activity_type, document_id) "
+        "VALUES (%s, 'view_exam', %s)"
+    )
+    cursor.execute(insert_query, (user_id, document_id))
+    conn.commit()
+    
+    cursor.close()
+    conn.close()
+    
+    return jsonify({'success': True})
+@app.route('/membership_number', methods=['GET'])
+def membership_number():
+    # Lấy user_id từ session
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    # Lấy thông tin user: cột university lưu dưới dạng id của trường
+    cursor.execute("SELECT university FROM users WHERE id = %s", (user_id,))
+    user = cursor.fetchone()
+    if not user:
+        cursor.close()
+        conn.close()
+        return jsonify({'error': 'User not found'}), 404
+
+    university_id = user['university']
+
+    # Tra cứu tên trường từ bảng schools
+    cursor.execute("SELECT name FROM schools WHERE id = %s", (university_id,))
+    school = cursor.fetchone()
+    if school:
+        university_name = school['name']
+    else:
+        university_name = "Unknown"
+
+    # Tính thứ tự gia nhập theo id
+    cursor.execute("""
+        SELECT COUNT(*) AS member_number 
+        FROM users 
+        WHERE university = %s AND id <= %s
+    """, (university_id, user_id))
+    result = cursor.fetchone()
+    membership_number = result['member_number']
+
+    cursor.close()
+    conn.close()
+
+    return jsonify({
+        'membership_number': membership_number,
+        'university': university_name
+    })
+@app.route('/api/welcome_checked', methods=['GET'])
+def get_welcome_checked():
+    # Lấy user id từ session
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'User not logged in'}), 401
+
+    # Lấy kết nối từ pool
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    
+    # Truy vấn cột welcome_checked của user
+    query = "SELECT welcome_checked FROM users WHERE id = %s"
+    cursor.execute(query, (user_id,))
+    result = cursor.fetchone()
+    
+    cursor.close()
+    connection.close()
+    
+    if result is None:
+        return jsonify({'error': 'User not found'}), 404
+
+    # Trả về giá trị của welcome_checked (0 hoặc 1)
+    return jsonify({'welcome_checked': result['welcome_checked']})
+@app.route('/api/update_welcome', methods=['POST'])
+def update_welcome():
+    # Lấy user id từ session
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'User not logged in'}), 401
+
+    # Lấy dữ liệu JSON từ body của request
+    data = request.get_json()
+    if not data or 'welcome_checked' not in data:
+        return jsonify({'error': 'Missing welcome_checked field'}), 400
+
+    welcome_checked = data.get('welcome_checked')
+
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        # Cập nhật cột welcome_checked theo user_id
+        query = "UPDATE users SET welcome_checked = %s WHERE id = %s"
+        cursor.execute(query, (welcome_checked, user_id))
+        connection.commit()
+    except Exception as e:
+        connection.rollback()
+        return jsonify({'error': str(e)}), 500
+    finally:
+        cursor.close()
+        connection.close()
+
+    return jsonify({'success': True, 'welcome_checked': welcome_checked})
 
 if __name__ == '__main__':
 
