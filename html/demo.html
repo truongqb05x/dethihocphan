@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Custom Notification</title>
+  <script>
+    (function() {
+      const css = `
+        :root {
+          --custom-primary-color: #4a90e2;
+          --custom-accent-color: #6c5ce7;
+          --custom-progress-color: #00cec9;
+          --custom-glass-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        @keyframes customFloatIn {
+          0% {
+              transform: translateY(100%) scale(0.9);
+              opacity: 0;
+          }
+          80% {
+              transform: translateY(-10px) scale(1.02);
+          }
+          100% {
+              transform: translateY(0) scale(1);
+              opacity: 1;
+          }
+        }
+
+        .custom-notification-wrapper {
+          position: fixed;
+          bottom: 30px;
+          right: 30px;
+          z-index: 1000;
+          animation: customFloatIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        .custom-study-notification {
+          width: 380px;
+          background: var(--custom-glass-bg);
+          border-radius: 16px;
+          padding: 20px;
+          backdrop-filter: blur(12px);
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          position: relative;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .custom-study-notification:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .custom-header-section {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          margin-bottom: 20px;
+        }
+
+        .custom-subject-badge {
+          width: 48px;
+          height: 48px;
+          background: linear-gradient(135deg, var(--custom-primary-color), var(--custom-accent-color));
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 24px;
+          color: white;
+          box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+        }
+
+        .custom-subject-info {
+          flex: 1;
+        }
+
+        .custom-subject-title {
+          font: 600 18px/1.2 'Segoe UI', sans-serif;
+          color: #2d3436;
+          margin-bottom: 4px;
+        }
+
+        .custom-subject-progress {
+          font: 500 12px/1.4 'Segoe UI', sans-serif;
+          color: #636e72;
+        }
+
+        .custom-doc-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 12px;
+          margin-bottom: 20px;
+        }
+
+        .custom-doc-card {
+          background: white;
+          padding: 14px;
+          border-radius: 8px;
+          transition: all 0.2s ease;
+          cursor: pointer;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .custom-doc-card:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .custom-doc-card::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 4px;
+          background: var(--custom-progress-color);
+          transform: scaleX(0);
+          transition: transform 0.3s ease;
+        }
+
+        .custom-doc-card:hover::after {
+          transform: scaleX(1);
+        }
+
+        .custom-doc-type {
+          font: 600 10px/1 'Segoe UI', sans-serif;
+          color: var(--custom-primary-color);
+          text-transform: uppercase;
+          margin-bottom: 6px;
+        }
+
+        .custom-doc-name {
+          font: 500 14px/1.3 'Segoe UI', sans-serif;
+          color: #2d3436;
+        }
+
+        .custom-actions-section {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .custom-view-all-btn {
+          background: linear-gradient(to right, var(--custom-primary-color), var(--custom-accent-color));
+          color: white;
+          padding: 8px 20px;
+          border-radius: 20px;
+          font: 500 12px/1 'Segoe UI', sans-serif;
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          transition: transform 0.2s ease;
+        }
+
+        .custom-view-all-btn svg {
+          width: 14px;
+          height: 14px;
+          fill: currentColor;
+          transition: transform 0.2s ease;
+        }
+
+        .custom-view-all-btn:hover {
+          transform: translateY(-1px);
+        }
+
+        .custom-view-all-btn:hover svg {
+          transform: translateX(3px);
+        }
+
+        .custom-close-btn {
+          position: absolute;
+          top: 16px;
+          right: 16px;
+          width: 28px;
+          height: 28px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          background: rgba(0, 0, 0, 0.05);
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .custom-close-btn:hover {
+          background: rgba(0, 0, 0, 0.08);
+          transform: rotate(90deg);
+        }
+
+        .custom-progress-bar {
+          height: 4px;
+          background: rgba(108, 92, 231, 0.1);
+          border-radius: 2px;
+          overflow: hidden;
+          margin-top: 12px;
+        }
+
+        .custom-progress-fill {
+          height: 100%;
+          width: 65%;
+          background: var(--custom-progress-color);
+          border-radius: 2px;
+          transition: width 0.5s ease;
+        }
+
+        /* Hiệu ứng notification indicator */
+        @keyframes customPing {
+          0% {
+              transform: scale(0.9);
+              opacity: 1;
+          }
+          100% {
+              transform: scale(2);
+              opacity: 0;
+          }
+        }
+
+        .custom-notification-indicator {
+          position: absolute;
+          top: -8px;
+          right: -8px;
+          width: 16px;
+          height: 16px;
+          background: #ff4757;
+          border-radius: 50%;
+          animation: customPing 1.5s infinite;
+        }
+
+        @media (max-width: 480px) {
+          .custom-study-notification {
+              width: 90vw;
+              right: 5vw;
+          }
+          
+          .custom-doc-grid {
+              grid-template-columns: 1fr;
+          }
+        }
+      `;
+      const styleTag = document.createElement('style');
+      styleTag.textContent = css;
+      document.head.appendChild(styleTag);
+    })();
+  </script>
+</head>
+<body>
+  <div class="custom-notification-wrapper">
+    <div class="custom-study-notification">
+      <div class="custom-notification-indicator"></div>
+      <button class="custom-close-btn">×</button>
+      
+      <div class="custom-header-section">
+        <div class="custom-subject-badge">📐</div>
+        <div class="custom-subject-info">
+          <div class="custom-subject-title">Toán nâng cao 10</div>
+          <div class="custom-subject-progress">Đang xem: Đại số - Chương 2</div>
+          <div class="custom-progress-bar">
+            <div class="custom-progress-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="custom-doc-grid">
+        <div class="custom-doc-card">
+          <div class="custom-doc-type">Bài giảng</div>
+          <div class="custom-doc-name">Hàm số bậc nhất</div>
+        </div>
+        <div class="custom-doc-card">
+          <div class="custom-doc-type">Bài tập</div>
+          <div class="custom-doc-name">50 bài tập vận dụng</div>
+        </div>
+        <div class="custom-doc-card">
+          <div class="custom-doc-type">Video</div>
+          <div class="custom-doc-name">Giải đề giữa kỳ</div>
+        </div>
+        <div class="custom-doc-card">
+          <div class="custom-doc-type">Tài liệu</div>
+          <div class="custom-doc-name">Công thức cần nhớ</div>
+        </div>
+      </div>
+
+      <div class="custom-actions-section">
+        <a href="#" class="custom-view-all-btn">
+          <span>Xem chi tiết</span>
+          <svg viewBox="0 0 24 24">
+            <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Xử lý nút đóng thông báo
+    document.querySelector('.custom-close-btn').addEventListener('click', () => {
+      const notification = document.querySelector('.custom-notification-wrapper');
+      notification.style.transform = 'translateY(100%)';
+      notification.style.opacity = 0;
+      setTimeout(() => notification.remove(), 500);
+    });
+
+    // Logic thay đổi nội dung dựa theo môn học
+    const docTypes = {
+      math: { badge: '🧮', color: '#e55039' },
+      physics: { badge: '⚛️', color: '#0984e3' },
+      chemistry: { badge: '⚗️', color: '#6c5ce7' }
+    };
+
+    function updateNotification(subject) {
+      const typeConfig = docTypes[subject];
+      document.querySelector('.custom-subject-badge').textContent = typeConfig.badge;
+      document.documentElement.style.setProperty('--custom-primary-color', typeConfig.color);
+    }
+
+    // Xử lý tương tác cho các thẻ tài liệu
+    document.querySelectorAll('.custom-doc-card').forEach(card => {
+      card.addEventListener('click', () => {
+        card.style.transform = 'scale(0.98)';
+        setTimeout(() => card.style.transform = '', 100);
+        // Thêm logic xử lý click nếu cần
+      });
+    });
+
+    // Tự động ẩn sau một khoảng thời gian nhất định
+    let timeout;
+    function resetTimer() {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        document.querySelector('.custom-notification-wrapper').style.transform = 'translateY(100%)';
+      }, 10000);
+    }
+
+    document.querySelector('.custom-study-notification').addEventListener('mouseenter', () => clearTimeout(timeout));
+    document.querySelector('.custom-study-notification').addEventListener('mouseleave', resetTimer);
+    resetTimer();
+  </script>
+</body>
+</html>
