@@ -63,6 +63,7 @@ pool = pooling.MySQLConnectionPool(
     host='localhost',
     user='mmddllg_huehub',
     password='Ngoctruong123@',
+    charset="utf8mb4",       # Đảm bảo dùng utf8mb4 để hỗ trợ đầy đủ tiếng Việt
     database='mmddllg_huehub'
 )
 def get_db_connection():
@@ -457,10 +458,16 @@ def get_documents_by_subject_and_year(subject_id, year):
     try:
         conn = pool.get_connection()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("""
-          SELECT * FROM documents
-          WHERE subject_id = %s AND year = %s
-        """, (subject_id, year))
+        # Truy vấn bảng documents và join với bảng activities để lấy số lượt view (activity_type = 'view_exam')
+        query = """
+            SELECT DISTINCT d.*, COUNT(a.id) AS view_count
+            FROM documents d
+            LEFT JOIN user_activity_logs a 
+              ON d.id = a.document_id AND a.activity_type = 'view_exam'
+            WHERE d.subject_id = %s AND d.year = %s
+            GROUP BY d.id;
+        """
+        cursor.execute(query, (subject_id, year))
         documents = cursor.fetchall()
         return jsonify(documents)
     except Exception as e:
@@ -682,7 +689,7 @@ def allowed_file(filename):
 #   - Chèn dữ liệu file vào bảng documents
 #   - Trả về thông báo thành công cùng document_id
 # -----------------------------------------------------------------
-@app.route('/api/upload_v2', methods=['POST'])
+@app.route('/api/upload_document_v2', methods=['POST'])
 def upload_document_v2():
     if 'fileInput' not in request.files:
         return jsonify({"error": "No file part in the request"}), 400
@@ -1751,6 +1758,302 @@ def update_welcome():
         connection.close()
 
     return jsonify({'success': True, 'welcome_checked': welcome_checked})
+@app.route('/report', methods=['POST'])
+def report_document():
+    try:
+        data = request.json
+        user_id = data.get('user_id')
+        document_id = data.get('document_id')
+        report_content = data.get('report_content')
+
+        if not user_id or not document_id or not report_content:
+            return jsonify({"error": "Missing required fields"}), 400
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        sql = """
+        INSERT INTO document_reports (user_id, document_id, report_content)
+        VALUES (%s, %s, %s)
+        """
+        cursor.execute(sql, (user_id, document_id, report_content))
+        conn.commit()
+
+        cursor.close()
+        conn.close()
+
+        return jsonify({"message": "Report submitted successfully"}), 201
+
+    except mysql.connector.Error as err:
+        return jsonify({"error": str(err)}), 500
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+@app.route('/get-data', methods=['GET'])
+def get_data():
+    try:
+        # Lấy document_id từ query parameters
+        document_id = request.args.get('document_id', type=int)
+        if document_id is None:
+            return jsonify({"error": "document_id không được cung cấp"}), 400
+
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        # Truy vấn lấy dữ liệu từ bảng Comments dựa trên document_id cùng với thông tin người dùng từ bảng Users
+        query = """
+            SELECT c.*, u.username, u.fullname
+            FROM Comments c
+            LEFT JOIN users u ON c.user_id = u.id
+            WHERE c.document_id = %s
+            ORDER BY c.created_at DESC;
+        """
+        cursor.execute(query, (document_id,))
+        comments = cursor.fetchall()
+
+        # Lấy dữ liệu từ bảng Attachments
+        cursor.execute("SELECT * FROM Attachments")
+        attachments = cursor.fetchall()
+
+        # Lấy dữ liệu từ bảng Likes
+        cursor.execute("SELECT * FROM Likes")
+        likes = cursor.fetchall()
+
+        cursor.close()
+        conn.close()
+
+        # Nhóm attachments theo comment_id
+        attachments_by_comment = {}
+        for attachment in attachments:
+            cid = attachment['comment_id']
+            attachments_by_comment.setdefault(cid, []).append(attachment)
+
+        # Nhóm likes theo comment_id
+        likes_by_comment = {}
+        for like in likes:
+            cid = like['comment_id']
+            likes_by_comment.setdefault(cid, []).append(like)
+
+        # Gắn attachments và likes vào từng comment
+        for comment in comments:
+            cid = comment['id']
+            comment['attachments'] = attachments_by_comment.get(cid, [])
+            comment['likes'] = likes_by_comment.get(cid, [])
+
+            # Gán tên người dùng từ fullname hoặc username
+            if comment.get('fullname'):
+                comment['userName'] = comment['fullname']
+            elif comment.get('username'):
+                comment['userName'] = comment['username']
+            else:
+                comment['userName'] = "Unknown"
+
+        return jsonify({"comments": comments}), 200
+
+    except mysql.connector.Error as err:
+        return jsonify({"error": str(err)}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# Thư mục lưu file thảo luận
+DISCUSSION_UPLOAD_FOLDER = 'static/thaoluan'
+app.config['DISCUSSION_UPLOAD_FOLDER'] = DISCUSSION_UPLOAD_FOLDER
+
+# Đảm bảo thư mục tồn tại
+if not os.path.exists(DISCUSSION_UPLOAD_FOLDER):
+    os.makedirs(DISCUSSION_UPLOAD_FOLDER)
+
+@app.route('/comment', methods=['POST'])
+def post_comment():
+    """
+    Xử lý đăng bài comment mới.
+    Dữ liệu nhận vào có thể bao gồm:
+      - user_id, document_id, content (từ form)
+      - file (nếu có, dưới dạng multipart/form-data)
+    """
+    try:
+        user_id = request.form.get('user_id')
+        document_id = request.form.get('document_id')
+        content = request.form.get('content')
+
+        # Kiểm tra các trường bắt buộc
+        if not user_id or not document_id or not content:
+            return jsonify({"error": "Missing required fields"}), 400
+
+        # Xử lý file upload (nếu có)
+        file_url = None
+        if 'file' in request.files:
+            file = request.files['file']
+            if file.filename != '':
+                UPLOAD_FOLDER_THAOLUAN = "static/thaoluan"
+                os.makedirs(UPLOAD_FOLDER_THAOLUAN, exist_ok=True)
+                file_path = os.path.join(UPLOAD_FOLDER_THAOLUAN, file.filename)
+                file.save(file_path)
+                file_url = f"/{file_path}"  # Trả về URL file
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Chèn comment mới vào database
+        sql = """
+            INSERT INTO Comments (document_id, user_id, parent_id, content)
+            VALUES (%s, %s, %s, %s)
+        """
+        cursor.execute(sql, (document_id, user_id, None, content))
+        comment_id = cursor.lastrowid
+
+        # Nếu có file, lưu vào Attachments
+        if file_url:
+            sql_attach = """
+                INSERT INTO Attachments (comment_id, file_name, file_type, file_url)
+                VALUES (%s, %s, %s, %s)
+            """
+            cursor.execute(sql_attach, (comment_id, file.filename, file.content_type, file_url))
+
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        return jsonify({
+            "message": "Comment posted successfully",
+            "comment_id": comment_id,
+            "file_url": file_url  # Trả về URL file đã lưu
+        }), 201
+
+    except mysql.connector.Error as err:
+        return jsonify({"error": str(err)}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# Route để truy cập file trong static/thaoluan/
+@app.route('/static/thaoluan/<filename>')
+def get_uploaded_file(filename):
+    return send_from_directory(app.config['DISCUSSION_UPLOAD_FOLDER'], filename)
+@app.route('/reply', methods=['POST'])
+def post_reply():
+    """
+    Xử lý đăng reply cho comment, hỗ trợ tải file lên dưới dạng multipart/form-data.
+    Yêu cầu dữ liệu từ form:
+      - user_id, parent_id, document_id, content
+      - file (nếu có)
+    """
+    try:
+        # Lấy dữ liệu từ form
+        user_id = request.form.get('user_id')
+        parent_id = request.form.get('parent_id')
+        document_id = request.form.get('document_id')
+        content = request.form.get('content')
+
+        # Kiểm tra các trường bắt buộc
+        if not user_id or not parent_id or not document_id or not content:
+            return jsonify({"error": "Missing required fields"}), 400
+
+        # Xử lý file upload (nếu có)
+        file_url = None
+        if 'file' in request.files:
+            file = request.files['file']
+            if file.filename != '':
+                UPLOAD_FOLDER_THAOLUAN = "static/thaoluan"
+                os.makedirs(UPLOAD_FOLDER_THAOLUAN, exist_ok=True)
+                # Đổi tên file để tránh trùng lặp (ở đây sử dụng parent_id làm tiền tố, bạn có thể thay đổi)
+                filename = f"{parent_id}_{file.filename}"
+                file_path = os.path.join(UPLOAD_FOLDER_THAOLUAN, filename)
+                file.save(file_path)
+                file_url = f"/{file_path}"  # Ví dụ: /static/thaoluan/...
+        
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Chèn reply vào bảng Comments (với parent_id không null)
+        sql = """
+            INSERT INTO Comments (document_id, user_id, parent_id, content)
+            VALUES (%s, %s, %s, %s)
+        """
+        cursor.execute(sql, (document_id, user_id, parent_id, content))
+        reply_id = cursor.lastrowid
+
+        # Nếu có file tải lên, lưu thông tin file vào bảng Attachments
+        if file_url:
+            sql_attach = """
+                INSERT INTO Attachments (comment_id, file_name, file_type, file_url)
+                VALUES (%s, %s, %s, %s)
+            """
+            cursor.execute(sql_attach, (reply_id, file.filename, file.content_type, file_url))
+        
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        return jsonify({"message": "Reply posted successfully", "reply_id": reply_id}), 201
+
+    except mysql.connector.Error as err:
+        app.logger.error("MySQL Error: %s", err)
+        return jsonify({"error": str(err)}), 500
+    except Exception as e:
+        app.logger.error("Exception: %s", e)
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/like', methods=['POST'])
+def like_comment():
+    """
+    Xử lý like/unlike comment.
+    Dữ liệu nhận vào:
+      - user_id, comment_id, action (like hoặc unlike)
+    """
+    try:
+        data = request.get_json()
+        user_id = data.get('user_id')
+        comment_id = data.get('comment_id')
+        action = data.get('action')
+
+        if not user_id or not comment_id or not action:
+            return jsonify({"error": "Missing required fields"}), 400
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        if action == 'like':
+            # Thêm lượt like, UNIQUE sẽ ngăn chặn duplicate
+            sql = """
+                INSERT INTO Likes (user_id, comment_id)
+                VALUES (%s, %s)
+                ON DUPLICATE KEY UPDATE created_at = CURRENT_TIMESTAMP
+            """
+            cursor.execute(sql, (user_id, comment_id))
+        elif action == 'unlike':
+            sql = "DELETE FROM Likes WHERE user_id = %s AND comment_id = %s"
+            cursor.execute(sql, (user_id, comment_id))
+        else:
+            return jsonify({"error": "Invalid action"}), 400
+
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        return jsonify({"message": "Like updated successfully"}), 200
+
+    except mysql.connector.Error as err:
+        return jsonify({"error": str(err)}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+@app.route('/comments/count', methods=['GET'])
+def get_comment_count():
+    try:
+        document_id = request.args.get('document_id', type=int)
+        if document_id is None:
+            return jsonify({"error": "document_id không được cung cấp"}), 400
+        
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        query = "SELECT COUNT(*) AS total FROM Comments WHERE document_id = %s"
+        cursor.execute(query, (document_id,))
+        result = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        return jsonify({"count": result["total"]})
+    except Exception as e:
+        print("Error fetching comment count:", e)
+        return jsonify({"error": "Internal Server Error"}), 500
 
 if __name__ == '__main__':
 

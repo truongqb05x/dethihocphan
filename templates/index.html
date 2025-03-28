@@ -393,6 +393,57 @@
       border-bottom-left-radius: 15px;
       border-bottom-right-radius: 15px;
     }
+    /*thư mục rỗng*/
+.empty-folder {
+  margin: 32px auto;
+  padding: 24px;
+  max-width: 480px;
+  background: linear-gradient(to bottom right, #f8f9fa, #e9ecef);
+  border-left: 5px solid #0d6efd;
+  border-radius: 8px;
+  text-align: center;
+  color: #6c757d;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.empty-folder::before {
+  content: "📁";
+  display: block;
+  font-size: 48px;
+  margin-bottom: 16px;
+  filter: grayscale(100%);
+  opacity: 0.6;
+  transition: transform 0.3s ease;
+}
+
+.empty-folder:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+.empty-folder:hover::before {
+  transform: scale(1.1) rotate(-5deg);
+  opacity: 0.8;
+}
+
+.empty-folder p {
+  margin: 12px 0;
+  font-size: 15px;
+  line-height: 1.6;
+  letter-spacing: 0.3px;
+}
+
+.empty-folder strong {
+  display: block;
+  font-weight: 600;
+  color: #212529;
+  margin-bottom: 8px;
+  font-size: 17px;
+}
 
     .btn-close {
       filter: invert(1);
@@ -716,7 +767,7 @@
               <div class="version-info"
                 style="position: absolute; bottom: 0; right: 0; padding: 5px; font-size: 0.9rem; color: #666;"
                 data-bs-toggle="modal" data-bs-target="#updateHistoryModal">
-                Version 2.0.4
+                Version 2.0.5
               </div>
             </div>
           </div>
@@ -724,6 +775,10 @@
       </div>
     </div>
   </div>
+<!-- Container chứa iframe thảo luận (ẩn ban đầu) -->
+<div id="discussion-container" style="display:none; width: 100%; height: 100vh; margin: 0; padding: 0;">
+  <iframe id="discussion-iframe" src="thaoluan.html" style="width: 100%; height: 100%; border: none; margin: 0;"></iframe>
+</div>
   <!-- Container chứa thông báo, sẽ được tạo tự động nếu chưa có -->
   <div class="my-notification-container"></div>
 
@@ -1335,6 +1390,402 @@
     </div>
   </div>
 </div>
+<!-- Modal báo lỗi -->
+<div class="mr-modal-overlay" id="mr-modal" style="display: none;">
+  <div class="mr-modal-container">
+    <div class="mr-modal-header">
+      <h2 class="mr-modal-title">
+        <i class="fas fa-bug"></i>
+        Báo cáo sự cố
+      </h2>
+      <button class="mr-close-btn" onclick="mr_hideModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="mr-modal-content">
+      <form id="mr-reportForm" onsubmit="mr_handleSubmit(event)">
+        <!-- Hiển thị tên đề thi (readonly) -->
+        <div class="mr-input-group">
+          <input 
+            type="text" 
+            class="mr-form-input" 
+            placeholder=" " 
+            id="document_name"
+            value="Đề thi mặc định" 
+            readonly>
+          <label class="mr-form-label">Đề thi</label>
+        </div>
+        <!-- Input ẩn cho document_id -->
+        <input type="hidden" id="document_id" name="document_id" value="">
+        <!-- Input ẩn cho user_id (giả sử lấy từ biến currentUserId) -->
+        <input type="hidden" id="user_id" name="user_id" value="">
+
+        <!-- Nội dung báo cáo -->
+        <div class="mr-input-group">
+          <textarea 
+            class="mr-form-input" 
+            placeholder=" "
+            id="report_content"
+            rows="4"
+            required
+          ></textarea>
+          <label class="mr-form-label">Mô tả chi tiết</label>
+        </div>
+
+        <div class="mr-action-buttons">
+          <button type="button" class="mr-btn mr-btn-secondary" onclick="mr_hideModal()">
+            Hủy bỏ
+          </button>
+          <button type="submit" class="mr-btn mr-btn-primary">
+            <i class="fas fa-paper-plane"></i>
+            Gửi báo cáo
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Giả sử currentUserId được lấy từ session hoặc biến toàn cục
+  const currentUserId = 1; // Ví dụ
+
+  // Chèn CSS của modal qua DOM và prepend vào <head> để ưu tiên thực thi
+  (function() {
+    const style = document.createElement('style');
+    style.type = 'text/css';
+    style.id = 'mr-modalStyles';
+    const css = `
+      :root {
+        --mr-primary: #6366f1;
+        --mr-primary-hover: #4f46e5;
+        --mr-background: #ffffff;
+        --mr-text: #1e293b;
+        --mr-glass: rgba(255, 255, 255, 0.9);
+        --mr-border: #e2e8f0;
+      }
+      
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --mr-background: #0f172a;
+          --mr-text: #f8fafc;
+          --mr-glass: rgba(15, 23, 42, 0.9);
+          --mr-border: #334155;
+        }
+      }
+    
+      /* Modal Overlay */
+      .mr-modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: transparent;
+        backdrop-filter: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        animation: mr-fadeIn 0.3s ease;
+      }
+      
+      /* Modal Container */
+      .mr-modal-container {
+        width: 90%;
+        max-width: 480px;
+        background: var(--mr-glass);
+        border: 1px solid var(--mr-border);
+        border-radius: 24px;
+        backdrop-filter: blur(16px);
+        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.1);
+        transform: scale(0.95);
+        opacity: 0;
+        animation: mr-modalEnter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      }
+      
+      /* Modal Header */
+      .mr-modal-header {
+        padding: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--mr-border);
+      }
+      
+      .mr-modal-title {
+        font-size: 24px;
+        font-weight: 600;
+        color: var(--mr-text);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      
+      .mr-close-btn {
+        background: none;
+        border: none;
+        padding: 8px;
+        cursor: pointer;
+        color: var(--mr-text);
+        opacity: 0.7;
+        transition: opacity 0.2s;
+      }
+      
+      .mr-close-btn:hover {
+        opacity: 1;
+      }
+      
+      /* Modal Content */
+      .mr-modal-content {
+        padding: 24px;
+      }
+      
+      /* Form Elements */
+      .mr-input-group {
+        margin-bottom: 24px;
+        position: relative;
+      }
+      
+      .mr-form-input {
+        width: 100%;
+        padding: 16px;
+        border: 2px solid var(--mr-border);
+        border-radius: 12px;
+        background: transparent;
+        color: var(--mr-text);
+        font-size: 16px;
+        transition: border-color 0.3s;
+      }
+      
+      .mr-form-input:focus {
+        outline: none;
+        border-color: var(--mr-primary);
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+      }
+      
+      .mr-form-label {
+        position: absolute;
+        left: 16px;
+        top: 16px;
+        color: #64748b;
+        pointer-events: none;
+        transition: all 0.3s;
+        background: var(--mr-glass);
+        padding: 0 4px;
+      }
+      
+      .mr-form-input:focus ~ .mr-form-label,
+      .mr-form-input:not(:placeholder-shown) ~ .mr-form-label {
+        transform: translateY(-24px);
+        font-size: 14px;
+        color: var(--mr-primary);
+      }
+      
+      /* Action Buttons */
+      .mr-action-buttons {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+        margin-top: 32px;
+      }
+      
+      .mr-btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        transition: all 0.3s;
+      }
+      
+      .mr-btn-primary {
+        background: var(--mr-primary);
+        color: white;
+      }
+      
+      .mr-btn-primary:hover {
+        background: var(--mr-primary-hover);
+        transform: translateY(-1px);
+      }
+      
+      .mr-btn-secondary {
+        background: rgba(99, 102, 241, 0.1);
+        color: var(--mr-primary);
+        border: 1px solid var(--mr-border);
+      }
+      
+      .mr-btn-secondary:hover {
+        background: rgba(99, 102, 241, 0.2);
+      }
+      
+      /* Animations */
+      @keyframes mr-fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      
+      @keyframes mr-modalEnter {
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      
+      /* Success Animation */
+      .mr-success-check {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: var(--mr-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 24px auto;
+        animation: mr-checkBounce 0.6s ease;
+      }
+      
+      @keyframes mr-checkBounce {
+        0% { transform: scale(0); }
+        50% { transform: scale(1.2); }
+        100% { transform: scale(1); }
+      }
+      
+      /* Responsive Design */
+      @media (max-width: 480px) {
+        .mr-modal-container {
+          border-radius: 16px;
+        }
+        
+        .mr-modal-title {
+          font-size: 20px;
+        }
+        
+        .mr-form-input {
+          padding: 14px;
+        }
+      }
+    `;
+    style.textContent = css;
+    document.head.prepend(style);
+  })();
+
+  // Hàm mở modal báo lỗi và cập nhật nội dung "Đề thi" cũng như document_id
+  function openReportModal(file) {
+    const modal = document.getElementById('mr-modal');
+    // Cập nhật tên đề thi
+    const examInput = document.getElementById('document_name');
+    if(examInput) {
+      examInput.value = file.file_name;
+    }
+    // Lưu document_id vào input ẩn
+    document.getElementById('document_id').value = file.id;
+    // Cập nhật user_id (giả sử lấy từ biến currentUserId)
+    document.getElementById('user_id').value = currentUserId;
+    
+    mr_showModal();
+    console.log("Mở modal báo lỗi cho file:", file.file_name);
+  }
+
+  // Hàm mở modal
+  function mr_showModal() {
+    const modal = document.getElementById('mr-modal');
+    modal.style.display = 'flex';
+    modal.style.opacity = '1';
+    document.body.style.overflow = 'hidden';
+  }
+
+  // Hàm đóng modal
+  function mr_hideModal() {
+    const modal = document.getElementById('mr-modal');
+    modal.style.opacity = '0';
+    setTimeout(() => {
+      modal.style.display = 'none';
+      document.body.style.overflow = 'auto';
+      // Reset form nếu cần
+      resetReportForm();
+    }, 300);
+  }
+
+  // Reset form modal về ban đầu
+  function resetReportForm() {
+    const form = document.getElementById('mr-reportForm');
+    form.reset();
+    // Nếu bạn có nội dung HTML mặc định cần khôi phục thì có thể đặt lại ở đây.
+    // Ví dụ: reset giá trị của document_name nếu cần.
+  }
+
+  // Xử lý submit form báo lỗi, gửi dữ liệu đến backend
+  async function mr_handleSubmit(e) {
+    e.preventDefault();
+    
+    const user_id = document.getElementById('user_id').value;
+    const document_id = document.getElementById('document_id').value;
+    const report_content = document.getElementById('report_content').value;
+    
+    if (!user_id || !document_id || !report_content) {
+      alert("Vui lòng nhập đủ thông tin báo cáo.");
+      return;
+    }
+    
+    // Gói dữ liệu theo định dạng JSON
+    const payload = {
+      user_id: user_id,
+      document_id: document_id,
+      report_content: report_content
+    };
+
+    try {
+      // Gọi API POST đến backend
+      const response = await fetch('/report', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+      
+      if(response.ok) {
+        // Hiệu ứng chuyển đổi form thành thông báo thành công
+        const form = document.getElementById('mr-reportForm');
+        form.style.opacity = '0';
+        setTimeout(() => {
+          form.innerHTML = `
+            <div class="mr-success-check">
+              <i class="fas fa-check" style="color: white; font-size: 24px;"></i>
+            </div>
+            <h3 style="text-align: center; color: var(--mr-text); margin-bottom: 24px;">
+              Báo cáo đã được gửi thành công!
+            </h3>
+            <button 
+              class="mr-btn mr-btn-primary" 
+              style="margin: 0 auto;" 
+              onclick="mr_hideModal()"
+            >
+              Đóng
+            </button>
+          `;
+          form.style.opacity = '1';
+        }, 500);
+      } else {
+        const errorData = await response.json();
+        alert("Có lỗi xảy ra: " + (errorData.error || 'Lỗi không xác định'));
+      }
+    } catch (error) {
+      console.error("Lỗi khi gửi báo cáo:", error);
+      alert("Không thể kết nối đến máy chủ.");
+    }
+  }
+
+  // Đóng modal khi click bên ngoài container
+  document.getElementById('mr-modal').addEventListener('click', function(e) {
+    if (e.target === this) mr_hideModal();
+  });
+
+  // Đóng modal khi nhấn phím ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') mr_hideModal();
+  });
+</script>
 
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -3010,6 +3461,8 @@ function confirmShare_v2() {
         animation: customFloatIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
       }
 
+      /* Sử dụng flex cho container của notification để header và actions luôn hiển thị,
+         phần nội dung (grid) sẽ cuộn khi vượt quá chiều cao tối đa */
       .custom-study-notification {
         width: 380px;
         background: var(--custom-glass-bg);
@@ -3020,6 +3473,9 @@ function confirmShare_v2() {
         border: 1px solid rgba(255, 255, 255, 0.2);
         position: relative;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        max-height: 80vh;
       }
 
       .custom-study-notification:hover {
@@ -3032,6 +3488,7 @@ function confirmShare_v2() {
         align-items: center;
         gap: 15px;
         margin-bottom: 20px;
+        flex-shrink: 0;
       }
 
       .custom-subject-badge {
@@ -3078,11 +3535,33 @@ function confirmShare_v2() {
         transition: width 0.5s ease;
       }
 
+      /* Container grid được đặt làm flex-grow để chiếm phần không gian còn lại,
+         nếu dữ liệu nhiều thì sẽ cuộn theo chiều dọc */
       .custom-doc-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 12px;
         margin-bottom: 20px;
+        flex: 1 1 auto;
+        overflow-y: auto;
+      }
+
+      /* CSS cho thanh cuộn (scrollbar) trên trình duyệt Webkit */
+      .custom-doc-grid::-webkit-scrollbar {
+        width: 6px;
+      }
+      .custom-doc-grid::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      .custom-doc-grid::-webkit-scrollbar-thumb {
+        background: var(--custom-accent-color);
+        border-radius: 3px;
+      }
+      
+      /* Firefox scrollbar width */
+      .custom-doc-grid {
+        scrollbar-width: thin;
+        scrollbar-color: var(--custom-accent-color) #f1f1f1;
       }
 
       .custom-doc-card {
@@ -3132,6 +3611,7 @@ function confirmShare_v2() {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        flex-shrink: 0;
       }
 
       .custom-view-all-btn {
@@ -3320,6 +3800,17 @@ function confirmShare_v2() {
   document.querySelector('.custom-study-notification').addEventListener('mouseleave', resetTimer);
   resetTimer();
 </script>
+<!-- Chèn CSS bằng JS DOM -->
+<script>
+  function loadCSS(url) {
+    var link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = url;
+    document.head.appendChild(link);
+  }
+
+</script>
+
 
 <script>
   /* PDF.js Worker Configuration */
@@ -3333,170 +3824,516 @@ function confirmShare_v2() {
   let currentFile = null;
 
   /* Hàm renderFolderItem: Tạo mục folder dựa theo dữ liệu */
-  function renderFolderItem(list, name, currentPath, callback, count, itemId) {
-    const li = document.createElement('li');
-    li.className = 'file-item';
-    const countHTML = count > 0 ? `<span class="file-count">${count}</span>` : '';
-    li.innerHTML = `
-      <i class="bi bi-folder-fill file-icon folder"></i>
-      <span class="file-name">${name}</span>
-      ${countHTML}
+/* Hàm renderFolderItem dùng cho các cấp folder không phải trường */
+function renderFolderItem(list, name, currentPath, callback, count, itemId) {
+  const li = document.createElement('li');
+  li.className = 'file-item';
+  // Logic ban đầu: nếu có count thì hiển thị số (không thêm icon cộng đồng)
+  const countHTML = count > 0 ? `<span class="file-count">${count}</span>` : '';
+  li.innerHTML = `
+    <i class="bi bi-folder-fill file-icon folder"></i>
+    <span class="file-name">${name}</span>
+    ${countHTML}
+  `;
+  li.addEventListener('click', () => {
+    callback([...currentPath, { id: itemId, name }]);
+  });
+  list.appendChild(li);
+}
+
+/* Hàm renderSchoolFolderItem: dùng cho folder trường (path.length === 0),
+   chèn thêm icon cộng đồng kèm số thành viên */
+function renderSchoolFolderItem(list, name, currentPath, callback, count, itemId) {
+  const li = document.createElement('li');
+  li.className = 'file-item';
+  // Nếu có số thành viên, chèn icon cộng đồng (bi-people) cùng số lượng
+  const countHTML = count > 0 ? `<span class="file-count"><i class="bi bi-people"></i> ${count}</span>` : '';
+  li.innerHTML = `
+    <i class="bi bi-folder-fill file-icon folder"></i>
+    <span class="file-name">${name}</span>
+    ${countHTML}
+  `;
+  li.addEventListener('click', () => {
+    callback([...currentPath, { id: itemId, name }]);
+  });
+  list.appendChild(li);
+}
+
+/* Hàm renderFileItem: Tạo file item (giữ nguyên logic ban đầu) */
+function renderFileItem(list, file, documentType) {
+  // Nếu CSS động cho phần tử file mới chưa được thêm vào, tạo và chèn thẻ <style>
+  if (!document.getElementById('dynamic-new-file-item-css')) {
+    const style = document.createElement('style');
+    style.id = 'dynamic-new-file-item-css';
+    style.textContent = `
+      /* CSS cho phần tử file mới với lớp "new-file-item" */
+      .new-file-item {
+        padding: 12px 15px;
+        border-radius: 8px;
+        transition: background-color 0.2s;
+        margin-bottom: 8px;
+        background-color: #ffffff;
+        position: relative;
+      }
+      .new-file-info-section {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        flex: 1;
+      }
+      .new-file-text-info {
+        flex: 1;
+      }
+      .new-file-views {
+        font-size: 0.75em;
+        color: #666;
+        margin-top: 2px;
+      }
+      .new-file-actions {
+        display: flex;
+        gap: 8px;
+      }
+      .new-btn-menu {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        padding: 0;
+        border: none;
+        background-color: transparent;
+        color: #555;
+        transition: all 0.2s;
+        cursor: pointer;
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+      .new-btn-menu:hover {
+        background-color: #f0f0f0;
+      }
+      .new-action-menu {
+        position: absolute;
+        right: 15px;
+        top: 50px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        z-index: 10;
+        display: none;
+        min-width: 120px;
+        overflow: hidden;
+      }
+      .new-action-menu.show {
+        display: block;
+      }
+      .new-menu-item {
+        padding: 8px 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        color: #333;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+      .new-menu-item:hover {
+        background-color: #f5f5f5;
+      }
+      .new-menu-item i {
+        font-size: 1rem;
+      }
+      .new-file-icon {
+        font-size: 1.8rem;
+        color: #5f6368;
+      }
+      .new-file-icon.pdf {
+        color: #d93025;
+      }
+      .new-file-icon.word {
+        color: #2a5699;
+      }
     `;
-    li.addEventListener('click', () => {
-      callback([...currentPath, { id: itemId, name }]);
-    });
-    list.appendChild(li);
+    document.head.appendChild(style);
   }
 
-  /* Hàm renderDrive: Hiển thị danh sách file/folder theo đường dẫn */
-  async function renderDrive(containerId, path, updatePathCallback) {
-    const documentType = containerId.includes('exam') ? 'exam' : 'syllabus';
-    const container = document.getElementById(containerId);
-    if (!container) {
-      console.error(`Không tìm thấy container với ID: ${containerId}`);
-      return;
-    }
-    container.innerHTML = '';
+  // Kiểm tra file có đường dẫn hợp lệ; nếu không có thì dừng hàm và in cảnh báo
+  if (!file.file_path) {
+    console.warn('File không có đường dẫn hợp lệ:', file);
+    return;
+  }
+  
+  // Kiểm tra quyền truy cập file theo trường (school_id)
+  if (file.school_id && window.userSchoolId && file.school_id != window.userSchoolId) {
+    console.warn("File không thuộc trường của user! File school_id:", file.school_id, "User's school id:", window.userSchoolId);
+    triggerNotification('danger', 'Lỗi', "Bạn không được phép mở file của trường khác!");
+    return;
+  }
+  
+  // Đảm bảo đường dẫn file có dấu "/" đầu tiên
+  const filePath = file.file_path.startsWith('/') ? file.file_path : `/${file.file_path}`;
+  // Lấy phần mở rộng của file và chọn icon tương ứng dựa trên một mapping
+  const ext = filePath.split('.').pop().toLowerCase();
+  const iconClass = {
+    pdf: 'bi-file-pdf pdf',
+    doc: 'bi-file-earmark-word word',
+    docx: 'bi-file-earmark-word word',
+    jpg: 'bi-file-image',
+    jpeg: 'bi-file-image',
+    png: 'bi-file-image',
+    gif: 'bi-file-image'
+  }[ext] || 'bi-file-earmark';
+  
+  // Tạo phần tử list item <li> cho file
+  const li = document.createElement('li');
+  li.className = 'file-item new-file-item';
+  // Chọn nhãn cho file dựa trên documentType: 'exam' hoặc 'other'
+  const typeLabel = documentType === 'exam' ? 'Đề Thi' : 'Đề Cương';
+  
+  console.log('File object:', file);
+  console.log('View count:', file.view_count);
+  
+  // Xây dựng nội dung HTML cho file item
+  li.innerHTML = `
+    <div class="file-item-container new-file-item-container">
+      <div class="file-info-section new-file-info-section">
+        <i class="bi ${iconClass} file-icon new-file-icon"></i>
+        <div class="file-text-info new-file-text-info">
+          <div class="file-name new-file-name">${typeLabel} ${file.file_name}</div>
+          <div class="file-info new-file-info">${file.file_info || ''}</div>
+          <div class="file-views new-file-views">Người xem: ${file.view_count || 0}</div>
+        </div>
+      </div>
+      <div class="file-actions new-file-actions">
+        <button class="btn btn-menu new-btn-menu" title="Menu">
+          <i class="bi bi-three-dots-vertical"></i>
+        </button>
+        <div class="action-menu new-action-menu">
+          <a class="menu-item btn-download new-menu-item">
+            <i class="bi bi-download"></i>
+            <span>Tải xuống</span>
+          </a>
+          <a href="#" class="menu-item btn-share new-menu-item">
+            <i class="bi bi-exclamation-triangle"></i>
+            <span>Báo lỗi</span>
+          </a>
+          <a class="menu-item btn-discuss new-menu-item">
+            <i class="bi bi-chat"></i>
+            <span>Thảo luận</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Lấy các nút tương tác từ phần tử HTML vừa tạo
+  const menuBtn = li.querySelector('.new-btn-menu');
+  const actionMenu = li.querySelector('.new-action-menu');
+  const downloadBtn = li.querySelector('.btn-download');
+  const shareBtn = li.querySelector('.btn-share');
+  const discussBtn = li.querySelector('.btn-discuss');
 
-    // Nếu không còn ở cấp môn, ẩn phần thông báo gợi ý (custom-notification-wrapper)
-    if (path.length !== 3) {
-      const notif = document.querySelector('.custom-notification-wrapper');
-      if (notif) notif.style.display = 'none';
-    }
+  // Sự kiện click nút menu: hiển thị/ẩn menu hành động
+  menuBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    actionMenu.classList.toggle('show');
+  });
 
-    // Hiển thị spinner
-    const spinner = document.createElement('div');
-    spinner.className = 'spinner';
-    spinner.textContent = 'Loading...';
-    container.appendChild(spinner);
-
-    let data = [];
+  // Sự kiện click nút download
+  downloadBtn.addEventListener('click', async (e) => {
+    e.stopPropagation();
+    actionMenu.classList.remove('show');
+    // Kiểm tra đăng nhập trước khi cho phép tải file
     try {
-      if (path.length === 0) {
-        let res = await fetch('/user/university', { credentials: 'include' });
-        if (res.ok) {
-          const userSchool = await res.json();
-          window.userSchoolId = userSchool.university;
-          data = [{ id: userSchool.university, name: userSchool.school_name }];
-        } else {
-          const allSchoolsRes = await fetch('/api/schools');
-          if (allSchoolsRes.ok) {
-            data = await allSchoolsRes.json();
-          } else {
-            throw new Error("Không thể lấy danh sách trường");
-          }
-        }
-      } else if (path.length === 1) {
-        const schoolId = path[0].id;
-        data = await (await fetch(`/api/schools/${schoolId}/faculties`)).json();
-      } else if (path.length === 2) {
-        const facultyId = path[1].id;
-        data = await (await fetch(`/api/faculties/${facultyId}/subjects?type=${documentType}`)).json();
-      } else if (path.length === 3) {
-        // Ở cấp môn, lấy danh sách năm có tài liệu của loại đang xem
-        const subjectId = path[2].id;
-        const response = await fetch(`/api/subjects/${subjectId}/documents_by_year?type=${documentType}`);
-        const groupedData = await response.json();
-        data = Object.keys(groupedData)
-          .map(year => ({
-            id: parseInt(year),
-            name: year,
-            count: groupedData[year].length,
-            documents: groupedData[year]
-          }))
-          .sort((a, b) => b.id - a.id);
-      } else if (path.length === 4) {
-        const subjectId = path[2].id;
-        const year = path[3].id;
-        data = await (await fetch(`/api/subjects/${subjectId}/documents/${year}?type=${documentType}`)).json();
+      const res = await fetch('/api/check-login');
+      const data = await res.json();
+      if (!data.loggedIn) {
+        triggerNotification('danger', 'Lỗi', 'Bạn cần đăng nhập để thực hiện thao tác này!');
+        return;
       }
     } catch (error) {
-      console.error('Lỗi khi lấy dữ liệu:', error);
-      container.innerHTML = `<div class="alert alert-danger">
-        Có lỗi khi tải dữ liệu: ${error.message || error}.<br>
-        Vui lòng <a href="#" onclick="window.location.reload()">nhấn vào đây</a> để thử lại (F5).
-      </div>`;
+      console.error('Lỗi khi kiểm tra đăng nhập:', error);
+      triggerNotification('danger', 'Lỗi', 'Không thể kiểm tra đăng nhập lúc này!');
       return;
     }
-  
-    container.innerHTML = '';
+    
+    console.log('Download button clicked for file:', file.file_name);
+    // Xử lý file khi nhấn download (ví dụ: tăng lượt xem,...)
+    handleFileClick(file, documentType, filePath);
+    // Tạo link tải và kích hoạt sự kiện click để tải file
+    const downloadLink = document.createElement('a');
+    downloadLink.href = filePath;
+    downloadLink.download = file.file_name;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  });
 
-    // Hiển thị breadcrumb nếu có
-    if (path.length > 0) {
-      renderBreadcrumb(container, path, updatePathCallback);
+  // Sự kiện click nút báo lỗi (share)
+  shareBtn.addEventListener('click', async (e) => {
+    e.stopPropagation();
+    actionMenu.classList.remove('show');
+    // Kiểm tra đăng nhập trước khi báo lỗi
+    try {
+      const res = await fetch('/api/check-login');
+      const data = await res.json();
+      if (!data.loggedIn) {
+        triggerNotification('danger', 'Lỗi', 'Bạn cần đăng nhập để thực hiện thao tác này!');
+        return;
+      }
+    } catch (error) {
+      console.error('Lỗi khi kiểm tra đăng nhập:', error);
+      triggerNotification('danger', 'Lỗi', 'Không thể kiểm tra đăng nhập lúc này!');
+      return;
     }
-  
-    // >>>>> CHỈNH SỬA: Chèn dữ liệu gợi ý vào custom-notification-wrapper <<<<<
-    // Khi đang ở cấp môn (path.length === 3), gọi API gợi ý và chỉ hiển thị nếu có dữ liệu
-    if (path.length === 3) {
+    // Gọi hàm mở modal báo lỗi cho file
+    openReportModal(file);
+  });
+
+  // Sự kiện click nút thảo luận
+  discussBtn.addEventListener('click', async function(e) {
+    e.stopPropagation();
+    // Kiểm tra đăng nhập trước khi chuyển sang trang thảo luận
+    try {
+      const res = await fetch('/api/check-login');
+      const data = await res.json();
+      if (!data.loggedIn) {
+        triggerNotification('danger', 'Lỗi', 'Bạn cần đăng nhập để thực hiện thao tác này!');
+        return;
+      }
+    } catch (error) {
+      console.error('Lỗi khi kiểm tra đăng nhập:', error);
+      triggerNotification('danger', 'Lỗi', 'Không thể kiểm tra đăng nhập lúc này!');
+      return;
+    }
+    
+    // Ẩn container compact-container trên trang hiện tại
+    const compactContainer = document.querySelector('.compact-container.my-4');
+    if (compactContainer) {
+      compactContainer.style.display = 'none';
+    } else {
+      console.warn('Không tìm thấy phần tử compact-container.');
+    }
+    // Hiển thị container chứa thảo luận và tải trang thảo luận vào iframe
+    const discussionContainer = document.getElementById('discussion-container');
+    if (discussionContainer) {
+      discussionContainer.style.display = 'block';
+      const iframe = document.getElementById('discussion-iframe');
+      if (iframe) {
+        // Gán trang thảo luận vào iframe (có thể chuyển đổi URL nếu cần)
+        iframe.src = 'thaoluan.html';
+      }
+    } else {
+      console.warn('Không tìm thấy phần tử discussion-container.');
+    }
+  });
+    
+  // Khi click bên ngoài phần tử li, ẩn action menu
+  document.addEventListener('click', (e) => {
+    if (!li.contains(e.target)) {
+      actionMenu.classList.remove('show');
+    }
+  });
+
+  // Nếu nhấn vào li (ngoại trừ các nút menu) thì gọi hàm xử lý file
+  li.addEventListener('click', (e) => {
+    if (e.target.closest('.new-btn-menu') || e.target.closest('.new-action-menu')) {
+      return;
+    }
+    handleFileClick(file, documentType, filePath);
+  });
+
+  // Thêm phần tử li vừa tạo vào danh sách
+  list.appendChild(li);
+}
+
+/* Hàm renderDrive: Hiển thị danh sách file/folder theo đường dẫn */
+async function renderDrive(containerId, path, updatePathCallback) {
+  const documentType = containerId.includes('exam') ? 'exam' : 'syllabus';
+  const container = document.getElementById(containerId);
+  if (!container) {
+    console.error(`Không tìm thấy container với ID: ${containerId}`);
+    return;
+  }
+  container.innerHTML = '';
+
+  // Ẩn thông báo gợi ý nếu không ở cấp môn
+  if (path.length !== 3) {
+    const notif = document.querySelector('.custom-notification-wrapper');
+    if (notif) notif.style.display = 'none';
+  }
+
+  // Hiển thị spinner khi đang tải dữ liệu
+  const spinner = document.createElement('div');
+  spinner.className = 'spinner';
+  spinner.textContent = 'Loading...';
+  container.appendChild(spinner);
+
+  let data = [];
+  try {
+    if (path.length === 0) {
+      // Lấy thông tin trường của user nếu có đăng nhập
+      let res = await fetch('/user/university', { credentials: 'include' });
+      if (res.ok) {
+        const userSchool = await res.json();
+        window.userSchoolId = userSchool.university;
+        data = [{ id: userSchool.university, name: userSchool.school_name }];
+      } else {
+        const allSchoolsRes = await fetch('/api/schools');
+        if (allSchoolsRes.ok) {
+          data = await allSchoolsRes.json();
+        } else {
+          throw new Error("Không thể lấy danh sách trường");
+        }
+      }
+      // Lấy số liệu thống kê số thành viên theo trường
+      try {
+        const statsRes = await fetch('/api/users/statistics');
+        if (statsRes.ok) {
+          const stats = await statsRes.json();
+          const statsMap = {};
+          stats.forEach(stat => {
+            statsMap[stat.school] = stat.user_count;
+          });
+          data = data.map(item => {
+            const count = statsMap[item.name] || 0;
+            return { ...item, count };
+          });
+        }
+      } catch (error) {
+        console.error("Lỗi khi lấy thống kê người dùng:", error);
+      }
+    } else if (path.length === 1) {
+      const schoolId = path[0].id;
+      data = await (await fetch(`/api/schools/${schoolId}/faculties`)).json();
+    } else if (path.length === 2) {
+      const facultyId = path[1].id;
+      data = await (await fetch(`/api/faculties/${facultyId}/subjects?type=${documentType}`)).json();
+    } else if (path.length === 3) {
       const subjectId = path[2].id;
-      // Nếu đang xem "Đề Thi" thì gợi ý "Đề Cương", ngược lại
-      const alternateType = documentType === 'exam' ? 'syllabus' : 'exam';
-      console.log(`Đang gọi API gợi ý cho subject_id: ${subjectId} với type: ${alternateType}`);
-      fetch(`/api/subjects/${subjectId}/documents_by_year?type=${alternateType}`)
-        .then(response => response.json())
-        .then(alternateData => {
-          console.log("Dữ liệu gợi ý trả về:", alternateData);
-          const wrapper = document.querySelector('.custom-notification-wrapper');
-          // Nếu có dữ liệu gợi ý
-          if (Object.keys(alternateData).length > 0) {
-            // Đảm bảo hiển thị wrapper (có thể đã ẩn trước đó)
-            wrapper.style.display = 'block';
-            // Xây dựng lại nội dung thông báo với gợi ý
-            let newContent = `
-              <div class="custom-study-notification">
-                <div class="custom-notification-indicator"></div>
-                <button class="custom-close-btn">×</button>
-                <div class="custom-header-section">
-                  <div class="custom-subject-badge">${documentType === 'exam' ? '📐' : '📘'}</div>
-                  <div class="custom-subject-info">
-                    <div class="custom-subject-title">Gợi ý ${alternateType === 'exam' ? 'Đề Thi' : 'Đề Cương'}</div>
-                    <div class="custom-subject-progress">Cho môn ${path[2].name}</div>
-                    <div class="custom-progress-bar">
-                      <div class="custom-progress-fill"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="custom-doc-grid">`;
-            // Chèn các mục gợi ý (theo năm)
-            Object.keys(alternateData).forEach(year => {
+      const response = await fetch(`/api/subjects/${subjectId}/documents_by_year?type=${documentType}`);
+      const groupedData = await response.json();
+      data = Object.keys(groupedData)
+        .map(year => ({
+          id: parseInt(year),
+          name: year,
+          count: groupedData[year].length,
+          documents: groupedData[year]
+        }))
+        .sort((a, b) => b.id - a.id);
+    } else if (path.length === 4) {
+      const subjectId = path[2].id;
+      const year = path[3].id;
+      data = await (await fetch(`/api/subjects/${subjectId}/documents/${year}?type=${documentType}`)).json();
+    }
+  } catch (error) {
+    console.error('Lỗi khi lấy dữ liệu:', error);
+    container.innerHTML = `<div class="alert alert-danger">
+      Có lỗi khi tải dữ liệu: ${error.message || error}.<br>
+      Vui lòng <a href="#" onclick="window.location.reload()">nhấn vào đây</a> để thử lại (F5).
+    </div>`;
+    return;
+  }
+  
+  // Xóa spinner
+  container.innerHTML = '';
+
+  if (path.length > 0) {
+    renderBreadcrumb(container, path, updatePathCallback);
+  }
+    // >>>>> CHỈNH SỬA: Gọi modal chào mừng khi ở trang chủ <<<<<
+ if (path.length === 0) {
+   // Nếu có user đã đăng nhập, kiểm tra trạng thái welcome_checked
+   fetch('/api/welcome_checked')
+     .then(response => response.json())
+     .then(data => {
+       // Nếu không có lỗi và welcome_checked bằng 0 (chưa xem thông báo)
+       if (!data.error && data.welcome_checked === 0) {
+         fetchMembershipData();
+       }
+     })
+     .catch(error => console.error('Error checking welcome status:', error));
+ }
+   // <<< END CHỈNH SỬA
+  
+  // Phần gợi ý cho cấp môn (path.length === 3) giữ nguyên như cũ
+  if (path.length === 3) {
+    const subjectId = path[2].id;
+    const alternateType = documentType === 'exam' ? 'syllabus' : 'exam';
+    console.log(`Đang gọi API gợi ý cho subject_id: ${subjectId} với type: ${alternateType}`);
+    fetch(`/api/subjects/${subjectId}/documents_by_year?type=${alternateType}`)
+      .then(response => response.json())
+      .then(alternateData => {
+        console.log("Dữ liệu gợi ý trả về:", alternateData);
+        const wrapper = document.querySelector('.custom-notification-wrapper');
+        if (Object.keys(alternateData).length > 0) {
+          wrapper.style.display = 'block';
+          const years = Object.keys(alternateData).sort((a, b) => parseInt(b) - parseInt(a));
+          const totalItems = years.length;
+          const collapsedLimit = 4;
+          let isCollapsed = totalItems > collapsedLimit;
+          let displayedYears = isCollapsed ? years.slice(0, collapsedLimit) : years;
+          function renderGrid(yearList) {
+            let gridHtml = '';
+            yearList.forEach(year => {
               const group = alternateData[year];
-              newContent += `
+              gridHtml += `
                 <div class="custom-doc-card alternate-suggestion-item" data-year="${year}" style="cursor:pointer;">
                   <div class="custom-doc-type">Năm ${year}</div>
                   <div class="custom-doc-name">(${group.length} tài liệu)</div>
                 </div>
               `;
             });
+            return gridHtml;
+          }
+          let newContent = `
+            <div class="custom-study-notification">
+              <div class="custom-notification-indicator"></div>
+              <button class="custom-close-btn">×</button>
+              <div class="custom-header-section">
+                <div class="custom-subject-badge">${documentType === 'exam' ? '📐' : '📘'}</div>
+                <div class="custom-subject-info">
+                  <div class="custom-subject-title">Gợi ý ${alternateType === 'exam' ? 'Đề Thi' : 'Đề Cương'}</div>
+                  <div class="custom-subject-progress">Cho môn ${path[2].name}</div>
+                  <div class="custom-progress-bar">
+                    <div class="custom-progress-fill"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="custom-doc-grid" id="alternateGrid">
+                ${renderGrid(displayedYears)}
+              </div>
+          `;
+          if (isCollapsed) {
             newContent += `
-                </div>
-                <div class="custom-actions-section">
-                  <a href="#" class="custom-view-all-btn">
-                    <span>Xem chi tiết</span>
-                    <svg viewBox="0 0 24 24">
-                      <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
-                    </svg>
-                  </a>
-                </div>
-              </div>`;
-            wrapper.innerHTML = newContent;
-  
-            // Gán lại sự kiện nút đóng cho nội dung mới
-            wrapper.querySelector('.custom-close-btn').addEventListener('click', () => {
-              wrapper.style.transform = 'translateY(100%)';
-              wrapper.style.opacity = 0;
-              setTimeout(() => {
-                wrapper.style.display = 'none';
-              }, 500);
-            });
-  
-            // Gán sự kiện cho các mục gợi ý (nhấn trực tiếp)
+              <div class="custom-actions-section">
+                <a href="#" class="custom-view-all-btn">
+                  <span>Xem thêm</span>
+                  <svg viewBox="0 0 24 24">
+                    <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                  </svg>
+                </a>
+              </div>
+            `;
+          }
+          newContent += `</div>`;
+          wrapper.innerHTML = newContent;
+          wrapper.querySelector('.custom-close-btn').addEventListener('click', () => {
+            wrapper.style.transform = 'translateY(100%)';
+            wrapper.style.opacity = 0;
+            setTimeout(() => {
+              wrapper.style.display = 'none';
+            }, 500);
+          });
+          function addItemEvents() {
             wrapper.querySelectorAll('.alternate-suggestion-item').forEach(item => {
               item.addEventListener('click', (e) => {
                 const selectedYear = e.currentTarget.getAttribute('data-year');
                 console.log(`Người dùng chọn năm ${selectedYear}`);
                 const newPath = [...path, { id: parseInt(selectedYear), name: selectedYear }];
-                // Chuyển tab tự động
                 if (documentType === 'exam') {
                   document.getElementById('de-thi-tab').classList.remove('active');
                   document.getElementById('de-cuong-tab').classList.add('active');
@@ -3512,116 +4349,202 @@ function confirmShare_v2() {
                 }
               });
             });
-  
-            // Gán sự kiện cho nút "Xem chi tiết" để mở luôn path của mục gợi ý đầu tiên
-            wrapper.querySelector('.custom-actions-section .custom-view-all-btn').addEventListener('click', (e) => {
+          }
+          addItemEvents();
+          const viewAllBtn = wrapper.querySelector('.custom-view-all-btn');
+          if (viewAllBtn) {
+            viewAllBtn.addEventListener('click', (e) => {
               e.preventDefault();
-              const firstYear = Object.keys(alternateData)[0];
-              console.log(`Nhấn xem chi tiết: mở đường dẫn của năm ${firstYear}`);
-              const newPath = [...path, { id: parseInt(firstYear), name: firstYear }];
-              if (documentType === 'exam') {
-                document.getElementById('de-thi-tab').classList.remove('active');
-                document.getElementById('de-cuong-tab').classList.add('active');
-                document.getElementById('de-thi').classList.remove('show', 'active');
-                document.getElementById('de-cuong').classList.add('show', 'active');
-                renderSyllabusDrive(newPath);
-              } else {
-                document.getElementById('de-cuong-tab').classList.remove('active');
-                document.getElementById('de-thi-tab').classList.add('active');
-                document.getElementById('de-cuong').classList.remove('show', 'active');
-                document.getElementById('de-thi').classList.add('show', 'active');
-                renderExamDrive(newPath);
+              const fullGridHtml = renderGrid(years);
+              const gridContainer = document.getElementById('alternateGrid');
+              if (gridContainer) {
+                gridContainer.innerHTML = fullGridHtml;
+                viewAllBtn.parentElement.remove();
+                addItemEvents();
               }
             });
-          } else {
-            console.log("Không có dữ liệu gợi ý; ẩn thông báo gợi ý.");
-            const wrapper = document.querySelector('.custom-notification-wrapper');
-            if (wrapper) wrapper.style.display = 'none';
           }
-        })
-        .catch(err => console.error("Error fetching alternate suggestions", err));
-    }
-    // <<< END CHỈNH SỬA
+        } else {
+          console.log("Không có dữ liệu gợi ý; ẩn thông báo gợi ý.");
+          const wrapper = document.querySelector('.custom-notification-wrapper');
+          if (wrapper) wrapper.style.display = 'none';
+        }
+      })
+      .catch(err => console.error("Error fetching alternate suggestions", err));
+  }
   
-    // Thanh tìm kiếm inline
-    const inlineSearchContainer = document.createElement('div');
-    inlineSearchContainer.className = 'input-group mb-3';
-    inlineSearchContainer.style.position = 'relative';
-    inlineSearchContainer.innerHTML = `
-      <span class="input-group-text"><i class="bi bi-search"></i></span>
-      <input type="search" class="form-control" placeholder="Tìm kiếm trong thư mục...">
-    `;
-    container.appendChild(inlineSearchContainer);
-  
-    const inlineSuggestions = document.createElement('div');
-    inlineSuggestions.className = 'suggestions';
-    inlineSuggestions.style.display = 'none';
-    inlineSearchContainer.appendChild(inlineSuggestions);
-  
-    const advancedSearchBtn = document.createElement('button');
-    advancedSearchBtn.className = 'btn btn-outline-primary mb-3';
-    advancedSearchBtn.textContent = 'Tìm kiếm theo tên môn học';
-    advancedSearchBtn.addEventListener('click', () => {
-      const subjectSearchModal = new bootstrap.Modal(document.getElementById('customSearchModal'));
-      subjectSearchModal.show();
-    });
-    container.appendChild(advancedSearchBtn);
-  
-    // Tạo danh sách file/folder
-    const list = document.createElement('ul');
-    list.className = 'file-list';
-    if (Array.isArray(data)) {
-      data.forEach(item => {
-        if (path.length === 0) {
+  // Thanh tìm kiếm inline
+  const inlineSearchContainer = document.createElement('div');
+  inlineSearchContainer.className = 'input-group mb-3';
+  inlineSearchContainer.style.position = 'relative';
+  inlineSearchContainer.innerHTML = `
+    <span class="input-group-text"><i class="bi bi-search"></i></span>
+    <input type="search" class="form-control" placeholder="Tìm kiếm trong thư mục...">
+  `;
+  container.appendChild(inlineSearchContainer);
+
+  const inlineSuggestions = document.createElement('div');
+  inlineSuggestions.className = 'suggestions';
+  inlineSuggestions.style.display = 'none';
+  inlineSearchContainer.appendChild(inlineSuggestions);
+
+  const advancedSearchBtn = document.createElement('button');
+  advancedSearchBtn.className = 'btn btn-outline-primary mb-3';
+  advancedSearchBtn.textContent = 'Tìm kiếm theo tên môn học';
+  advancedSearchBtn.addEventListener('click', () => {
+    const subjectSearchModal = new bootstrap.Modal(document.getElementById('customSearchModal'));
+    subjectSearchModal.show();
+  });
+  container.appendChild(advancedSearchBtn);
+
+  // Tạo danh sách file/folder
+  const list = document.createElement('ul');
+  list.className = 'file-list';
+  if (Array.isArray(data)) {
+    data.forEach(item => {
+      if (path.length === 0) {
+        // Ở cấp trường: sử dụng hàm renderSchoolFolderItem để chèn icon cộng đồng
+        renderSchoolFolderItem(list, item.name, path, updatePathCallback, item.count || 0, item.id);
+      } else if (path.length < 3) {
+        if (typeof item.count !== 'undefined') {
+          renderFolderItem(list, item.name, path, updatePathCallback, item.count, item.id);
+        } else {
           renderFolderItem(list, item.name, path, updatePathCallback, 0, item.id);
-        } else if (path.length < 3) {
-          if (typeof item.count !== 'undefined') {
-            renderFolderItem(list, item.name, path, updatePathCallback, item.count, item.id);
-          } else {
-            renderFolderItem(list, item.name, path, updatePathCallback, 0, item.id);
-          }
-        } else if (path.length === 3) {
-          renderFolderItem(list, item.name, path, updatePathCallback, item.count || 0, item.id);
-        } else if (path.length === 4) {
-          renderFileItem(list, item, documentType);
         }
-      });
-    }
-    container.appendChild(list);
-  
-    // Tìm kiếm inline
-    const inlineSearchInput = inlineSearchContainer.querySelector('input');
-    inlineSearchInput.addEventListener('input', (e) => {
-      const term = e.target.value.toLowerCase();
-      const suggestions = [];
-      Array.from(list.children).forEach(item => {
-        const text = item.textContent.toLowerCase();
-        item.style.display = text.includes(term) ? 'flex' : 'none';
-        if (item.style.display !== 'none') {
-          const name = item.querySelector('.file-name').textContent;
-          if (!suggestions.includes(name)) suggestions.push(name);
-        }
-      });
-      inlineSuggestions.innerHTML = '';
-      if (term && suggestions.length > 0) {
-        suggestions.forEach(suggestion => {
-          const div = document.createElement('div');
-          div.className = 'suggestion-item';
-          div.textContent = suggestion;
-          div.addEventListener('click', () => {
-            inlineSearchInput.value = suggestion;
-            inlineSearchInput.dispatchEvent(new Event('input'));
-            inlineSuggestions.style.display = 'none';
-          });
-          inlineSuggestions.appendChild(div);
-        });
-        inlineSuggestions.style.display = 'block';
-      } else {
-        inlineSuggestions.style.display = 'none';
+      } else if (path.length === 3) {
+        renderFolderItem(list, item.name, path, updatePathCallback, item.count || 0, item.id);
+      } else if (path.length === 4) {
+        renderFileItem(list, item, documentType);
       }
     });
   }
+  container.appendChild(list);
+
+  // Nếu danh sách folder trống thì hiển thị thông báo "Thư mục rỗng"
+if (!list.hasChildNodes()) {
+  const emptyMsg = document.createElement('p');
+  emptyMsg.className = 'empty-folder';
+  emptyMsg.textContent = 'Thư mục rỗng';
+  container.appendChild(emptyMsg);
+}
+
+  // Xử lý tìm kiếm inline
+ // Thêm CSS trực tiếp vào trang
+const style = document.createElement('style');
+style.textContent = `
+  /* Container gợi ý tìm kiếm */
+  .inline-suggestions {
+    position: absolute;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-height: 300px;
+    overflow-y: auto;
+    width: 100%;
+    z-index: 1000;
+    display: none;
+  }
+
+  /* Mỗi item gợi ý */
+  .suggestion-item {
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .suggestion-item:hover {
+    background-color: #f5f5f5;
+  }
+
+  /* Thông báo không có kết quả */
+  .no-results-message {
+    color: #dc3545;
+    padding: 12px 16px;
+    margin: 0;
+    font-size: 0.9em;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .no-results-message::before {
+    content: "⚠️";
+    font-style: normal;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .inline-suggestions {
+      max-height: 200px;
+    }
+    
+    .suggestion-item, .no-results-message {
+      padding: 8px 12px;
+    }
+  }
+`;
+document.head.appendChild(style);
+
+// Xử lý tìm kiếm inline
+const inlineSearchInput = inlineSearchContainer.querySelector('input');
+inlineSearchInput.addEventListener('input', (e) => {
+  const term = e.target.value.toLowerCase().trim();
+  const suggestions = [];
   
+  // Lọc và hiển thị các item phù hợp
+  Array.from(list.children).forEach(item => {
+    const text = item.textContent.toLowerCase();
+    const isVisible = text.includes(term);
+    item.style.display = isVisible ? 'flex' : 'none';
+    
+    if (isVisible) {
+      const name = item.querySelector('.file-name').textContent;
+      if (!suggestions.includes(name)) suggestions.push(name);
+    }
+  });
+
+  // Xóa gợi ý cũ
+  inlineSuggestions.innerHTML = '';
+  
+  if (term) {
+    if (suggestions.length > 0) {
+      // Hiển thị gợi ý
+      suggestions.forEach(suggestion => {
+        const div = document.createElement('div');
+        div.className = 'suggestion-item';
+        div.textContent = suggestion;
+        
+        div.addEventListener('click', () => {
+          inlineSearchInput.value = suggestion;
+          inlineSearchInput.dispatchEvent(new Event('input'));
+          inlineSuggestions.style.display = 'none';
+        });
+        
+        inlineSuggestions.appendChild(div);
+      });
+    } else {
+      // Hiển thị thông báo không có kết quả
+      const p = document.createElement('p');
+      p.className = 'no-results-message';
+      p.textContent = 'Không tìm thấy kết quả phù hợp';
+      inlineSuggestions.appendChild(p);
+    }
+    
+    inlineSuggestions.style.display = 'block';
+  } else {
+    inlineSuggestions.style.display = 'none';
+  }
+});
+
+// Ẩn gợi ý khi click ra ngoài
+document.addEventListener('click', (e) => {
+  if (!inlineSearchContainer.contains(e.target)) {
+    inlineSuggestions.style.display = 'none';
+  }
+});
+}
   function renderBreadcrumb(container, path, callback) {
     if (path.length === 0) return;
     const breadcrumb = document.createElement('nav');
@@ -3651,119 +4574,400 @@ function confirmShare_v2() {
     container.prepend(breadcrumb);
   }
   
-  function renderFileItem(list, file, documentType) {
-    if (!file.file_path) {
-      console.warn('File không có đường dẫn hợp lệ:', file);
-      return;
-    }
-    if (file.school_id && window.userSchoolId && file.school_id != window.userSchoolId) {
-      console.warn("File không thuộc trường của user! File school_id:", file.school_id, "User's school id:", window.userSchoolId);
-      triggerNotification('danger', 'Lỗi', "Bạn không được phép mở file của trường khác!");
-      return;
-    }
-    const filePath = file.file_path.startsWith('/') ? file.file_path : `/${file.file_path}`;
-    const ext = filePath.split('.').pop().toLowerCase();
-    const iconClass = {
-      pdf: 'bi-file-pdf pdf',
-      doc: 'bi-file-earmark-word word',
-      docx: 'bi-file-earmark-word word',
-      jpg: 'bi-file-image',
-      jpeg: 'bi-file-image',
-      png: 'bi-file-image',
-      gif: 'bi-file-image'
-    }[ext] || 'bi-file-earmark';
-    const li = document.createElement('li');
-    li.className = 'file-item';
-    const typeLabel = documentType === 'exam' ? 'Đề Thi' : 'Đề Cương';
-    li.innerHTML = `
-      <i class="bi ${iconClass} file-icon"></i>
-      <div>
-        <div class="file-name">${typeLabel} ${file.file_name}</div>
-        <div class="file-info">${file.file_info || ''}</div>
-      </div>
+  // Hàm tạo file item (renderFileItem)
+function renderFileItem(list, file, documentType) {
+  // Thêm CSS động cho phần tử file mới (nếu chưa có)
+  if (!document.getElementById('dynamic-new-file-item-css')) {
+    const style = document.createElement('style');
+    style.id = 'dynamic-new-file-item-css';
+    style.textContent = `
+      /* CSS cho phần tử file mới với lớp "new-file-item" */
+      .new-file-item {
+        padding: 12px 15px;
+        border-radius: 8px;
+        transition: background-color 0.2s;
+        margin-bottom: 8px;
+        background-color: #ffffff;
+        position: relative;
+      }
+      .new-file-info-section {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        flex: 1;
+      }
+      .new-file-text-info {
+        flex: 1;
+      }
+      .new-file-views {
+        font-size: 0.75em;
+        color: #666;
+        margin-top: 2px;
+      }
+      .new-file-actions {
+        display: flex;
+        gap: 8px;
+      }
+      .new-btn-menu {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        padding: 0;
+        border: none;
+        background-color: transparent;
+        color: #555;
+        transition: all 0.2s;
+        cursor: pointer;
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+      .new-btn-menu:hover {
+        background-color: #f0f0f0;
+      }
+      .new-action-menu {
+        position: absolute;
+        right: 15px;
+        top: 50px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        z-index: 10;
+        display: none;
+        min-width: 120px;
+        overflow: hidden;
+      }
+      .new-action-menu.show {
+        display: block;
+      }
+      .new-menu-item {
+        padding: 8px 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        color: #333;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+      .new-menu-item:hover {
+        background-color: #f5f5f5;
+      }
+      .new-menu-item i {
+        font-size: 1rem;
+      }
+      .new-file-icon {
+        font-size: 1.8rem;
+        color: #5f6368;
+      }
+      .new-file-icon.pdf {
+        color: #d93025;
+      }
+      .new-file-icon.word {
+        color: #2a5699;
+      }
     `;
-    li.addEventListener('click', () => {
-      fetch('/api/check-login', { method: 'GET', credentials: 'include' })
+    document.head.appendChild(style);
+  }
+
+  if (!file.file_path) {
+    console.warn('File không có đường dẫn hợp lệ:', file);
+    return;
+  }
+  
+  if (file.school_id && window.userSchoolId && file.school_id != window.userSchoolId) {
+    console.warn("File không thuộc trường của user! File school_id:", file.school_id, "User's school id:", window.userSchoolId);
+    triggerNotification('danger', 'Lỗi', "Bạn không được phép mở file của trường khác!");
+    return;
+  }
+  
+  const filePath = file.file_path.startsWith('/') ? file.file_path : `/${file.file_path}`;
+  const ext = filePath.split('.').pop().toLowerCase();
+  const iconClass = {
+    pdf: 'bi-file-pdf pdf',
+    doc: 'bi-file-earmark-word word',
+    docx: 'bi-file-earmark-word word',
+    jpg: 'bi-file-image',
+    jpeg: 'bi-file-image',
+    png: 'bi-file-image',
+    gif: 'bi-file-image'
+  }[ext] || 'bi-file-earmark';
+  
+  // Tạo phần tử li cho file item
+  const li = document.createElement('li');
+  li.className = 'file-item new-file-item';
+  const typeLabel = documentType === 'exam' ? 'Đề Thi' : 'Đề Cương';
+  
+  li.innerHTML = `
+    <div class="file-item-container new-file-item-container">
+      <div class="file-info-section new-file-info-section">
+        <i class="bi ${iconClass} file-icon new-file-icon"></i>
+        <div class="file-text-info new-file-text-info">
+          <div class="file-name new-file-name">${typeLabel} ${file.file_name}</div>
+          <div class="file-info new-file-info">${file.file_info || ''}</div>
+          <div class="file-views new-file-views">Người xem: ${file.view_count  || 0}</div>
+        </div>
+      </div>
+      <div class="file-actions new-file-actions">
+        <button class="btn btn-menu new-btn-menu" title="Menu">
+          <i class="bi bi-three-dots-vertical"></i>
+        </button>
+        <div class="action-menu new-action-menu">
+          <a class="menu-item btn-download new-menu-item">
+            <i class="bi bi-download"></i>
+            <span>Tải xuống</span>
+          </a>
+          <!-- Menu báo lỗi -->
+          <a href="#" class="menu-item btn-share new-menu-item">
+            <i class="bi bi-exclamation-triangle"></i>
+            <span>Báo lỗi</span>
+          </a>
+          <a class="menu-item btn-discuss new-menu-item">
+            <i class="bi bi-chat"></i>
+            <span>Thảo luận</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Lấy các phần tử cần xử lý sự kiện
+  const menuBtn = li.querySelector('.new-btn-menu');
+  const actionMenu = li.querySelector('.new-action-menu');
+  const downloadBtn = li.querySelector('.btn-download');
+  const shareBtn = li.querySelector('.btn-share');
+  const discussBtn = li.querySelector('.btn-discuss');
+
+  // Xử lý click vào nút menu
+  menuBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    actionMenu.classList.toggle('show');
+  });
+
+// Xử lý click nút download
+// Xử lý click nút download
+downloadBtn.addEventListener('click', async (e) => {
+  e.stopPropagation();
+  actionMenu.classList.remove('show');
+
+  // Kiểm tra đăng nhập qua API
+  try {
+    const res = await fetch('/api/check-login');
+    const data = await res.json();
+    if (!data.loggedIn) {
+      triggerNotification('danger', 'Lỗi', 'Bạn cần đăng nhập để thực hiện thao tác này!');
+      return;
+    }
+  } catch (error) {
+    console.error('Lỗi khi kiểm tra đăng nhập:', error);
+    triggerNotification('danger', 'Lỗi', 'Không thể kiểm tra đăng nhập lúc này!');
+    return;
+  }
+  
+  console.log('Download button clicked for file:', file.file_name);
+  // Thực hiện logic mở file (ví dụ: cập nhật lượt xem, ghi log, v.v.)
+  handleFileClick(file, documentType, filePath);
+
+  // Tạo thẻ a ẩn và thiết lập thuộc tính download để tải file xuống tại tab hiện tại
+  const downloadLink = document.createElement('a');
+  downloadLink.href = filePath;
+  downloadLink.download = file.file_name;
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
+});
+
+// Xử lý click "Báo lỗi": mở modal và cập nhật tên đề thi theo file được click
+shareBtn.addEventListener('click', async (e) => {
+  e.stopPropagation();
+  actionMenu.classList.remove('show');
+
+  // Kiểm tra đăng nhập qua API
+  try {
+    const res = await fetch('/api/check-login');
+    const data = await res.json();
+    if (!data.loggedIn) {
+      triggerNotification('danger', 'Lỗi', 'Bạn cần đăng nhập để thực hiện thao tác này!');
+      return;
+    }
+  } catch (error) {
+    console.error('Lỗi khi kiểm tra đăng nhập:', error);
+    triggerNotification('danger', 'Lỗi', 'Không thể kiểm tra đăng nhập lúc này!');
+    return;
+  }
+
+  openReportModal(file);
+});
+
+  // Xử lý sự kiện "Thảo luận": chuyển hướng sang trang thaoluan.html và truyền document_id
+  discussBtn.addEventListener('click', async function(e) {
+    e.stopPropagation();
+    try {
+      const res = await fetch('/api/check-login');
+      const data = await res.json();
+      if (!data.loggedIn) {
+        triggerNotification('danger', 'Lỗi', 'Bạn cần đăng nhập để thực hiện thao tác này!');
+        return;
+      }
+    } catch (error) {
+      console.error('Lỗi khi kiểm tra đăng nhập:', error);
+      triggerNotification('danger', 'Lỗi', 'Không thể kiểm tra đăng nhập lúc này!');
+      return;
+    }
+    
+    // Ẩn container compact-container
+    const compactContainer = document.querySelector('.compact-container.my-4');
+    if (compactContainer) {
+        compactContainer.style.display = 'none';
+    } else {
+        console.warn('Không tìm thấy phần tử compact-container.');
+    }
+
+    // Ẩn nút đóng góp đề thi
+    const contributeButton = document.querySelector('.btn.btn-primary.contribute-btn');
+    if (contributeButton) {
+        contributeButton.style.display = 'none';
+    } else {
+        console.warn('Không tìm thấy nút đóng góp đề thi.');
+    }// Ẩn thanh cuộn của trang gốc nhưng giữ thanh cuộn của iframe
+document.documentElement.style.overflow = 'hidden';  // Ẩn thanh cuộn của trang
+document.body.style.overflow = 'hidden';
+
+// Đảm bảo iframe vẫn có thanh cuộn
+const iframe = document.getElementById('discussion-iframe');
+if (iframe) {
+    iframe.style.overflow = 'auto';
+    iframe.style.scrollbarWidth = 'auto'; // Firefox
+    iframe.style.webkitScrollbar = 'auto'; // Chrome, Safari
+}
+
+    
+    // Hiển thị container chứa iframe thảo luận và chuyển document_id qua URL
+    const discussionContainer = document.getElementById('discussion-container');
+    if (discussionContainer) {
+      discussionContainer.style.display = 'block';
+      const iframe = document.getElementById('discussion-iframe');
+      if (iframe) {
+        // Sử dụng file.document_id nếu có, nếu không có thì có thể sử dụng file.id
+        const docId = file.document_id || file.id;
+        if (!docId) {
+          console.error('Không tìm thấy document_id hợp lệ trong file:', file);
+          triggerNotification('danger', 'Lỗi', 'File không có document_id hợp lệ!');
+          return;
+        }
+        // Truyền document_id qua query string
+        iframe.src = 'thaoluan.html?document_id=' + docId;
+      }
+    } else {
+      console.warn('Không tìm thấy phần tử discussion-container.');
+    }
+  });
+
+  
+  // Đóng menu khi click ra ngoài
+  document.addEventListener('click', (e) => {
+    if (!li.contains(e.target)) {
+      actionMenu.classList.remove('show');
+    }
+  });
+
+  // Sự kiện click chính của li (không ảnh hưởng nút menu)
+  li.addEventListener('click', (e) => {
+    if (e.target.closest('.new-btn-menu') || e.target.closest('.new-action-menu')) {
+      return;
+    }
+    handleFileClick(file, documentType, filePath);
+  });
+
+  list.appendChild(li);
+}
+
+// Hàm xử lý click file (giữ nguyên)
+function handleFileClick(file, documentType, filePath) {
+    fetch('/api/check-login', { method: 'GET', credentials: 'include' })
         .then(response => response.json())
         .then(data => {
-          if (data.loggedIn) {
-            fetch('/api/account_status', { method: 'GET', credentials: 'include' })
-              .then(response => response.json())
-              .then(statusData => {
-                if (statusData.account_status === 'đã duyệt') {
-                  fetch('/api/check-file-open-timer', { method: 'GET', credentials: 'include' })
+            if (data.loggedIn) {
+                fetch('/api/account_status', { method: 'GET', credentials: 'include' })
                     .then(response => response.json())
-                    .then(timerData => {
-                      if (timerData.can_open) {
-                        fetch('/api/log-file-open', {
-                          method: 'POST',
-                          headers: { 'Content-Type': 'application/json' },
-                          credentials: 'include',
-                          body: JSON.stringify({ documentId: file.id })
-                        })
-                          .then(() => {
-                            if (documentType === 'exam') {
-                              fetch('/api/log-view-exam-v2', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                credentials: 'include',
-                                body: JSON.stringify({ documentId: file.id })
-                              })
-                                .then(response => {
-                                  if (!response.ok) {
-                                    return response.json().then(data => {
-                                      triggerNotification('danger', 'Lỗi', data.error);
-                                      throw new Error(data.error);
-                                    });
-                                  }
-                                  return response.json();
-                                })
-                                .then(() => {
-                                  window.open(filePath, '_blank');
+                    .then(statusData => {
+                        if (statusData.account_status === 'đã duyệt') {
+                            fetch('/api/check-file-open-timer', { method: 'GET', credentials: 'include' })
+                                .then(response => response.json())
+                                .then(timerData => {
+                                    if (timerData.can_open) {
+                                        fetch('/api/log-file-open', {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            credentials: 'include',
+                                            body: JSON.stringify({ documentId: file.id })
+                                        })
+                                            .then(() => {
+                                                if (documentType === 'exam') {
+                                                    fetch('/api/log-view-exam-v2', {
+                                                        method: 'POST',
+                                                        headers: { 'Content-Type': 'application/json' },
+                                                        credentials: 'include',
+                                                        body: JSON.stringify({ documentId: file.id })
+                                                    })
+                                                        .then(response => {
+                                                            if (!response.ok) {
+                                                                return response.json().then(data => {
+                                                                    triggerNotification('danger', 'Lỗi', data.error);
+                                                                    throw new Error(data.error);
+                                                                });
+                                                            }
+                                                            return response.json();
+                                                        })
+                                                        .then(() => {
+                                                            window.open(filePath, '_blank');
+                                                        })
+                                                        .catch(error => {
+                                                            console.error('Lỗi khi log view exam:', error);
+                                                        });
+                                                } else {
+                                                    window.open(filePath, '_blank');
+                                                }
+                                            })
+                                            .catch(error => {
+                                                console.error('Lỗi khi log file:', error);
+                                                window.open(filePath, '_blank');
+                                            });
+                                    } else {
+                                        triggerNotification('warning', 'Thông báo', `Thao tác quá nhanh, đợi ${Math.ceil(timerData.seconds_left)} giây.`);
+                                    }
                                 })
                                 .catch(error => {
-                                  console.error('Lỗi khi log view exam:', error);
+                                    console.error('Lỗi khi kiểm tra thời gian mở file:', error);
                                 });
-                            } else {
-                              window.open(filePath, '_blank');
-                            }
-                          })
-                          .catch(error => {
-                            console.error('Lỗi khi log file:', error);
-                            window.open(filePath, '_blank');
-                          });
-                      } else {
-                        triggerNotification('warning', 'Thông báo', `Thao tác quá nhanh, đợi ${Math.ceil(timerData.seconds_left)} giây.`);
-                      }
+                        } else if (statusData.account_status === 'bình thường') {
+                            const modal = new bootstrap.Modal(document.getElementById('verificationModal-v2'));
+                            modal.show();
+                        } else if (statusData.account_status === 'đang duyệt') {
+                            triggerNotification('danger', 'Lỗi', 'Tài khoản của bạn đang được xét duyệt, vui lòng đợi');
+                        }
                     })
                     .catch(error => {
-                      console.error('Lỗi khi kiểm tra thời gian mở file:', error);
+                        console.error('Lỗi khi kiểm tra trạng thái tài khoản:', error);
+                        const modal = new bootstrap.Modal(document.getElementById('verificationModal-v2'));
+                        modal.show();
                     });
-                } else if (statusData.account_status === 'bình thường') {
-                  const modal = new bootstrap.Modal(document.getElementById('verificationModal-v2'));
-                  modal.show();
-                } else if (statusData.account_status === 'đang duyệt') {
-                  triggerNotification('danger', 'Lỗi', 'Tài khoản của bạn đang được xét duyệt, vui lòng đợi');
-                }
-              })
-              .catch(error => {
-                console.error('Lỗi khi kiểm tra trạng thái tài khoản:', error);
-                const modal = new bootstrap.Modal(document.getElementById('verificationModal-v2'));
+            } else {
+                const modal = new bootstrap.Modal(document.getElementById('loginModal-v3'));
                 modal.show();
-              });
-          } else {
-            const modal = new bootstrap.Modal(document.getElementById('loginModal-v3'));
-            modal.show();
-          }
+            }
         })
         .catch(error => {
-          console.error('Lỗi kiểm tra đăng nhập:', error);
-          const modal = new bootstrap.Modal(document.getElementById('loginModal-v3'));
-          modal.show();
+            console.error('Lỗi kiểm tra đăng nhập:', error);
+            const modal = new bootstrap.Modal(document.getElementById('loginModal-v3'));
+            modal.show();
         });
-    });
-    list.appendChild(li);
-  }
+}
 
   function openFile(filePath) {
     if (isInAppBrowser()) {
@@ -3897,6 +5101,93 @@ function confirmShare_v2() {
          - Xử lý hiển thị kết quả và gợi ý tìm kiếm theo từ khóa nhập vào
        ================================================== */
 document.addEventListener("DOMContentLoaded", function () {
+  // Thêm CSS hiện đại trực tiếp vào trang
+  const style = document.createElement('style');
+  style.textContent = `
+    /* Modern Empty State Styles */
+    .empty-search-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      margin: 1rem 0;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .empty-search-icon {
+      font-size: 3rem;
+      color: #adb5bd;
+      margin-bottom: 1rem;
+    }
+
+    .empty-search-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #212529;
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-search-description {
+      color: #6c757d;
+      margin-bottom: 1.5rem;
+      max-width: 400px;
+    }
+
+    .empty-search-action {
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 0.5rem 1.25rem;
+      color: #495057;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .empty-search-action:hover {
+      background: #e9ecef;
+      transform: translateY(-2px);
+    }
+
+    .empty-search-action i {
+      font-size: 0.9rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Error State Styles */
+    .error-search-container {
+      background: #fff3f3;
+      border-left: 4px solid #ff6b6b;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+    }
+
+    .error-search-title {
+      color: #dc3545;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .error-search-message {
+      color: #6c757d;
+      font-size: 0.9rem;
+    }
+  `;
+  document.head.appendChild(style);
+
   const subjectSearchInput = document.getElementById("subjectSearchInput");
   const subjectSearchSuggestions = document.getElementById("subjectSearchSuggestions");
   const schoolSelectionNotice = document.getElementById("schoolSelectionNotice");
@@ -3916,7 +5207,7 @@ document.addEventListener("DOMContentLoaded", function () {
     modalInstance = new bootstrap.Modal(modalEl);
   }
 
-  subjectSearchInput?.addEventListener("input", async () => {
+  subjectSearchInput?.addEventListener("input", async function() {
     const term = subjectSearchInput.value.trim().toLowerCase();
 
     if (term.length < 2) {
@@ -4064,16 +5355,35 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         subjectSearchSuggestions.style.display = "block";
       } else {
-        subjectSearchSuggestions.style.display = "none";
+        // Hiển thị empty state hiện đại khi không có kết quả
+        const emptyState = document.createElement('div');
+        emptyState.className = 'empty-search-container';
+        emptyState.innerHTML = `
+          <div class="empty-search-icon">
+            <i class="fas fa-search-minus"></i>
+          </div>
+          <h3 class="empty-search-title">Không tìm thấy kết quả</h3>
+          <p class="empty-search-description">Không có môn học nào phù hợp với từ khóa "${term}". Vui lòng thử lại với từ khóa khác.</p>
+          <button class="empty-search-action" onclick="document.getElementById('subjectSearchInput').focus()">
+            <i class="fas fa-redo"></i> Thử tìm kiếm khác
+          </button>
+        `;
+        subjectSearchSuggestions.appendChild(emptyState);
+        subjectSearchSuggestions.style.display = "block";
       }
     } catch (error) {
       console.error("Lỗi tìm kiếm:", error);
-      subjectSearchSuggestions.innerHTML = '<div class="error">Lỗi tải kết quả</div>';
+      // Hiển thị error state hiện đại
+      subjectSearchSuggestions.innerHTML = `
+        <div class="error-search-container">
+          <h4 class="error-search-title"><i class="fas fa-exclamation-triangle me-2"></i>Đã xảy ra lỗi</h4>
+          <p class="error-search-message">Không thể tải kết quả tìm kiếm. Vui lòng thử lại sau hoặc kiểm tra kết nối mạng.</p>
+        </div>
+      `;
       subjectSearchSuggestions.style.display = "block";
     }
   });
-});
-  </script>
+});  </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
