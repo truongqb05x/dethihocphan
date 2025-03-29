@@ -3,11 +3,16 @@ import os
 import logging
 from datetime import datetime, timezone
 import hashlib
-from flask import Flask, request, jsonify, session, render_template, redirect, url_for, abort, send_from_directory
+from flask import Flask, request, jsonify, session, render_template, redirect, url_for, abort, send_from_directory,current_app
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import mysql.connector
 from mysql.connector import pooling, Error
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+import random
+import string
 
 from werkzeug.security import generate_password_hash
 import bcrypt
@@ -443,31 +448,26 @@ def get_documents_by_subject_grouped(subject_id):
 
 
 # -----------------------------------------------------------------
-# Route lấy danh sách tài liệu của môn học tại một năm cụ thể
+# Route lấy danh sách tài liệu của môn học theo năm
 # Endpoint: /api/subjects/<int:subject_id>/documents/<int:year>
 # Phương thức: GET
 # Mô tả:
-#   - Lấy subject_id và year từ URL
-#   - Truy vấn bảng documents với điều kiện subject_id và year
-#   - Trả về danh sách tài liệu dưới dạng JSON
+#   - Lấy subject_id và year từ URL, tham số 'type' từ query (mặc định là 'exam')
+#   - Truy vấn danh sách tài liệu của môn học theo năm và loại tài liệu
 # -----------------------------------------------------------------
 @app.route('/api/subjects/<int:subject_id>/documents/<int:year>', methods=['GET'])
 def get_documents_by_subject_and_year(subject_id, year):
+    document_type = request.args.get('type', 'exam')  # Mặc định là 'exam'
     conn = None
     cursor = None
     try:
         conn = pool.get_connection()
         cursor = conn.cursor(dictionary=True)
-        # Truy vấn bảng documents và join với bảng activities để lấy số lượt view (activity_type = 'view_exam')
-        query = """
-            SELECT DISTINCT d.*, COUNT(a.id) AS view_count
-            FROM documents d
-            LEFT JOIN user_activity_logs a 
-              ON d.id = a.document_id AND a.activity_type = 'view_exam'
-            WHERE d.subject_id = %s AND d.year = %s
-            GROUP BY d.id;
-        """
-        cursor.execute(query, (subject_id, year))
+        cursor.execute("""
+            SELECT * FROM documents 
+            WHERE subject_id = %s AND year = %s AND document_type = %s 
+            ORDER BY file_name
+        """, (subject_id, year, document_type))
         documents = cursor.fetchall()
         return jsonify(documents)
     except Exception as e:
@@ -477,7 +477,6 @@ def get_documents_by_subject_and_year(subject_id, year):
             cursor.close()
         if conn:
             conn.close()
-
 
 # -----------------------------------------------------------------
 # Route tìm kiếm môn học
@@ -1461,15 +1460,15 @@ def handle_approval():
     if action == 'approve':
         # Cập nhật account_status của user thành 'đã duyệt'
         cursor.execute("UPDATE users SET account_status = 'đã duyệt' WHERE id = %s", (user_id,))
-        # Xóa yêu cầu khỏi bảng user_images
-        cursor.execute("DELETE FROM user_images WHERE id = %s", (image_id,))
+        # Xóa TẤT CẢ các yêu cầu của user đó trong bảng user_images
+        cursor.execute("DELETE FROM user_images WHERE user_id = %s", (user_id,))
         conn.commit()
         cursor.close()
         conn.close()
-        return jsonify({'status': 'success', 'message': 'Yêu cầu đã được duyệt và xóa.'})
+        return jsonify({'status': 'success', 'message': 'Yêu cầu đã được duyệt và tất cả yêu cầu của user đã được xóa.'})
     elif action == 'reject':
-        # Cập nhật trạng thái của yêu cầu thành 'rejected' và cập nhật ghi chú
-        cursor.execute("UPDATE user_images SET status = 'rejected', note = %s WHERE id = %s", (note, image_id))
+        # Cập nhật trạng thái của TẤT CẢ các yêu cầu của user thành 'rejected' và cập nhật ghi chú
+        cursor.execute("UPDATE user_images SET status = 'rejected', note = %s WHERE user_id = %s", (note, user_id))
         # Chuyển trạng thái của user trong bảng users về 'bình thường'
         cursor.execute("UPDATE users SET account_status = 'bình thường' WHERE id = %s", (user_id,))
         conn.commit()
@@ -1594,25 +1593,147 @@ def accounts_by_ip():
             cursor.close()
         if conn is not None:
             conn.close()
+def generate_random_password(length=12):
+    """Sinh mật khẩu ngẫu nhiên với chữ hoa, chữ thường, số và ký tự đặc biệt."""
+    characters = string.ascii_letters + string.digits + "!@#$%^&*()"
+    return ''.join(random.choice(characters) for _ in range(length))
+
+def send_password_email(new_password, email_to):
+    # Cấu hình email bên trong hàm
+    email_from = "truongqb05x@gmail.com"
+    email_password = "ggcw xthp gwko hurm"  # Mật khẩu ứng dụng Gmail
+
+    # Sử dụng multipart/related để hỗ trợ nhúng inline image
+    msg = MIMEMultipart('related')
+    msg['From'] = email_from
+    msg['To'] = email_to
+    msg['Subject'] = "🔐 Thông báo cấp lại mật khẩu - Hue Hub"
+
+    # Nội dung HTML sử dụng Content-ID để tham chiếu hình ảnh nhúng
+    html_content = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <style>
+            body {{ font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: 1.6; }}
+            .container {{ max-width: 600px; margin: 20px auto; padding: 30px; border-radius: 10px; background: #f8f9fa; }}
+            .header {{ text-align: center; margin-bottom: 30px; }}
+            .logo {{ max-width: 150px; margin-bottom: 20px; }}
+            .password-box {{ 
+                background: #ffffff; 
+                padding: 20px; 
+                border-radius: 8px;
+                border: 1px solid #e0e0e0;
+                font-size: 18px;
+                color: #2c3e50;
+                margin: 25px 0;
+                text-align: center;
+                font-weight: bold;
+            }}
+            .button {{
+                background-color: #007bff;
+                color: white !important;
+                padding: 12px 25px;
+                border-radius: 5px;
+                text-decoration: none;
+                display: inline-block;
+                margin-top: 20px;
+            }}
+            .footer {{ 
+                margin-top: 40px; 
+                text-align: center; 
+                color: #6c757d;
+                font-size: 14px;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <img src="https://huehub.fun/static/logo.png" class="logo" alt="Hue Hub Logo">
+                <h2 style="color: #2c3e50; margin-bottom: 5px;">Xin chào bạn,</h2>
+                <p style="color: #6c757d;">Bạn vừa yêu cầu cấp lại mật khẩu truy cập Hue Hub</p>
+            </div>
+            <p>Mật khẩu mới của bạn:</p>
+            <div class="password-box">{password}</div>
+            <p>Vui lòng:</p>
+            <ol>
+                <li>Đăng nhập bằng mật khẩu trên</li>
+                <li>Truy cập Cài đặt tài khoản</li>
+                <li>Đổi mật khẩu mới để bảo mật</li>
+            </ol>
+            <center>
+                <a href="[Login_URL]" class="button">TRUY CẬP NGAY</a>
+            </center>
+            <div class="footer">
+                <p>📧 Bạn cần hỗ trợ? Liên hệ ngay: support@huehub.vn</p>
+                <p>© 2024 Hue Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+    html_content = html_content.format(password=new_password)
+    html_part = MIMEText(html_content, 'html')
+    msg.attach(html_part)
+
+    # Đính kèm hình ảnh logo dưới dạng inline
+    try:
+        with open("static/logo.png", "rb") as img_file:
+            img = MIMEImage(img_file.read())
+            img.add_header('Content-ID', '<logo_image>')
+            img.add_header('Content-Disposition', 'inline', filename="logo.png")
+            msg.attach(img)
+    except Exception as e:
+        current_app.logger.debug("Không thể đính kèm hình ảnh logo: %s", e)
+
+    try:
+        with smtplib.SMTP('smtp.gmail.com', 587) as server:
+            server.starttls()
+            server.login(email_from, email_password)
+            server.sendmail(email_from, email_to, msg.as_string())
+        current_app.logger.debug("Email đã gửi thành công!")
+    except Exception as e:
+        current_app.logger.debug("Lỗi khi gửi email: %s", e)
+
 @app.route('/api/request_password_reset', methods=['POST'])
 def request_password_reset():
     data = request.get_json()
     username = data.get('username')
     email = data.get('email')
     
-    # Kiểm tra các trường bắt buộc
     if not username or not email:
         return jsonify({"error": "Username và email là bắt buộc"}), 400
+
+    # Sinh mật khẩu mới (plain text)
+    new_password = generate_random_password()
+    # Mã hóa mật khẩu mới giống route đăng kí
+    hashed_new_password = hash_password(new_password)
 
     conn = None
     cursor = None
     try:
-        conn = get_db_connection()  # Hàm kết nối cơ sở dữ liệu của bạn
+        conn = get_db_connection()
         cursor = conn.cursor()
-        query = "INSERT INTO password_reset_requests (username, email) VALUES (%s, %s)"
-        cursor.execute(query, (username, email))
+
+        # Kiểm tra xem người dùng có tồn tại trong bảng users
+        select_query = "SELECT id FROM users WHERE username = %s"
+        cursor.execute(select_query, (username,))
+        result = cursor.fetchone()
+        if not result:
+            return jsonify({"error": "Người dùng không tồn tại"}), 404
+
+        # Cập nhật mật khẩu mới (đã mã hóa) vào bảng users (cột password)
+        update_query = "UPDATE users SET password = %s WHERE username = %s"
+        cursor.execute(update_query, (hashed_new_password, username))
         conn.commit()
-        return jsonify({"message": "Yêu cầu cấp lại mật khẩu đã được ghi nhận. Vui lòng kiểm tra email."}), 200
+
+        # Gọi hàm gửi email ngay sau khi update thành công
+        # Gửi mật khẩu gốc (plain text) để người dùng có thể đăng nhập và đổi mật khẩu sau đó
+        send_password_email(new_password, email)
+
+        return jsonify({"message": "Mật khẩu đã được cập nhật và email đã được gửi."}), 200
+
     except mysql.connector.Error as err:
         return jsonify({"error": f"Lỗi cơ sở dữ liệu: {str(err)}"}), 500
     finally:
@@ -1620,6 +1741,7 @@ def request_password_reset():
             cursor.close()
         if conn is not None:
             conn.close()
+
 # view của user
 @app.route('/api/log-view-exam-v2', methods=['POST'])
 def log_view_exam_v2():
@@ -1934,18 +2056,19 @@ def post_reply():
     """
     Xử lý đăng reply cho comment, hỗ trợ tải file lên dưới dạng multipart/form-data.
     Yêu cầu dữ liệu từ form:
-      - user_id, parent_id, document_id, content
+      - user_id, parent_id, document_id, content, full_name
       - file (nếu có)
     """
     try:
-        # Lấy dữ liệu từ form
+        # Lấy dữ liệu từ form, bao gồm full_name
         user_id = request.form.get('user_id')
         parent_id = request.form.get('parent_id')
         document_id = request.form.get('document_id')
         content = request.form.get('content')
+        full_name = request.form.get('full_name')  # Lấy họ tên của người dùng
 
         # Kiểm tra các trường bắt buộc
-        if not user_id or not parent_id or not document_id or not content:
+        if not user_id or not parent_id or not document_id or not content or not full_name:
             return jsonify({"error": "Missing required fields"}), 400
 
         # Xử lý file upload (nếu có)
@@ -1955,24 +2078,24 @@ def post_reply():
             if file.filename != '':
                 UPLOAD_FOLDER_THAOLUAN = "static/thaoluan"
                 os.makedirs(UPLOAD_FOLDER_THAOLUAN, exist_ok=True)
-                # Đổi tên file để tránh trùng lặp (ở đây sử dụng parent_id làm tiền tố, bạn có thể thay đổi)
+                # Đổi tên file để tránh trùng lặp
                 filename = f"{parent_id}_{file.filename}"
                 file_path = os.path.join(UPLOAD_FOLDER_THAOLUAN, filename)
                 file.save(file_path)
                 file_url = f"/{file_path}"  # Ví dụ: /static/thaoluan/...
-        
+
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        # Chèn reply vào bảng Comments (với parent_id không null)
+        # Chèn reply vào bảng Comments, lưu thêm họ tên (user_name)
         sql = """
-            INSERT INTO Comments (document_id, user_id, parent_id, content)
-            VALUES (%s, %s, %s, %s)
+            INSERT INTO Comments (document_id, user_id, parent_id, content, user_name)
+            VALUES (%s, %s, %s, %s, %s)
         """
-        cursor.execute(sql, (document_id, user_id, parent_id, content))
+        cursor.execute(sql, (document_id, user_id, parent_id, content, full_name))
         reply_id = cursor.lastrowid
 
-        # Nếu có file tải lên, lưu thông tin file vào bảng Attachments
+        # Nếu có file, lưu vào Attachments
         if file_url:
             sql_attach = """
                 INSERT INTO Attachments (comment_id, file_name, file_type, file_url)
@@ -1984,7 +2107,12 @@ def post_reply():
         cursor.close()
         conn.close()
 
-        return jsonify({"message": "Reply posted successfully", "reply_id": reply_id}), 201
+        return jsonify({
+            "message": "Reply posted successfully",
+            "reply_id": reply_id,
+            "user_name": full_name,   # Trả về họ tên của người dùng
+            "file_url": file_url
+        }), 201
 
     except mysql.connector.Error as err:
         app.logger.error("MySQL Error: %s", err)
