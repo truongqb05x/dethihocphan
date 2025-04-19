@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập & Đăng ký</title>
+    <link rel="shortcut icon" href="../static/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(to bottom right, #e0f7fa, #b2ebf2);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: auto;
+            padding: 20px 0;
+        }
+
+        .auth-container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            width: 500px;
+            max-width: 95%;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Thêm style cho toast notification */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateX(150%);
+            transition: transform 0.3s ease-out;
+            max-width: 350px;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            background-color: #28a745;
+        }
+
+        .toast.error {
+            background-color: #dc3545;
+        }
+
+        .toast.warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        .toast .close-btn {
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            font-size: 16px;
+            margin-left: 15px;
+            opacity: 0.8;
+        }
+
+        .toast .close-btn:hover {
+            opacity: 1;
+        }
+
+        .toast .icon {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        /* Các style còn lại giữ nguyên */
+        .logo {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .logo h1 {
+            color: #0077b6;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .logo p {
+            color: #555;
+            font-size: 15px;
+        }
+
+        .form-container {
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #0077b6;
+            box-shadow: 0 0 8px rgba(0, 119, 182, 0.2);
+            outline: none;
+        }
+
+        .options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            color: #555;
+        }
+
+        .remember-me input[type="checkbox"] {
+             margin-right: 8px;
+        }
+
+        .forgot-password a {
+            color: #0077b6;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+            color: #023e8a;
+        }
+
+        .auth-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #0077b6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .auth-button:hover {
+            background-color: #023e8a;
+        }
+        
+        .auth-button:active {
+            transform: scale(0.98);
+        }
+
+        .toggle-form {
+            margin-top: 25px;
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+        }
+
+        .toggle-form a {
+            color: #0077b6;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .toggle-form a:hover {
+            color: #023e8a;
+        }
+
+        .divider {
+            margin: 30px 0;
+            height: 1px;
+            background-color: #eee;
+            position: relative;
+            text-align: center;
+        }
+
+        .divider span {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 0 15px;
+            color: #999;
+            font-size: 13px;
+        }
+
+        .social-login {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa;
+            color: #555;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            border: 1px solid #ddd;
+        }
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-group select:focus {
+            border-color: #0077b6;
+            box-shadow: 0 0 8px rgba(0, 119, 182, 0.2);
+            outline: none;
+        }
+
+        .social-btn:hover {
+            background-color: #e9ecef;
+            color: #333;
+        }
+        
+        .social-btn .fa-facebook-f { color: #1877f2; }
+        .social-btn .fa-google { color: #db4437; }
+        .social-btn .fa-github { color: #333; }
+
+        .login-form {
+            transform: translateX(0%);
+            opacity: 1;
+            position: static;
+        }
+
+        .register-form {
+            position: absolute;
+            top: 40px;
+            left: 0;
+            width: 100%;
+            transform: translateX(100%);
+            opacity: 0;
+            transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
+        }
+
+        .auth-container.active .login-form {
+            transform: translateX(-100%);
+            opacity: 0;
+            position: absolute;
+        }
+
+        .auth-container.active .register-form {
+            transform: translateX(0%);
+            opacity: 1;
+            position: static;
+        }
+
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: 30px;
+            }
+            .logo h1 {
+                font-size: 24px;
+            }
+            .logo p {
+                font-size: 14px;
+            }
+            .toast {
+                max-width: 90%;
+                left: 5%;
+                right: 5%;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Toast notification container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <div class="auth-container" id="authContainer">
+        <div class="logo">
+            <h1>Dethihocphan.com</h1>
+            <p>Kho tài liệu đề thi học phần chất lượng</p>
+        </div>
+
+        <!-- Login Form -->
+        <div class="form-container login-form">
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginUsername">Tên đăng nhập</label>
+                    <input type="text" id="loginUsername" name="username" placeholder="Nhập tên đăng nhập" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Mật khẩu</label>
+                    <input type="password" id="loginPassword" name="password" placeholder="Nhập mật khẩu" required>
+                </div>
+                <button type="submit" class="auth-button">ĐĂNG NHẬP</button>
+            </form>
+
+            <div class="toggle-form">
+                Chưa có tài khoản? <a id="showRegister" href="#">Đăng ký ngay</a>
+            </div>
+
+            <div class="divider"><span>HOẶC</span></div>
+            <div class="social-login">
+                <a href="/auth/facebook" class="social-btn" aria-label="Login with Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="/auth/google" class="social-btn" aria-label="Login with Google">
+                    <i class="fab fa-google"></i>
+                </a>
+                <a href="/auth/github" class="social-btn" aria-label="Login with Github">
+                    <i class="fab fa-github"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Register Form -->
+        <div class="form-container register-form">
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="regFullname">Họ và tên</label>
+                    <input type="text" id="regFullname" name="fullname" placeholder="Nhập họ và tên" required>
+                </div>
+                <div class="form-group">
+                    <label for="regUsername">Tên đăng nhập</label>
+                    <input type="text" id="regUsername" name="username" placeholder="Nhập tên đăng nhập" required>
+                </div>
+                <div class="form-group">
+                    <label for="university">Chọn trường đại học</label>
+                    <select id="university" name="university" required>
+                        <option value="">-- Đang tải danh sách --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Mật khẩu</label>
+                    <input type="password" id="regPassword" name="password" placeholder="Nhập mật khẩu" required>
+                </div>
+                <div class="form-group">
+                    <label for="regConfirmPassword">Nhập lại mật khẩu</label>
+                    <input type="password" id="regConfirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu" required>
+                </div>
+                <button type="submit" class="auth-button">ĐĂNG KÝ</button>
+            </form>
+
+            <div class="toggle-form">
+                Đã có tài khoản? <a id="showLogin" href="#">Đăng nhập ngay</a>
+            </div>
+
+            <div class="divider"><span>HOẶC</span></div>
+            <div class="social-login">
+                <a href="/auth/facebook" class="social-btn" aria-label="Register with Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="/auth/google" class="social-btn" aria-label="Register with Google">
+                    <i class="fab fa-google"></i>
+                </a>
+                <a href="/auth/github" class="social-btn" aria-label="Register with Github">
+                    <i class="fab fa-github"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // check login
+window.addEventListener('DOMContentLoaded', () => {
+    fetch('/api/check-login')
+        .then(res => res.json())
+        .then(data => {
+            if (data.loggedIn) {
+                // Delay 2 giây rồi chuyển về trang chủ
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 2000);
+            }
+        })
+        .catch(err => {
+            console.error('Lỗi khi kiểm tra đăng nhập:', err);
+        });
+});
+
+        // Hàm hiển thị toast notification
+        function showToast(message, type = 'success', duration = 5000) {
+            const toastContainer = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            // Icon tương ứng với loại thông báo
+            let icon = '';
+            if (type === 'success') {
+                icon = '<i class="fas fa-check-circle icon"></i>';
+            } else if (type === 'error') {
+                icon = '<i class="fas fa-exclamation-circle icon"></i>';
+            } else if (type === 'warning') {
+                icon = '<i class="fas fa-exclamation-triangle icon"></i>';
+            }
+            
+            toast.innerHTML = `
+                ${icon}
+                <span>${message}</span>
+                <button class="close-btn">&times;</button>
+            `;
+            
+            // Thêm toast vào container
+            toastContainer.appendChild(toast);
+            
+            // Hiển thị toast
+            setTimeout(() => toast.classList.add('show'), 10);
+            
+            // Tự động ẩn sau khoảng thời gian duration
+            const timer = setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, duration);
+            
+            // Cho phép đóng toast bằng cách click
+            toast.querySelector('.close-btn').addEventListener('click', () => {
+                clearTimeout(timer);
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const authContainer = document.getElementById('authContainer');
+            const showRegister = document.getElementById('showRegister');
+            const showLogin = document.getElementById('showLogin');
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const universitySelect = document.getElementById('university');
+
+            // Start with login visible
+            authContainer.classList.remove('active');
+
+            // Toggle forms
+            showRegister.addEventListener('click', function(e) {
+                e.preventDefault();
+                authContainer.classList.add('active');
+            });
+            showLogin.addEventListener('click', function(e) {
+                e.preventDefault();
+                authContainer.classList.remove('active');
+            });
+
+            // Fetch list of universities
+            fetch('/api/schools')
+                .then(res => res.json())
+                .then(data => {
+                    universitySelect.innerHTML = '<option value="">-- Chọn trường --</option>';
+                    data.forEach(school => {
+                        const opt = document.createElement('option');
+                        opt.value = school.id;
+                        opt.textContent = school.name;
+                        universitySelect.appendChild(opt);
+                    });
+                })
+                .catch(() => {
+                    universitySelect.innerHTML = '<option value="">Không tải được danh sách</option>';
+                    showToast('Không thể tải danh sách trường đại học', 'error');
+                });
+
+            // Handle Login
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const username = document.getElementById('loginUsername').value.trim();
+                const password = document.getElementById('loginPassword').value;
+
+                // Hiển thị loading
+                const submitBtn = loginForm.querySelector('button[type="submit"]');
+                const originalText = submitBtn.textContent;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ĐANG XỬ LÝ...';
+                submitBtn.disabled = true;
+
+                fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.error) {
+                        showToast(data.error, 'error');
+                    } else {
+                        showToast(data.message || 'Đăng nhập thành công!', 'success');
+                        setTimeout(() => window.location.href = '/', 1500);// quay về trang chủ
+                    }
+                })
+                .catch(() => {
+                    showToast('Lỗi kết nối khi đăng nhập', 'error');
+                })
+                .finally(() => {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                });
+            });
+
+            // Handle Register
+            registerForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const fullname = document.getElementById('regFullname').value.trim();
+                const username = document.getElementById('regUsername').value.trim();
+                const university = universitySelect.value;
+                const password = document.getElementById('regPassword').value;
+                const confirmPassword = document.getElementById('regConfirmPassword').value;
+
+                if (!fullname || !username || !university || !password || !confirmPassword) {
+                    showToast('Vui lòng điền đầy đủ tất cả các trường', 'error');
+                    return;
+                }
+                if (password !== confirmPassword) {
+                    showToast('Mật khẩu không khớp', 'error');
+                    return;
+                }
+
+                // Hiển thị loading
+                const submitBtn = registerForm.querySelector('button[type="submit"]');
+                const originalText = submitBtn.textContent;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ĐANG XỬ LÝ...';
+                submitBtn.disabled = true;
+
+                fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fullname, username, password, university })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.error) {
+                        showToast(data.error, 'error');
+                    } else {
+                        showToast(data.message || 'Đăng ký thành công!', 'success');
+                        authContainer.classList.remove('active');
+                        loginForm.reset();
+                        registerForm.reset();
+                        document.getElementById('loginUsername').value = username;
+                        document.getElementById('loginPassword').value = password;
+                    }
+                })
+                .catch(() => {
+                    showToast('Lỗi kết nối khi đăng ký', 'error');
+                })
+                .finally(() => {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                });
+            });
+        });
+    </script>
+</body>
+</html>

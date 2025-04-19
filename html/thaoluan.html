@@ -7,1543 +7,1656 @@
     <link rel="shortcut icon" href="../static/logo.png" type="image/x-icon">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-dyZtQnYF0AL3Ys3SJK0KZD2cuqQlBDTPhDYZe2SmqdeQK9BwEIv6tv0vK6nAmQeaQK4zX+8XHf5ZLhPKgCIsQg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Custom CSS -->
     <style>
         :root {
-            --primary-color: #4361ee;
-            --secondary-color: #3a0ca3;
-            --accent-color: #4cc9f0;
-            --light-bg: #f8f9fa;
-            --dark-bg: #212529;
-            --text-color: #495057;
-            --border-radius: 12px;
-            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            --transition: all 0.3s ease;
+            --primary-color: #1877f2; /* Facebook blue */
+            --secondary-color: #606770; /* Facebook grey */
+            --accent-color: #e4e6eb; /* Light grey background */
+            --light-bg: #f0f2f5; /* Very light grey background */
+            --dark-bg: #242526; /* Dark background for text */
+            --text-color: #050505; /* Default text color */
+            --border-radius: 8px;
+            --box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            --transition: all 0.2s ease-in-out;
         }
-        
+
         body {
-            background-color: #f5f7fb;
+            background-color: var(--light-bg);
             color: var(--text-color);
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            margin-top: 56px; /* Adjust for fixed navbar if you have one */
         }
-        
+
+        .facebook-newsfeed-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 15px;
+        }
+
+        .post-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 15px;
+            padding: 12px;
+            border: 1px solid var(--accent-color);
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .post-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+            border: 1px solid var(--accent-color);
+        }
+
+        .post-info {
+            flex-grow: 1;
+        }
+
+        .post-author {
+            font-weight: bold;
+            color: var(--dark-bg);
+            margin-bottom: 2px;
+        }
+
+        .post-time {
+            font-size: 0.85rem;
+            color: var(--secondary-color);
+        }
+
+        .post-content {
+            margin-bottom: 10px;
+            line-height: 1.5;
+            color: var(--dark-bg);
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            border-top: 1px solid var(--accent-color);
+        }
+
+        .action-button {
+            background: none;
+            border: none;
+            color: var(--secondary-color);
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+            transition: background-color 0.2s ease;
+        }
+
+        .action-button:hover {
+            background-color: var(--accent-color);
+        }
+
+        .comment-section {
+            margin-top: 10px;
+        }
+
+        .comment-input-area {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border-top: 1px solid var(--accent-color);
+        }
+
+        .comment-input-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+            border: 1px solid var(--accent-color);
+        }
+
+        .comment-input {
+            flex-grow: 1;
+            border: none;
+            background-color: var(--accent-color);
+            border-radius: 20px;
+            padding: 8px 12px;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
         .comment-card {
             background: white;
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
             transition: var(--transition);
-            border: 1px solid rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--accent-color);
         }
-        
+
         .comment-card:hover {
-            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        
+
         .reply-form {
             display: none;
-            margin-top: 1.5rem;
+            margin-top: 1rem;
             background: var(--light-bg);
-            padding: 1rem;
+            padding: 0.75rem;
             border-radius: var(--border-radius);
         }
-        
+
         .replies {
-            margin-left: 3rem;
+            margin-left: 1rem;
             border-left: 2px solid var(--accent-color);
-            padding-left: 2rem;
+            padding-left: 1rem;
         }
-        
+
         .avatar {
-            width: 42px;
-            height: 42px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--accent-color);
+            background-color: #f8f9fa;
         }
-        
+
         .user-name {
-            font-weight: 600;
+            font-weight: 500;
             color: var(--dark-bg);
         }
-        
+
         .comment-time {
-            font-size: 0.8rem;
-            color: #6c757d;
+            font-size: 0.75rem;
+            color: var(--secondary-color);
         }
-        
+
         .comment-actions {
             display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
         }
-        
+
         .action-btn {
             display: flex;
             align-items: center;
-            gap: 0.3rem;
-            font-size: 0.9rem;
-            color: #6c757d;
+            gap: 0.25rem;
+            font-size: 0.8rem;
+            color: var(--secondary-color);
             background: none;
             border: none;
             cursor: pointer;
             transition: var(--transition);
         }
-        
+
         .action-btn:hover {
             color: var(--primary-color);
         }
-        
+
         .like-btn.active {
             color: var(--primary-color);
         }
-        
+
         .form-control, .form-control:focus {
-            border-radius: var(--border-radius);
-            padding: 0.75rem 1rem;
-            border: 1px solid #e9ecef;
-            background-color: #f8f9fa;
+            border-radius: 20px;
+            padding: 0.6rem 1rem;
+            border: 1px solid var(--accent-color);
+            background-color: var(--accent-color);
+            outline: none;
         }
-        
+
         .btn-primary {
             background-color: var(--primary-color);
             border-color: var(--primary-color);
             border-radius: var(--border-radius);
-            padding: 0.5rem 1.25rem;
+            padding: 0.4rem 1rem;
             font-weight: 500;
         }
-        
+
         .btn-outline-secondary {
             border-radius: var(--border-radius);
         }
-        
+
         .comment-content {
-            line-height: 1.6;
-            margin: 0.75rem 0;
+            line-height: 1.4;
+            margin: 0.5rem 0;
+            color: var(--dark-bg);
+            font-size: 0.9rem;
         }
-        
+
         .floating-btn {
             position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            width: 56px;
-            height: 56px;
+            bottom: 1rem;
+            right: 1rem;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             background: var(--primary-color);
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
             z-index: 100;
             border: none;
             cursor: pointer;
             transition: var(--transition);
         }
-        
+
         .tag-user {
             color: var(--primary-color);
             font-weight: 500;
             cursor: pointer;
         }
-        
+
         .file-attachment {
             display: flex;
             align-items: center;
             margin-top: 0.5rem;
             padding: 0.5rem;
-            background: #f1f3f5;
+            background: var(--accent-color);
             border-radius: 8px;
-            max-width: 300px;
+            max-width: 100%;
+            width: 100%;
+            box-sizing: border-box;
         }
-        
+
         .file-attachment i {
             margin-right: 0.5rem;
             color: var(--primary-color);
         }
-        
+
         .file-name {
-            white-space: nowrap;
+            white-space: normal;
             overflow: hidden;
             text-overflow: ellipsis;
             flex-grow: 1;
+            word-break: break-word;
         }
-        
+
         .file-preview {
-            margin-top: 1rem;
+            margin-top: 0.5rem;
             display: none;
         }
-        
+
         .file-remove {
             color: #dc3545;
             margin-left: 0.5rem;
             cursor: pointer;
         }
-        
+
         @media (max-width: 768px) {
             .replies {
-                margin-left: 1.5rem;
-                padding-left: 1rem;
+                margin-left: 0.5rem;
+                padding-left: 0.5rem;
+                border-left-width: 1px;
             }
         }
         /* Filter Bar Styles */
-.filter-bar {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-top: 0.5rem;
-    padding: 0.5rem 0;
-}
+        .filter-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 15px;
+            padding: 8px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            border: 1px solid var(--accent-color);
+        }
 
-.filter-group {
+        .filter-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .filter-select {
+            appearance: none;
+            padding: 0.4rem 2.5rem 0.4rem 0.8rem;
+            border: 1px solid var(--accent-color);
+            border-radius: var(--border-radius);
+            background-color: white;
+            font-size: 0.85rem;
+            color: var(--secondary-color);
+            cursor: pointer;
+            transition: var(--transition);
+            height: 36px;
+            width: 100%;
+        }
+
+        .filter-select:hover,
+        .filter-select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.2);
+        }
+
+        .filter-icon {
+            position: absolute;
+            right: 0.75rem;
+            color: var(--primary-color);
+            font-size: 0.8rem;
+            pointer-events: none;
+        }
+        .loading-container {
+            text-align: center;
+            padding: 20px;
+            display: none; /* Ẩn mặc định */
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #applyFilter {
+            padding: 0.3rem 1rem;
+            font-size: 0.85rem;
+            height: 36px; /* Đồng bộ với select */
+            line-height: 1;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 576px) {
+            .filter-bar {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .filter-group {
+                flex-grow: 1;
+            }
+
+            #applyFilter {
+                width: 100%;
+            }
+        }
+        @media (max-width: 576px) {
+            /* Điều chỉnh chung */
+            .facebook-newsfeed-container {
+                padding: 10px;
+                margin: 10px auto;
+            }
+
+            /* Tiêu đề */
+            h2 {
+                font-size: 1.3rem;
+                margin-bottom: 10px;
+            }
+
+            /* Post card */
+            .post-card {
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+
+            /* Avatar trong post header */
+            .post-avatar {
+                width: 32px;
+                height: 32px;
+                margin-right: 8px;
+            }
+
+            /* Thông tin người dùng trong post */
+            .post-author {
+                font-size: 0.9rem;
+            }
+            .post-time {
+                font-size: 0.75rem;
+            }
+
+            /* Nội dung post */
+            .post-content {
+                font-size: 0.85rem;
+                margin-bottom: 8px;
+            }
+
+            /* Nút hành động trong post */
+            .action-button {
+                font-size: 0.8rem;
+                padding: 6px 10px;
+            }
+
+            /* Khu vực nhập comment */
+            .comment-input-area {
+                padding: 6px;
+            }
+            .comment-input-avatar {
+                width: 28px;
+                height: 28px;
+                margin-right: 8px;
+            }
+            .comment-input {
+                font-size: 0.8rem;
+                padding: 6px 10px;
+            }
+
+            /* Card bình luận */
+            .comment-card {
+                padding: 0.75rem;
+                margin-bottom: 0.5rem;
+            }
+
+            /* Avatar trong comment */
+            .avatar {
+                width: 30px;
+                height: 30px;
+            }
+
+            /* Thông tin người dùng trong comment */
+            .user-name {
+                font-size: 0.85rem;
+            }
+            .comment-time {
+                font-size: 0.7rem;
+            }
+
+            /* Nội dung bình luận */
+            .comment-content {
+                font-size: 0.8rem;
+                line-height: 1.3;
+                margin: 0.4rem 0;
+            }
+
+            /* Form trả lời */
+            .reply-form {
+                margin-top: 0.75rem;
+                padding: 0.6rem;
+            }
+
+            /* Các reply lồng nhau */
+            .replies {
+                margin-left: 0.5rem;
+                padding-left: 0.3rem;
+                border-left-width: 1px;
+            }
+
+            /* Nút hành động trong comment */
+            .comment-actions {
+                gap: 0.5rem;
+            }
+            .action-btn {
+                font-size: 0.75rem;
+            }
+
+            /* Form chính */
+            #mainCommentForm textarea {
+                font-size: 0.8rem;
+            }
+
+            /* Thanh lọc */
+            .filter-bar {
+                gap: 0.3rem;
+                padding: 6px;
+            }
+            .filter-select {
+                font-size: 0.75rem;
+                padding: 0.3rem 1.5rem 0.3rem 0.5rem;
+                height: 30px;
+            }
+            #applyFilter {
+                font-size: 0.75rem;
+                height: 30px;
+                padding: 0.2rem 0.75rem;
+            }
+
+            /* Nút floating */
+            .floating-btn {
+                bottom: 0.75rem;
+                right: 0.75rem;
+                width: 40px;
+                height: 40px;
+            }
+
+            /* Điều chỉnh layout form */
+            .d-flex.gap-3 {
+                gap: 0.75rem !important;
+            }
+
+            /* Nút attach file */
+            .btn-sm {
+                padding: 0.2rem 0.4rem;
+                font-size: 0.7rem;
+            }
+        }
+        .btn-view-replies {
+            background-color: #e4e6eb; /* Màu nền xám nhạt */
+            color: var(--primary-color); /* Chữ xanh Facebook */
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn-view-replies:hover {
+            background-color: #d8dadf;
+            transform: translateY(-1px);
+        }
+
+        .btn-view-replies:focus {
+            outline: none;
+            box-shadow: 0 0 0 1px var(--primary-color);
+        }
+
+        /* Sửa phần file attachment hiện tại */
+        .file-attachment {
+            display: flex;
+            align-items: center;
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background: var(--accent-color);
+            border-radius: 8px;
+            max-width: 100%; /* Thay 300px bằng 100% */
+            width: 100%;
+            box-sizing: border-box; /* Quan trọng */
+        }
+
+        .file-name {
+            white-space: normal; /* Thay nowrap bằng normal */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-grow: 1;
+            word-break: break-word; /* Thêm thuộc tính này */
+        }
+
+        /* Thêm media query cho mobile */
+        @media (max-width: 576px) {
+            .file-attachment {
+                flex-wrap: wrap; /* Cho phép xuống dòng */
+                gap: 0.3rem;
+                padding: 0.5rem;
+            }
+
+            .file-name {
+                flex-basis: 100%; /* Chiếm toàn bộ chiều rộng */
+                order: 1; /* Đưa tên file xuống dưới */
+            }
+
+            .file-remove {
+                margin-left: auto; /* Đẩy nút close sang phải */
+                order: 2;
+            }
+
+            .file-attachment i {
+                font-size: 0.8rem;
+            }
+        }
+        /* Container chính */
+        #commentsSection {
+            /* Các thuộc tính cũ vẫn giữ nguyên */
+        }
+
+        /* Trạng thái trống */
+        #commentsSection > p {
+            /* Các thuộc tính cũ vẫn giữ nguyên */
+        }
+
+        #commentsSection > p::before {
+            /* Các thuộc tính cũ vẫn giữ nguyên */
+        }
+
+        /* Comment item */
+        .comment {
+            background: white;
+            margin: 0.5rem 0; /* Giảm margin */
+            padding: 1rem; /* Giảm padding */
+            border-radius: 6px; /* Bo tròn nhẹ hơn */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Nhẹ hơn */
+            transition: transform 0.1s ease; /* Nhanh hơn */
+            border: 1px solid var(--accent-color);
+        }
+
+        .comment:hover {
+            transform: translateY(-1px); /* Ít hơn */
+        }
+
+        /* Comment con */
+        .comment.reply {
+            margin-left: 2rem; /* Giảm margin */
+            border-left: 2px solid var(--accent-color); /* Mỏng hơn */
+        }
+
+        /* Header comment */
+        .comment-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem; /* Giảm gap */
+            margin-bottom: 0.75rem; /* Giảm margin */
+        }
+
+        .avatar {
+            width: 30px; /* Nhỏ hơn */
+            height: 30px; /* Nhỏ hơn */
+            border-radius: 50%;
+            object-fit: cover;
+            background-color: #e9ecef;
+            border: 1px solid var(--accent-color);
+        }
+
+        .user-info {
+            flex-grow: 1;
+        }
+
+        .username {
+            font-weight: 500; /* Nhẹ hơn */
+            color: var(--dark-bg);
+            margin-bottom: 0.1rem; /* Ít margin hơn */
+            font-size: 0.9rem;
+        }
+
+        .timestamp {
+            color: var(--secondary-color);
+            font-size: 0.75rem;
+        }
+
+        /* Nội dung comment */
+        .comment-content {
+            color: var(--dark-bg);
+            line-height: 1.4; /* Gọn hơn */
+            margin-bottom: 0.5rem; /* Ít margin hơn */
+            font-size: 0.85rem;
+        }
+
+        /* Attachments */
+        .attachments {
+            display: flex;
+            gap: 0.3rem; /* Ít gap hơn */
+            margin-top: 0.5rem; /* Ít margin hơn */
+        }
+
+        .attachment-item {
+            width: 60px; /* Nhỏ hơn */
+            height: 60px; /* Nhỏ hơn */
+            border-radius: 4px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: opacity 0.1s ease; /* Nhanh hơn */
+        }
+
+        .attachment-item:hover {
+            opacity: 0.9; /* Ít trong suốt hơn */
+        }
+
+        /* Actions */
+        .comment-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem; /* Giảm gap */
+            margin-top: 0.5rem; /* Ít margin hơn */
+        }
+
+        .like-button {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem; /* Ít gap hơn */
+            color: var(--secondary-color);
+            cursor: pointer;
+            transition: color 0.1s ease; /* Nhanh hơn */
+            font-size: 0.8rem;
+        }
+
+        .like-button:hover {
+            color: var(--primary-color);
+        }
+
+        .like-button.liked {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .reply-button {
+            color: var(--primary-color);
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+
+        /* Loading indicator */
+        #loadingIndicator {
+            display: none;
+            text-align: center;
+            padding: 1.5rem; /* Giảm padding */
+            color: var(--primary-color);
+        }
+
+        .loading-spinner {
+            width: 2rem; /* Nhỏ hơn */
+            height: 2rem; /* Nhỏ hơn */
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            #commentsSection {
+                margin: 0.5rem; /* Ít margin hơn */
+                border-radius: 6px; /* Bo tròn ít hơn */
+            }
+
+            .comment.reply {
+                margin-left: 1rem; /* Ít margin hơn */
+            }
+
+            .attachment-item {
+                width: 50px; /* Nhỏ hơn */
+                height: 50px; /* Nhỏ hơn */
+            }
+        }
+.post-card, .comment-card {
     position: relative;
-    display: flex;
-    align-items: center;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    margin-bottom: 15px;
 }
 
-.filter-select {
-    appearance: none;
-    padding: 0.4rem 1.5rem 0.4rem 0.6rem;
-    border: 1px solid #e9ecef;
-    border-radius: var(--border-radius);
-    background-color: var(--light-bg);
-    font-size: 0.85rem;
-    color: var(--text-color);
-    cursor: pointer;
-    transition: var(--transition);
-    height: 32px; /* Chiều cao nhỏ hơn */
-}
-
-.filter-select:hover,
-.filter-select:focus {
-    border-color: var(--primary-color);
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
-}
-
-.filter-icon {
-    position: absolute;
-    right: 0.5rem;
-    color: var(--primary-color);
-    font-size: 0.8rem;
-    pointer-events: none;
-}
-.loading-container {
-    text-align: center;
-    padding: 20px;
-    display: none; /* Ẩn mặc định */
-}
-
-.spinner {
-    width: 50px;
-    height: 50px;
-    border: 5px solid rgba(0, 0, 0, 0.1);
-    border-top: 5px solid var(--primary-color);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-#applyFilter {
-    padding: 0.3rem 1rem;
-    font-size: 0.85rem;
-    height: 32px; /* Đồng bộ với select */
-    line-height: 1;
-}
-
-/* Responsive adjustments */
-@media (max-width: 576px) {
-    .filter-bar {
-        flex-wrap: wrap;
-        gap: 0.5rem;
-    }
-    
-    .filter-group {
-        flex-grow: 1;
-    }
-    
-    #applyFilter {
-        width: 100%;
-    }
-}
-@media (max-width: 576px) {
-  /* Điều chỉnh chung */
-  .container {
-    padding-left: 12px;
-    padding-right: 12px;
-  }
-  
-  /* Tiêu đề */
-  h2 {
-    font-size: 1.5rem;
-  }
-  
-  /* Card bình luận */
-  .comment-card {
-    padding: 1rem;
-    margin-bottom: 1rem;
-  }
-  
-  /* Avatar */
-  .avatar {
-    width: 36px;
-    height: 36px;
-  }
-  
-  /* Thông tin người dùng */
-  .user-name {
-    font-size: 0.95rem;
-  }
-  .comment-time {
-    font-size: 0.75rem;
-  }
-  
-  /* Nội dung bình luận */
-  .comment-content {
-    font-size: 0.9rem;
-    line-height: 1.5;
-    margin: 0.5rem 0;
-  }
-  
-  /* Form trả lời */
-  .reply-form {
-    margin-top: 1rem;
-    padding: 0.75rem;
-  }
-  
-  /* Các reply lồng nhau */
-  .replies {
-    margin-left: 1rem;
-    padding-left: 0.5rem;
-    border-left-width: 1px;
-  }
-  
-  /* Nút hành động */
-  .comment-actions {
-    gap: 0.75rem;
-  }
-  .action-btn {
-    font-size: 0.85rem;
-  }
-  
-  /* Form chính */
-  #mainCommentForm textarea {
-    font-size: 0.9rem;
-  }
-  
-  /* Thanh lọc */
-  .filter-bar {
-    gap: 0.5rem;
-  }
-  .filter-select {
-    font-size: 0.8rem;
-    padding: 0.3rem 1.2rem 0.3rem 0.5rem;
-  }
-  
-  /* Nút floating */
-  .floating-btn {
-    bottom: 1rem;
-    right: 1rem;
-    width: 48px;
-    height: 48px;
-  }
-  
-  /* Điều chỉnh layout form */
-  .d-flex.gap-3 {
-    gap: 1rem !important;
-  }
-  
-  /* Nút attach file */
-  .btn-sm {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.8rem;
-  }
-}
-.btn-view-replies {
-  background-color: #007bff; /* Màu nền xanh */
-  color: #fff; /* Chữ trắng */
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  margin-top: 10px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.btn-view-replies:hover {
-  background-color: #0056b3;
-  transform: translateY(-2px);
-}
-
-.btn-view-replies:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5);
-}
-
-/* Sửa phần file attachment hiện tại */
 .file-attachment {
     display: flex;
     align-items: center;
-    margin-top: 0.5rem;
-    padding: 0.5rem;
-    background: #f1f3f5;
+    gap: 8px;
+    padding: 8px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.view-count {
+    display: block;
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+    padding-left: 5px;
+}
+
+.view-count::before {
+    content: "\f06e";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    margin-right: 5px;
+    color: #888;
+}
+
+.post-actions {
+    margin-top: 10px;
+}
+        .comment-card {
+            background-color: #f8f9fa;
+            margin-left: 30px;
+            margin-top: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #dee2e6;
+            transition: background-color 0.2s ease;
+        }
+        .comment-card:hover {
+            background-color: #e9ecef;
+        }
+.comment-section {
+    background: none !important; /* Loại bỏ hoàn toàn nền */
+}
+/* Phong cách cho section comments */
+.comments-section {
+    padding: 1.5rem;
+    background-color: #f8f9fa;
     border-radius: 8px;
-    max-width: 100%; /* Thay 300px bằng 100% */
-    width: 100%;
-    box-sizing: border-box; /* Quan trọng */
+    margin-top: 1.5rem;
 }
 
-.file-name {
-    white-space: normal; /* Thay nowrap bằng normal */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex-grow: 1;
-    word-break: break-word; /* Thêm thuộc tính này */
+/* Thông báo khi không có comment */
+.empty-comments-message {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    text-align: center;
+    color: #6c757d;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-/* Thêm media query cho mobile */
-@media (max-width: 576px) {
-    .file-attachment {
-        flex-wrap: wrap; /* Cho phép xuống dòng */
-        gap: 0.3rem;
-        padding: 0.75rem;
-    }
-
-    .file-name {
-        flex-basis: 100%; /* Chiếm toàn bộ chiều rộng */
-        order: 1; /* Đưa tên file xuống dưới */
-    }
-
-    .file-remove {
-        margin-left: auto; /* Đẩy nút close sang phải */
-        order: 2;
-    }
-
-    .file-attachment i {
-        font-size: 0.9rem;
-    }
-}
-/* Container chính */
-#commentsSection {
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 1rem;
-  background-color: #f8f9fa;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+.empty-comments-message i {
+    color: #dee2e6;
+    margin-bottom: 1rem;
 }
 
-/* Trạng thái trống */
-#commentsSection > p {
-  text-align: center;
-  padding: 4rem 2rem;
-  color: #6c757d;
-  font-size: 1.2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
+.empty-message-text {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #495057;
 }
 
-#commentsSection > p::before {
-  content: "\f086"; /* FontAwesome comment icon */
-  font-family: "Font Awesome 5 Free";
-  font-size: 3rem;
-  opacity: 0.5;
-}
-
-/* Comment item */
+/* Phong cách cho từng comment (giả định) */
 .comment {
-  background: white;
-  margin: 1rem 0;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease;
-}
-
-.comment:hover {
-  transform: translateY(-2px);
-}
-
-/* Comment con */
-.comment.reply {
-  margin-left: 3rem;
-  border-left: 3px solid #e9ecef;
-}
-
-/* Header comment */
-.comment-header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-  background-color: #dee2e6;
-}
-
-.user-info {
-  flex-grow: 1;
-}
-
-.username {
-  font-weight: 600;
-  color: #212529;
-  margin-bottom: 0.2rem;
-}
-
-.timestamp {
-  color: #6c757d;
-  font-size: 0.85rem;
-}
-
-/* Nội dung comment */
-.comment-content {
-  color: #495057;
-  line-height: 1.6;
-  margin-bottom: 1rem;
-}
-
-/* Attachments */
-.attachments {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.attachment-item {
-  width: 80px;
-  height: 80px;
-  border-radius: 4px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: opacity 0.2s ease;
-}
-
-.attachment-item:hover {
-  opacity: 0.8;
-}
-
-/* Actions */
-.comment-actions {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  margin-top: 1rem;
-}
-
-.like-button {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #6c757d;
-  cursor: pointer;
-  transition: color 0.2s ease;
-}
-
-.like-button:hover {
-  color: #dc3545;
-}
-
-.like-button.liked {
-  color: #dc3545;
-  font-weight: 500;
-}
-
-.reply-button {
-  color: #0d6efd;
-  cursor: pointer;
-  font-weight: 500;
-}
-
-/* Loading indicator */
-#loadingIndicator {
-  display: none;
-  text-align: center;
-  padding: 2rem;
-  color: #0d6efd;
-}
-
-.loading-spinner {
-  width: 3rem;
-  height: 3rem;
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #0d6efd;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  #commentsSection {
-    margin: 1rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: white;
     border-radius: 8px;
-  }
-  
-  .comment.reply {
-    margin-left: 1.5rem;
-  }
-  
-  .attachment-item {
-    width: 60px;
-    height: 60px;
-  }
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
     </style>
 </head>
 <body>
-
-<div class="container py-5">
+<div class="container facebook-newsfeed-container py-3">
     <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="fw-bold mb-0">Thảo luận cộng đồng</h2>
-<span class="badge bg-primary rounded-pill">0 new</span>
-            </div>
-<!-- Filter Bar -->
-<div class="filter-bar">
-  <div class="filter-group">
-    <select class="filter-select" id="sortFilter">
-      <option value="newest">Newest First</option>
-      <option value="oldest">Oldest First</option>
-      <option value="popular">Most Liked</option>
-    </select>
-    <i class="fas fa-filter filter-icon"></i>
-  </div>
-  <!-- Nếu không cần nút "Quay lại" cho bộ lọc, bạn có thể bỏ hoặc dùng cho chức năng khác -->
-  <button class="btn btn-primary" id="applyFilter">
-    <i class="fas fa-arrow-left me-1"></i>Quay lại
-  </button>
-</div>
-
+        <div class="col-md-12">
             <!-- Main Comment Form -->
-            <div class="comment-card mb-4" id="mainCommentFormContainer" style="display: none;">
-                <form id="mainCommentForm">
-                    <div class="d-flex gap-3">
-                        <img src="https://i.pravatar.cc/42?img=5" class="avatar" alt="User Avatar">
-                        <div class="flex-grow-1">
-                            <textarea class="form-control mb-3" id="mainCommentText" rows="3" placeholder="Share your thoughts..." required></textarea>
-                            
-                            <div class="file-preview" id="mainFilePreview"></div>
-                            
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <input type="file" id="mainFileInput" style="display: none;">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary me-2" onclick="document.getElementById('mainFileInput').click()">
+            <div class="post-card mb-3">
+                <div class="d-flex align-items-center gap-3">
+                    <img src="https://i.pravatar.cc/42" class="post-avatar" alt="User Avatar">
+                    <button class="form-control rounded-pill" id="newCommentBtn">What's on your mind?</button>
+                </div>
+                <div class="comment-card mt-3" id="mainCommentFormContainer" style="display: none;">
+                    <form id="mainCommentForm">
+                        <div class="d-flex gap-3">
+                            <img src="https://i.pravatar.cc/42" class="avatar" alt="User Avatar">
+                            <div class="flex-grow-1">
+                                <textarea class="form-control mb-2" id="mainCommentText" rows="2" placeholder="Share your thoughts..." required></textarea>
+                                <div class="file-preview" id="mainFilePreview" style="display: none;"></div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" id="mainAttachBtn">
                                         <i class="fas fa-paperclip"></i> Attach
                                     </button>
+                                    <div>
+                                        <button type="button" class="btn btn-outline-secondary me-2" id="cancelMainBtn">Cancel</button>
+                                        <button type="submit" class="btn btn-primary">Post</button>
+                                    </div>
                                 </div>
-                                <div>
-                                    <button type="button" class="btn btn-outline-secondary me-2 btn-cancel-main">Cancel</button>
-                                    <button type="submit" class="btn btn-primary">Post Comment</button>
-                                </div>
+                                <input type="file" id="mainFileInput" style="display: none;">
                             </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar mb-3 d-flex justify-content-between align-items-center">
+                <div class="filter-group d-flex align-items-center gap-2">
+                    <select class="form-select" id="sortFilter">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="popular">Most Liked</option>
+                    </select>
+                    <i class="fas fa-filter"></i>
+                </div>
+                <button class="btn btn-primary" id="applyFilter">
+                    <i class="fas fa-arrow-left me-1"></i>Quay lại
+                </button>
             </div>
 
             <!-- Comments Section -->
             <div id="commentsSection">
-                <!-- Sample Comment 1 -->
-                <div class="comment-card" data-comment-id="1">
-                    <div class="d-flex gap-3">
-                        <img src="https://i.pravatar.cc/42?img=3" class="avatar" alt="User Avatar">
-                        <div class="flex-grow-1">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <span class="user-name">Alex Johnson</span>
-                                    <span class="comment-time ms-2"><i class="far fa-clock me-1"></i>2 hours ago</span>
-                                </div>
-                                <div class="dropdown">
-                                    <button class="btn btn-sm btn-link text-muted p-0" type="button" data-bs-toggle="dropdown">
-                                        <i class="fas fa-ellipsis-h"></i>
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a class="dropdown-item" href="#"><i class="far fa-bookmark me-2"></i>Save</a></li>
-                                        <li><a class="dropdown-item" href="#"><i class="fas fa-flag me-2"></i>Report</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <p class="comment-content">Has anyone tried the new React 18 features? The concurrent rendering seems promising for our dashboard project. I'd love to hear about your experiences!</p>
-                            
-                            <!-- File Attachment -->
-                            <div class="file-attachment">
-                                <i class="fas fa-file-pdf"></i>
-                                <span class="file-name">react-18-features.pdf</span>
-                                <a href="#" class="file-remove"><i class="fas fa-times"></i></a>
-                            </div>
-                            
-                            <div class="comment-actions">
-                                <button class="action-btn like-btn">
-                                    <i class="far fa-thumbs-up"></i>
-                                    <span class="like-count">12</span>
-                                </button>
-                                <button class="action-btn btn-reply">
-                                    <i class="far fa-comment-dots"></i>
-                                    <span>Reply</span>
-                                </button>
-                            </div>
-                            
-                            <!-- Reply Form -->
-                            <form class="reply-form" data-parent-id="1">
-                                <div class="d-flex gap-3">
-                                    <img src="https://i.pravatar.cc/42?img=5" class="avatar" alt="User Avatar">
-                                    <div class="flex-grow-1">
-                                        <textarea class="form-control mb-3 reply-text" rows="2" placeholder="Write your reply..." required></textarea>
-                                        
-                                        <div class="file-preview reply-file-preview"></div>
-                                        
-                                        <div class="d-flex justify-content-end gap-2">
-                                            <input type="file" class="reply-file-input" style="display: none;">
-                                            <button type="button" class="btn btn-sm btn-outline-secondary attach-reply-btn">
-                                                <i class="fas fa-paperclip"></i> Attach
-                                            </button>
-                                            <button type="button" class="btn btn-sm btn-outline-secondary btn-cancel-reply">Cancel</button>
-                                            <button type="submit" class="btn btn-sm btn-primary">Post Reply</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-
-                            <!-- Replies -->
-                            <div class="replies mt-3">
-                                <!-- Sample Reply 1 -->
-                                <div class="comment-card" data-comment-id="2" data-parent-id="1">
-                                    <div class="d-flex gap-3">
-                                        <img src="https://i.pravatar.cc/42?img=7" class="avatar" alt="User Avatar">
-                                        <div class="flex-grow-1">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <div>
-                                                    <span class="user-name">Sarah Miller</span>
-                                                    <span class="comment-time ms-2"><i class="far fa-clock me-1"></i>1 hour ago</span>
-                                                </div>
-                                            </div>
-                                            <p class="comment-content">Yes! We've implemented it in our latest project. The automatic batching is a game changer for performance. <span class="tag-user">@Alex Johnson</span> you should definitely check it out.</p>
-                                            <div class="comment-actions">
-                                                <button class="action-btn like-btn active">
-                                                    <i class="fas fa-thumbs-up"></i>
-                                                    <span class="like-count">5</span>
-                                                </button>
-                                                <button class="action-btn btn-reply">
-                                                    <i class="far fa-comment-dots"></i>
-                                                    <span>Reply</span>
-                                                </button>
-                                            </div>
-                                            
-                                            <!-- Nested Reply Form -->
-                                            <form class="reply-form" data-parent-id="2">
-                                                <div class="d-flex gap-3">
-                                                    <img src="https://i.pravatar.cc/42" class="avatar" alt="User Avatar">
-                                                    <div class="flex-grow-1">
-                                                        <textarea class="form-control mb-3 reply-text" rows="2" placeholder="Write your reply..." required></textarea>
-                                                        
-                                                        <div class="file-preview reply-file-preview"></div>
-                                                        
-                                                        <div class="d-flex justify-content-end gap-2">
-                                                            <input type="file" class="reply-file-input" style="display: none;">
-                                                            <button type="button" class="btn btn-sm btn-outline-secondary attach-reply-btn">
-                                                                <i class="fas fa-paperclip"></i> Attach
-                                                            </button>
-                                                            <button type="button" class="btn btn-sm btn-outline-secondary btn-cancel-reply">Cancel</button>
-                                                            <button type="submit" class="btn btn-sm btn-primary">Post Reply</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                <!-- Mẫu Comment Card -->
+                <div class="post-card" data-comment-id="1">
+                    <!-- Header Comment -->
+                    <div class="post-header d-flex align-items-center gap-2">
+                        <img src="https://i.pravatar.cc/42" class="post-avatar" alt="User Avatar">
+                        <div class="post-info flex-grow-1">
+                            <span class="post-author">Nguyễn Ngọc Trường</span>
+                            <span class="post-time"><i class="far fa-clock me-1"></i>5 minutes ago</span>
                         </div>
                     </div>
+                    <!-- Nội dung comment -->
+                    <p class="post-content">Đây là nội dung comment.</p>
+                    <!-- Các hành động của comment -->
+                    <div class="post-actions d-flex gap-3">
+                        <button class="action-button like-btn" aria-label="Like this comment">
+                            <i class="far fa-thumbs-up"></i> <span class="like-count">0</span>
+                        </button>
+                        <button class="action-button btn-reply" aria-label="Reply to this comment">
+                            <i class="far fa-comment-dots"></i> Reply
+                        </button>
+                        <button class="action-button" aria-label="Share this comment">
+                            <i class="fas fa-share"></i> Share
+                        </button>
+                    </div>
+                    <!-- Khu vực chứa form reply và các reply đã đăng -->
+                    <div class="comment-section">
+                        <!-- Khu vực nhập comment (nếu cần) -->
+                        <!--<div class="comment-input-area d-flex gap-2">-->
+                        <!--    <img src="https://i.pravatar.cc/42" class="avatar" alt="User Avatar">-->
+                        <!--    <input type="text" class="form-control" placeholder="Write a comment...">-->
+                        <!--</div>-->
+                        <!-- Form reply (ẩn mặc định) -->
+                        <form class="reply-form mt-2" data-parent-id="1" style="display: none;">
+                            <div class="d-flex gap-2">
+                                <img src="https://i.pravatar.cc/42" class="avatar" alt="User Avatar">
+                                <div class="flex-grow-1">
+                                    <textarea class="form-control mb-2 reply-text" rows="1" placeholder="Write your reply..." required></textarea>
+                                    <div class="file-preview" style="display: none;"></div>
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <input type="file" class="reply-file-input" style="display: none;">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary attach-reply-btn">
+                                            <i class="fas fa-paperclip"></i> Attach
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary btn-cancel-reply">Cancel</button>
+                                        <button type="submit" class="btn btn-sm btn-primary">Reply</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <!-- Container cho danh sách reply -->
+                        <div class="replies"></div>
+                    </div>
                 </div>
+                <!-- End mẫu Comment Card -->
             </div>
         </div>
     </div>
 </div>
-<div id="loadingIndicator" class="loading-container">
+
+<!-- Loading Indicator -->
+<div id="loadingIndicator" class="loading-container" style="display: none;">
     <div class="spinner"></div>
     <p>Đang tải...</p>
 </div>
 
-<!-- Floating Action Button -->
-<button class="floating-btn" id="newCommentBtn">
-    <i class="fas fa-plus"></i>
-</button>
-<!-- Bootstrap 5 JS Bundle with Popper -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    document.getElementById('applyFilter').addEventListener('click', function(e) {
-        e.stopPropagation();
-      
-        // Lấy đối tượng DOM của trang cha
-        const parentDoc = window.parent.document;
-      
-        // Ẩn container chứa iframe thảo luận ở trang cha
-        const discussionContainer = parentDoc.getElementById('discussion-container');
-        if (discussionContainer) {
-            discussionContainer.style.display = 'none';
-        } else {
-            console.warn('Không tìm thấy phần tử discussion-container.');
-        }
-      
-        // Hiển thị lại container chứa nội dung trang ban đầu (compact-container)
-        const compactContainer = parentDoc.querySelector('.compact-container.my-4');
-        if (compactContainer) {
-            compactContainer.style.display = 'block';
-        } else {
-            console.warn('Không tìm thấy phần tử compact-container.');
-        }
-    });
-</script>
-<!-- Custom JavaScript -->
-<script>
-// Hàm cập nhật số lượng bình luận mới dựa trên document_id từ URL
-async function updateCommentCount() {
-    // Lấy document_id từ URL
-    const documentId = getParameterByName('document_id');
-    if (!documentId) {
-        console.error("document_id không tồn tại trong URL!");
-        return;
-    }
-    
-    try {
-        const res = await fetch(`/comments/count?document_id=${documentId}`);
-        const data = await res.json();
+    // Utility Functions (unchanged)
+    const getParameterByName = (name, url = window.location.href) => {
+        const regex = new RegExp(`[?&]${name.replace(/[\[\]]/g, '\\$&')}(=([^&#]*)|&|#|$)`);
+        const results = regex.exec(url);
+        return results && results[2] ? decodeURIComponent(results[2].replace(/\+/g, ' ')) : null;
+    };
 
-        if (res.ok) {
-            const countBadge = document.querySelector('.badge.bg-primary.rounded-pill');
-            if (countBadge) {
-                countBadge.textContent = `${data.count} new`; // Thêm chữ "new" sau số lượng
-            }
-        } else {
-            console.error('Error fetching comment count:', data.error);
-        }
-    } catch (error) {
-        console.error('Error fetching comment count:', error);
-    }
-}
-document.addEventListener('DOMContentLoaded', updateCommentCount);
+    const getCookie = (name) => {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        return parts.length === 2 ? parts.pop().split(';').shift() : null;
+    };
 
-// Global variables
-let comments = []; // Ban đầu rỗng, sẽ được load từ backend
+const getFileIcon = (type) => {
+        if (!type) return 'alt';
+        if (type.includes('image')) return 'image';
+        if (type.includes('pdf')) return 'pdf';
+        if (type.includes('video')) return 'video';
+        return 'alt';
+    };
 
-// Hàm tìm kiếm comment theo id (đệ quy)
-function findCommentById(commentsArray, id) {
-  for (const comment of commentsArray) {
-    if (comment.id === id) {
-      return comment;
-    }
-    if (comment.replies && comment.replies.length) {
-      const found = findCommentById(comment.replies, id);
-      if (found) return found;
-    }
-  }
-  return null;
-}
+    // State
+    const currentUser = {
+        id: parseInt(getCookie('login_token')) || 0,
+        fullName: getCookie('full_name') || 'You',
+        avatar: 'https://i.pravatar.cc/42'
+    };
+    let comments = [];
+    let userFullNames = new Set();
 
-// Hàm lấy cookie theo tên
-function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-    return null;
-}
-// Lấy user id từ cookie "login_token" và chuyển thành số
-const currentUserId = parseInt(getCookie('login_token')) || 0;
-console.log("Current User ID:", currentUserId);
+    // DOM Elements (unchanged)
+    const elements = {
+        commentsSection: document.getElementById('commentsSection'),
+        mainCommentFormContainer: document.getElementById('mainCommentFormContainer'),
+        newCommentBtn: document.getElementById('newCommentBtn'),
+        mainCommentForm: document.getElementById('mainCommentForm'),
+        mainCommentText: document.getElementById('mainCommentText'),
+        mainFileInput: document.getElementById('mainFileInput'),
+        mainFilePreview: document.getElementById('mainFilePreview'),
+        cancelMainBtn: document.getElementById('cancelMainBtn'),
+        mainAttachBtn: document.getElementById('mainAttachBtn'),
+        sortFilter: document.getElementById('sortFilter'),
+        applyFilter: document.getElementById('applyFilter'),
+        loadingIndicator: document.getElementById('loadingIndicator')
+    };
 
-// Khi DOM được load
-document.addEventListener('DOMContentLoaded', async function() {
-    await loadComments();
-
-    // Toggle main comment form
-    const newCommentBtn = document.getElementById('newCommentBtn');
-    const mainCommentFormContainer = document.getElementById('mainCommentFormContainer');
-    
-    newCommentBtn.addEventListener('click', function() {
-        mainCommentFormContainer.style.display = mainCommentFormContainer.style.display === 'block' ? 'none' : 'block';
-        if (mainCommentFormContainer.style.display === 'block') {
-            mainCommentFormContainer.scrollIntoView({ behavior: 'smooth' });
-            document.getElementById('mainCommentText').focus();
-        }
-    });
-    
-    document.querySelector('.btn-cancel-main').addEventListener('click', function() {
-        mainCommentFormContainer.style.display = 'none';
-        document.getElementById('mainFilePreview').innerHTML = '';
-        document.getElementById('mainFilePreview').style.display = 'none';
+    // Event Listeners (unchanged)
+    document.addEventListener('DOMContentLoaded', async () => {
+        await loadComments();
+        setupEventListeners();
     });
 
-    // Handle file attachment cho main comment
-    document.getElementById('mainFileInput').addEventListener('change', function(e) {
+    function setupEventListeners() {
+        elements.newCommentBtn.addEventListener('click', toggleMainCommentForm);
+        elements.cancelMainBtn.addEventListener('click', resetMainCommentForm);
+        elements.mainAttachBtn.addEventListener('click', () => elements.mainFileInput.click());
+        elements.mainFileInput.addEventListener('change', handleFileInputChange);
+        elements.mainCommentForm.addEventListener('submit', handleMainCommentSubmit);
+        elements.sortFilter.addEventListener('change', loadComments);
+        elements.applyFilter.addEventListener('click', handleApplyFilter);
+        elements.commentsSection.addEventListener('click', handleCommentsSectionClick);
+    }
+
+    // Main Comment Form Handlers (unchanged)
+    function toggleMainCommentForm() {
+        const isVisible = elements.mainCommentFormContainer.style.display === 'block';
+        elements.mainCommentFormContainer.style.display = isVisible ? 'none' : 'block';
+        if (!isVisible) {
+            elements.mainCommentText.focus();
+            elements.mainCommentFormContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+
+    function resetMainCommentForm() {
+        elements.mainCommentFormContainer.style.display = 'none';
+        elements.mainCommentForm.reset();
+        elements.mainFilePreview.innerHTML = '';
+        elements.mainFilePreview.style.display = 'none';
+    }
+
+    function handleFileInputChange(e) {
         const file = e.target.files[0];
+        const preview = e.target.closest('.comment-card')?.querySelector('.file-preview') || elements.mainFilePreview;
         if (file) {
-            const preview = document.getElementById('mainFilePreview');
             preview.style.display = 'block';
             preview.innerHTML = `
-                <div class="file-attachment">
+                <div class="file-attachment" data-file-name="${file.name}">
                     <i class="fas fa-file-${getFileIcon(file.type)}"></i>
                     <span class="file-name">${file.name}</span>
-                    <span class="file-remove" onclick="removeFile('mainFileInput', 'mainFilePreview')">
+                    <button type="button" class="file-remove btn btn-link p-0">
                         <i class="fas fa-times"></i>
-                    </span>
+                    </button>
                 </div>
             `;
         }
-    });
+    }
 
-    // Sử dụng delegated event để xử lý các sự kiện trong commentsSection
-    document.getElementById('commentsSection').addEventListener('click', function(e) {
-        // Toggle reply form
-        if (e.target.closest('.btn-reply')) {
-            const btn = e.target.closest('.btn-reply');
-            const commentCard = btn.closest('.comment-card');
-            const replyForm = commentCard.querySelector('.reply-form');
-            replyForm.style.display = replyForm.style.display === 'block' ? 'none' : 'block';
-            
-            if (replyForm.style.display === 'block') {
-                replyForm.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                const parentUserName = commentCard.querySelector('.user-name').textContent;
-                const textarea = replyForm.querySelector('.reply-text');
-                if (!textarea.value.includes(`@${parentUserName}`)) {
-                    textarea.value = `@${parentUserName} `;
-                }
-                textarea.focus();
-            }
-        }
-        
-        // Xử lý click vào nút xem phản hồi
-        if (e.target.closest('.btn-view-replies')) {
-            const btn = e.target.closest('.btn-view-replies');
-            const commentCard = btn.closest('.comment-card');
-            const repliesContainer = commentCard.querySelector('.replies');
-            const commentId = parseInt(commentCard.getAttribute('data-comment-id'));
-            const comment = findCommentById(comments, commentId);
-            
-            if (!comment) {
-                console.error("Không tìm thấy comment với id:", commentId);
-                return;
-            }
-            
-            if (repliesContainer.innerHTML.trim() === '') {
-                if (comment.replies && comment.replies.length) {
-                    renderReplies(comment.replies, repliesContainer);
-                    btn.textContent = 'Ẩn phản hồi';
-                }
-            } else {
-                if (repliesContainer.style.display === 'none' || repliesContainer.style.display === '') {
-                    repliesContainer.style.display = 'block';
-                    btn.textContent = 'Ẩn phản hồi';
-                } else {
-                    repliesContainer.style.display = 'none';
-                    btn.textContent = `Xem phản hồi (${comment.replies.length})`;
-                }
-            }
-        }
-        
-        // Xử lý tag user clicks & file attachment clicks
-        if (e.target.classList.contains('tag-user')) {
-            const username = e.target.textContent.substring(1);
-            const activeReplyForm = document.querySelector('.reply-form[style="display: block;"]');
-            if (activeReplyForm) {
-                const textarea = activeReplyForm.querySelector('textarea');
-                if (!textarea.value.includes(username)) {
-                    textarea.value += `@${username} `;
-                    textarea.focus();
-                }
-            }
-        }
-        if (e.target.closest('.file-attachment')) {
-            const fileUrl = e.target.closest('.file-attachment').dataset.url;
-            if (fileUrl) {
-                window.open(fileUrl, '_blank');
-            }
-        }
-    });
-
-    // Handle file attachment cho replies
-    document.addEventListener('change', function(e) {
-        if (e.target.classList.contains('reply-file-input')) {
-            const file = e.target.files[0];
-            if (file) {
-                const preview = e.target.closest('.reply-form').querySelector('.reply-file-preview');
-                preview.style.display = 'block';
-                preview.innerHTML = `
-                    <div class="file-attachment">
-                        <i class="fas fa-file-${getFileIcon(file.type)}"></i>
-                        <span class="file-name">${file.name}</span>
-                        <span class="file-remove" onclick="removeFileFromPreview(this)">
-                            <i class="fas fa-times"></i>
-                        </span>
-                    </div>
-                `;
-            }
-        }
-    });
-
-    // Cancel reply
-    document.addEventListener('click', function(e) {
-        if (e.target.closest('.btn-cancel-reply')) {
-            const btn = e.target.closest('.btn-cancel-reply');
-            const replyForm = btn.closest('.reply-form');
-            replyForm.style.display = 'none';
-            replyForm.querySelector('.reply-file-preview').innerHTML = '';
-            replyForm.querySelector('.reply-file-preview').style.display = 'none';
-            replyForm.querySelector('.reply-file-input').value = '';
-        }
-    });
-
-    // Xử lý nút attach file trong reply
-    document.addEventListener('click', function(e) {
-        if (e.target.closest('.attach-reply-btn')) {
-            const btn = e.target.closest('.attach-reply-btn');
-            const fileInput = btn.parentElement.querySelector('.reply-file-input');
-            fileInput.click();
-        }
-    });
-
-    // Thêm chức năng filter
-    document.getElementById('applyFilter').addEventListener('click', applyFilters);
-    document.getElementById('sortFilter').addEventListener('change', applyFilters);
-
-    // Like functionality (delegated event)
-    document.getElementById('commentsSection').addEventListener('click', async function(e) {
-        if (e.target.closest('.like-btn')) {
-            const btn = e.target.closest('.like-btn');
-            const commentCard = btn.closest('.comment-card');
-            const commentId = parseInt(commentCard.getAttribute('data-comment-id'));
-            const comment = comments.find(c => c.id === commentId);
-            if (comment) {
-                let action;
-                if (comment.liked) {
-                    comment.likes--;
-                    comment.liked = false;
-                    btn.querySelector('i').classList.replace('fas', 'far');
-                    action = 'unlike';
-                } else {
-                    comment.likes++;
-                    comment.liked = true;
-                    btn.querySelector('i').classList.replace('far', 'fas');
-                    action = 'like';
-                }
-                btn.classList.toggle('active');
-                btn.querySelector('.like-count').textContent = comment.likes;
-                try {
-                    await fetch('/like', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ user_id: currentUserId, comment_id: commentId, action: action })
-                    });
-                } catch (error) {
-                    console.error("Error updating like:", error);
-                }
-            }
-        }
-    });
-
-    // Submit main comment (giữ nguyên logic cũ, đã loại bỏ addCommentToDOM)
-    document.getElementById('mainCommentForm').addEventListener('submit', async function(e) {
+    async function handleMainCommentSubmit(e) {
         e.preventDefault();
-        const commentText = document.getElementById('mainCommentText').value;
-        const fileInput = document.getElementById('mainFileInput');
-        let fileData = null;
-        
-        if (fileInput.files.length > 0) {
-            const file = fileInput.files[0];
-            fileData = {
-                name: file.name,
-                type: file.type.split('/')[1] || 'file',
-                url: URL.createObjectURL(file) // Trong thực tế, file nên được upload lên server
-            };
-        }
-        
-        // Lấy document_id từ URL
-        const documentId = getParameterByName('document_id');
-        if (!documentId) {
-            alert("document_id không tồn tại trong URL!");
+        const text = elements.mainCommentText.value.trim();
+        const file = elements.mainFileInput.files[0];
+        if (!text && !file) return alert('Please enter text or attach a file.');
+        await postComment(null, text, file);
+        resetMainCommentForm();
+    }
+
+    // Comments Section Handlers
+// Biến global để theo dõi form đang active
+let activeReplyForm = null;
+
+function handleCommentsSectionClick(e) {
+    const target = e.target;
+    
+    // Xử lý nút reply
+    if (target.closest('.btn-reply')) {
+        e.preventDefault();
+        e.stopPropagation();
+        const replyBtn = target.closest('.btn-reply');
+        handleReplyButtonClick(replyBtn);
+        return;
+    }
+    
+    // Xử lý các sự kiện khác giữ nguyên
+    if (target.closest('.btn-view-replies')) {
+        toggleReplies(target.closest('.btn-view-replies'));
+    } else if (target.closest('.like-btn')) {
+        toggleLike(target.closest('.like-btn'));
+    } else if (target.closest('.file-remove')) {
+        removeFile(target.closest('.file-remove'));
+    } else if (target.closest('.file-attachment')) {
+        openFile(target.closest('.file-attachment'));
+    } else if (target.closest('.tag-user')) {
+        tagUser(target.closest('.tag-user'));
+    } else if (target.type === 'submit') {
+        e.preventDefault();
+        handleReplySubmit(target.closest('form'));
+    } else if (target.closest('.btn-cancel-reply')) {
+        resetReplyForm(target.closest('.reply-form'));
+    } else if (target.closest('.attach-reply-btn')) {
+        target.closest('.reply-form').querySelector('.reply-file-input').click();
+    }
+}
+function handleReplyButtonClick(replyBtn) {
+    console.log("Đã nhấn nút reply:", replyBtn);
+    // Lấy phần tử comment chứa nút reply
+    const commentCard = replyBtn.closest('.post-card, .comment-card');
+    console.log("Tìm thấy commentCard:", commentCard);
+    if (!commentCard) {
+        console.error("Không tìm thấy commentCard!");
+        return;
+    }
+    
+    // Tìm form reply nằm trực tiếp trong comment-section của commentCard
+    const replyForm = commentCard.querySelector(':scope > .comment-section > .reply-form');
+    console.log("Tìm thấy replyForm:", replyForm);
+    if (!replyForm) {
+        console.error("Không tìm thấy replyForm!");
+        return;
+    }
+    
+    // Lấy khu vực nhập comment chính (nếu có)
+    const commentInputArea = commentCard.querySelector(':scope > .comment-section > .comment-input-area');
+    
+    // Kiểm tra trạng thái hiển thị của form reply
+    const isVisible = replyForm.style.display === 'block';
+    console.log("replyForm đang hiển thị?", isVisible);
+    
+    // Toggle form reply: nếu đang hiển thị thì ẩn, nếu đang ẩn thì hiện
+    replyForm.style.display = isVisible ? 'none' : 'block';
+    console.log("replyForm sau khi toggle:", replyForm.style.display);
+    
+    // Nếu có khu vực nhập comment chính, ẩn nó khi mở form reply và ngược lại
+    if (commentInputArea) {
+        commentInputArea.style.display = isVisible ? 'flex' : 'none';
+        console.log("commentInputArea hiện tại:", commentInputArea.style.display);
+    }
+    
+    // Nếu form reply được mở, thêm tên người dùng vào textarea và focus vào nó
+    if (!isVisible) {
+        const textarea = replyForm.querySelector('.reply-text');
+        if (!textarea) {
+            console.error("Không tìm thấy textarea trong replyForm!");
             return;
         }
-        
-        try {
-            const res = await fetch('/comment', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    user_id: currentUserId, 
-                    document_id: documentId,
-                    content: commentText, 
-                    file: fileData 
-                })
-            });
-            const result = await res.json();
-            if (res.ok) {
-                // Tạo comment mới
-                const newComment = {
-                    id: result.comment_id,
-                    parent_id: null,
-                    user_id: currentUserId,
-                    userName: "You",
-                    avatar: "https://i.pravatar.cc/42",
-                    content: commentText,
-                    time: "Just now",
-                    likes: 0,
-                    liked: false,
-                    attachments: fileData ? [{ file_url: fileData.url, file_type: fileData.type, file_name: fileData.name }] : [],
-                    replies: []
-                };
-                // Thêm vào đầu mảng comments
-                comments.unshift(newComment);
-                // Nhóm lại bình luận và render lại danh sách
-                const grouped = groupComments(comments);
-                renderCommentsRecursive(grouped, document.getElementById('commentsSection'));
-                
-                // Cuộn đến comment mới được thêm
-                const newCommentElement = document.querySelector(`.comment-card[data-comment-id="${newComment.id}"]`);
-                if (newCommentElement) {
-                    newCommentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-                
-                this.reset();
-                document.getElementById('mainFilePreview').innerHTML = '';
-                document.getElementById('mainFilePreview').style.display = 'none';
-                document.getElementById('mainCommentFormContainer').style.display = 'none';
-            } else {
-                alert(result.error || "Error posting comment");
+        const userNameElement = commentCard.querySelector('.post-author');
+        if (userNameElement) {
+            const userName = userNameElement.textContent.trim();
+            if (!textarea.value.includes(`@${userName}`)) {
+                textarea.value = `@${userName} `;
             }
-        } catch (error) {
-            console.error("Error posting comment:", error);
+            console.log("Gán nội dung cho textarea:", textarea.value);
+        }
+        textarea.focus();
+        console.log("Đã focus vào textarea.");
+        replyForm.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+}
+
+    // Simplified handlers (no server interaction for likes/views)
+function toggleReplyForm(replyBtn) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const commentCard = replyBtn.closest('.post-card, .comment-card');
+    if (!commentCard) return;
+
+    const commentId = commentCard.dataset.commentId;
+    const replyForm = commentCard.querySelector('.reply-form');
+    
+    if (!replyForm) return;
+
+    // Đóng tất cả các form trả lời khác
+    document.querySelectorAll('.reply-form').forEach(form => {
+        if (form !== replyForm) {
+            form.style.display = 'none';
+            const siblingInputArea = form.closest('.comment-section')?.querySelector('.comment-input-area');
+            if (siblingInputArea) siblingInputArea.style.display = 'flex';
         }
     });
 
-    // Submit main comment (phiên bản thứ 2, giữ nguyên logic cũ)
-document.getElementById('mainCommentForm').addEventListener('submit', async function (e) {
-    e.preventDefault();
+    // Toggle form hiện tại
+    const isVisible = replyForm.style.display === 'block';
+    replyForm.style.display = isVisible ? 'none' : 'block';
+    
+    const commentInputArea = commentCard.querySelector('.comment-input-area');
+    if (commentInputArea) {
+        commentInputArea.style.display = isVisible ? 'flex' : 'none';
+    }
 
-    const commentText = document.getElementById('mainCommentText').value;
-    const fileInput = document.getElementById('mainFileInput');
+    if (!isVisible) {
+        const textarea = replyForm.querySelector('.reply-text');
+        const userNameElement = commentCard.querySelector('.post-author');
+        if (userNameElement) {
+            const userName = userNameElement.textContent;
+            if (!textarea.value.includes(`@${userName}`)) {
+                textarea.value = `@${userName} `;
+            }
+        }
+        textarea.focus();
+        replyForm.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+}
+function toggleReplies(viewBtn) {
+        const repliesContainer = viewBtn.nextElementSibling;
+        const isVisible = repliesContainer.style.display === 'block';
+        repliesContainer.style.display = isVisible ? 'none' : 'block';
+        viewBtn.textContent = isVisible ? `View ${repliesContainer.children.length} more replies` : 'Hide replies';
+    }
 
-    // Lấy document_id từ URL
+async function toggleLike(likeBtn) {
+    const commentCard = likeBtn.closest('.post-card, .comment-card');
+    const commentId = parseInt(commentCard.dataset.commentId);
+    const action = likeBtn.classList.contains('active') ? 'unlike' : 'like';
+
+    try {
+        const response = await fetch('/like', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                user_id: currentUser.id,
+                comment_id: commentId,
+                action: action
+            })
+        });
+
+        if (!response.ok) throw new Error('Failed to update like');
+        
+        const comment = findCommentById(commentId);
+        if (comment) {
+            comment.likes += action === 'like' ? 1 : -1;
+            comment.liked = action === 'like';
+            likeBtn.classList.toggle('active');
+            likeBtn.querySelector('i').classList.toggle('far');
+            likeBtn.querySelector('i').classList.toggle('fas');
+            likeBtn.querySelector('.like-count').textContent = comment.likes;
+        }
+    } catch (error) {
+        console.error('Like error:', error);
+        alert('Failed to update like. Please try again.');
+    }
+}
+    function removeFile(removeBtn) {
+        const preview = removeBtn.closest('.file-preview');
+        const input = removeBtn.closest('.comment-card').querySelector('input[type="file"]');
+        preview.innerHTML = '';
+        preview.style.display = 'none';
+        input.value = '';
+    }
+
+    function openFile(fileAttachment) {
+        const url = fileAttachment.dataset.url;
+        if (url) window.open(url, '_blank');
+    }
+
+    function tagUser(tag) {
+        const username = tag.textContent.slice(1);
+        const activeReplyForm = document.querySelector('.reply-form[style="display: block;"]');
+        if (activeReplyForm) {
+            const textarea = activeReplyForm.querySelector('.reply-text');
+            if (!textarea.value.includes(`@${username}`)) textarea.value += `@${username} `;
+            textarea.focus();
+        }
+    }
+
+    function handleReplySubmit(form) {
+        const parentId = parseInt(form.dataset.parentId);
+        const text = form.querySelector('.reply-text').value.trim();
+        const file = form.querySelector('.reply-file-input').files[0];
+        if (!text && !file) return alert('Please enter text or attach a file.');
+        postComment(parentId, text, file);
+        resetReplyForm(form);
+    }
+
+    function resetReplyForm(form) {
+        form.style.display = 'none';
+        form.reset();
+        const preview = form.querySelector('.file-preview');
+        preview.innerHTML = '';
+        preview.style.display = 'none';
+        const commentInputArea = form.closest('.comment-section').querySelector('.comment-input-area');
+        if (commentInputArea) commentInputArea.style.display = 'flex';
+    }
+
+    // Data Fetching and Rendering
+async function loadComments() {
+    elements.loadingIndicator.style.display = 'block';
+    elements.commentsSection.style.display = 'none';
+
     const documentId = getParameterByName('document_id');
     if (!documentId) {
-        alert("document_id không tồn tại trong URL!");
+        elements.loadingIndicator.style.display = 'none';
         return;
     }
 
-    // Tạo FormData để gửi dữ liệu
-    const formData = new FormData();
-    formData.append('user_id', currentUserId);
-    formData.append('document_id', documentId);
-    formData.append('content', commentText);
-
-    if (fileInput.files.length > 0) {
-        formData.append('file', fileInput.files[0]); // Gửi file thực tế
-    }
-
     try {
-        const res = await fetch('/comment', {
-            method: 'POST',
-            body: formData, // Không cần Content-Type, FormData tự xử lý
-        });
+        const sort = elements.sortFilter.value || 'desc';
+        const res = await fetch(`/get-data?document_id=${documentId}&sort=${sort}`);
+        if (!res.ok) throw new Error('Failed to fetch comments');
+        const data = await res.json();
+        comments = data.comments.map(comment => ({
+            ...comment,
+            replies: [], // Đảm bảo mỗi comment có mảng replies rỗng
+            liked: comment.liked_by_user || false,
+            likes: comment.likes_count || 0,
+            views: comment.views_count || 0
+        }));
 
-        const result = await res.json();
-        if (res.ok) {
-            // Xử lý file URL từ server trả về
-            let fileAttachment = [];
-            if (result.file_url) {
-                fileAttachment.push({
-                    file_url: result.file_url, 
-                    file_type: fileInput.files[0]?.type.split('/')[1] || 'file', 
-                    file_name: fileInput.files[0]?.name 
-                });
-            }
-
-            // Tạo comment mới
-            const newComment = {
-                id: result.comment_id,
-                parent_id: null,
-                user_id: currentUserId,
-                userName: "You",
-                avatar: "https://i.pravatar.cc/42",
-                content: commentText,
-                time: "Just now",
-                likes: 0,
-                liked: false,
-                attachments: fileAttachment,
-                replies: []
-            };
-
-            // Thêm vào đầu mảng comments
-            comments.unshift(newComment);
-            const grouped = groupComments(comments);
-            renderCommentsRecursive(grouped, document.getElementById('commentsSection'));
-
-            // Cuộn đến comment mới
-            const newCommentElement = document.querySelector(`.comment-card[data-comment-id="${newComment.id}"]`);
-            if (newCommentElement) {
-                newCommentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-
-            // Reset form
-            this.reset();
-            document.getElementById('mainFilePreview').innerHTML = '';
-            document.getElementById('mainFilePreview').style.display = 'none';
-            document.getElementById('mainCommentFormContainer').style.display = 'none';
-        } else {
-            alert(result.error || "Lỗi khi đăng bình luận");
+        userFullNames = new Set(comments.map(comment => comment.user_full_name));
+        if (data.current_user && data.current_user.full_name) {
+            userFullNames.add(data.current_user.full_name);
         }
+
+        console.log('Loaded comments:', comments); // Debug dữ liệu
+        renderComments();
     } catch (error) {
-        console.error("Lỗi khi gửi bình luận:", error);
+        console.error('Load comments error:', error);
+        elements.commentsSection.innerHTML = `<p class="text-danger">Failed to load comments: ${error.message}</p>`;
+    } finally {
+        elements.loadingIndicator.style.display = 'none';
+        elements.commentsSection.style.display = 'block';
     }
-});
-
-// Submit replies (delegated event)
-document.getElementById('commentsSection').addEventListener('submit', async function(e) {
-    if (e.target.classList.contains('reply-form')) {
-        e.preventDefault();
-        const form = e.target;
-        const parentId = form.getAttribute('data-parent-id');  // Lấy parent_id từ form (dạng string)
-        const replyText = form.querySelector('.reply-text').value;
-        const fileInput = form.querySelector('.reply-file-input');
-        
-        // Lấy document_id từ URL
-        const documentId = getParameterByName('document_id');
-        if (!documentId) {
-            alert("document_id không tồn tại trong URL!");
-            return;
-        }
-        
-        // Tạo FormData để gửi dữ liệu dưới dạng multipart/form-data
-        const formData = new FormData();
-        formData.append('user_id', currentUserId);
-        formData.append('parent_id', parentId);
-        formData.append('document_id', documentId);
-        formData.append('content', replyText);
-        
-        // Nếu có file đính kèm, thêm vào FormData
-        if (fileInput.files.length > 0) {
-            formData.append('file', fileInput.files[0]);
-        }
-        
-        try {
-            const res = await fetch('/reply', {
-                method: 'POST',
-                body: formData, // FormData tự xử lý Content-Type
-            });
-            const result = await res.json();
-            if (res.ok) {
-                // Tạo reply object mới từ dữ liệu trả về
-                const newReply = {
-                    id: result.reply_id,
-                    parent_id: parentId,
-                    user_id: currentUserId,
-                    userName: "You",
-                    avatar: "https://i.pravatar.cc/42",
-                    content: replyText,
-                    time: "Just now",
-                    likes: 0,
-                    liked: false,
-                    // Nếu backend trả về file_url, tạo đối tượng attachments; nếu không thì rỗng
-                    attachments: result.file_url ? [{
-                        file_url: result.file_url,
-                        file_type: fileInput.files[0] ? fileInput.files[0].type.split('/')[1] : '',
-                        file_name: fileInput.files[0] ? fileInput.files[0].name : ''
-                    }] : [],
-                    replies: []
-                };
-                // Thêm reply mới vào mảng comments (hoặc cập nhật lại theo logic của bạn)
-                comments.push(newReply);
-                const grouped = groupComments(comments);
-                renderCommentsRecursive(grouped, document.getElementById('commentsSection'));
-                
-                // Reset form và ẩn preview file
-                form.reset();
-                form.querySelector('.reply-file-preview').innerHTML = '';
-                form.querySelector('.reply-file-preview').style.display = 'none';
-                fileInput.value = '';
-                form.style.display = 'none';
-            } else {
-                alert(result.error || "Error posting reply");
-            }
-        } catch (error) {
-            console.error("Error posting reply:", error);
-        }
-    }
-});
-});
-// Hàm filter: sắp xếp bình luận dựa trên tiêu chí đã chọn và render lại danh sách
-function applyFilters() {
-    const sortBy = document.getElementById('sortFilter').value;
-    let sortedComments = [...comments];
-    
-    switch (sortBy) {
-        case 'newest':
-            sortedComments.sort((a, b) => b.id - a.id);
-            break;
-        case 'oldest':
-            sortedComments.sort((a, b) => a.id - b.id);
-            break;
-        case 'popular':
-            sortedComments.sort((a, b) => b.likes - a.likes);
-            break;
-        default:
-            break;
-    }
-    
-    const grouped = groupComments(sortedComments);
-    renderCommentsRecursive(grouped, document.getElementById('commentsSection'));
 }
+// Sửa lại hàm renderComments để bảo toàn các form đang mở
+function renderComments() {
+    // Xóa nội dung hiện tại
+    elements.commentsSection.innerHTML = '';
 
-// Hàm nhóm bình luận theo cấu trúc đệ quy theo parent_id
+    if (comments.length === 0) {
+        // Tạo thông báo khi không có comment
+        const message = document.createElement('div');
+        message.className = 'empty-comments-message';
+        message.innerHTML = `
+            <i class="far fa-comment-dots fa-3x mb-2"></i>
+            <p class="empty-message-text">Chưa có bình luận nào. Hãy là người đầu tiên!</p>
+        `;
+        
+        elements.commentsSection.appendChild(message);
+    } else {
+        // Hiển thị comments theo nhóm
+        const grouped = groupComments(comments);
+        const commentsFragment = document.createDocumentFragment();
+        
+        grouped.forEach(comment => {
+            commentsFragment.appendChild(createCommentElement(comment));
+        });
+        
+        elements.commentsSection.appendChild(commentsFragment);
+    }
+}
 function groupComments(comments) {
-    const map = {};
+    const map = new Map();
     const roots = [];
-    
-    comments.forEach(comment => {
-        comment.replies = [];
-        map[comment.id] = comment;
+    comments.forEach(c => {
+        c.replies = [];
+        map.set(c.id, c);
     });
-    
-    comments.forEach(comment => {
-        if (comment.parent_id) {
-            if (map[comment.parent_id]) {
-                map[comment.parent_id].replies.push(comment);
-            } else {
-                roots.push(comment);
-            }
+    comments.forEach(c => {
+        if (c.parent_id && map.has(c.parent_id)) {
+            map.get(c.parent_id).replies.push(c);
         } else {
-            roots.push(comment);
+            roots.push(c);
         }
     });
-    
     return roots;
 }
-
-// Hàm render bình luận theo đệ quy
-function renderCommentsRecursive(commentsArray, container) {
-    container.innerHTML = '';
-    commentsArray.forEach(comment => {
-        const commentHTML = createCommentHTML(comment);
-        container.insertAdjacentHTML('beforeend', commentHTML);
-        // Các reply sẽ được hiển thị sau khi người dùng click nút "Xem phản hồi"
-    });
+// ==================== STYLE MANAGEMENT ====================
+function injectRepliesStyles() {
+    if (!document.getElementById('replies-styles')) {
+        const style = document.createElement('style');
+        style.id = 'replies-styles';
+        style.textContent = `
+            .btn-view-replies {
+                color: #1a73e8;
+                font-weight: 600;
+                font-size: 0.875rem;
+                background: transparent;
+                border: none;
+                padding: 0.25rem 0;
+                margin: 0.5rem 0 0 0;
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.25rem;
+                transition: all 0.2s ease;
+            }
+            .btn-view-replies:hover {
+                color: #0d5bba;
+                text-decoration: underline;
+            }
+            .btn-view-replies .arrow-icon {
+                transition: transform 0.2s ease;
+                width: 16px;
+                height: 16px;
+            }
+            .btn-view-replies.active .arrow-icon {
+                transform: rotate(180deg);
+            }
+            .replies-container {
+                display: none;
+                margin-top: 0.5rem;
+                padding-left: 1rem;
+                border-left: 2px solid #e0e0e0;
+                animation: fadeIn 0.3s ease-out;
+            }
+            .replies-container.visible {
+                display: block;
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(-5px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        `;
+        document.head.appendChild(style);
+    }
 }
 
-// Hàm tạo HTML cho một comment
-function createCommentHTML(comment) {
-    const displayName = comment.userName ? comment.userName : (comment.user_id === currentUserId ? "You" : "Unknown");
-    const displayTime = comment.created_at ? comment.created_at : comment.time;
+// ==================== REPLY TOGGLE FUNCTION ====================
+function setupReplyToggle(viewBtn) {
+    const repliesContainer = viewBtn.nextElementSibling;
+    const isVisible = repliesContainer.classList.contains('visible');
     
-    let fileHTML = '';
-    if (comment.attachments && comment.attachments.length > 0) {
-        const file = comment.attachments[0];
-        fileHTML = `
-            <div class="file-attachment" data-url="${file.file_url}">
-                <i class="fas fa-file-${getFileIcon(file.file_type)}"></i>
-                <span class="file-name">${file.file_name}</span>
-                <a href="${file.file_url}" target="_blank" class="ms-2" onclick="event.stopPropagation();">
-                    <i class="fas fa-external-link-alt"></i>
-                </a>
-            </div>
-        `;
-    }
+    // Toggle hiển thị
+    repliesContainer.classList.toggle('visible', !isVisible);
+    viewBtn.classList.toggle('active', !isVisible);
     
-    // Nếu có reply thì thêm nút xem phản hồi (chưa render reply)
-    let viewRepliesBtn = '';
-    if (comment.replies && comment.replies.length > 0) {
-        viewRepliesBtn = `<button class="btn-view-replies">Xem phản hồi (${comment.replies.length})</button>`;
-    }
-    
-    return `
-        <div class="comment-card" data-comment-id="${comment.id}">
-            <div class="d-flex gap-3">
-                <img src="${comment.avatar || 'https://i.pravatar.cc/42'}" class="avatar" alt="User Avatar">
-                <div class="flex-grow-1">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <span class="user-name">${displayName}</span>
-                            <span class="comment-time ms-2">
-                                <i class="far fa-clock me-1"></i>${displayTime}
-                            </span>
-                        </div>
-                        <div class="dropdown">
-                            <button class="btn btn-sm btn-link text-muted p-0" type="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-ellipsis-h"></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#"><i class="far fa-bookmark me-2"></i>Save</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-flag me-2"></i>Report</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <p class="comment-content">${comment.content}</p>
-                    ${fileHTML}
-                    <div class="comment-actions">
-                        <button class="action-btn like-btn ${comment.liked ? 'active' : ''}">
-                            <i class="${comment.liked ? 'fas' : 'far'} fa-thumbs-up"></i>
-                            <span class="like-count">${comment.likes || 0}</span>
+    // Cập nhật text
+    const replyCount = repliesContainer.children.length;
+    viewBtn.innerHTML = isVisible 
+        ? `<svg class="arrow-icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg> View ${replyCount} more repl${replyCount !== 1 ? 'ies' : 'y'}`
+        : `<svg class="arrow-icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg> Hide replies`;
+}
+
+// ==================== MODIFIED COMMENT ELEMENT CREATOR ====================
+function createCommentElement(comment, isReply = false) {
+    injectRepliesStyles(); // Đảm bảo CSS đã được inject
+
+    const div = document.createElement('div');
+    div.className = isReply ? 'comment-card' : 'post-card';
+    div.dataset.commentId = comment.id;
+
+    let taggedContent = comment.content;
+    userFullNames.forEach(fullName => {
+        const regex = new RegExp(`@${fullName}\\b`, 'g');
+        taggedContent = taggedContent.replace(regex, `<span class="tag-user">@${fullName}</span>`);
+    });
+
+    div.innerHTML = `
+        <div class="post-header d-flex align-items-center gap-2">
+            <img src="${comment.user_avatar || currentUser.avatar}" class="post-avatar" alt="User Avatar">
+            <div class="post-info flex-grow-1">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="post-author">${comment.user_full_name || 'Anonymous'}</span>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-link text-muted p-0" type="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-ellipsis-h"></i>
                         </button>
-                        <button class="action-btn btn-reply">
-                            <i class="far fa-comment-dots"></i>
-                            <span>Reply</span>
-                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#"><i class="far fa-bookmark me-2"></i>Save</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-flag me-2"></i>Report</a></li>
+                        </ul>
                     </div>
-                    ${viewRepliesBtn}
-                    <form class="reply-form" data-parent-id="${comment.id}" style="display: none;">
-                        <div class="d-flex gap-3">
-                            <img src="https://i.pravatar.cc/42" class="avatar" alt="User Avatar">
-                            <div class="flex-grow-1">
-                                <textarea class="form-control mb-3 reply-text" rows="2" placeholder="Write your reply..." required></textarea>
-                                <div class="file-preview reply-file-preview" style="display: none;"></div>
-                                <div class="d-flex justify-content-end gap-2">
-                                    <input type="file" class="reply-file-input" style="display: none;">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary attach-reply-btn">
-                                        <i class="fas fa-paperclip"></i> Attach
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary btn-cancel-reply">Cancel</button>
-                                    <button type="submit" class="btn btn-sm btn-primary">Post Reply</button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                    <!-- Container chứa reply sẽ được render khi click "Xem phản hồi" -->
-                    <div class="replies" style="display: none;"></div>
                 </div>
+<span class="post-time"><i class="far fa-clock me-1"></i>${comment.time_ago}</span>
+</div>
+        </div>
+        <p class="post-content">${taggedContent}</p>
+        ${comment.file_url ? `
+            <div class="file-attachment" data-url="${comment.file_url}">
+                <i class="fas fa-file-${getFileIcon(comment.file_type)}"></i>
+                <span class="file-name">${comment.file_name || 'Attached file'}</span>
             </div>
+            <span class="view-count">${comment.views || 0} views</span>
+        ` : ''}
+        <div class="post-actions d-flex gap-3">
+            <button class="action-button like-btn ${comment.liked ? 'active' : ''}" aria-label="Like this comment">
+                <i class="${comment.liked ? 'fas' : 'far'} fa-thumbs-up"></i>
+                <span class="like-count">${comment.likes || 0}</span>
+            </button>
+            <button class="action-button btn-reply" aria-label="Reply to this comment">
+                <i class="far fa-comment-dots"></i> Comment
+            </button>
+            <button class="action-button" aria-label="Share this comment">
+                <i class="fas fa-share"></i> Share
+            </button>
+        </div>
+        <div class="comment-section">
+            ${comment.replies.length > 0 ? `
+                <button class="btn-view-replies" onclick="setupReplyToggle(this)">
+                    <svg class="arrow-icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                    View ${comment.replies.length} more repl${comment.replies.length !== 1 ? 'ies' : 'y'}
+                </button>
+                <div class="replies-container">
+                    ${comment.replies.map(reply => createCommentElement(reply, true).outerHTML).join('')}
+                </div>
+            ` : ''}
+            <form class="reply-form mt-2" data-parent-id="${comment.id}" style="display: none;">
+                <div class="d-flex gap-2">
+                    <img src="${currentUser.avatar}" class="avatar" alt="User Avatar">
+                    <div class="flex-grow-1">
+                        <textarea class="form-control mb-2 reply-text" rows="1" placeholder="Write your reply..." required></textarea>
+                        <div class="file-preview" style="display: none;"></div>
+                        <div class="d-flex justify-content-end gap-2">
+                            <input type="file" class="reply-file-input" style="display: none;">
+                            <button type="button" class="btn btn-sm btn-outline-secondary attach-reply-btn">
+                                <i class="fas fa-paperclip"></i> Attach
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary btn-cancel-reply">Cancel</button>
+                            <button type="submit" class="btn btn-sm btn-primary">Reply</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
     `;
-}
 
-// Hàm render reply cho một mảng reply vào container đã cho
-function renderReplies(repliesArray, container) {
-    container.style.display = 'block';
-    container.innerHTML = '';
-    repliesArray.forEach(reply => {
-        container.insertAdjacentHTML('beforeend', createCommentHTML(reply));
+    // Thêm event listeners
+    div.querySelector('.reply-file-input')?.addEventListener('change', handleFileInputChange);
+    
+    // Xử lý reply toggle nếu có replies
+    const viewBtn = div.querySelector('.btn-view-replies');
+    if (viewBtn) {
+        viewBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            setupReplyToggle(viewBtn);
+        });
+    }
+
+    return div;
+}
+function postComment(parentId, text, file) {
+    elements.loadingIndicator.style.display = 'block';
+    const documentId = getParameterByName('document_id');
+    if (!documentId || !currentUser.id) {
+        alert('Missing document_id or user ID.');
+        elements.loadingIndicator.style.display = 'none';
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('user_id', currentUser.id);
+    formData.append('document_id', documentId);
+    formData.append('content', text);
+    if (parentId) formData.append('parent_id', parentId);
+    if (file) formData.append('file', file);
+
+    const url = parentId ? '/reply' : '/comment';
+
+    fetch(url, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Failed to post');
+        return response.json();
+    })
+    .then(result => {
+        const newComment = {
+            id: result.reply_id || result.comment_id,
+            parent_id: parentId || null,
+            user_id: currentUser.id,
+            user_full_name: currentUser.fullName,
+            user_avatar: currentUser.avatar,
+            content: text,
+            created_at: new Date().toISOString(),
+            likes: 0,
+            liked: false,
+            views: 0,
+            file_url: result.file_url || null,
+            file_name: file?.name || null,
+            file_type: file?.type || null,
+            replies: []
+        };
+
+        userFullNames.add(newComment.user_full_name);
+
+        // Nếu là reply, thêm vào replies của comment cha
+        if (parentId) {
+            const parentComment = findCommentById(parentId);
+            if (parentComment) {
+                parentComment.replies.push(newComment);
+            } else {
+                comments.push(newComment); // Fallback nếu không tìm thấy parent
+            }
+        } else {
+            comments.push(newComment); // Comment gốc
+        }
+
+        // Render lại giao diện
+        renderComments();
+
+        // Cuộn đến comment mới
+        elements.commentsSection.querySelector(`[data-comment-id="${newComment.id}"]`)
+            ?.scrollIntoView({ behavior: 'smooth' });
+    })
+    .catch(error => {
+        console.error('Post error:', error);
+        alert(`Failed to post: ${error.message}`);
+    })
+    .finally(() => {
+        elements.loadingIndicator.style.display = 'none';
     });
 }
-
-// Helper functions
-function getFileIcon(fileType) {
-  if (!fileType) return 'file';
-  fileType = fileType.toLowerCase();
-  if (fileType.includes('image') || fileType.includes('png') || fileType.includes('jpg') || fileType.includes('jpeg') || fileType.includes('gif')) {
-    return 'image';
-  }
-  if (fileType.includes('pdf')) return 'pdf';
-  if (fileType.includes('word')) return 'word';
-  if (fileType.includes('excel')) return 'excel';
-  if (fileType.includes('powerpoint')) return 'powerpoint';
-  if (fileType.includes('zip')) return 'archive';
-  if (fileType.includes('text')) return 'alt';
-  return 'file';
-}
-
-function removeFile(inputId, previewId) {
-    document.getElementById(inputId).value = '';
-    document.getElementById(previewId).innerHTML = '';
-    document.getElementById(previewId).style.display = 'none';
-}
-    
-function removeFileFromPreview(element) {
-    const previewContainer = element.closest('.file-preview');
-    const fileInput = previewContainer.parentElement.querySelector('input[type="file"]');
-    previewContainer.innerHTML = '';
-    previewContainer.style.display = 'none';
-    if (fileInput) fileInput.value = '';
-}
-    
-// Hàm lấy tham số từ URL
-function getParameterByName(name, url = window.location.href) {
-  name = name.replace(/[\[\]]/g, '\\$&');
-  const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-        results = regex.exec(url);
-  if (!results) return null;
-  if (!results[2]) return '';
-  return decodeURIComponent(results[2].replace(/\+/g, ' '));
-}
-
-async function loadComments() {
-  const loadingIndicator = document.getElementById('loadingIndicator');
-  const commentsSection = document.getElementById('commentsSection');
-
-  loadingIndicator.style.display = 'block';
-  commentsSection.style.display = 'none';
-
-  // Lấy document_id từ URL
-  const documentId = getParameterByName('document_id');
-  console.log("document_id từ URL:", documentId); // In ra giá trị nhận được
-
-  if (!documentId) {
-    console.error("Không có document_id trong URL.");
-    loadingIndicator.style.display = 'none';
-    return;
-  }
-
-  try {
-    // Gọi API với query string chứa document_id
-    const res = await fetch(`/get-data?document_id=${documentId}`);
-    const data = await res.json();
-
-    if (res.ok) {
-      // Cập nhật biến toàn cục comments
-      comments = data.comments;
-
-      // Xử lý số lượt like và đảm bảo attachments là mảng
-      comments.forEach(comment => {
-        if (Array.isArray(comment.likes)) {
-          comment.liked = comment.likes.some(like => like.user_id === currentUserId);
-          comment.likes = comment.likes.length;
-        }
-        if (!Array.isArray(comment.attachments)) {
-          comment.attachments = [];
-        }
-      });
-
-      const groupedComments = groupComments(comments);
-      if (groupedComments.length === 0) {
-        commentsSection.innerHTML = `<p>Cuộc thảo luận đang trống</p>`;
-      } else {
-        renderCommentsRecursive(groupedComments, commentsSection);
-      }
-    } else {
-      console.error("Error loading comments:", data.error);
+function findCommentById(id) {
+        const search = (comments) => {
+            for (const comment of comments) {
+                if (comment.id === id) return comment;
+                if (comment.replies.length) {
+                    const found = search(comment.replies);
+                    if (found) return found;
+                }
+            }
+            return null;
+        };
+        return search(comments);
     }
-  } catch (error) {
-    console.error("Error loading comments:", error);
-  } finally {
-    loadingIndicator.style.display = 'none';
-    commentsSection.style.display = 'block';
-  }
-}
+
+    function handleApplyFilter(e) {
+        e.stopPropagation();
+        const parentDoc = window.parent.document;
+        const discussionContainer = parentDoc.getElementById('discussion-container');
+        const compactContainer = parentDoc.querySelector('.compact-container.my-4');
+        if (discussionContainer) discussionContainer.style.display = 'none';
+        if (compactContainer) compactContainer.style.display = 'block';
+        parentDoc.documentElement.style.overflow = 'auto';
+        parentDoc.body.style.overflow = 'auto';
+    }
 </script>
-
-
 
 </body>
 </html>
