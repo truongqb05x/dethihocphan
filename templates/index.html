@@ -74,6 +74,12 @@
     .nav-tabs .nav-link:hover {
       color: var(--primary-color);
     }
+.school-logo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  border-radius: 4px;
+}
 
     .breadcrumb {
       background: transparent;
@@ -700,6 +706,26 @@
       </div>
     </div>
   </nav>
+  <script>
+  document.getElementById('logoutBtn').addEventListener('click', function () {
+    fetch('/api/logout', {
+      method: 'POST',
+      credentials: 'include' // Gửi cookie kèm theo nếu bạn dùng session
+    })
+    .then(response => {
+      if (response.ok) {
+        // Sau khi logout thành công, chuyển hướng về trang đăng nhập hoặc trang chính
+        window.location.href = '/'; // Hoặc '/login.html' tùy bạn
+      } else {
+        alert('Đăng xuất thất bại!');
+      }
+    })
+    .catch(error => {
+      console.error('Lỗi khi gọi API logout:', error);
+    });
+  });
+</script>
+
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     // Kiểm tra trạng thái đăng nhập qua API
@@ -2579,16 +2605,72 @@ document.getElementById('contributeExamForm').addEventListener('submit', functio
 });
   </script>
 
-  <script>
-    // Giả sử currentUserId được lấy từ session hoặc biến toàn cục
-    const currentUserId = 1; // Ví dụ
+<!-- Modal báo lỗi -->
+<div class="mr-modal-overlay" id="mr-modal" style="display: none;">
+  <div class="mr-modal-container">
+    <div class="mr-modal-header">
+      <h2 class="mr-modal-title">
+        <i class="fas fa-bug"></i>
+        Báo cáo sự cố
+      </h2>
+      <button class="mr-close-btn" onclick="mr_hideModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="mr-modal-content">
+      <form id="mr-reportForm" onsubmit="mr_handleSubmit(event)">
+        <!-- Hiển thị tên đề thi (readonly) -->
+        <div class="mr-input-group">
+          <input 
+            type="text" 
+            class="mr-form-input" 
+            placeholder=" " 
+            id="document_name"
+            value="Đề thi mặc định" 
+            readonly>
+          <label class="mr-form-label">Đề thi</label>
+        </div>
+        <!-- Input ẩn cho document_id -->
+        <input type="hidden" id="document_id" name="document_id" value="">
+        <!-- Input ẩn cho user_id (giả sử lấy từ biến currentUserId) -->
+        <input type="hidden" id="user_id" name="user_id" value="">
 
-    // Chèn CSS của modal qua DOM và prepend vào <head> để ưu tiên thực thi
-    (function () {
-      const style = document.createElement('style');
-      style.type = 'text/css';
-      style.id = 'mr-modalStyles';
-      const css = `
+        <!-- Nội dung báo cáo -->
+        <div class="mr-input-group">
+          <textarea 
+            class="mr-form-input" 
+            placeholder=" "
+            id="report_content"
+            rows="4"
+            required
+          ></textarea>
+          <label class="mr-form-label">Mô tả chi tiết</label>
+        </div>
+
+        <div class="mr-action-buttons">
+          <button type="button" class="mr-btn mr-btn-secondary" onclick="mr_hideModal()">
+            Hủy bỏ
+          </button>
+          <button type="submit" class="mr-btn mr-btn-primary">
+            <i class="fas fa-paper-plane"></i>
+            Gửi báo cáo
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Giả sử currentUserId được lấy từ session hoặc biến toàn cục
+  const currentUserId = 1; // Ví dụ
+
+  // Chèn CSS của modal qua DOM và prepend vào <head> để ưu tiên thực thi
+  (function() {
+    const style = document.createElement('style');
+    style.type = 'text/css';
+    style.id = 'mr-modalStyles';
+    const css = `
       :root {
         --mr-primary: #6366f1;
         --mr-primary-hover: #4f46e5;
@@ -2798,91 +2880,91 @@ document.getElementById('contributeExamForm').addEventListener('submit', functio
         }
       }
     `;
-      style.textContent = css;
-      document.head.prepend(style);
-    })();
+    style.textContent = css;
+    document.head.prepend(style);
+  })();
 
-    // Hàm mở modal báo lỗi và cập nhật nội dung "Đề thi" cũng như document_id
-    function openReportModal(file) {
-      const modal = document.getElementById('mr-modal');
-      // Cập nhật tên đề thi
-      const examInput = document.getElementById('document_name');
-      if (examInput) {
-        examInput.value = file.file_name;
-      }
-      // Lưu document_id vào input ẩn
-      document.getElementById('document_id').value = file.id;
-      // Cập nhật user_id (giả sử lấy từ biến currentUserId)
-      document.getElementById('user_id').value = currentUserId;
-
-      mr_showModal();
-      console.log("Mở modal báo lỗi cho file:", file.file_name);
+  // Hàm mở modal báo lỗi và cập nhật nội dung "Đề thi" cũng như document_id
+  function openReportModal(file) {
+    const modal = document.getElementById('mr-modal');
+    // Cập nhật tên đề thi
+    const examInput = document.getElementById('document_name');
+    if(examInput) {
+      examInput.value = file.file_name;
     }
+    // Lưu document_id vào input ẩn
+    document.getElementById('document_id').value = file.id;
+    // Cập nhật user_id (giả sử lấy từ biến currentUserId)
+    document.getElementById('user_id').value = currentUserId;
+    
+    mr_showModal();
+    console.log("Mở modal báo lỗi cho file:", file.file_name);
+  }
 
-    // Hàm mở modal
-    function mr_showModal() {
-      const modal = document.getElementById('mr-modal');
-      modal.style.display = 'flex';
-      modal.style.opacity = '1';
-      document.body.style.overflow = 'hidden';
+  // Hàm mở modal
+  function mr_showModal() {
+    const modal = document.getElementById('mr-modal');
+    modal.style.display = 'flex';
+    modal.style.opacity = '1';
+    document.body.style.overflow = 'hidden';
+  }
+
+  // Hàm đóng modal
+  function mr_hideModal() {
+    const modal = document.getElementById('mr-modal');
+    modal.style.opacity = '0';
+    setTimeout(() => {
+      modal.style.display = 'none';
+      document.body.style.overflow = 'auto';
+      // Reset form nếu cần
+      resetReportForm();
+    }, 300);
+  }
+
+  // Reset form modal về ban đầu
+  function resetReportForm() {
+    const form = document.getElementById('mr-reportForm');
+    form.reset();
+    // Nếu bạn có nội dung HTML mặc định cần khôi phục thì có thể đặt lại ở đây.
+    // Ví dụ: reset giá trị của document_name nếu cần.
+  }
+
+  // Xử lý submit form báo lỗi, gửi dữ liệu đến backend
+  async function mr_handleSubmit(e) {
+    e.preventDefault();
+    
+    const user_id = document.getElementById('user_id').value;
+    const document_id = document.getElementById('document_id').value;
+    const report_content = document.getElementById('report_content').value;
+    
+    if (!user_id || !document_id || !report_content) {
+      alert("Vui lòng nhập đủ thông tin báo cáo.");
+      return;
     }
+    
+    // Gói dữ liệu theo định dạng JSON
+    const payload = {
+      user_id: user_id,
+      document_id: document_id,
+      report_content: report_content
+    };
 
-    // Hàm đóng modal
-    function mr_hideModal() {
-      const modal = document.getElementById('mr-modal');
-      modal.style.opacity = '0';
-      setTimeout(() => {
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-        // Reset form nếu cần
-        resetReportForm();
-      }, 300);
-    }
-
-    // Reset form modal về ban đầu
-    function resetReportForm() {
-      const form = document.getElementById('mr-reportForm');
-      form.reset();
-      // Nếu bạn có nội dung HTML mặc định cần khôi phục thì có thể đặt lại ở đây.
-      // Ví dụ: reset giá trị của document_name nếu cần.
-    }
-
-    // Xử lý submit form báo lỗi, gửi dữ liệu đến backend
-    async function mr_handleSubmit(e) {
-      e.preventDefault();
-
-      const user_id = document.getElementById('user_id').value;
-      const document_id = document.getElementById('document_id').value;
-      const report_content = document.getElementById('report_content').value;
-
-      if (!user_id || !document_id || !report_content) {
-        alert("Vui lòng nhập đủ thông tin báo cáo.");
-        return;
-      }
-
-      // Gói dữ liệu theo định dạng JSON
-      const payload = {
-        user_id: user_id,
-        document_id: document_id,
-        report_content: report_content
-      };
-
-      try {
-        // Gọi API POST đến backend
-        const response = await fetch('/report', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(payload)
-        });
-
-        if (response.ok) {
-          // Hiệu ứng chuyển đổi form thành thông báo thành công
-          const form = document.getElementById('mr-reportForm');
-          form.style.opacity = '0';
-          setTimeout(() => {
-            form.innerHTML = `
+    try {
+      // Gọi API POST đến backend
+      const response = await fetch('/report', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+      
+      if(response.ok) {
+        // Hiệu ứng chuyển đổi form thành thông báo thành công
+        const form = document.getElementById('mr-reportForm');
+        form.style.opacity = '0';
+        setTimeout(() => {
+          form.innerHTML = `
             <div class="mr-success-check">
               <i class="fas fa-check" style="color: white; font-size: 24px;"></i>
             </div>
@@ -2897,28 +2979,28 @@ document.getElementById('contributeExamForm').addEventListener('submit', functio
               Đóng
             </button>
           `;
-            form.style.opacity = '1';
-          }, 500);
-        } else {
-          const errorData = await response.json();
-          alert("Có lỗi xảy ra: " + (errorData.error || 'Lỗi không xác định'));
-        }
-      } catch (error) {
-        console.error("Lỗi khi gửi báo cáo:", error);
-        alert("Không thể kết nối đến máy chủ.");
+          form.style.opacity = '1';
+        }, 500);
+      } else {
+        const errorData = await response.json();
+        alert("Có lỗi xảy ra: " + (errorData.error || 'Lỗi không xác định'));
       }
+    } catch (error) {
+      console.error("Lỗi khi gửi báo cáo:", error);
+      alert("Không thể kết nối đến máy chủ.");
     }
+  }
 
-    // Đóng modal khi click bên ngoài container
-    document.getElementById('mr-modal').addEventListener('click', function (e) {
-      if (e.target === this) mr_hideModal();
-    });
+  // Đóng modal khi click bên ngoài container
+  document.getElementById('mr-modal').addEventListener('click', function(e) {
+    if (e.target === this) mr_hideModal();
+  });
 
-    // Đóng modal khi nhấn phím ESC
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') mr_hideModal();
-    });
-  </script>
+  // Đóng modal khi nhấn phím ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') mr_hideModal();
+  });
+</script>
 
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -2968,30 +3050,6 @@ document.getElementById('contributeExamForm').addEventListener('submit', functio
     }
 
 
-
-    /*************************************
-     * Xử lý đăng xuất                   *
-     *************************************/
-    document.getElementById('logoutBtn').addEventListener('click', function () {
-      fetch("/api/logout", {
-        method: "POST",
-        credentials: "same-origin",
-        headers: { "Content-Type": "application/json" }
-      })
-        .then(response => response.json())
-        .then(data => {
-          // Hiển thị thông báo đăng xuất thành công
-          triggerNotification('success', 'Thành công', data.message);
-          // Chuyển hướng về trang chủ sau 2000ms
-          setTimeout(() => {
-            window.location.href = "/";
-          }, 2000);
-        })
-        .catch(error => {
-          triggerNotification('error', 'Lỗi', 'Có lỗi khi đăng xuất.');
-          console.error("Lỗi:", error);
-        });
-    });
 
     /*************************************
      * DOMContentLoaded: Các sự kiện bổ sung *
@@ -4857,11 +4915,6 @@ document.getElementById('contributeExamForm').addEventListener('submit', functio
     let currentRotation = 0;
     let adTimer = null;
     let currentFile = null;
-
-    /* Hàm renderFolderItem: Tạo mục folder dựa theo dữ liệu */
-    /* Hàm renderFolderItem dùng cho các cấp folder không phải trường */
-// Hàm renderFolderItem: dùng để render folder thông thường
-// Phiên bản này ẩn luôn logic hiển thị số count. Nếu muốn mở lại, bỏ comment đoạn logic bên dưới.
 function renderFolderItem(list, name, currentPath, callback, count, itemId) {
   const li = document.createElement('li');
   li.className = 'file-item';
@@ -4886,33 +4939,63 @@ function renderFolderItem(list, name, currentPath, callback, count, itemId) {
   list.appendChild(li);
 }
 
+
+
 // Hàm renderSchoolFolderItem: dùng cho folder trường (path.length === 0)
 // Phiên bản này ẩn luôn logic hiển thị icon cộng đồng và số count.
 // Nếu muốn mở lại, bỏ comment đoạn logic bên dưới.
+// Hàm renderSchoolFolderItem: dùng cho folder trường (path.length === 0)
+// === 1. Định nghĩa map logo và default logo ===
+const SCHOOL_LOGOS = {
+  1: '/static/image/logo_uni/husc.ico',
+    3: '/static/image/logo_uni/hus.ico',
+    5: '/static/image/logo_uni/hcmu.png',
+    2: '/static/image/logo_uni/logo_dhsp2.gif'
+    // … thêm id trường tương ứng với đường dẫn logo
+};
+
+const DEFAULT_SCHOOL_LOGO = '/static/logo3.png';
+
+/**
+ * renderSchoolFolderItem: render folder cấp trường với logo
+ *
+ * @param {HTMLElement} list         - phần tử <ul> chứa danh sách
+ * @param {string}       name        - tên trường
+ * @param {Array}        currentPath - đường dẫn hiện tại dưới dạng mảng
+ * @param {Function}     callback    - hàm gọi khi click vào trường
+ * @param {number}       count       - (nếu cần) số thành viên
+ * @param {number|string} itemId     - id của trường
+ * @param {string}       logoUrl     - đường dẫn đến logo của trường
+ */
 function renderSchoolFolderItem(list, name, currentPath, callback, count, itemId) {
   const li = document.createElement('li');
   li.className = 'file-item';
 
-  // Đã ẩn logic hiển thị icon cộng đồng và count: thay vì hiển thị, gán countHTML thành chuỗi rỗng.
-  // Để mở lại, bỏ comment đoạn dưới và comment dòng gán countHTML thành chuỗi rỗng.
-  /*
-  const countHTML = count > 0 ? `<span class="file-count"><i class="bi bi-people"></i> ${count}</span>` : '';
-  */
+  // ✅ Lấy logo theo itemId từ SCHOOL_LOGOS hoặc dùng mặc định
+  const logoSrc = SCHOOL_LOGOS[itemId] || DEFAULT_SCHOOL_LOGO;
+
+  // Ẩn phần count nếu không cần thiết
   const countHTML = '';
 
   li.innerHTML = `
-    <i class="bi bi-folder-fill file-icon folder"></i>
-    <span class="file-name">${name}</span>
-    ${countHTML}
+    <div class="school-folder d-flex align-items-center">
+      <img
+        class="school-logo"
+        src="${logoSrc}"
+        alt="Logo ${name}"
+        onerror="this.src='${DEFAULT_SCHOOL_LOGO}';"
+      />
+      <span class="file-name ms-2">${name}</span>
+      ${countHTML}
+    </div>
   `;
-  
+
   li.addEventListener('click', () => {
     callback([...currentPath, { id: itemId, name }]);
   });
-  
+
   list.appendChild(li);
 }
-
 
     /* Hàm renderFileItem: Tạo file item (giữ nguyên logic ban đầu) */
     function renderFileItem(list, file, documentType) {
@@ -5239,38 +5322,49 @@ async function renderDrive(containerId, path, updatePathCallback) {
 
   let data = [];
   try {
-    if (path.length === 0) {
-      // Lấy thông tin trường của user nếu có đăng nhập
-      let res = await fetch('/user/university', { credentials: 'include' });
-      if (res.ok) {
-        const userSchool = await res.json();
-        window.userSchoolId = userSchool.university;
-        data = [{ id: userSchool.university, name: userSchool.school_name }];
+  if (path.length === 0) {
+    // Lấy thông tin trường của user nếu có đăng nhập
+    let res = await fetch('/user/university', { credentials: 'include' });
+    if (res.ok) {
+      const userSchool = await res.json();
+      window.userSchoolId = userSchool.university;
+      data = [{
+        id:   userSchool.university,
+        name: userSchool.school_name,
+        // <-- thêm logo_url
+        logo_url: SCHOOL_LOGOS[userSchool.university] || DEFAULT_SCHOOL_LOGO
+      }];
+    } else {
+      const allSchoolsRes = await fetch('/api/schools');
+      if (allSchoolsRes.ok) {
+        data = await allSchoolsRes.json();
       } else {
-        const allSchoolsRes = await fetch('/api/schools');
-        if (allSchoolsRes.ok) {
-          data = await allSchoolsRes.json();
-        } else {
-          throw new Error("Không thể lấy danh sách trường");
-        }
+        throw new Error("Không thể lấy danh sách trường");
       }
-      // Lấy số liệu thống kê số thành viên theo trường
-      try {
-        const statsRes = await fetch('/api/users/statistics');
-        if (statsRes.ok) {
-          const stats = await statsRes.json();
-          const statsMap = {};
-          stats.forEach(stat => {
-            statsMap[stat.school] = stat.user_count;
-          });
-          data = data.map(item => {
-            const count = statsMap[item.name] || 0;
-            return { ...item, count };
-          });
-        }
-      } catch (error) {
-        console.error("Lỗi khi lấy thống kê người dùng:", error);
+    }
+
+    // Lấy số liệu thống kê số thành viên theo trường
+    try {
+      const statsRes = await fetch('/api/users/statistics');
+      if (statsRes.ok) {
+        const stats = await statsRes.json();
+        const statsMap = {};
+        stats.forEach(stat => {
+          statsMap[stat.school] = stat.user_count;
+        });
+        // map lại data, thêm count và logo_url
+        data = data.map(item => {
+          const count = statsMap[item.name] || 0;
+          return {
+            ...item,
+            count,
+            logo_url: SCHOOL_LOGOS[item.id] || DEFAULT_SCHOOL_LOGO
+          };
+        });
       }
+    } catch (error) {
+      console.error("Lỗi khi lấy thống kê người dùng:", error);
+  }
     } else if (path.length === 1) {
       const schoolId = path[0].id;
       data = await (await fetch(`/api/schools/${schoolId}/faculties`)).json();
