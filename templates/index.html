@@ -3,26 +3,55 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Kho Học Liệu</title>
+  <!-- Mobile meta -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
-  <!-- Bootstrap CSS -->
+  <!-- Title + Description -->
+  <title>Ngân Hàng Đề Thi Kết Thúc Học Phần</title>
+
+  <meta name="description"
+    content="Tải Đề thi kết thúc học phần miễn phí, đa dạng nhiều môn. Cập nhật đề thi mới nhất, đầy đủ đáp án và hướng dẫn ôn tập hiệu quả.">
+  <meta name="keywords" content="đề thi kết thúc học phần, đề thi học phần, tải đề thi, ôn tập học phần">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="dethihocphan.com/de-thi-ket-thuc-hoc-phan">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Đề thi kết thúc học phần – Tải miễn phí, cập nhật mới nhất">
+  <meta property="og:description"
+    content="Tải Đề thi kết thúc học phần miễn phí, đa dạng nhiều môn. Cập nhật đề thi mới nhất, đầy đủ đáp án và hướng dẫn ôn tập hiệu quả.">
+  <meta property="og:url" content="dethihocphan.com/de-thi-ket-thuc-hoc-phan">
+  <meta property="og:image" content="dethihocphan.com/static/logo.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Đề thi kết thúc học phần – Tải miễn phí, cập nhật mới nhất">
+  <meta name="twitter:description"
+    content="Tải Đề thi kết thúc học phần miễn phí, đa dạng nhiều môn. Cập nhật đề thi mới nhất, đầy đủ đáp án và hướng dẫn ôn tập hiệu quả.">
+  <meta name="twitter:image" content="dethihocphan.com/static/logo.png">
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Đề thi kết thúc học phần",
+    "description": "Tải Đề thi kết thúc học phần miễn phí, đa dạng nhiều môn. Cập nhật đề thi mới nhất, đầy đủ đáp án và hướng dẫn ôn tập hiệu quả.",
+    "url": "dethihocphan.com/de-thi-ket-thuc-hoc-phan"
+  }
+  </script>
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="../static/logo.png" type="image/x-icon">
+
+  <!-- CSS/Fonts/Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-  <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-
-  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-  <!-- Google Fonts -->
   <link
     href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Inter:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&display=swap"
     rel="stylesheet">
-
-  <!-- Custom CSS -->
-  <link rel="shortcut icon" href="../static/logo.png" type="image/x-icon">
   <link rel="stylesheet" href="../static/css/index.css">
   <style>
     :root {
@@ -74,12 +103,13 @@
     .nav-tabs .nav-link:hover {
       color: var(--primary-color);
     }
-.school-logo {
-  width: 32px;
-  height: 32px;
-  object-fit: contain;
-  border-radius: 4px;
-}
+
+    .school-logo {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+      border-radius: 4px;
+    }
 
     .breadcrumb {
       background: transparent;
@@ -625,11 +655,12 @@
 </head>
 
 <body>
-    
+
   <!-- Bọc toàn bộ nội dung trong 1 container -->
   <!-- Thêm navbar vào trước phần content chính -->
-<nav id="navbar" class="navbar navbar-expand-lg navbar-light border-bottom py-3 fixed-top" style="border: none !important;">
-        <div class="container-fluid">
+  <nav id="navbar" class="navbar navbar-expand-lg navbar-light border-bottom py-3 fixed-top"
+    style="border: none !important;">
+    <div class="container-fluid">
       <!-- Tên trang web bên trái -->
       <a class="navbar-brand me-5" href="/">
         <span class="text-primary fw-bold fs-4">HueHub</span>
@@ -656,47 +687,47 @@
           <i class="bi bi-box-arrow-in-right me-2"></i>
           Đăng nhập
         </button>
-    <div >
-        <button class="js-bell-btn" id="jsNotificationBell">
+        <div>
+          <button class="js-bell-btn" id="jsNotificationBell">
             <i class="bi bi-bell"></i>
             <span class="js-bell-badge" id="jsBellBadge">5</span>
-        </button>
+          </button>
 
-        <!-- Notification Dropdown Container -->
-        <div class="js-notification-container">
+          <!-- Notification Dropdown Container -->
+          <div class="js-notification-container">
             <div class="js-notification-dropdown" id="jsNotificationDropdown">
-                <div class="js-notification-header">
-                    <h3 class="js-notification-title">
-                        <i class="bi bi-bell-fill"></i>
-                        Thông Báo
-                    </h3>
-                    <div class="js-notification-actions">
-                        <button class="btn btn-sm btn-outline-light" id="jsMarkAllRead">
-                            <i class="bi bi-check2-all"></i>
-                        </button>
-                    </div>
+              <div class="js-notification-header">
+                <h3 class="js-notification-title">
+                  <i class="bi bi-bell-fill"></i>
+                  Thông Báo
+                </h3>
+                <div class="js-notification-actions">
+                  <button class="btn btn-sm btn-outline-light" id="jsMarkAllRead">
+                    <i class="bi bi-check2-all"></i>
+                  </button>
                 </div>
-                
-                <!-- Filter tabs -->
-                <div class="js-filter-tabs">
-                    <button class="js-filter-tab active" data-filter="all">Tất cả</button>
-                    <button class="js-filter-tab" data-filter="comment">Bình luận</button>
-                    <button class="js-filter-tab" data-filter="like">Thích</button>
-                    <button class="js-filter-tab" data-filter="mention">Nhắc đến</button>
-                    <button class="js-filter-tab" data-filter="system">Hệ thống</button>
-                </div>
-                
-                <div class="js-notification-list" id="jsNotificationList">
-                    <!-- Dynamic content will be inserted here -->
-                </div>
-                <div class="js-notification-footer">
-                    <button class="js-view-all-btn" id="jsViewAllNotifications">
-                        <i class="bi bi-list"></i> Xem tất cả
-                    </button>
-                </div>
+              </div>
+
+              <!-- Filter tabs -->
+              <div class="js-filter-tabs">
+                <button class="js-filter-tab active" data-filter="all">Tất cả</button>
+                <button class="js-filter-tab" data-filter="comment">Bình luận</button>
+                <button class="js-filter-tab" data-filter="like">Thích</button>
+                <button class="js-filter-tab" data-filter="mention">Nhắc đến</button>
+                <button class="js-filter-tab" data-filter="system">Hệ thống</button>
+              </div>
+
+              <div class="js-notification-list" id="jsNotificationList">
+                <!-- Dynamic content will be inserted here -->
+              </div>
+              <div class="js-notification-footer">
+                <button class="js-view-all-btn" id="jsViewAllNotifications">
+                    <i class="bi bi-x-lg"></i> Đóng
+                </button>
+              </div>
             </div>
+          </div>
         </div>
-    </div>
         <!-- Nút đăng xuất -->
         <button class="btn btn-outline-danger rounded-pill px-3 btn-hover-tooltip" id="logoutBtn"
           data-tooltip="Đăng xuất">
@@ -707,224 +738,224 @@
     </div>
   </nav>
   <script>
-  document.getElementById('logoutBtn').addEventListener('click', function () {
-    fetch('/api/logout', {
-      method: 'POST',
-      credentials: 'include' // Gửi cookie kèm theo nếu bạn dùng session
-    })
-    .then(response => {
-      if (response.ok) {
-        // Sau khi logout thành công, chuyển hướng về trang đăng nhập hoặc trang chính
-        window.location.href = '/'; // Hoặc '/login.html' tùy bạn
-      } else {
-        alert('Đăng xuất thất bại!');
-      }
-    })
-    .catch(error => {
-      console.error('Lỗi khi gọi API logout:', error);
-    });
-  });
-</script>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    // Kiểm tra trạng thái đăng nhập qua API
-    fetch("/api/check-login")
-      .then(response => response.json())
-      .then(data => {
-        if (data.loggedIn) {
-          // Nếu đã đăng nhập, hiển thị nút Đăng xuất, Notification Container và nút chuông
-          document.getElementById("logoutBtn").style.display = "block";
-          document.getElementById("loginBtn").style.display = "none";
-          document.querySelector(".js-notification-container").style.display = "block";
-          document.getElementById("jsNotificationBell").style.display = "block"; // Hiển thị nút chuông
-        } else {
-          // Nếu chưa đăng nhập, hiển thị nút Đăng nhập, ẩn thông báo và nút chuông
-          document.getElementById("loginBtn").style.display = "block";
-          document.getElementById("logoutBtn").style.display = "none";
-          document.querySelector(".js-notification-container").style.display = "none";
-          document.getElementById("jsNotificationBell").style.display = "none"; // Ẩn nút chuông
-
-          var contributeBtn = document.querySelector(".btn.btn-primary.contribute-btn");
-          if (contributeBtn) {
-            contributeBtn.style.display = "none";
-          }
-        }
+    document.getElementById('logoutBtn').addEventListener('click', function () {
+      fetch('/api/logout', {
+        method: 'POST',
+        credentials: 'include' // Gửi cookie kèm theo nếu bạn dùng session
       })
-      .catch(error => console.error("Lỗi kiểm tra đăng nhập:", error));
+        .then(response => {
+          if (response.ok) {
+            // Sau khi logout thành công, chuyển hướng về trang đăng nhập hoặc trang chính
+            window.location.href = '/'; // Hoặc '/login.html' tùy bạn
+          } else {
+            alert('Đăng xuất thất bại!');
+          }
+        })
+        .catch(error => {
+          console.error('Lỗi khi gọi API logout:', error);
+        });
+    });
+  </script>
 
-// Khi nhấn nút Đăng nhập, chuyển hướng về trang /login
-var loginBtn = document.getElementById("loginBtn");
-if (loginBtn) {
-  loginBtn.addEventListener("click", function () {
-    window.location.href = '/login'; // Chuyển hướng đến trang /login
-  });
-}
-  });
-</script>
-    <!-- Full Notification Panel -->
-    <div class="js-notification-panel" id="jsNotificationPanel">
-        <div class="js-notification-panel-header">
-            <h3 class="js-notification-panel-title">
-                <i class="bi bi-bell-fill"></i>
-                Tất cả thông báo
-            </h3>
-            <button class="js-close-panel" id="jsClosePanel">
-                <i class="bi bi-x-lg"></i>
-            </button>
-        </div>
-        
-        <!-- Filter tabs -->
-        <div class="js-filter-tabs">
-            <button class="js-filter-tab active" data-filter="all">Tất cả</button>
-            <button class="js-filter-tab" data-filter="comment">Bình luận</button>
-            <button class="js-filter-tab" data-filter="like">Thích</button>
-            <button class="js-filter-tab" data-filter="mention">Nhắc đến</button>
-            <button class="js-filter-tab" data-filter="system">Hệ thống</button>
-        </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Kiểm tra trạng thái đăng nhập qua API
+      fetch("/api/check-login")
+        .then(response => response.json())
+        .then(data => {
+          if (data.loggedIn) {
+            // Nếu đã đăng nhập, hiển thị nút Đăng xuất, Notification Container và nút chuông
+            document.getElementById("logoutBtn").style.display = "block";
+            document.getElementById("loginBtn").style.display = "none";
+            document.querySelector(".js-notification-container").style.display = "block";
+            document.getElementById("jsNotificationBell").style.display = "block"; // Hiển thị nút chuông
+          } else {
+            // Nếu chưa đăng nhập, hiển thị nút Đăng nhập, ẩn thông báo và nút chuông
+            document.getElementById("loginBtn").style.display = "block";
+            document.getElementById("logoutBtn").style.display = "none";
+            document.querySelector(".js-notification-container").style.display = "none";
+            document.getElementById("jsNotificationBell").style.display = "none"; // Ẩn nút chuông
 
-        <!-- Notification list -->
-        <div class="js-panel-notification-list" id="jsPanelNotificationList">
-            <!-- Dynamic content will be inserted here -->
-        </div>
+            var contributeBtn = document.querySelector(".btn.btn-primary.contribute-btn");
+            if (contributeBtn) {
+              contributeBtn.style.display = "none";
+            }
+          }
+        })
+        .catch(error => console.error("Lỗi kiểm tra đăng nhập:", error));
+
+      // Khi nhấn nút Đăng nhập, chuyển hướng về trang /login
+      var loginBtn = document.getElementById("loginBtn");
+      if (loginBtn) {
+        loginBtn.addEventListener("click", function () {
+          window.location.href = '/login'; // Chuyển hướng đến trang /login
+        });
+      }
+    });
+  </script>
+  <!-- Full Notification Panel -->
+  <div class="js-notification-panel" id="jsNotificationPanel">
+    <div class="js-notification-panel-header">
+      <h3 class="js-notification-panel-title">
+        <i class="bi bi-bell-fill"></i>
+        Tất cả thông báo
+      </h3>
+      <button class="js-close-panel" id="jsClosePanel">
+        <i class="bi bi-x-lg"></i>
+      </button>
     </div>
 
-    <!-- Notification template (Đã đảo ngược thứ tự) -->
-<!-- Cập nhật thứ tự các phần tử trong template -->
-<template id="jsNotificationTemplate">
+    <!-- Filter tabs -->
+    <div class="js-filter-tabs">
+      <button class="js-filter-tab active" data-filter="all">Tất cả</button>
+      <button class="js-filter-tab" data-filter="comment">Bình luận</button>
+      <button class="js-filter-tab" data-filter="like">Thích</button>
+      <button class="js-filter-tab" data-filter="mention">Nhắc đến</button>
+      <button class="js-filter-tab" data-filter="system">Hệ thống</button>
+    </div>
+
+    <!-- Notification list -->
+    <div class="js-panel-notification-list" id="jsPanelNotificationList">
+      <!-- Dynamic content will be inserted here -->
+    </div>
+  </div>
+
+  <!-- Notification template (Đã đảo ngược thứ tự) -->
+  <!-- Cập nhật thứ tự các phần tử trong template -->
+  <template id="jsNotificationTemplate">
     <div class="js-notification-item js-unread" data-type="">
-        <!-- Icon loại thông báo lên đầu -->
-        <div class="js-notification-type">
-            <i class="bi"></i>
-        </div>
-        
-        <!-- Avatar người dùng -->
-        <img class="js-user-avatar" src="" alt="User avatar">
-        
-        <!-- Nội dung thông báo -->
-        <div class="js-notification-content">
-            <div class="js-interaction-text">
-                <span class="js-user-name"></span>
-                <span class="js-action-text"></span>
-                <span class="js-interaction-with"></span>
-            </div>
-            <p class="js-notification-text">
-                <a href="#" class="js-post-link"></a>
-            </p>
-            <div class="js-notification-time">
-                <i class="bi bi-clock"></i>
-                <span class="js-time-text"></span>
-            </div>
-        </div>
-        
-        <!-- Badge unread -->
-        <div class="js-unread-badge"></div>
-    </div>
-</template>
+      <!-- Icon loại thông báo lên đầu -->
+      <div class="js-notification-type">
+        <i class="bi"></i>
+      </div>
 
-<!-- Tương tự cho panel notification template -->
-<template id="jsPanelNotificationTemplate">
+      <!-- Avatar người dùng -->
+      <img class="js-user-avatar" src="" alt="User avatar">
+
+      <!-- Nội dung thông báo -->
+      <div class="js-notification-content">
+        <div class="js-interaction-text">
+          <span class="js-user-name"></span>
+          <span class="js-action-text"></span>
+          <span class="js-interaction-with"></span>
+        </div>
+        <p class="js-notification-text">
+          <a href="#" class="js-post-link"></a>
+        </p>
+        <div class="js-notification-time">
+          <i class="bi bi-clock"></i>
+          <span class="js-time-text"></span>
+        </div>
+      </div>
+
+      <!-- Badge unread -->
+      <div class="js-unread-badge"></div>
+    </div>
+  </template>
+
+  <!-- Tương tự cho panel notification template -->
+  <template id="jsPanelNotificationTemplate">
     <div class="js-panel-notification-item js-unread" data-type="">
-        <div class="js-notification-type">
-            <i class="bi"></i>
-        </div>
-        
-        <img class="js-user-avatar" src="" alt="User avatar">
-        
-        <div class="js-notification-content">
-            <div class="js-interaction-text">
-                <span class="js-user-name"></span>
-                <span class="js-action-text"></span>
-                <span class="js-interaction-with"></span>
-            </div>
-            <p class="js-notification-text">
-                <a href="#" class="js-post-link"></a>
-            </p>
-            <div class="js-notification-time">
-                <i class="bi bi-clock"></i>
-                <span class="js-time-text"></span>
-            </div>
-            <div class="js-panel-notification-actions"></div>
-        </div>
-        
-        <div class="js-unread-badge"></div>
-        <button class="js-delete-btn" title="Xóa thông báo">
-            <i class="bi bi-x"></i>
-        </button>
-    </div>
-</template>
-    <!-- Panel Notification template (Đã đảo ngược thứ tự) -->
-    <template id="jsPanelNotificationTemplate">
-        <div class="js-panel-notification-item js-unread" data-type="">
-            <img class="js-user-avatar" src="" alt="User avatar">
-            <div class="js-notification-content">
-                <div class="js-interaction-text">
-                    <span class="js-user-name"></span>
-                    <span class="js-action-text"></span>
-                    <span class="js-interaction-with"></span>
-                </div>
-                <p class="js-notification-text">
-                    <a href="#" class="js-post-link"></a>
-                </p>
-                <div class="js-notification-time">
-                    <i class="bi bi-clock"></i>
-                    <span class="js-time-text"></span>
-                </div>
-                <div class="js-panel-notification-actions"></div>
-            </div>
-            <div class="js-notification-type">
-                <i class="bi"></i>
-            </div>
-            <div class="js-unread-badge"></div>
-            <button class="js-delete-btn" title="Xóa thông báo">
-                <i class="bi bi-x"></i>
-            </button>
-        </div>
-    </template>
+      <div class="js-notification-type">
+        <i class="bi"></i>
+      </div>
 
-    <!-- Modal for system update details -->
-    <div class="modal fade" id="jsUpdateDetailsModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Thay đổi trong bản cập nhật</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="jsUpdateDetailsContent">
-                    <!-- Update details will be inserted here -->
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Đóng</button>
-                </div>
-            </div>
+      <img class="js-user-avatar" src="" alt="User avatar">
+
+      <div class="js-notification-content">
+        <div class="js-interaction-text">
+          <span class="js-user-name"></span>
+          <span class="js-action-text"></span>
+          <span class="js-interaction-with"></span>
         </div>
+        <p class="js-notification-text">
+          <a href="#" class="js-post-link"></a>
+        </p>
+        <div class="js-notification-time">
+          <i class="bi bi-clock"></i>
+          <span class="js-time-text"></span>
+        </div>
+        <div class="js-panel-notification-actions"></div>
+      </div>
+
+      <div class="js-unread-badge"></div>
+      <button class="js-delete-btn" title="Xóa thông báo">
+        <i class="bi bi-x"></i>
+      </button>
     </div>
-<template id="jsEmptyNotificationTemplate">
+  </template>
+  <!-- Panel Notification template (Đã đảo ngược thứ tự) -->
+  <template id="jsPanelNotificationTemplate">
+    <div class="js-panel-notification-item js-unread" data-type="">
+      <img class="js-user-avatar" src="" alt="User avatar">
+      <div class="js-notification-content">
+        <div class="js-interaction-text">
+          <span class="js-user-name"></span>
+          <span class="js-action-text"></span>
+          <span class="js-interaction-with"></span>
+        </div>
+        <p class="js-notification-text">
+          <a href="#" class="js-post-link"></a>
+        </p>
+        <div class="js-notification-time">
+          <i class="bi bi-clock"></i>
+          <span class="js-time-text"></span>
+        </div>
+        <div class="js-panel-notification-actions"></div>
+      </div>
+      <div class="js-notification-type">
+        <i class="bi"></i>
+      </div>
+      <div class="js-unread-badge"></div>
+      <button class="js-delete-btn" title="Xóa thông báo">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
+  </template>
+
+  <!-- Modal for system update details -->
+  <div class="modal fade" id="jsUpdateDetailsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Thay đổi trong bản cập nhật</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="jsUpdateDetailsContent">
+          <!-- Update details will be inserted here -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Đóng</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <template id="jsEmptyNotificationTemplate">
     <div class="js-notification-empty">
-        <div class="js-notification-empty-icon">
-            <i class="bi bi-bell"></i>
-        </div>
-        <div class="js-notification-empty-text">Không có thông báo</div>
-        <div class="js-notification-empty-subtext">Chúng tôi sẽ thông báo cho bạn khi có cập nhật mới</div>
+      <div class="js-notification-empty-icon">
+        <i class="bi bi-bell"></i>
+      </div>
+      <div class="js-notification-empty-text">Không có thông báo</div>
+      <div class="js-notification-empty-subtext">Chúng tôi sẽ thông báo cho bạn khi có cập nhật mới</div>
     </div>
-</template>
+  </template>
 
-<template id="jsEmptyPanelNotificationTemplate">
+  <template id="jsEmptyPanelNotificationTemplate">
     <div class="js-panel-notification-empty">
-        <div class="js-panel-notification-empty-icon">
-            <i class="bi bi-bell"></i>
-        </div>
-        <div class="js-panel-notification-empty-text">Không có thông báo</div>
-        <div class="js-panel-notification-empty-subtext">Bạn đã xem tất cả thông báo của mình</div>
+      <div class="js-panel-notification-empty-icon">
+        <i class="bi bi-bell"></i>
+      </div>
+      <div class="js-panel-notification-empty-text">Không có thông báo</div>
+      <div class="js-panel-notification-empty-subtext">Bạn đã xem tất cả thông báo của mình</div>
     </div>
-</template>
+  </template>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
     // Inject CSS styles
     function injectStyles() {
-        const style = document.createElement('style');
-        style.textContent = `
+      const style = document.createElement('style');
+      style.textContent = `
             :root {
                 --js-primary-color: #6366f1;
                 --js-secondary-color: #8b5cf6;
@@ -1633,47 +1664,47 @@ if (loginBtn) {
         }
 
         `;
-        document.head.appendChild(style);
+      document.head.appendChild(style);
     }
 
     // Notification types configuration
     const notificationTypes = {
-        comment: { 
-            icon: 'bi-chat-dots', 
-            class: 'js-type-comment',
-            actionBtn: {
-                text: 'Phản hồi',
-                icon: 'bi-reply',
-                class: 'primary'
-            }
-        },
-        like: { 
-            icon: 'bi-heart-fill', 
-            class: 'js-type-like',
-            actionBtn: {
-                text: 'Xem bài viết',
-                icon: 'bi-eye',
-                class: 'secondary'
-            }
-        },
-        mention: { 
-            icon: 'bi-at', 
-            class: 'js-type-mention',
-            actionBtn: {
-                text: 'Xem chi tiết',
-                icon: 'bi-arrow-right',
-                class: 'secondary'
-            }
-        },
-        system: { 
-            icon: 'bi-info-circle', 
-            class: 'js-type-system',
-            actionBtn: {
-                text: 'Xem thêm',
-                icon: 'bi-chevron-right',
-                class: 'secondary'
-            }
+      comment: {
+        icon: 'bi-chat-dots',
+        class: 'js-type-comment',
+        actionBtn: {
+          text: 'Phản hồi',
+          icon: 'bi-reply',
+          class: 'primary'
         }
+      },
+      like: {
+        icon: 'bi-heart-fill',
+        class: 'js-type-like',
+        actionBtn: {
+          text: 'Xem bài viết',
+          icon: 'bi-eye',
+          class: 'secondary'
+        }
+      },
+      mention: {
+        icon: 'bi-at',
+        class: 'js-type-mention',
+        actionBtn: {
+          text: 'Xem chi tiết',
+          icon: 'bi-arrow-right',
+          class: 'secondary'
+        }
+      },
+      system: {
+        icon: 'bi-info-circle',
+        class: 'js-type-system',
+        actionBtn: {
+          text: 'Xem thêm',
+          icon: 'bi-chevron-right',
+          class: 'secondary'
+        }
+      }
     };
 
     // DOM elements
@@ -1693,358 +1724,358 @@ if (loginBtn) {
 
     // Fetch notifications from backend
     async function fetchNotifications(filter = 'all') {
-        const url = filter === 'all' ? '/api/notifications' : `/api/notifications?type=${filter}`;
-        try {
-            const response = await fetch(url);
-            if (!response.ok) throw new Error('Failed to fetch notifications');
-            return await response.json();
-        } catch (error) {
-            console.error('Error fetching notifications:', error);
-            return [];
-        }
+      const url = filter === 'all' ? '/api/notifications' : `/api/notifications?type=${filter}`;
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Failed to fetch notifications');
+        return await response.json();
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+        return [];
+      }
     }
 
     // Toggle notification dropdown
     notificationBell.addEventListener('click', async (e) => {
-        e.stopPropagation();
-        notificationDropdown.classList.toggle('show');
-        
-        document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
-            if (menu !== notificationDropdown) {
-                menu.classList.remove('show');
-            }
-        });
-        
-        if (notificationDropdown.classList.contains('show')) {
-            await renderDropdownNotifications(document.querySelector('.js-filter-tab.active').dataset.filter);
+      e.stopPropagation();
+      notificationDropdown.classList.toggle('show');
+
+      document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+        if (menu !== notificationDropdown) {
+          menu.classList.remove('show');
         }
+      });
+
+      if (notificationDropdown.classList.contains('show')) {
+        await renderDropdownNotifications(document.querySelector('.js-filter-tab.active').dataset.filter);
+      }
     });
 
     // Close dropdown when clicking outside
     document.addEventListener('click', (e) => {
-        if (!notificationBell.contains(e.target) && !notificationDropdown.contains(e.target)) {
-            notificationDropdown.classList.remove('show');
-        }
+      if (!notificationBell.contains(e.target) && !notificationDropdown.contains(e.target)) {
+        notificationDropdown.classList.remove('show');
+      }
     });
 
     // View all notifications
     viewAllBtn.addEventListener('click', async () => {
-        notificationDropdown.classList.remove('show');
-        notificationPanel.classList.add('show');
-        document.body.classList.add('notification-panel-open');
-        await renderPanelNotifications('all');
+      notificationDropdown.classList.remove('show');
+      notificationPanel.classList.add('show');
+      document.body.classList.add('notification-panel-open');
+      await renderPanelNotifications('all');
     });
 
     // Close panel
     closePanelBtn.addEventListener('click', () => {
-        notificationPanel.classList.remove('show');
-        document.body.classList.remove('notification-panel-open');
+      notificationPanel.classList.remove('show');
+      document.body.classList.remove('notification-panel-open');
     });
 
     // Mark all as read
     markAllReadBtn.addEventListener('click', async () => {
-        await markAllAsRead();
+      await markAllAsRead();
     });
 
     // Render notifications in dropdown
-async function renderDropdownNotifications(filter = 'all') {
-    notificationList.innerHTML = '';
-    const notifications = await fetchNotifications(filter);
-    const recentNotifications = notifications.slice(0, 5);
+    async function renderDropdownNotifications(filter = 'all') {
+      notificationList.innerHTML = '';
+      const notifications = await fetchNotifications(filter);
+      const recentNotifications = notifications.slice(0, 5);
 
-    if (recentNotifications.length === 0) {
+      if (recentNotifications.length === 0) {
         const emptyClone = emptyNotificationTemplate.content.cloneNode(true);
         notificationList.appendChild(emptyClone);
-    } else {
+      } else {
         recentNotifications.forEach(notification => {
-            const clone = notificationTemplate.content.cloneNode(true);
-            const item = clone.querySelector('.js-notification-item');
-            const avatar = clone.querySelector('.js-user-avatar');
-            const userName = clone.querySelector('.js-user-name');
-            const actionText = clone.querySelector('.js-action-text');
-            const interactionWith = clone.querySelector('.js-interaction-with');
-            const timeText = clone.querySelector('.js-time-text');
-            const postLink = clone.querySelector('.js-post-link');
-            const typeIcon = clone.querySelector('.js-notification-type i');
-            const typeBox = clone.querySelector('.js-notification-type');
-            const badge = clone.querySelector('.js-unread-badge');
-            
-            item.dataset.id = notification.id;
-            item.dataset.type = notification.type;
-            
-            // Thêm class system và điều chỉnh nội dung
-            if (notification.type === 'system') {
-                item.classList.add('js-system-notification');
-                actionText.textContent = notification.action;
-            } else {
-                avatar.src = notification.avatar || 'https://i.pravatar.cc/80';
-                avatar.alt = notification.name || 'User';
-                userName.textContent = notification.name || 'Unknown';
-                actionText.textContent = ` ${notification.action} `;
-                interactionWith.textContent = notification.interaction || '';
-                postLink.textContent = notification.post || 'No title';
-                postLink.href = `#${notification.id}`;
-            }
-            
-            timeText.textContent = notification.time;
-            
-            const typeConfig = notificationTypes[notification.type];
-            typeIcon.className = `bi ${typeConfig.icon}`;
-            typeBox.className = `js-notification-type ${typeConfig.class}`;
-            
-            if (!notification.unread) {
-                item.classList.remove('js-unread');
-                badge.remove();
-            }
-            
-            item.addEventListener('click', async () => {
-                await markAsRead(notification.id);
-                await handleNotificationAction(notification);
-            });
-            
-            notificationList.appendChild(clone);
+          const clone = notificationTemplate.content.cloneNode(true);
+          const item = clone.querySelector('.js-notification-item');
+          const avatar = clone.querySelector('.js-user-avatar');
+          const userName = clone.querySelector('.js-user-name');
+          const actionText = clone.querySelector('.js-action-text');
+          const interactionWith = clone.querySelector('.js-interaction-with');
+          const timeText = clone.querySelector('.js-time-text');
+          const postLink = clone.querySelector('.js-post-link');
+          const typeIcon = clone.querySelector('.js-notification-type i');
+          const typeBox = clone.querySelector('.js-notification-type');
+          const badge = clone.querySelector('.js-unread-badge');
+
+          item.dataset.id = notification.id;
+          item.dataset.type = notification.type;
+
+          // Thêm class system và điều chỉnh nội dung
+          if (notification.type === 'system') {
+            item.classList.add('js-system-notification');
+            actionText.textContent = notification.action;
+          } else {
+            avatar.src = notification.avatar || 'https://i.pravatar.cc/80';
+            avatar.alt = notification.name || 'User';
+            userName.textContent = notification.name || 'Unknown';
+            actionText.textContent = ` ${notification.action} `;
+            interactionWith.textContent = notification.interaction || '';
+            postLink.textContent = notification.post || 'No title';
+            postLink.href = `#${notification.id}`;
+          }
+
+          timeText.textContent = notification.time;
+
+          const typeConfig = notificationTypes[notification.type];
+          typeIcon.className = `bi ${typeConfig.icon}`;
+          typeBox.className = `js-notification-type ${typeConfig.class}`;
+
+          if (!notification.unread) {
+            item.classList.remove('js-unread');
+            badge.remove();
+          }
+
+          item.addEventListener('click', async () => {
+            await markAsRead(notification.id);
+            await handleNotificationAction(notification);
+          });
+
+          notificationList.appendChild(clone);
         });
+      }
+
+      updateBadgeCount(notifications);
     }
-    
-    updateBadgeCount(notifications);
-}
     // Handle responsive
     function handleResponsive() {
-        if (window.innerWidth <= 576) {
-            notificationDropdown.style.position = 'fixed';
-            notificationDropdown.style.bottom = '0';
-            notificationDropdown.style.top = 'auto';
-        } else {
-            notificationDropdown.style.position = 'absolute';
-            notificationDropdown.style.bottom = '';
-            notificationDropdown.style.top = '100%';
-        }
+      if (window.innerWidth <= 576) {
+        notificationDropdown.style.position = 'fixed';
+        notificationDropdown.style.bottom = '0';
+        notificationDropdown.style.top = 'auto';
+      } else {
+        notificationDropdown.style.position = 'absolute';
+        notificationDropdown.style.bottom = '';
+        notificationDropdown.style.top = '100%';
+      }
     }
 
     // Render notifications in panel
-async function renderPanelNotifications(filter = 'all') {
-    panelNotificationList.innerHTML = '';
-    const notifications = await fetchNotifications(filter);
-    
-    if (notifications.length === 0) {
+    async function renderPanelNotifications(filter = 'all') {
+      panelNotificationList.innerHTML = '';
+      const notifications = await fetchNotifications(filter);
+
+      if (notifications.length === 0) {
         const emptyClone = emptyPanelNotificationTemplate.content.cloneNode(true);
         panelNotificationList.appendChild(emptyClone);
-    } else {
+      } else {
         notifications.forEach(notification => {
-            const clone = panelNotificationTemplate.content.cloneNode(true);
-            const item = clone.querySelector('.js-panel-notification-item');
-            const avatar = clone.querySelector('.js-user-avatar');
-            const userName = clone.querySelector('.js-user-name');
-            const actionText = clone.querySelector('.js-action-text');
-            const interactionWith = clone.querySelector('.js-interaction-with');
-            const timeText = clone.querySelector('.js-time-text');
-            const postLink = clone.querySelector('.js-post-link');
-            const typeIcon = clone.querySelector('.js-notification-type i');
-            const typeBox = clone.querySelector('.js-notification-type');
-            const badge = clone.querySelector('.js-unread-badge');
-            const actionsContainer = clone.querySelector('.js-panel-notification-actions');
-            const deleteBtn = clone.querySelector('.js-delete-btn');
-            
-            item.dataset.id = notification.id;
-            item.dataset.type = notification.type;
-            
-            // Xử lý thông báo hệ thống
-            if (notification.type === 'system') {
-                // Ẩn hoàn toàn các phần tử không cần thiết
-                avatar.remove();
-                userName.remove();
-                postLink.remove();
-                interactionWith.remove();
-                
-                // Hiển thị toàn bộ nội dung trong actionText
-                actionText.textContent = notification.action;
-                actionText.style.marginLeft = '0'; // Loại bỏ margin nếu có
-                
-                // Điều chỉnh CSS cho item
-                item.style.alignItems = 'center';
-                item.style.paddingLeft = '12px'; // Giảm padding nếu cần
-            } else {
-                // Xử lý thông báo thông thường
-                avatar.src = notification.avatar || 'https://i.pravatar.cc/80';
-                avatar.alt = notification.name || 'User';
-                userName.textContent = notification.name || 'Unknown';
-                actionText.textContent = ` ${notification.action} `;
-                interactionWith.textContent = notification.interaction || '';
-                postLink.textContent = notification.post || 'No title';
-                postLink.href = `#${notification.id}`;
-            }
-            
-            timeText.textContent = notification.time;
-            
-            const typeConfig = notificationTypes[notification.type];
-            typeIcon.className = `bi ${typeConfig.icon}`;
-            typeBox.className = `js-notification-type ${typeConfig.class}`;
-            
-            if (typeConfig.actionBtn) {
-                const actionBtn = document.createElement('button');
-                actionBtn.className = `js-action-btn ${typeConfig.actionBtn.class}`;
-                actionBtn.innerHTML = `
+          const clone = panelNotificationTemplate.content.cloneNode(true);
+          const item = clone.querySelector('.js-panel-notification-item');
+          const avatar = clone.querySelector('.js-user-avatar');
+          const userName = clone.querySelector('.js-user-name');
+          const actionText = clone.querySelector('.js-action-text');
+          const interactionWith = clone.querySelector('.js-interaction-with');
+          const timeText = clone.querySelector('.js-time-text');
+          const postLink = clone.querySelector('.js-post-link');
+          const typeIcon = clone.querySelector('.js-notification-type i');
+          const typeBox = clone.querySelector('.js-notification-type');
+          const badge = clone.querySelector('.js-unread-badge');
+          const actionsContainer = clone.querySelector('.js-panel-notification-actions');
+          const deleteBtn = clone.querySelector('.js-delete-btn');
+
+          item.dataset.id = notification.id;
+          item.dataset.type = notification.type;
+
+          // Xử lý thông báo hệ thống
+          if (notification.type === 'system') {
+            // Ẩn hoàn toàn các phần tử không cần thiết
+            avatar.remove();
+            userName.remove();
+            postLink.remove();
+            interactionWith.remove();
+
+            // Hiển thị toàn bộ nội dung trong actionText
+            actionText.textContent = notification.action;
+            actionText.style.marginLeft = '0'; // Loại bỏ margin nếu có
+
+            // Điều chỉnh CSS cho item
+            item.style.alignItems = 'center';
+            item.style.paddingLeft = '12px'; // Giảm padding nếu cần
+          } else {
+            // Xử lý thông báo thông thường
+            avatar.src = notification.avatar || 'https://i.pravatar.cc/80';
+            avatar.alt = notification.name || 'User';
+            userName.textContent = notification.name || 'Unknown';
+            actionText.textContent = ` ${notification.action} `;
+            interactionWith.textContent = notification.interaction || '';
+            postLink.textContent = notification.post || 'No title';
+            postLink.href = `#${notification.id}`;
+          }
+
+          timeText.textContent = notification.time;
+
+          const typeConfig = notificationTypes[notification.type];
+          typeIcon.className = `bi ${typeConfig.icon}`;
+          typeBox.className = `js-notification-type ${typeConfig.class}`;
+
+          if (typeConfig.actionBtn) {
+            const actionBtn = document.createElement('button');
+            actionBtn.className = `js-action-btn ${typeConfig.actionBtn.class}`;
+            actionBtn.innerHTML = `
                     <i class="bi ${typeConfig.actionBtn.icon}"></i>
                     ${typeConfig.actionBtn.text}
                 `;
-                actionsContainer.appendChild(actionBtn);
-                
-                actionBtn.addEventListener('click', async (e) => {
-                    e.stopPropagation();
-                    await handleNotificationAction(notification);
-                });
-            }
-            
-            if (!notification.unread) {
-                item.classList.remove('js-unread');
-                badge.remove();
-            }
-            
-            deleteBtn.addEventListener('click', async (e) => {
-                e.stopPropagation();
-                await deleteNotification(notification.id);
+            actionsContainer.appendChild(actionBtn);
+
+            actionBtn.addEventListener('click', async (e) => {
+              e.stopPropagation();
+              await handleNotificationAction(notification);
             });
-            
-            item.addEventListener('click', async () => {
-                await markAsRead(notification.id);
-            });
-            
-            panelNotificationList.appendChild(clone);
+          }
+
+          if (!notification.unread) {
+            item.classList.remove('js-unread');
+            badge.remove();
+          }
+
+          deleteBtn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            await deleteNotification(notification.id);
+          });
+
+          item.addEventListener('click', async () => {
+            await markAsRead(notification.id);
+          });
+
+          panelNotificationList.appendChild(clone);
         });
+      }
+
+      updateBadgeCount(notifications);
     }
-    
-    updateBadgeCount(notifications);
-}
 
     // Handle notification actions
     async function handleNotificationAction(notification) {
-        switch (notification.type) {
-            case 'comment':
-                alert(`Phản hồi bình luận từ ${notification.name}`);
-                break;
-            case 'like':
-                alert(`Xem bài viết: ${notification.post}`);
-                break;
-            case 'mention':
-                alert(`Xem chi tiết nhắc đến trong ${notification.post}`);
-                break;
-            case 'system':
-                const response = await fetch(`/api/notifications/${notification.id}/update-details`);
-                if (response.ok) {
-                    const updateDetails = await response.json();
-                    showUpdateDetails(updateDetails);
-                } else {
-                    alert(`Thông báo hệ thống: ${notification.post}`);
-                }
-                break;
-        }
+      switch (notification.type) {
+        case 'comment':
+          alert(`Phản hồi bình luận từ ${notification.name}`);
+          break;
+        case 'like':
+          alert(`Xem bài viết: ${notification.post}`);
+          break;
+        case 'mention':
+          alert(`Xem chi tiết nhắc đến trong ${notification.post}`);
+          break;
+        case 'system':
+          const response = await fetch(`/api/notifications/${notification.id}/update-details`);
+          if (response.ok) {
+            const updateDetails = await response.json();
+            showUpdateDetails(updateDetails);
+          } else {
+            alert(`Thông báo hệ thống: ${notification.post}`);
+          }
+          break;
+      }
     }
 
     // Show update details
     function showUpdateDetails(updateDetails) {
-        const modal = new bootstrap.Modal(document.getElementById('jsUpdateDetailsModal'));
-        const content = document.getElementById('jsUpdateDetailsContent');
-        
-        let html = `
+      const modal = new bootstrap.Modal(document.getElementById('jsUpdateDetailsModal'));
+      const content = document.getElementById('jsUpdateDetailsContent');
+
+      let html = `
             <div class="mb-3">
                 <h6 class="fw-bold">Phiên bản ${updateDetails.version}</h6>
                 <small class="text-muted">Ngày cập nhật: ${updateDetails.date}</small>
             </div>
             <ul class="js-update-details-list">
         `;
-        
-        updateDetails.changes.forEach(change => {
-            const typeClass = `js-update-${change.type}`;
-            html += `<li><span class="${typeClass}">${change.text}</span></li>`;
-        });
-        
-        html += `</ul>`;
-        content.innerHTML = html;
-        
-        modal.show();
+
+      updateDetails.changes.forEach(change => {
+        const typeClass = `js-update-${change.type}`;
+        html += `<li><span class="${typeClass}">${change.text}</span></li>`;
+      });
+
+      html += `</ul>`;
+      content.innerHTML = html;
+
+      modal.show();
     }
 
     // Mark notification as read
     async function markAsRead(id) {
-        try {
-            const response = await fetch(`/api/notifications/${id}/read`, { method: 'POST' });
-            if (!response.ok) throw new Error('Failed to mark as read');
-            const currentFilter = document.querySelector('.js-filter-tab.active').dataset.filter;
-            await renderDropdownNotifications(currentFilter);
-            if (notificationPanel.classList.contains('show')) {
-                await renderPanelNotifications(currentFilter);
-            }
-        } catch (error) {
-            console.error('Error marking notification as read:', error);
+      try {
+        const response = await fetch(`/api/notifications/${id}/read`, { method: 'POST' });
+        if (!response.ok) throw new Error('Failed to mark as read');
+        const currentFilter = document.querySelector('.js-filter-tab.active').dataset.filter;
+        await renderDropdownNotifications(currentFilter);
+        if (notificationPanel.classList.contains('show')) {
+          await renderPanelNotifications(currentFilter);
         }
+      } catch (error) {
+        console.error('Error marking notification as read:', error);
+      }
     }
 
     // Delete notification
     async function deleteNotification(id) {
-        try {
-            const response = await fetch(`/api/notifications/${id}`, { method: 'DELETE' });
-            if (!response.ok) throw new Error('Failed to delete notification');
-            const currentFilter = document.querySelector('.js-filter-tab.active').dataset.filter;
-            await renderDropdownNotifications(currentFilter);
-            await renderPanelNotifications(currentFilter);
-        } catch (error) {
-            console.error('Error deleting notification:', error);
-        }
+      try {
+        const response = await fetch(`/api/notifications/${id}`, { method: 'DELETE' });
+        if (!response.ok) throw new Error('Failed to delete notification');
+        const currentFilter = document.querySelector('.js-filter-tab.active').dataset.filter;
+        await renderDropdownNotifications(currentFilter);
+        await renderPanelNotifications(currentFilter);
+      } catch (error) {
+        console.error('Error deleting notification:', error);
+      }
     }
 
     // Mark all as read
     async function markAllAsRead() {
-        try {
-            const response = await fetch('/api/notifications/read-all', { method: 'POST' });
-            if (!response.ok) throw new Error('Failed to mark all as read');
-            const currentFilter = document.querySelector('.js-filter-tab.active').dataset.filter;
-            await renderDropdownNotifications(currentFilter);
-            if (notificationPanel.classList.contains('show')) {
-                await renderPanelNotifications(currentFilter);
-            }
-        } catch (error) {
-            console.error('Error marking all as read:', error);
+      try {
+        const response = await fetch('/api/notifications/read-all', { method: 'POST' });
+        if (!response.ok) throw new Error('Failed to mark all as read');
+        const currentFilter = document.querySelector('.js-filter-tab.active').dataset.filter;
+        await renderDropdownNotifications(currentFilter);
+        if (notificationPanel.classList.contains('show')) {
+          await renderPanelNotifications(currentFilter);
         }
+      } catch (error) {
+        console.error('Error marking all as read:', error);
+      }
     }
 
     // Update badge count
     function updateBadgeCount(notifications) {
-        const count = notifications.filter(n => n.unread).length;
-        bellBadge.textContent = count;
-        bellBadge.style.display = count === 0 ? 'none' : 'flex';
+      const count = notifications.filter(n => n.unread).length;
+      bellBadge.textContent = count;
+      bellBadge.style.display = count === 0 ? 'none' : 'flex';
     }
 
     // Initialize
     async function init() {
-        injectStyles();
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        document.body.setAttribute('data-bs-theme', savedTheme);
-        
-        document.querySelectorAll('.js-filter-tab').forEach(tab => {
-            tab.addEventListener('click', async () => {
-                const container = tab.closest('.js-filter-tabs');
-                container.querySelectorAll('.js-filter-tab').forEach(t => {
-                    t.classList.remove('active');
-                });
-                tab.classList.add('active');
-                
-                if (container.parentElement === notificationDropdown) {
-                    await renderDropdownNotifications(tab.dataset.filter);
-                } else {
-                    await renderPanelNotifications(tab.dataset.filter);
-                }
-            });
+      injectStyles();
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.body.setAttribute('data-bs-theme', savedTheme);
+
+      document.querySelectorAll('.js-filter-tab').forEach(tab => {
+        tab.addEventListener('click', async () => {
+          const container = tab.closest('.js-filter-tabs');
+          container.querySelectorAll('.js-filter-tab').forEach(t => {
+            t.classList.remove('active');
+          });
+          tab.classList.add('active');
+
+          if (container.parentElement === notificationDropdown) {
+            await renderDropdownNotifications(tab.dataset.filter);
+          } else {
+            await renderPanelNotifications(tab.dataset.filter);
+          }
         });
-        
-        window.addEventListener('resize', handleResponsive);
-        handleResponsive();
-        
-        await renderDropdownNotifications('all');
+      });
+
+      window.addEventListener('resize', handleResponsive);
+      handleResponsive();
+
+      await renderDropdownNotifications('all');
     }
 
     init();
-</script>
-<style>
+  </script>
+  <style>
     /* Định dạng cho nút nav */
     .nav-link {
       position: relative;
@@ -2139,7 +2170,8 @@ async function renderPanelNotifications(filter = 'all') {
                     <span>Design by Nguyen Ngoc Truong</span>
                   </div>
                   <div class="social-links">
-                    <a href="https://www.facebook.com/profile.php?id=100093400989542" target="_blank" aria-label="Facebook">
+                    <a href="https://www.facebook.com/profile.php?id=100093400989542" target="_blank"
+                      aria-label="Facebook">
                       <i class="bi bi-facebook"></i>
                     </a>
                     <a href="https://github.com/truongqb05x" target="_blank" aria-label="GitHub">
@@ -2397,195 +2429,196 @@ async function renderPanelNotifications(filter = 'all') {
     <i class="bi bi-pencil-square"></i> Đóng góp đề thi
   </button>
 
-<!-- Modal Đóng góp Đề thi -->
-<div class="modal fade" id="contributeExamModal" data-bs-backdrop="false" tabindex="-1"
-  aria-labelledby="contributeExamModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
+  <!-- Modal Đóng góp Đề thi -->
+  <div class="modal fade" id="contributeExamModal" data-bs-backdrop="false" tabindex="-1"
+    aria-labelledby="contributeExamModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="contributeExamModalLabel">Đóng góp đề thi</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
         </div>
-      <div class="modal-body">
-        <!-- Thông báo -->
-        <div id="alertContainer">
-          <div id="successAlert" class="alert alert-success" role="alert" style="display: none;">
-            <i class="bi bi-check-circle-fill me-2"></i>Upload thành công!
-          </div>
-          <div id="errorAlert" class="alert alert-danger" role="alert" style="display: none;">
-            <i class="bi bi-exclamation-circle-fill me-2"></i><span id="errorMessage"></span>
-          </div>
-        </div>
-
-        <!-- Form upload -->
-        <form id="contributeExamForm" action="/api/upload_exam" method="POST" enctype="multipart/form-data">
-          <!-- Chọn trường -->
-          <div class="mb-4">
-            <label for="fieldSelect" class="form-label fw-bold">Trường đại học <span class="text-danger">*</span></label>
-            <select class="form-select" id="fieldSelect" name="field" required>
-              <option value="" disabled selected>Vui lòng chọn trường...</option>
-              <!-- Options sẽ được thêm bằng JavaScript -->
-            </select>
-            <div class="invalid-feedback">Vui lòng chọn trường đại học</div>
-          </div>
-
-          <!-- File upload section -->
-          <div class="mb-3">
-            <label class="form-label fw-bold">Tải lên file <span class="text-danger">*</span></label>
-            <div id="fileInputsContainer">
-              <div class="file-input-group mb-3">
-                <div class="d-flex align-items-center justify-content-between mb-2">
-                  <span class="text-muted">File 1</span>
-                  <button type="button" class="btn btn-link text-danger p-0 remove-file" disabled>
-                    <i class="bi bi-trash"></i>
-                  </button>
-                </div>
-                <div class="input-group">
-                  <input type="file" class="form-control" name="examFile[]" accept="*/*" required>
-                  <button class="btn btn-outline-secondary" type="button">
-                    <i class="bi bi-folder2-open"></i>
-                  </button>
-                </div>
-                <div class="form-text mt-1">Định dạng hỗ trợ: PDF, DOCX, JPG, PNG (Tối đa 10MB)</div>
-                <div class="invalid-feedback">Vui lòng chọn file</div>
-              </div>
+        <div class="modal-body">
+          <!-- Thông báo -->
+          <div id="alertContainer">
+            <div id="successAlert" class="alert alert-success" role="alert" style="display: none;">
+              <i class="bi bi-check-circle-fill me-2"></i>Upload thành công!
             </div>
-            
-            <button type="button" class="btn btn-outline-primary w-100" id="addFileInput">
-              <i class="bi bi-plus-circle me-2"></i>Thêm file
-            </button>
+            <div id="errorAlert" class="alert alert-danger" role="alert" style="display: none;">
+              <i class="bi bi-exclamation-circle-fill me-2"></i><span id="errorMessage"></span>
+            </div>
           </div>
-        </form>
-      </div>
-      <div class="modal-footer bg-light">
-        <button type="submit" form="contributeExamForm" class="btn btn-primary px-4">
-          <i class="bi bi-send me-2"></i>Gửi đóng góp
-        </button>
-        <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Đóng</button>
+
+          <!-- Form upload -->
+          <form id="contributeExamForm" action="/api/upload_exam" method="POST" enctype="multipart/form-data">
+            <!-- Chọn trường -->
+            <div class="mb-4">
+              <label for="fieldSelect" class="form-label fw-bold">Trường đại học <span
+                  class="text-danger">*</span></label>
+              <select class="form-select" id="fieldSelect" name="field" required>
+                <option value="" disabled selected>Vui lòng chọn trường...</option>
+                <!-- Options sẽ được thêm bằng JavaScript -->
+              </select>
+              <div class="invalid-feedback">Vui lòng chọn trường đại học</div>
+            </div>
+
+            <!-- File upload section -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">Tải lên file <span class="text-danger">*</span></label>
+              <div id="fileInputsContainer">
+                <div class="file-input-group mb-3">
+                  <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="text-muted">File 1</span>
+                    <button type="button" class="btn btn-link text-danger p-0 remove-file" disabled>
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                  <div class="input-group">
+                    <input type="file" class="form-control" name="examFile[]" accept="*/*" required>
+                    <button class="btn btn-outline-secondary" type="button">
+                      <i class="bi bi-folder2-open"></i>
+                    </button>
+                  </div>
+                  <div class="form-text mt-1">Định dạng hỗ trợ: PDF, DOCX, JPG, PNG (Tối đa 10MB)</div>
+                  <div class="invalid-feedback">Vui lòng chọn file</div>
+                </div>
+              </div>
+
+              <button type="button" class="btn btn-outline-primary w-100" id="addFileInput">
+                <i class="bi bi-plus-circle me-2"></i>Thêm file
+              </button>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer bg-light">
+          <button type="submit" form="contributeExamForm" class="btn btn-primary px-4">
+            <i class="bi bi-send me-2"></i>Gửi đóng góp
+          </button>
+          <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Đóng</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<style>
-.file-input-group {
-  border: 1px solid #dee2e6;
-  border-radius: 0.375rem;
-  padding: 1rem;
-  transition: border-color 0.15s ease-in-out;
-}
+  <style>
+    .file-input-group {
+      border: 1px solid #dee2e6;
+      border-radius: 0.375rem;
+      padding: 1rem;
+      transition: border-color 0.15s ease-in-out;
+    }
 
-.file-input-group:hover {
-  border-color: #86b7fe;
-}
+    .file-input-group:hover {
+      border-color: #86b7fe;
+    }
 
-.remove-file {
-  transition: opacity 0.2s ease-in-out;
-}
+    .remove-file {
+      transition: opacity 0.2s ease-in-out;
+    }
 
-.remove-file:not(:disabled):hover {
-  opacity: 0.75;
-}
+    .remove-file:not(:disabled):hover {
+      opacity: 0.75;
+    }
 
-.input-group button:hover {
-  background-color: #e9ecef;
-}
-</style>
+    .input-group button:hover {
+      background-color: #e9ecef;
+    }
+  </style>
   <!-- Script xử lý form và các chức năng khác -->
   <script>
     // Load danh sách trường từ API /api/schools
-document.addEventListener('DOMContentLoaded', function () {
-  var fieldSelect = document.getElementById('fieldSelect');
-  fetch('/api/schools')
-    .then(response => response.json())
-    .then(data => {
-      fieldSelect.innerHTML = '';
-      if (data.error) {
-        let errorOption = document.createElement('option');
-        errorOption.text = 'Lỗi khi tải trường';
-        fieldSelect.appendChild(errorOption);
-        triggerNotification('danger', 'Lỗi', 'Lỗi khi tải danh sách trường!');
-      } else {
-        let defaultOption = document.createElement('option');
-        defaultOption.text = 'Chọn trường của bạn';
-        defaultOption.selected = true;
-        defaultOption.value = ''; // Đảm bảo giá trị rỗng để kiểm tra
-        fieldSelect.appendChild(defaultOption);
-        data.forEach(function (school) {
-          let option = document.createElement('option');
-          option.value = school.id;
-          option.text = school.name + " (" + school.count + ")";
-          fieldSelect.appendChild(option);
+    document.addEventListener('DOMContentLoaded', function () {
+      var fieldSelect = document.getElementById('fieldSelect');
+      fetch('/api/schools')
+        .then(response => response.json())
+        .then(data => {
+          fieldSelect.innerHTML = '';
+          if (data.error) {
+            let errorOption = document.createElement('option');
+            errorOption.text = 'Lỗi khi tải trường';
+            fieldSelect.appendChild(errorOption);
+            triggerNotification('danger', 'Lỗi', 'Lỗi khi tải danh sách trường!');
+          } else {
+            let defaultOption = document.createElement('option');
+            defaultOption.text = 'Chọn trường của bạn';
+            defaultOption.selected = true;
+            defaultOption.value = ''; // Đảm bảo giá trị rỗng để kiểm tra
+            fieldSelect.appendChild(defaultOption);
+            data.forEach(function (school) {
+              let option = document.createElement('option');
+              option.value = school.id;
+              option.text = school.name + " (" + school.count + ")";
+              fieldSelect.appendChild(option);
+            });
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          fieldSelect.innerHTML = '<option>Lỗi khi tải trường</option>';
+          triggerNotification('danger', 'Lỗi', 'Có lỗi khi tải danh sách trường!');
         });
-      }
-    })
-    .catch(err => {
-      console.error(err);
-      fieldSelect.innerHTML = '<option>Lỗi khi tải trường</option>';
-      triggerNotification('danger', 'Lỗi', 'Có lỗi khi tải danh sách trường!');
     });
-});
 
-// Thêm input file mới
-document.getElementById('addFileInput').addEventListener('click', function () {
-  var fileGroup = document.createElement('div');
-  fileGroup.className = 'file-input-group mb-3';
+    // Thêm input file mới
+    document.getElementById('addFileInput').addEventListener('click', function () {
+      var fileGroup = document.createElement('div');
+      fileGroup.className = 'file-input-group mb-3';
 
-  var fileLabel = document.createElement('label');
-  fileLabel.className = 'form-label';
-  fileLabel.innerText = 'Tải file đề thi';
-  fileGroup.appendChild(fileLabel);
+      var fileLabel = document.createElement('label');
+      fileLabel.className = 'form-label';
+      fileLabel.innerText = 'Tải file đề thi';
+      fileGroup.appendChild(fileLabel);
 
-  var fileInput = document.createElement('input');
-  fileInput.type = 'file';
-  fileInput.className = 'form-control';
-  fileInput.name = 'examFile[]';
-  fileInput.accept = '*/*';
-  fileGroup.appendChild(fileInput);
+      var fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.className = 'form-control';
+      fileInput.name = 'examFile[]';
+      fileInput.accept = '*/*';
+      fileGroup.appendChild(fileInput);
 
-  document.getElementById('fileInputsContainer').appendChild(fileGroup);
-});
+      document.getElementById('fileInputsContainer').appendChild(fileGroup);
+    });
 
-// Xử lý submit form với kiểm tra đầy đủ
-document.getElementById('contributeExamForm').addEventListener('submit', function (e) {
-  e.preventDefault(); // Ngăn form submit mặc định
-  var form = this;
+    // Xử lý submit form với kiểm tra đầy đủ
+    document.getElementById('contributeExamForm').addEventListener('submit', function (e) {
+      e.preventDefault(); // Ngăn form submit mặc định
+      var form = this;
 
-  // Kiểm tra đã chọn trường chưa
-  var fieldSelect = document.getElementById('fieldSelect');
-  if (!fieldSelect.value) {
-    triggerNotification('danger', 'Chưa chọn trường', 'Vui lòng chọn trường của bạn trước khi tải lên!');
-    return;
-  }
+      // Kiểm tra đã chọn trường chưa
+      var fieldSelect = document.getElementById('fieldSelect');
+      if (!fieldSelect.value) {
+        triggerNotification('danger', 'Chưa chọn trường', 'Vui lòng chọn trường của bạn trước khi tải lên!');
+        return;
+      }
 
-  // Kiểm tra xem đã chọn file chưa
-  var fileInputs = document.getElementsByName('examFile[]');
-  var fileSelected = false;
-  for (var i = 0; i < fileInputs.length; i++) {
-    if (fileInputs[i].files.length > 0) {
-      fileSelected = true;
-      break;
-    }
-  }
-  if (!fileSelected) {
-    triggerNotification('danger', 'Chưa chọn file', 'Vui lòng chọn ít nhất một file để tải lên!');
-    return;
-  }
+      // Kiểm tra xem đã chọn file chưa
+      var fileInputs = document.getElementsByName('examFile[]');
+      var fileSelected = false;
+      for (var i = 0; i < fileInputs.length; i++) {
+        if (fileInputs[i].files.length > 0) {
+          fileSelected = true;
+          break;
+        }
+      }
+      if (!fileSelected) {
+        triggerNotification('danger', 'Chưa chọn file', 'Vui lòng chọn ít nhất một file để tải lên!');
+        return;
+      }
 
-  let formData = new FormData(form);
+      let formData = new FormData(form);
 
-  fetch(form.action, {
-    method: 'POST',
-    body: formData
-  })
-    .then(response => response.json())
-    .then(data => {
-      if (data.message) {
-        triggerNotification('success', 'Thành công', data.message);
-        // Reset form sau khi upload thành công
-        form.reset();
-        // Cập nhật lại container file với một input mặc định
-        document.getElementById('fileInputsContainer').innerHTML = `
+      fetch(form.action, {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.message) {
+            triggerNotification('success', 'Thành công', data.message);
+            // Reset form sau khi upload thành công
+            form.reset();
+            // Cập nhật lại container file với một input mặc định
+            document.getElementById('fileInputsContainer').innerHTML = `
           <div class="file-input-group mb-3">
             <label class="form-label">Tải file</label>
             <input type="file" class="form-control" name="examFile[]" accept="*/*">
@@ -2594,83 +2627,72 @@ document.getElementById('contributeExamForm').addEventListener('submit', functio
             </p>
           </div>
         `;
-      } else if (data.error) {
-        triggerNotification('danger', 'Lỗi', "Lỗi: " + data.error);
-      }
-    })
-    .catch(error => {
-      console.error(error);
-      triggerNotification('danger', 'Lỗi', 'Có lỗi xảy ra khi tải lên. Vui lòng thử lại!');
+          } else if (data.error) {
+            triggerNotification('danger', 'Lỗi', "Lỗi: " + data.error);
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          triggerNotification('danger', 'Lỗi', 'Có lỗi xảy ra khi tải lên. Vui lòng thử lại!');
+        });
     });
-});
   </script>
 
-<!-- Modal báo lỗi -->
-<div class="mr-modal-overlay" id="mr-modal" style="display: none;">
-  <div class="mr-modal-container">
-    <div class="mr-modal-header">
-      <h2 class="mr-modal-title">
-        <i class="fas fa-bug"></i>
-        Báo cáo sự cố
-      </h2>
-      <button class="mr-close-btn" onclick="mr_hideModal()">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-    <div class="mr-modal-content">
-      <form id="mr-reportForm" onsubmit="mr_handleSubmit(event)">
-        <!-- Hiển thị tên đề thi (readonly) -->
-        <div class="mr-input-group">
-          <input 
-            type="text" 
-            class="mr-form-input" 
-            placeholder=" " 
-            id="document_name"
-            value="Đề thi mặc định" 
-            readonly>
-          <label class="mr-form-label">Đề thi</label>
-        </div>
-        <!-- Input ẩn cho document_id -->
-        <input type="hidden" id="document_id" name="document_id" value="">
-        <!-- Input ẩn cho user_id (giả sử lấy từ biến currentUserId) -->
-        <input type="hidden" id="user_id" name="user_id" value="">
+  <!-- Modal báo lỗi -->
+  <div class="mr-modal-overlay" id="mr-modal" style="display: none;">
+    <div class="mr-modal-container">
+      <div class="mr-modal-header">
+        <h2 class="mr-modal-title">
+          <i class="fas fa-bug"></i>
+          Báo cáo sự cố
+        </h2>
+        <button class="mr-close-btn" onclick="mr_hideModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="mr-modal-content">
+        <form id="mr-reportForm" onsubmit="mr_handleSubmit(event)">
+          <!-- Hiển thị tên đề thi (readonly) -->
+          <div class="mr-input-group">
+            <input type="text" class="mr-form-input" placeholder=" " id="document_name" value="Đề thi mặc định"
+              readonly>
+            <label class="mr-form-label">Đề thi</label>
+          </div>
+          <!-- Input ẩn cho document_id -->
+          <input type="hidden" id="document_id" name="document_id" value="">
+          <!-- Input ẩn cho user_id (giả sử lấy từ biến currentUserId) -->
+          <input type="hidden" id="user_id" name="user_id" value="">
 
-        <!-- Nội dung báo cáo -->
-        <div class="mr-input-group">
-          <textarea 
-            class="mr-form-input" 
-            placeholder=" "
-            id="report_content"
-            rows="4"
-            required
-          ></textarea>
-          <label class="mr-form-label">Mô tả chi tiết</label>
-        </div>
+          <!-- Nội dung báo cáo -->
+          <div class="mr-input-group">
+            <textarea class="mr-form-input" placeholder=" " id="report_content" rows="4" required></textarea>
+            <label class="mr-form-label">Mô tả chi tiết</label>
+          </div>
 
-        <div class="mr-action-buttons">
-          <button type="button" class="mr-btn mr-btn-secondary" onclick="mr_hideModal()">
-            Hủy bỏ
-          </button>
-          <button type="submit" class="mr-btn mr-btn-primary">
-            <i class="fas fa-paper-plane"></i>
-            Gửi báo cáo
-          </button>
-        </div>
-      </form>
+          <div class="mr-action-buttons">
+            <button type="button" class="mr-btn mr-btn-secondary" onclick="mr_hideModal()">
+              Hủy bỏ
+            </button>
+            <button type="submit" class="mr-btn mr-btn-primary">
+              <i class="fas fa-paper-plane"></i>
+              Gửi báo cáo
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-</div>
 
-<script>
-  // Giả sử currentUserId được lấy từ session hoặc biến toàn cục
-  const currentUserId = 1; // Ví dụ
+  <script>
+    // Giả sử currentUserId được lấy từ session hoặc biến toàn cục
+    const currentUserId = 1; // Ví dụ
 
-  // Chèn CSS của modal qua DOM và prepend vào <head> để ưu tiên thực thi
-  (function() {
-    const style = document.createElement('style');
-    style.type = 'text/css';
-    style.id = 'mr-modalStyles';
-    const css = `
+    // Chèn CSS của modal qua DOM và prepend vào <head> để ưu tiên thực thi
+    (function () {
+      const style = document.createElement('style');
+      style.type = 'text/css';
+      style.id = 'mr-modalStyles';
+      const css = `
       :root {
         --mr-primary: #6366f1;
         --mr-primary-hover: #4f46e5;
@@ -2880,91 +2902,91 @@ document.getElementById('contributeExamForm').addEventListener('submit', functio
         }
       }
     `;
-    style.textContent = css;
-    document.head.prepend(style);
-  })();
+      style.textContent = css;
+      document.head.prepend(style);
+    })();
 
-  // Hàm mở modal báo lỗi và cập nhật nội dung "Đề thi" cũng như document_id
-  function openReportModal(file) {
-    const modal = document.getElementById('mr-modal');
-    // Cập nhật tên đề thi
-    const examInput = document.getElementById('document_name');
-    if(examInput) {
-      examInput.value = file.file_name;
+    // Hàm mở modal báo lỗi và cập nhật nội dung "Đề thi" cũng như document_id
+    function openReportModal(file) {
+      const modal = document.getElementById('mr-modal');
+      // Cập nhật tên đề thi
+      const examInput = document.getElementById('document_name');
+      if (examInput) {
+        examInput.value = file.file_name;
+      }
+      // Lưu document_id vào input ẩn
+      document.getElementById('document_id').value = file.id;
+      // Cập nhật user_id (giả sử lấy từ biến currentUserId)
+      document.getElementById('user_id').value = currentUserId;
+
+      mr_showModal();
+      console.log("Mở modal báo lỗi cho file:", file.file_name);
     }
-    // Lưu document_id vào input ẩn
-    document.getElementById('document_id').value = file.id;
-    // Cập nhật user_id (giả sử lấy từ biến currentUserId)
-    document.getElementById('user_id').value = currentUserId;
-    
-    mr_showModal();
-    console.log("Mở modal báo lỗi cho file:", file.file_name);
-  }
 
-  // Hàm mở modal
-  function mr_showModal() {
-    const modal = document.getElementById('mr-modal');
-    modal.style.display = 'flex';
-    modal.style.opacity = '1';
-    document.body.style.overflow = 'hidden';
-  }
-
-  // Hàm đóng modal
-  function mr_hideModal() {
-    const modal = document.getElementById('mr-modal');
-    modal.style.opacity = '0';
-    setTimeout(() => {
-      modal.style.display = 'none';
-      document.body.style.overflow = 'auto';
-      // Reset form nếu cần
-      resetReportForm();
-    }, 300);
-  }
-
-  // Reset form modal về ban đầu
-  function resetReportForm() {
-    const form = document.getElementById('mr-reportForm');
-    form.reset();
-    // Nếu bạn có nội dung HTML mặc định cần khôi phục thì có thể đặt lại ở đây.
-    // Ví dụ: reset giá trị của document_name nếu cần.
-  }
-
-  // Xử lý submit form báo lỗi, gửi dữ liệu đến backend
-  async function mr_handleSubmit(e) {
-    e.preventDefault();
-    
-    const user_id = document.getElementById('user_id').value;
-    const document_id = document.getElementById('document_id').value;
-    const report_content = document.getElementById('report_content').value;
-    
-    if (!user_id || !document_id || !report_content) {
-      alert("Vui lòng nhập đủ thông tin báo cáo.");
-      return;
+    // Hàm mở modal
+    function mr_showModal() {
+      const modal = document.getElementById('mr-modal');
+      modal.style.display = 'flex';
+      modal.style.opacity = '1';
+      document.body.style.overflow = 'hidden';
     }
-    
-    // Gói dữ liệu theo định dạng JSON
-    const payload = {
-      user_id: user_id,
-      document_id: document_id,
-      report_content: report_content
-    };
 
-    try {
-      // Gọi API POST đến backend
-      const response = await fetch('/report', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
-      
-      if(response.ok) {
-        // Hiệu ứng chuyển đổi form thành thông báo thành công
-        const form = document.getElementById('mr-reportForm');
-        form.style.opacity = '0';
-        setTimeout(() => {
-          form.innerHTML = `
+    // Hàm đóng modal
+    function mr_hideModal() {
+      const modal = document.getElementById('mr-modal');
+      modal.style.opacity = '0';
+      setTimeout(() => {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        // Reset form nếu cần
+        resetReportForm();
+      }, 300);
+    }
+
+    // Reset form modal về ban đầu
+    function resetReportForm() {
+      const form = document.getElementById('mr-reportForm');
+      form.reset();
+      // Nếu bạn có nội dung HTML mặc định cần khôi phục thì có thể đặt lại ở đây.
+      // Ví dụ: reset giá trị của document_name nếu cần.
+    }
+
+    // Xử lý submit form báo lỗi, gửi dữ liệu đến backend
+    async function mr_handleSubmit(e) {
+      e.preventDefault();
+
+      const user_id = document.getElementById('user_id').value;
+      const document_id = document.getElementById('document_id').value;
+      const report_content = document.getElementById('report_content').value;
+
+      if (!user_id || !document_id || !report_content) {
+        alert("Vui lòng nhập đủ thông tin báo cáo.");
+        return;
+      }
+
+      // Gói dữ liệu theo định dạng JSON
+      const payload = {
+        user_id: user_id,
+        document_id: document_id,
+        report_content: report_content
+      };
+
+      try {
+        // Gọi API POST đến backend
+        const response = await fetch('/report', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+          // Hiệu ứng chuyển đổi form thành thông báo thành công
+          const form = document.getElementById('mr-reportForm');
+          form.style.opacity = '0';
+          setTimeout(() => {
+            form.innerHTML = `
             <div class="mr-success-check">
               <i class="fas fa-check" style="color: white; font-size: 24px;"></i>
             </div>
@@ -2979,28 +3001,28 @@ document.getElementById('contributeExamForm').addEventListener('submit', functio
               Đóng
             </button>
           `;
-          form.style.opacity = '1';
-        }, 500);
-      } else {
-        const errorData = await response.json();
-        alert("Có lỗi xảy ra: " + (errorData.error || 'Lỗi không xác định'));
+            form.style.opacity = '1';
+          }, 500);
+        } else {
+          const errorData = await response.json();
+          alert("Có lỗi xảy ra: " + (errorData.error || 'Lỗi không xác định'));
+        }
+      } catch (error) {
+        console.error("Lỗi khi gửi báo cáo:", error);
+        alert("Không thể kết nối đến máy chủ.");
       }
-    } catch (error) {
-      console.error("Lỗi khi gửi báo cáo:", error);
-      alert("Không thể kết nối đến máy chủ.");
     }
-  }
 
-  // Đóng modal khi click bên ngoài container
-  document.getElementById('mr-modal').addEventListener('click', function(e) {
-    if (e.target === this) mr_hideModal();
-  });
+    // Đóng modal khi click bên ngoài container
+    document.getElementById('mr-modal').addEventListener('click', function (e) {
+      if (e.target === this) mr_hideModal();
+    });
 
-  // Đóng modal khi nhấn phím ESC
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') mr_hideModal();
-  });
-</script>
+    // Đóng modal khi nhấn phím ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') mr_hideModal();
+    });
+  </script>
 
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -3060,171 +3082,172 @@ document.getElementById('contributeExamForm').addEventListener('submit', functio
     });
   </script>
 
-<!-- Modal Xác thực -->
-<div class="modal fade" id="verificationModal-v2" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content shadow-lg rounded-3">
-      <!-- Header sử dụng Shadow DOM với hậu tố _v2 -->
-      <modal-header-v2></modal-header-v2>
+  <!-- Modal Xác thực -->
+  <div class="modal fade" id="verificationModal-v2" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content shadow-lg rounded-3">
+        <!-- Header sử dụng Shadow DOM với hậu tố _v2 -->
+        <modal-header-v2></modal-header-v2>
 
-      <!-- Body -->
-      <div class="modal-body pt-0">
-        <p class="text-muted mb-4">
-          Tài khoản của bạn chưa được xác thực. Bạn cần chọn 1 trong 2 cách sau nhé! 😊
-        </p>
+        <!-- Body -->
+        <div class="modal-body pt-0">
+          <p class="text-muted mb-4">
+            Tài khoản của bạn chưa được xác thực. Bạn cần chọn 1 trong 2 cách sau nhé! 😊
+          </p>
 
-        <!-- Phương thức 1: Đóng góp ảnh đề thi -->
-        <div class="card mb-3 border-primary card-method-v2">
-          <div class="card-body">
-            <div class="d-flex align-items-center">
-              <i class="bi bi-cloud-upload fs-3 text-primary me-2"></i>
-              <div>
-                <h6 class="mb-1">Đóng góp ảnh đề thi</h6>
-                <p class="text-muted small mb-0">
-                  Chia sẻ ảnh đề thi bất kỳ để cộng đồng cùng học tập
-                </p>
+          <!-- Phương thức 1: Đóng góp ảnh đề thi -->
+          <div class="card mb-3 border-primary card-method-v2">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <i class="bi bi-cloud-upload fs-3 text-primary me-2"></i>
+                <div>
+                  <h6 class="mb-1">Đóng góp ảnh đề thi</h6>
+                  <p class="text-muted small mb-0">
+                    Chia sẻ ảnh đề thi bất kỳ để cộng đồng cùng học tập
+                  </p>
+                </div>
               </div>
-            </div>
-            <div class="position-relative">
-              <!-- File input cho ảnh đề thi -->
-              <input type="file" id="examImageUpload_v2" accept="image/*" class="d-none" multiple
-                data-container="fileNameExamImage_v2" onchange="handleFileUpload_v2(event, 'exam')">
-              <label for="examImageUpload_v2" class="btn btn-primary btn-sm mt-3 btn-contribute-v2 cursor-pointer">
-                <i class="bi bi-upload me-2"></i>Chọn ảnh đề thi
-              </label>
-              <div id="fileNameExamImage_v2" class="text-muted small mt-2"></div>
-            </div>
-            <!-- Nút gửi file -->
-            <button class="btn btn-success btn-sm mt-2" onclick="submitExamImage_v2()" id="submitExamBtn_v2">
-              <i class="bi bi-send me-2"></i>Gửi ảnh đề thi
-            </button>
-            <div id="examUploadLoading_v2" class="text-primary small mt-2" style="display:none;">
-              <i class="bi bi-hourglass-split"></i> Đang upload, vui lòng chờ...
-            </div>
-          </div>
-        </div>
-
-        <!-- Phương thức 2: Chia sẻ với bạn bè -->
-        <div class="card border-success card-method-v2">
-          <div class="card-body">
-            <div class="d-flex align-items-center mb-3">
-              <i class="bi bi-share fs-3 text-success me-2"></i>
-              <div>
-                <h6 class="mb-1">Chia sẻ với bạn bè</h6>
-                <p class="text-muted small mb-0">
-                  Share trang web cho 2 người bạn để xác thực
-                </p>
+              <div class="position-relative">
+                <!-- File input cho ảnh đề thi -->
+                <input type="file" id="examImageUpload_v2" accept="image/*" class="d-none" multiple
+                  data-container="fileNameExamImage_v2" onchange="handleFileUpload_v2(event, 'exam')">
+                <label for="examImageUpload_v2" class="btn btn-primary btn-sm mt-3 btn-contribute-v2 cursor-pointer">
+                  <i class="bi bi-upload me-2"></i>Chọn ảnh đề thi
+                </label>
+                <div id="fileNameExamImage_v2" class="text-muted small mt-2"></div>
               </div>
-            </div>
-
-            <div class="input-group mb-3">
-              <div id="copyContent_v2" class="form-control bg-light">
-                Kho lưu trữ đề thi và đề cương qua các năm, tại: huehub.fun
-              </div>
-              <button class="btn btn-success btn-copy-v2" onclick="copyText_v2()">
-                <i class="bi bi-clipboard"></i>
+              <!-- Nút gửi file -->
+              <button class="btn btn-success btn-sm mt-2" onclick="submitExamImage_v2()" id="submitExamBtn_v2">
+                <i class="bi bi-send me-2"></i>Gửi ảnh đề thi
               </button>
+              <div id="examUploadLoading_v2" class="text-primary small mt-2" style="display:none;">
+                <i class="bi bi-hourglass-split"></i> Đang upload, vui lòng chờ...
+              </div>
             </div>
-            <div id="copySuccess_v2" class="text-success small mt-2" style="display:none;">
-              <i class="bi bi-check2"></i> Đã sao chép!
-            </div>
+          </div>
 
-            <!-- Ghi chú hướng dẫn chụp màn hình -->
-            <div class="mt-2">
-              <small class="text-muted">
-                Ghi chú: Vui lòng coppy rồi gửi cho bạn bè đảm bảo có sự tương tác của họ rồi chụp lại màn hình sau
-                khi chia sẻ, sau đó ấn "Xác nhận đã chia sẻ"!
-              </small>
-            </div>
-            <div class="position-relative">
-              <!-- File input cho ảnh chụp màn hình -->
-              <input type="file" id="shareScreenshotUpload_v2" accept="image/*" class="d-none"
-                data-container="fileNameShareScreenshot_v2" onchange="handleFileUpload_v2(event, 'share')">
-              <label for="shareScreenshotUpload_v2"
-                class="btn btn-primary btn-sm mt-3 btn-contribute-v2 cursor-pointer">
-                <i class="bi bi-upload me-2"></i>Chọn ảnh màn hình
-              </label>
-              <div id="fileNameShareScreenshot_v2" class="text-muted small mt-2"></div>
-            </div>
+          <!-- Phương thức 2: Chia sẻ với bạn bè -->
+          <div class="card border-success card-method-v2">
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-3">
+                <i class="bi bi-share fs-3 text-success me-2"></i>
+                <div>
+                  <h6 class="mb-1">Chia sẻ với bạn bè</h6>
+                  <p class="text-muted small mb-0">
+                    Share trang web cho 2 người bạn để xác thực
+                  </p>
+                </div>
+              </div>
 
-            <!-- Nút xác nhận đã chia sẻ -->
-            <button class="btn btn-outline-success w-100 btn-confirm-share-v2 mt-2" onclick="confirmShare_v2()" id="confirmShareBtn_v2">
-              <i class="bi bi-check-circle me-2"></i>Xác nhận đã chia sẻ
-            </button>
-            <div id="shareUploadLoading_v2" class="text-primary small mt-2 text-center" style="display:none;">
-              <i class="bi bi-hourglass-split"></i> Đang upload, vui lòng chờ...
+              <div class="input-group mb-3">
+                <div id="copyContent_v2" class="form-control bg-light">
+                  Kho lưu trữ đề thi và đề cương qua các năm, tại: huehub.fun
+                </div>
+                <button class="btn btn-success btn-copy-v2" onclick="copyText_v2()">
+                  <i class="bi bi-clipboard"></i>
+                </button>
+              </div>
+              <div id="copySuccess_v2" class="text-success small mt-2" style="display:none;">
+                <i class="bi bi-check2"></i> Đã sao chép!
+              </div>
+
+              <!-- Ghi chú hướng dẫn chụp màn hình -->
+              <div class="mt-2">
+                <small class="text-muted">
+                  Ghi chú: Vui lòng coppy rồi gửi cho bạn bè đảm bảo có sự tương tác của họ rồi chụp lại màn hình sau
+                  khi chia sẻ, sau đó ấn "Xác nhận đã chia sẻ"!
+                </small>
+              </div>
+              <div class="position-relative">
+                <!-- File input cho ảnh chụp màn hình -->
+                <input type="file" id="shareScreenshotUpload_v2" accept="image/*" class="d-none"
+                  data-container="fileNameShareScreenshot_v2" onchange="handleFileUpload_v2(event, 'share')">
+                <label for="shareScreenshotUpload_v2"
+                  class="btn btn-primary btn-sm mt-3 btn-contribute-v2 cursor-pointer">
+                  <i class="bi bi-upload me-2"></i>Chọn ảnh màn hình
+                </label>
+                <div id="fileNameShareScreenshot_v2" class="text-muted small mt-2"></div>
+              </div>
+
+              <!-- Nút xác nhận đã chia sẻ -->
+              <button class="btn btn-outline-success w-100 btn-confirm-share-v2 mt-2" onclick="confirmShare_v2()"
+                id="confirmShareBtn_v2">
+                <i class="bi bi-check-circle me-2"></i>Xác nhận đã chia sẻ
+              </button>
+              <div id="shareUploadLoading_v2" class="text-primary small mt-2 text-center" style="display:none;">
+                <i class="bi bi-hourglass-split"></i> Đang upload, vui lòng chờ...
+              </div>
+              <div id="confirmSuccess_v2" class="text-success small mt-2 text-center" style="display:none;">
+                <i class="bi bi-check2-circle"></i> Đã xác nhận chia sẻ!
+              </div>
             </div>
-            <div id="confirmSuccess_v2" class="text-success small mt-2 text-center" style="display:none;">
-              <i class="bi bi-check2-circle"></i> Đã xác nhận chia sẻ!
-            </div>
+          </div>
+
+          <!-- Khu vực hiển thị thông tin xác thực -->
+          <div id="verification-alert" class="alert alert-danger mt-3" style="display: none;">
+            <p class="mb-1">
+              <strong>Lần xác thực gần nhất:</strong> <span id="last-rejected-time">12/03/2025 09:45</span>
+            </p>
+            <p class="mb-0">
+              <strong>Lý do từ chối:</strong> <span id="rejection-note">Thông tin xác thực không hợp lệ, vui lòng kiểm
+                tra lại</span>
+            </p>
           </div>
         </div>
 
-        <!-- Khu vực hiển thị thông tin xác thực -->
-        <div id="verification-alert" class="alert alert-danger mt-3" style="display: none;">
-          <p class="mb-1">
-            <strong>Lần xác thực gần nhất:</strong> <span id="last-rejected-time">12/03/2025 09:45</span>
-          </p>
-          <p class="mb-0">
-            <strong>Lý do từ chối:</strong> <span id="rejection-note">Thông tin xác thực không hợp lệ, vui lòng kiểm
-              tra lại</span>
-          </p>
+        <!-- Footer -->
+        <div class="modal-footer border-0">
+          <button type="button" class="btn btn-outline-secondary btn-close-v2" data-bs-dismiss="modal">
+            Để sau đi
+          </button>
         </div>
-      </div>
-
-      <!-- Footer -->
-      <div class="modal-footer border-0">
-        <button type="button" class="btn btn-outline-secondary btn-close-v2" data-bs-dismiss="modal">
-          Để sau đi
-        </button>
       </div>
     </div>
   </div>
-</div>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    fetch('https://huehub.fun/get_verification_info', {
-      method: 'GET',
-      credentials: 'include', // Gửi cookie session để server nhận diện người dùng
-      headers: {
-        'Accept': 'application/json'
-      }
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => {
-        const alertDiv = document.getElementById('verification-alert');
-        const lastRejectedTimeSpan = document.getElementById('last-rejected-time');
-        const rejectionNoteSpan = document.getElementById('rejection-note');
-
-        if (data.status === 'rejected') {
-          // Cập nhật nội dung từ API
-          lastRejectedTimeSpan.textContent = data.last_rejected_time || 'Không có dữ liệu';
-          rejectionNoteSpan.textContent = data.note || 'Không có ghi chú';
-          alertDiv.style.display = 'block'; // Hiển thị khi có dữ liệu
-        } else {
-          alertDiv.style.display = 'none'; // Ẩn nếu không có bản ghi bị từ chối
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      fetch('https://huehub.fun/get_verification_info', {
+        method: 'GET',
+        credentials: 'include', // Gửi cookie session để server nhận diện người dùng
+        headers: {
+          'Accept': 'application/json'
         }
       })
-      .catch(error => {
-        console.error('Lỗi khi gọi API:', error);
-        document.getElementById('verification-alert').style.display = 'none'; // Ẩn nếu có lỗi
-      });
-  });
-</script>
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          const alertDiv = document.getElementById('verification-alert');
+          const lastRejectedTimeSpan = document.getElementById('last-rejected-time');
+          const rejectionNoteSpan = document.getElementById('rejection-note');
 
-<!-- Định nghĩa custom element sử dụng Shadow DOM cho header, với tên có hậu tố _v2 -->
-<script>
-  class ModalHeaderV2 extends HTMLElement {
-    constructor() {
-      super();
-      const shadow = this.attachShadow({ mode: 'open' });
-      shadow.innerHTML = `
+          if (data.status === 'rejected') {
+            // Cập nhật nội dung từ API
+            lastRejectedTimeSpan.textContent = data.last_rejected_time || 'Không có dữ liệu';
+            rejectionNoteSpan.textContent = data.note || 'Không có ghi chú';
+            alertDiv.style.display = 'block'; // Hiển thị khi có dữ liệu
+          } else {
+            alertDiv.style.display = 'none'; // Ẩn nếu không có bản ghi bị từ chối
+          }
+        })
+        .catch(error => {
+          console.error('Lỗi khi gọi API:', error);
+          document.getElementById('verification-alert').style.display = 'none'; // Ẩn nếu có lỗi
+        });
+    });
+  </script>
+
+  <!-- Định nghĩa custom element sử dụng Shadow DOM cho header, với tên có hậu tố _v2 -->
+  <script>
+    class ModalHeaderV2 extends HTMLElement {
+      constructor() {
+        super();
+        const shadow = this.attachShadow({ mode: 'open' });
+        shadow.innerHTML = `
       <style>
         .header {
           display: flex;
@@ -3253,236 +3276,236 @@ document.getElementById('contributeExamForm').addEventListener('submit', functio
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
     `;
+      }
     }
-  }
-  customElements.define('modal-header-v2', ModalHeaderV2);
-</script>
+    customElements.define('modal-header-v2', ModalHeaderV2);
+  </script>
 
-<script>
-  // Biến lưu file riêng cho từng phương thức
-  let examFiles_v2 = [];
-  let shareFile_v2 = null;
+  <script>
+    // Biến lưu file riêng cho từng phương thức
+    let examFiles_v2 = [];
+    let shareFile_v2 = null;
 
-  // Hàm xử lý khi chọn file (hậu tố _v2)
-  function handleFileUpload_v2(event, type) {
-    const newFiles = Array.from(event.target.files);
-    const containerId = event.target.getAttribute('data-container');
-    let fileListHtml = '';
+    // Hàm xử lý khi chọn file (hậu tố _v2)
+    function handleFileUpload_v2(event, type) {
+      const newFiles = Array.from(event.target.files);
+      const containerId = event.target.getAttribute('data-container');
+      let fileListHtml = '';
 
-    if (type === 'exam') {
-      // Với ảnh đề thi: cộng dồn vào mảng examFiles_v2
-      examFiles_v2 = examFiles_v2.concat(newFiles);
-      examFiles_v2.forEach(file => {
-        fileListHtml += `<div><i class="bi bi-file-image"></i> Đã chọn: ${file.name}</div>`;
+      if (type === 'exam') {
+        // Với ảnh đề thi: cộng dồn vào mảng examFiles_v2
+        examFiles_v2 = examFiles_v2.concat(newFiles);
+        examFiles_v2.forEach(file => {
+          fileListHtml += `<div><i class="bi bi-file-image"></i> Đã chọn: ${file.name}</div>`;
+        });
+      } else if (type === 'share') {
+        // Với ảnh share: chỉ lưu file đầu tiên được chọn
+        shareFile_v2 = newFiles[0];
+        fileListHtml += `<div><i class="bi bi-file-image"></i> Đã chọn: ${shareFile_v2.name}</div>`;
+      }
+      document.getElementById(containerId).innerHTML = fileListHtml;
+      // Reset giá trị của input để cho phép chọn lại file nếu cần
+      event.target.value = '';
+    }
+
+    // Hàm gửi ảnh đề thi khi nhấn "Gửi ảnh đề thi" (không thay đổi)
+    function submitExamImage_v2() {
+      console.log("DEBUG: Hàm submitExamImage_v2 được gọi");
+
+      // Hiển thị thông báo "Vui lòng chờ"
+      document.getElementById('examUploadLoading_v2').style.display = 'block';
+      document.getElementById('submitExamBtn_v2').disabled = true;
+
+      // Kiểm tra file được chọn (ảnh đề thi)
+      if (!examFiles_v2 || examFiles_v2.length === 0) {
+        console.error("ERROR: Không có ảnh đề thi được chọn.", { examFiles_v2 });
+        triggerNotification('error', 'Lỗi', 'Vui lòng chọn ảnh đề thi trước khi gửi.');
+        document.getElementById('examUploadLoading_v2').style.display = 'none';
+        document.getElementById('submitExamBtn_v2').disabled = false;
+        return;
+      }
+      console.log("DEBUG: Số lượng file được chọn:", examFiles_v2.length);
+
+      // Tạo mảng các promise để upload file
+      const uploadPromises = examFiles_v2.map(file => {
+        console.log("DEBUG: Bắt đầu upload file:", file.name);
+        return uploadFile_v2(file, 'exam')
+          .then(response => {
+            console.log("DEBUG: Upload file thành công:", response);
+            return response;
+          })
+          .catch(error => {
+            console.error("ERROR: Lỗi khi upload file:", error);
+            throw error;
+          });
       });
-    } else if (type === 'share') {
-      // Với ảnh share: chỉ lưu file đầu tiên được chọn
-      shareFile_v2 = newFiles[0];
-      fileListHtml += `<div><i class="bi bi-file-image"></i> Đã chọn: ${shareFile_v2.name}</div>`;
-    }
-    document.getElementById(containerId).innerHTML = fileListHtml;
-    // Reset giá trị của input để cho phép chọn lại file nếu cần
-    event.target.value = '';
-  }
 
-  // Hàm gửi ảnh đề thi khi nhấn "Gửi ảnh đề thi" (không thay đổi)
-  function submitExamImage_v2() {
-    console.log("DEBUG: Hàm submitExamImage_v2 được gọi");
-    
-    // Hiển thị thông báo "Vui lòng chờ"
-    document.getElementById('examUploadLoading_v2').style.display = 'block';
-    document.getElementById('submitExamBtn_v2').disabled = true;
+      // Thực hiện upload tất cả file
+      Promise.all(uploadPromises)
+        .then(results => {
+          console.log("DEBUG: Kết quả upload file:", results);
 
-    // Kiểm tra file được chọn (ảnh đề thi)
-    if (!examFiles_v2 || examFiles_v2.length === 0) {
-      console.error("ERROR: Không có ảnh đề thi được chọn.", { examFiles_v2 });
-      triggerNotification('error', 'Lỗi', 'Vui lòng chọn ảnh đề thi trước khi gửi.');
-      document.getElementById('examUploadLoading_v2').style.display = 'none';
-      document.getElementById('submitExamBtn_v2').disabled = false;
-      return;
-    }
-    console.log("DEBUG: Số lượng file được chọn:", examFiles_v2.length);
+          // Kiểm tra kết quả upload
+          const uploadedFilePaths = results.map(result => {
+            if (!result || !result.filepath) {
+              console.error("ERROR: Upload file không trả về filepath hợp lệ", result);
+              throw new Error("Upload file không trả về filepath hợp lệ");
+            }
+            return result.filepath;
+          });
+          console.log("DEBUG: Danh sách file path sau upload:", uploadedFilePaths);
 
-    // Tạo mảng các promise để upload file
-    const uploadPromises = examFiles_v2.map(file => {
-      console.log("DEBUG: Bắt đầu upload file:", file.name);
-      return uploadFile_v2(file, 'exam')
+          // Reset giao diện sau khi upload thành công
+          examFiles_v2 = [];
+          document.getElementById('fileNameExamImage_v2').innerHTML = "";
+          document.getElementById('examUploadLoading_v2').style.display = 'none';
+          document.getElementById('submitExamBtn_v2').disabled = false;
+
+          // Gọi API cập nhật trạng thái tài khoản
+          console.log("DEBUG: Gọi API cập nhật trạng thái tài khoản...");
+          return fetch('/update_account_status_v2', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({})
+          });
+        })
         .then(response => {
-          console.log("DEBUG: Upload file thành công:", response);
-          return response;
+          console.log("DEBUG: Response status của update_account_status_v2:", response.status);
+          if (!response.ok) {
+            throw new Error(`Lỗi HTTP! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(statusData => {
+          console.log("DEBUG: Response từ update_account_status_v2:", statusData);
+
+          // Hiển thị thông báo thành công chung
+          triggerNotification('warning', 'Thông báo', 'Tài khoản của bạn đang được xét duyệt, vui lòng đợi');
+
+          // Đóng modal sau 2 giây
+          setTimeout(() => {
+            const modalElement = document.getElementById('verificationModal-v2');
+            let modalInstance = bootstrap.Modal.getInstance(modalElement);
+            if (!modalInstance) {
+              modalInstance = new bootstrap.Modal(modalElement);
+            }
+            modalInstance.hide();
+          }, 2000);
         })
         .catch(error => {
-          console.error("ERROR: Lỗi khi upload file:", error);
-          throw error;
+          console.error('ERROR: Lỗi trong quá trình upload hoặc cập nhật:', error);
+          // Hiển thị thông báo lỗi chung
+          triggerNotification('error', 'Lỗi', 'Đã xảy ra lỗi. Vui lòng thử lại.');
+          document.getElementById('examUploadLoading_v2').style.display = 'none';
+          document.getElementById('submitExamBtn_v2').disabled = false;
         });
-    });
-
-    // Thực hiện upload tất cả file
-    Promise.all(uploadPromises)
-      .then(results => {
-        console.log("DEBUG: Kết quả upload file:", results);
-
-        // Kiểm tra kết quả upload
-        const uploadedFilePaths = results.map(result => {
-          if (!result || !result.filepath) {
-            console.error("ERROR: Upload file không trả về filepath hợp lệ", result);
-            throw new Error("Upload file không trả về filepath hợp lệ");
-          }
-          return result.filepath;
-        });
-        console.log("DEBUG: Danh sách file path sau upload:", uploadedFilePaths);
-
-        // Reset giao diện sau khi upload thành công
-        examFiles_v2 = [];
-        document.getElementById('fileNameExamImage_v2').innerHTML = "";
-        document.getElementById('examUploadLoading_v2').style.display = 'none';
-        document.getElementById('submitExamBtn_v2').disabled = false;
-
-        // Gọi API cập nhật trạng thái tài khoản
-        console.log("DEBUG: Gọi API cập nhật trạng thái tài khoản...");
-        return fetch('/update_account_status_v2', {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({})
-        });
-      })
-      .then(response => {
-        console.log("DEBUG: Response status của update_account_status_v2:", response.status);
-        if (!response.ok) {
-          throw new Error(`Lỗi HTTP! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(statusData => {
-        console.log("DEBUG: Response từ update_account_status_v2:", statusData);
-
-        // Hiển thị thông báo thành công chung
-        triggerNotification('warning', 'Thông báo', 'Tài khoản của bạn đang được xét duyệt, vui lòng đợi');
-
-        // Đóng modal sau 2 giây
-        setTimeout(() => {
-          const modalElement = document.getElementById('verificationModal-v2');
-          let modalInstance = bootstrap.Modal.getInstance(modalElement);
-          if (!modalInstance) {
-            modalInstance = new bootstrap.Modal(modalElement);
-          }
-          modalInstance.hide();
-        }, 2000);
-      })
-      .catch(error => {
-        console.error('ERROR: Lỗi trong quá trình upload hoặc cập nhật:', error);
-        // Hiển thị thông báo lỗi chung
-        triggerNotification('error', 'Lỗi', 'Đã xảy ra lỗi. Vui lòng thử lại.');
-        document.getElementById('examUploadLoading_v2').style.display = 'none';
-        document.getElementById('submitExamBtn_v2').disabled = false;
-      });
-  }
-  
-  function uploadFile_v2(file, type) {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('type', type);
-
-    return fetch('/upload_v2', {
-      method: 'POST',
-      body: formData
-    })
-      .then(response => {
-        console.log(`Response từ uploadFile_v2 (${type}):`, response);
-        return response.json();
-      })
-      .then(data => {
-        console.log('Upload thành công:', data);
-        return data;
-      })
-      .catch(error => {
-        console.error(`ERROR: Lỗi khi upload file (${type}):`, error);
-        throw error;
-      });
-  }
-
-  function copyText_v2() {
-    const text = document.getElementById('copyContent_v2').innerText;
-    navigator.clipboard.writeText(text);
-
-    const successMsg = document.getElementById('copySuccess_v2');
-    successMsg.style.display = 'block';
-    setTimeout(() => successMsg.style.display = 'none', 2000);
-  }
-
-  // Hàm xác nhận đã chia sẻ: chỉ upload ảnh màn hình khi người dùng ấn nút xác nhận
-  function confirmShare_v2() {
-    // Hiển thị thông báo "Vui lòng chờ"
-    document.getElementById('shareUploadLoading_v2').style.display = 'block';
-    document.getElementById('confirmShareBtn_v2').disabled = true;
-    
-    // Kiểm tra xem người dùng đã chọn ảnh chưa
-    if (!shareFile_v2) {
-      alert("Vui lòng chọn ảnh màn hình trước khi xác nhận.");
-      document.getElementById('shareUploadLoading_v2').style.display = 'none';
-      document.getElementById('confirmShareBtn_v2').disabled = false;
-      return;
     }
 
-    // Upload ảnh chia sẻ
-    uploadFile_v2(shareFile_v2, 'share')
-      .then(data => {
-        console.log("Upload ảnh chia sẻ thành công:", data);
+    function uploadFile_v2(file, type) {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('type', type);
 
-        // Reset file và giao diện sau khi upload thành công
-        shareFile_v2 = null;
-        document.getElementById('fileNameShareScreenshot_v2').innerHTML = "";
-        document.getElementById('shareUploadLoading_v2').style.display = 'none';
-        document.getElementById('confirmShareBtn_v2').disabled = false;
-
-        // Gọi API cập nhật trạng thái tài khoản
-        console.log("Gọi API cập nhật trạng thái tài khoản...");
-        return fetch('/update_account_status_v2', {
-          method: 'POST',
-          credentials: 'include', // Server sẽ lấy user_id từ session
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({})
+      return fetch('/upload_v2', {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => {
+          console.log(`Response từ uploadFile_v2 (${type}):`, response);
+          return response.json();
+        })
+        .then(data => {
+          console.log('Upload thành công:', data);
+          return data;
+        })
+        .catch(error => {
+          console.error(`ERROR: Lỗi khi upload file (${type}):`, error);
+          throw error;
         });
-      })
-      .then(response => {
-        console.log("Response status của update_account_status_v2:", response.status);
-        if (!response.ok) {
-          throw new Error(`Lỗi HTTP! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(statusData => {
-        console.log("Response từ update_account_status_v2:", statusData);
+    }
 
-        // Hiển thị thông báo thành công
-        triggerNotification('success', 'Thành công', 'Ảnh chia sẻ đã được upload và trạng thái tài khoản đã được cập nhật.');
+    function copyText_v2() {
+      const text = document.getElementById('copyContent_v2').innerText;
+      navigator.clipboard.writeText(text);
 
-        // Đóng modal sau 2 giây
-        setTimeout(() => {
-          const modalElement = document.getElementById('verificationModal-v2');
-          let modalInstance = bootstrap.Modal.getInstance(modalElement);
-          if (!modalInstance) {
-            modalInstance = new bootstrap.Modal(modalElement);
-          }
-          modalInstance.hide();
-        }, 2000);
-      })
-      .catch(error => {
-        console.error("Lỗi khi upload ảnh chia sẻ hoặc cập nhật trạng thái:", error);
-        // Hiển thị thông báo lỗi
-        triggerNotification('error', 'Lỗi', 'Đã xảy ra lỗi. Vui lòng thử lại.');
+      const successMsg = document.getElementById('copySuccess_v2');
+      successMsg.style.display = 'block';
+      setTimeout(() => successMsg.style.display = 'none', 2000);
+    }
+
+    // Hàm xác nhận đã chia sẻ: chỉ upload ảnh màn hình khi người dùng ấn nút xác nhận
+    function confirmShare_v2() {
+      // Hiển thị thông báo "Vui lòng chờ"
+      document.getElementById('shareUploadLoading_v2').style.display = 'block';
+      document.getElementById('confirmShareBtn_v2').disabled = true;
+
+      // Kiểm tra xem người dùng đã chọn ảnh chưa
+      if (!shareFile_v2) {
+        alert("Vui lòng chọn ảnh màn hình trước khi xác nhận.");
         document.getElementById('shareUploadLoading_v2').style.display = 'none';
         document.getElementById('confirmShareBtn_v2').disabled = false;
-      });
-  }
-</script>
+        return;
+      }
+
+      // Upload ảnh chia sẻ
+      uploadFile_v2(shareFile_v2, 'share')
+        .then(data => {
+          console.log("Upload ảnh chia sẻ thành công:", data);
+
+          // Reset file và giao diện sau khi upload thành công
+          shareFile_v2 = null;
+          document.getElementById('fileNameShareScreenshot_v2').innerHTML = "";
+          document.getElementById('shareUploadLoading_v2').style.display = 'none';
+          document.getElementById('confirmShareBtn_v2').disabled = false;
+
+          // Gọi API cập nhật trạng thái tài khoản
+          console.log("Gọi API cập nhật trạng thái tài khoản...");
+          return fetch('/update_account_status_v2', {
+            method: 'POST',
+            credentials: 'include', // Server sẽ lấy user_id từ session
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({})
+          });
+        })
+        .then(response => {
+          console.log("Response status của update_account_status_v2:", response.status);
+          if (!response.ok) {
+            throw new Error(`Lỗi HTTP! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(statusData => {
+          console.log("Response từ update_account_status_v2:", statusData);
+
+          // Hiển thị thông báo thành công
+          triggerNotification('success', 'Thành công', 'Ảnh chia sẻ đã được upload và trạng thái tài khoản đã được cập nhật.');
+
+          // Đóng modal sau 2 giây
+          setTimeout(() => {
+            const modalElement = document.getElementById('verificationModal-v2');
+            let modalInstance = bootstrap.Modal.getInstance(modalElement);
+            if (!modalInstance) {
+              modalInstance = new bootstrap.Modal(modalElement);
+            }
+            modalInstance.hide();
+          }, 2000);
+        })
+        .catch(error => {
+          console.error("Lỗi khi upload ảnh chia sẻ hoặc cập nhật trạng thái:", error);
+          // Hiển thị thông báo lỗi
+          triggerNotification('error', 'Lỗi', 'Đã xảy ra lỗi. Vui lòng thử lại.');
+          document.getElementById('shareUploadLoading_v2').style.display = 'none';
+          document.getElementById('confirmShareBtn_v2').disabled = false;
+        });
+    }
+  </script>
   <style>
     .cursor-pointer {
       cursor: pointer;
@@ -4915,69 +4938,70 @@ document.getElementById('contributeExamForm').addEventListener('submit', functio
     let currentRotation = 0;
     let adTimer = null;
     let currentFile = null;
-function renderFolderItem(list, name, currentPath, callback, count, itemId) {
-  const li = document.createElement('li');
-  li.className = 'file-item';
+    function renderFolderItem(list, name, currentPath, callback, count, itemId) {
+      const li = document.createElement('li');
+      li.className = 'file-item';
 
-  // Đã ẩn logic hiển thị count: thay vì hiển thị count, gán countHTML thành chuỗi rỗng
-  // Để mở lại, bỏ comment đoạn dưới và comment dòng gán countHTML thành chuỗi rỗng.
-  /*
-  const countHTML = count > 0 ? `<span class="file-count">${count}</span>` : '';
-  */
-  const countHTML = '';
+      // Đã ẩn logic hiển thị count: thay vì hiển thị count, gán countHTML thành chuỗi rỗng
+      // Để mở lại, bỏ comment đoạn dưới và comment dòng gán countHTML thành chuỗi rỗng.
+      /*
+      const countHTML = count > 0 ? `<span class="file-count">${count}</span>` : '';
+      */
+      const countHTML = '';
 
-  li.innerHTML = `
+      li.innerHTML = `
     <i class="bi bi-folder-fill file-icon folder"></i>
     <span class="file-name">${name}</span>
     ${countHTML}
   `;
-  
-  li.addEventListener('click', () => {
-    callback([...currentPath, { id: itemId, name }]);
-  });
-  
-  list.appendChild(li);
-}
+
+      li.addEventListener('click', () => {
+        callback([...currentPath, { id: itemId, name }]);
+      });
+
+      list.appendChild(li);
+    }
 
 
 
-// Hàm renderSchoolFolderItem: dùng cho folder trường (path.length === 0)
-// Phiên bản này ẩn luôn logic hiển thị icon cộng đồng và số count.
-// Nếu muốn mở lại, bỏ comment đoạn logic bên dưới.
-// Hàm renderSchoolFolderItem: dùng cho folder trường (path.length === 0)
-// === 1. Định nghĩa map logo và default logo ===
+    // Hàm renderSchoolFolderItem: dùng cho folder trường (path.length === 0)
+    // Phiên bản này ẩn luôn logic hiển thị icon cộng đồng và số count.
+    // Nếu muốn mở lại, bỏ comment đoạn logic bên dưới.
+    // Hàm renderSchoolFolderItem: dùng cho folder trường (path.length === 0)
+    // === 1. Định nghĩa map logo và default logo ===
 const SCHOOL_LOGOS = {
   1: '/static/image/logo_uni/husc.ico',
-    3: '/static/image/logo_uni/hus.ico',
-    5: '/static/image/logo_uni/hcmu.png',
-    2: '/static/image/logo_uni/logo_dhsp2.gif'
-    // … thêm id trường tương ứng với đường dẫn logo
+  2: '/static/image/logo_uni/logo_dhsp2.gif',
+  3: '/static/image/logo_uni/hus.ico',
+  5: '/static/image/logo_uni/hcmu.png',
+  8: '/static/image/logo_uni/sgu.jpg',
+  9: '/static/image/logo_uni/qnu.jpg'
 };
 
-const DEFAULT_SCHOOL_LOGO = '/static/logo3.png';
+    const DEFAULT_SCHOOL_LOGO = '/static/logo3.png';
 
-/**
- * renderSchoolFolderItem: render folder cấp trường với logo
- *
- * @param {HTMLElement} list         - phần tử <ul> chứa danh sách
- * @param {string}       name        - tên trường
- * @param {Array}        currentPath - đường dẫn hiện tại dưới dạng mảng
- * @param {Function}     callback    - hàm gọi khi click vào trường
- * @param {number}       count       - (nếu cần) số thành viên
- * @param {number|string} itemId     - id của trường
- * @param {string}       logoUrl     - đường dẫn đến logo của trường
- */
-function renderSchoolFolderItem(list, name, currentPath, callback, count, itemId) {
-  const li = document.createElement('li');
-  li.className = 'file-item';
+    /**
+     * renderSchoolFolderItem: render folder cấp trường với logo
+     *
+     * @param {HTMLElement} list         - phần tử <ul> chứa danh sách
+     * @param {string}       name        - tên trường
+     * @param {Array}        currentPath - đường dẫn hiện tại dưới dạng mảng
+     * @param {Function}     callback    - hàm gọi khi click vào trường
+     * @param {number}       count       - (nếu cần) số thành viên
+     * @param {number|string} itemId     - id của trường
+     * @param {string}       logoUrl     - đường dẫn đến logo của trường
+     */
+    function renderSchoolFolderItem(list, name, currentPath, callback, count, itemId) {
+      const li = document.createElement('li');
+      li.className = 'file-item';
 
-  // ✅ Lấy logo theo itemId từ SCHOOL_LOGOS hoặc dùng mặc định
-  const logoSrc = SCHOOL_LOGOS[itemId] || DEFAULT_SCHOOL_LOGO;
+      // ✅ Lấy logo theo itemId từ SCHOOL_LOGOS hoặc dùng mặc định
+      const logoSrc = SCHOOL_LOGOS[itemId] || DEFAULT_SCHOOL_LOGO;
 
-  // Ẩn phần count nếu không cần thiết
-  const countHTML = '';
+      // Ẩn phần count nếu không cần thiết
+      const countHTML = '';
 
-  li.innerHTML = `
+      li.innerHTML = `
     <div class="school-folder d-flex align-items-center">
       <img
         class="school-logo"
@@ -4990,12 +5014,12 @@ function renderSchoolFolderItem(list, name, currentPath, callback, count, itemId
     </div>
   `;
 
-  li.addEventListener('click', () => {
-    callback([...currentPath, { id: itemId, name }]);
-  });
+      li.addEventListener('click', () => {
+        callback([...currentPath, { id: itemId, name }]);
+      });
 
-  list.appendChild(li);
-}
+      list.appendChild(li);
+    }
 
     /* Hàm renderFileItem: Tạo file item (giữ nguyên logic ban đầu) */
     function renderFileItem(list, file, documentType) {
@@ -5290,166 +5314,166 @@ function renderSchoolFolderItem(list, name, currentPath, callback, count, itemId
     }
 
     /* Hàm renderDrive: Hiển thị danh sách file/folder theo đường dẫn */
-/* Hàm renderDrive: Hiển thị danh sách file/folder theo đường dẫn */
-async function renderDrive(containerId, path, updatePathCallback) {
-  const documentType = containerId.includes('exam') ? 'exam' : 'syllabus';
-  const container = document.getElementById(containerId);
-  if (!container) {
-    console.error(`Không tìm thấy container với ID: ${containerId}`);
-    return;
-  }
-  container.innerHTML = '';
-
-  // Tạo hàm bọc để cập nhật đường dẫn và đồng thời gán tiêu đề là tên folder cuối
-  const updatePath = (newPath) => {
-    updatePathCallback(newPath);
-    if (newPath.length > 0) {
-      document.title = newPath[newPath.length - 1].name;
-    }
-  };
-
-  // Ẩn thông báo gợi ý nếu không ở cấp môn
-  if (path.length !== 3) {
-    const notif = document.querySelector('.custom-notification-wrapper');
-    if (notif) notif.style.display = 'none';
-  }
-
-  // Hiển thị spinner khi đang tải dữ liệu
-  const spinner = document.createElement('div');
-  spinner.className = 'spinner';
-  spinner.textContent = 'Loading...';
-  container.appendChild(spinner);
-
-  let data = [];
-  try {
-  if (path.length === 0) {
-    // Lấy thông tin trường của user nếu có đăng nhập
-    let res = await fetch('/user/university', { credentials: 'include' });
-    if (res.ok) {
-      const userSchool = await res.json();
-      window.userSchoolId = userSchool.university;
-      data = [{
-        id:   userSchool.university,
-        name: userSchool.school_name,
-        // <-- thêm logo_url
-        logo_url: SCHOOL_LOGOS[userSchool.university] || DEFAULT_SCHOOL_LOGO
-      }];
-    } else {
-      const allSchoolsRes = await fetch('/api/schools');
-      if (allSchoolsRes.ok) {
-        data = await allSchoolsRes.json();
-      } else {
-        throw new Error("Không thể lấy danh sách trường");
+    /* Hàm renderDrive: Hiển thị danh sách file/folder theo đường dẫn */
+    async function renderDrive(containerId, path, updatePathCallback) {
+      const documentType = containerId.includes('exam') ? 'exam' : 'syllabus';
+      const container = document.getElementById(containerId);
+      if (!container) {
+        console.error(`Không tìm thấy container với ID: ${containerId}`);
+        return;
       }
-    }
+      container.innerHTML = '';
 
-    // Lấy số liệu thống kê số thành viên theo trường
-    try {
-      const statsRes = await fetch('/api/users/statistics');
-      if (statsRes.ok) {
-        const stats = await statsRes.json();
-        const statsMap = {};
-        stats.forEach(stat => {
-          statsMap[stat.school] = stat.user_count;
-        });
-        // map lại data, thêm count và logo_url
-        data = data.map(item => {
-          const count = statsMap[item.name] || 0;
-          return {
-            ...item,
-            count,
-            logo_url: SCHOOL_LOGOS[item.id] || DEFAULT_SCHOOL_LOGO
-          };
-        });
+      // Tạo hàm bọc để cập nhật đường dẫn và đồng thời gán tiêu đề là tên folder cuối
+      const updatePath = (newPath) => {
+        updatePathCallback(newPath);
+        if (newPath.length > 0) {
+          document.title = newPath[newPath.length - 1].name;
+        }
+      };
+
+      // Ẩn thông báo gợi ý nếu không ở cấp môn
+      if (path.length !== 3) {
+        const notif = document.querySelector('.custom-notification-wrapper');
+        if (notif) notif.style.display = 'none';
       }
-    } catch (error) {
-      console.error("Lỗi khi lấy thống kê người dùng:", error);
-  }
-    } else if (path.length === 1) {
-      const schoolId = path[0].id;
-      data = await (await fetch(`/api/schools/${schoolId}/faculties`)).json();
-    } else if (path.length === 2) {
-      const facultyId = path[1].id;
-      data = await (await fetch(`/api/faculties/${facultyId}/subjects?type=${documentType}`)).json();
-    } else if (path.length === 3) {
-      const subjectId = path[2].id;
-      const response = await fetch(`/api/subjects/${subjectId}/documents_by_year?type=${documentType}`);
-      const groupedData = await response.json();
-      data = Object.keys(groupedData)
-        .map(year => ({
-          id: parseInt(year),
-          name: year,
-          count: groupedData[year].length,
-          documents: groupedData[year]
-        }))
-        .sort((a, b) => b.id - a.id);
-    } else if (path.length === 4) {
-      const subjectId = path[2].id;
-      const year = path[3].id;
-      data = await (await fetch(`/api/subjects/${subjectId}/documents/${year}?type=${documentType}`)).json();
-    }
-  } catch (error) {
-    console.error('Lỗi khi lấy dữ liệu:', error);
-    container.innerHTML = `<div class="alert alert-danger">
+
+      // Hiển thị spinner khi đang tải dữ liệu
+      const spinner = document.createElement('div');
+      spinner.className = 'spinner';
+      spinner.textContent = 'Loading...';
+      container.appendChild(spinner);
+
+      let data = [];
+      try {
+        if (path.length === 0) {
+          // Lấy thông tin trường của user nếu có đăng nhập
+          let res = await fetch('/user/university', { credentials: 'include' });
+          if (res.ok) {
+            const userSchool = await res.json();
+            window.userSchoolId = userSchool.university;
+            data = [{
+              id: userSchool.university,
+              name: userSchool.school_name,
+              // <-- thêm logo_url
+              logo_url: SCHOOL_LOGOS[userSchool.university] || DEFAULT_SCHOOL_LOGO
+            }];
+          } else {
+            const allSchoolsRes = await fetch('/api/schools');
+            if (allSchoolsRes.ok) {
+              data = await allSchoolsRes.json();
+            } else {
+              throw new Error("Không thể lấy danh sách trường");
+            }
+          }
+
+          // Lấy số liệu thống kê số thành viên theo trường
+          try {
+            const statsRes = await fetch('/api/users/statistics');
+            if (statsRes.ok) {
+              const stats = await statsRes.json();
+              const statsMap = {};
+              stats.forEach(stat => {
+                statsMap[stat.school] = stat.user_count;
+              });
+              // map lại data, thêm count và logo_url
+              data = data.map(item => {
+                const count = statsMap[item.name] || 0;
+                return {
+                  ...item,
+                  count,
+                  logo_url: SCHOOL_LOGOS[item.id] || DEFAULT_SCHOOL_LOGO
+                };
+              });
+            }
+          } catch (error) {
+            console.error("Lỗi khi lấy thống kê người dùng:", error);
+          }
+        } else if (path.length === 1) {
+          const schoolId = path[0].id;
+          data = await (await fetch(`/api/schools/${schoolId}/faculties`)).json();
+        } else if (path.length === 2) {
+          const facultyId = path[1].id;
+          data = await (await fetch(`/api/faculties/${facultyId}/subjects?type=${documentType}`)).json();
+        } else if (path.length === 3) {
+          const subjectId = path[2].id;
+          const response = await fetch(`/api/subjects/${subjectId}/documents_by_year?type=${documentType}`);
+          const groupedData = await response.json();
+          data = Object.keys(groupedData)
+            .map(year => ({
+              id: parseInt(year),
+              name: year,
+              count: groupedData[year].length,
+              documents: groupedData[year]
+            }))
+            .sort((a, b) => b.id - a.id);
+        } else if (path.length === 4) {
+          const subjectId = path[2].id;
+          const year = path[3].id;
+          data = await (await fetch(`/api/subjects/${subjectId}/documents/${year}?type=${documentType}`)).json();
+        }
+      } catch (error) {
+        console.error('Lỗi khi lấy dữ liệu:', error);
+        container.innerHTML = `<div class="alert alert-danger">
       Có lỗi khi tải dữ liệu: ${error.message || error}.<br>
       Vui lòng <a href="#" onclick="window.location.reload()">nhấn vào đây</a> để thử lại (F5).
     </div>`;
-    return;
-  }
+        return;
+      }
 
-  // Xóa spinner
-  container.innerHTML = '';
+      // Xóa spinner
+      container.innerHTML = '';
 
-  if (path.length > 0) {
-    // Sử dụng hàm updatePath thay vì updatePathCallback để cập nhật tiêu đề
-    renderBreadcrumb(container, path, updatePath);
-  }
-  // >>>>> CHỈNH SỬA: Gọi modal chào mừng khi ở trang chủ <<<<<
-  if (path.length === 0) {
-    // Nếu có user đã đăng nhập, kiểm tra trạng thái welcome_checked
-    fetch('/api/welcome_checked')
-      .then(response => response.json())
-      .then(data => {
-        // Nếu không có lỗi và welcome_checked bằng 0 (chưa xem thông báo)
-        if (!data.error && data.welcome_checked === 0) {
-          fetchMembershipData();
-        }
-      })
-      .catch(error => console.error('Error checking welcome status:', error));
-  }
-  // <<< END CHỈNH SỬA
+      if (path.length > 0) {
+        // Sử dụng hàm updatePath thay vì updatePathCallback để cập nhật tiêu đề
+        renderBreadcrumb(container, path, updatePath);
+      }
+      // >>>>> CHỈNH SỬA: Gọi modal chào mừng khi ở trang chủ <<<<<
+      if (path.length === 0) {
+        // Nếu có user đã đăng nhập, kiểm tra trạng thái welcome_checked
+        fetch('/api/welcome_checked')
+          .then(response => response.json())
+          .then(data => {
+            // Nếu không có lỗi và welcome_checked bằng 0 (chưa xem thông báo)
+            if (!data.error && data.welcome_checked === 0) {
+              fetchMembershipData();
+            }
+          })
+          .catch(error => console.error('Error checking welcome status:', error));
+      }
+      // <<< END CHỈNH SỬA
 
-  // Phần gợi ý cho cấp môn (path.length === 3) giữ nguyên như cũ
-  if (path.length === 3) {
-    const subjectId = path[2].id;
-    const alternateType = documentType === 'exam' ? 'syllabus' : 'exam';
-    console.log(`Đang gọi API gợi ý cho subject_id: ${subjectId} với type: ${alternateType}`);
-    fetch(`/api/subjects/${subjectId}/documents_by_year?type=${alternateType}`)
-      .then(response => response.json())
-      .then(alternateData => {
-        console.log("Dữ liệu gợi ý trả về:", alternateData);
-        const wrapper = document.querySelector('.custom-notification-wrapper');
-        if (Object.keys(alternateData).length > 0) {
-          wrapper.style.display = 'block';
-          const years = Object.keys(alternateData).sort((a, b) => parseInt(b) - parseInt(a));
-          const totalItems = years.length;
-          const collapsedLimit = 4;
-          let isCollapsed = totalItems > collapsedLimit;
-          let displayedYears = isCollapsed ? years.slice(0, collapsedLimit) : years;
-          function renderGrid(yearList) {
-            let gridHtml = '';
-            yearList.forEach(year => {
-              const group = alternateData[year];
-              gridHtml += `
+      // Phần gợi ý cho cấp môn (path.length === 3) giữ nguyên như cũ
+      if (path.length === 3) {
+        const subjectId = path[2].id;
+        const alternateType = documentType === 'exam' ? 'syllabus' : 'exam';
+        console.log(`Đang gọi API gợi ý cho subject_id: ${subjectId} với type: ${alternateType}`);
+        fetch(`/api/subjects/${subjectId}/documents_by_year?type=${alternateType}`)
+          .then(response => response.json())
+          .then(alternateData => {
+            console.log("Dữ liệu gợi ý trả về:", alternateData);
+            const wrapper = document.querySelector('.custom-notification-wrapper');
+            if (Object.keys(alternateData).length > 0) {
+              wrapper.style.display = 'block';
+              const years = Object.keys(alternateData).sort((a, b) => parseInt(b) - parseInt(a));
+              const totalItems = years.length;
+              const collapsedLimit = 4;
+              let isCollapsed = totalItems > collapsedLimit;
+              let displayedYears = isCollapsed ? years.slice(0, collapsedLimit) : years;
+              function renderGrid(yearList) {
+                let gridHtml = '';
+                yearList.forEach(year => {
+                  const group = alternateData[year];
+                  gridHtml += `
                 <div class="custom-doc-card alternate-suggestion-item" data-year="${year}" style="cursor:pointer;">
                   <div class="custom-doc-type">Năm ${year}</div>
                   <div class="custom-doc-name">(${group.length} tài liệu)</div>
                 </div>
               `;
-            });
-            return gridHtml;
-          }
-          let newContent = `
+                });
+                return gridHtml;
+              }
+              let newContent = `
             <div class="custom-study-notification">
               <div class="custom-notification-indicator"></div>
               <button class="custom-close-btn">×</button>
@@ -5467,8 +5491,8 @@ async function renderDrive(containerId, path, updatePathCallback) {
                 ${renderGrid(displayedYears)}
               </div>
           `;
-          if (isCollapsed) {
-            newContent += `
+              if (isCollapsed) {
+                newContent += `
               <div class="custom-actions-section">
                 <a href="#" class="custom-view-all-btn">
                   <span>Xem thêm</span>
@@ -5478,120 +5502,120 @@ async function renderDrive(containerId, path, updatePathCallback) {
                 </a>
               </div>
             `;
-          }
-          newContent += `</div>`;
-          wrapper.innerHTML = newContent;
-          wrapper.querySelector('.custom-close-btn').addEventListener('click', () => {
-            wrapper.style.transform = 'translateY(100%)';
-            wrapper.style.opacity = 0;
-            setTimeout(() => {
-              wrapper.style.display = 'none';
-            }, 500);
-          });
-          function addItemEvents() {
-            wrapper.querySelectorAll('.alternate-suggestion-item').forEach(item => {
-              item.addEventListener('click', (e) => {
-                const selectedYear = e.currentTarget.getAttribute('data-year');
-                console.log(`Người dùng chọn năm ${selectedYear}`);
-                const newPath = [...path, { id: parseInt(selectedYear), name: selectedYear }];
-                if (documentType === 'exam') {
-                  document.getElementById('de-thi-tab').classList.remove('active');
-                  document.getElementById('de-cuong-tab').classList.add('active');
-                  document.getElementById('de-thi').classList.remove('show', 'active');
-                  document.getElementById('de-cuong').classList.add('show', 'active');
-                  renderSyllabusDrive(newPath);
-                } else {
-                  document.getElementById('de-cuong-tab').classList.remove('active');
-                  document.getElementById('de-thi-tab').classList.add('active');
-                  document.getElementById('de-cuong').classList.remove('show', 'active');
-                  document.getElementById('de-thi').classList.add('show', 'active');
-                  renderExamDrive(newPath);
-                }
-              });
-            });
-          }
-          addItemEvents();
-          const viewAllBtn = wrapper.querySelector('.custom-view-all-btn');
-          if (viewAllBtn) {
-            viewAllBtn.addEventListener('click', (e) => {
-              e.preventDefault();
-              const fullGridHtml = renderGrid(years);
-              const gridContainer = document.getElementById('alternateGrid');
-              if (gridContainer) {
-                gridContainer.innerHTML = fullGridHtml;
-                viewAllBtn.parentElement.remove();
-                addItemEvents();
               }
-            });
-          }
-        } else {
-          console.log("Không có dữ liệu gợi ý; ẩn thông báo gợi ý.");
-          const wrapper = document.querySelector('.custom-notification-wrapper');
-          if (wrapper) wrapper.style.display = 'none';
-        }
-      })
-      .catch(err => console.error("Error fetching alternate suggestions", err));
-  }
+              newContent += `</div>`;
+              wrapper.innerHTML = newContent;
+              wrapper.querySelector('.custom-close-btn').addEventListener('click', () => {
+                wrapper.style.transform = 'translateY(100%)';
+                wrapper.style.opacity = 0;
+                setTimeout(() => {
+                  wrapper.style.display = 'none';
+                }, 500);
+              });
+              function addItemEvents() {
+                wrapper.querySelectorAll('.alternate-suggestion-item').forEach(item => {
+                  item.addEventListener('click', (e) => {
+                    const selectedYear = e.currentTarget.getAttribute('data-year');
+                    console.log(`Người dùng chọn năm ${selectedYear}`);
+                    const newPath = [...path, { id: parseInt(selectedYear), name: selectedYear }];
+                    if (documentType === 'exam') {
+                      document.getElementById('de-thi-tab').classList.remove('active');
+                      document.getElementById('de-cuong-tab').classList.add('active');
+                      document.getElementById('de-thi').classList.remove('show', 'active');
+                      document.getElementById('de-cuong').classList.add('show', 'active');
+                      renderSyllabusDrive(newPath);
+                    } else {
+                      document.getElementById('de-cuong-tab').classList.remove('active');
+                      document.getElementById('de-thi-tab').classList.add('active');
+                      document.getElementById('de-cuong').classList.remove('show', 'active');
+                      document.getElementById('de-thi').classList.add('show', 'active');
+                      renderExamDrive(newPath);
+                    }
+                  });
+                });
+              }
+              addItemEvents();
+              const viewAllBtn = wrapper.querySelector('.custom-view-all-btn');
+              if (viewAllBtn) {
+                viewAllBtn.addEventListener('click', (e) => {
+                  e.preventDefault();
+                  const fullGridHtml = renderGrid(years);
+                  const gridContainer = document.getElementById('alternateGrid');
+                  if (gridContainer) {
+                    gridContainer.innerHTML = fullGridHtml;
+                    viewAllBtn.parentElement.remove();
+                    addItemEvents();
+                  }
+                });
+              }
+            } else {
+              console.log("Không có dữ liệu gợi ý; ẩn thông báo gợi ý.");
+              const wrapper = document.querySelector('.custom-notification-wrapper');
+              if (wrapper) wrapper.style.display = 'none';
+            }
+          })
+          .catch(err => console.error("Error fetching alternate suggestions", err));
+      }
 
-  // Thanh tìm kiếm inline
-  const inlineSearchContainer = document.createElement('div');
-  inlineSearchContainer.className = 'input-group mb-3';
-  inlineSearchContainer.style.position = 'relative';
-  inlineSearchContainer.innerHTML = `
+      // Thanh tìm kiếm inline
+      const inlineSearchContainer = document.createElement('div');
+      inlineSearchContainer.className = 'input-group mb-3';
+      inlineSearchContainer.style.position = 'relative';
+      inlineSearchContainer.innerHTML = `
     <span class="input-group-text"><i class="bi bi-search"></i></span>
     <input type="search" class="form-control" placeholder="Tìm kiếm trong thư mục...">
   `;
-  container.appendChild(inlineSearchContainer);
+      container.appendChild(inlineSearchContainer);
 
-  const inlineSuggestions = document.createElement('div');
-  inlineSuggestions.className = 'suggestions';
-  inlineSuggestions.style.display = 'none';
-  inlineSearchContainer.appendChild(inlineSuggestions);
+      const inlineSuggestions = document.createElement('div');
+      inlineSuggestions.className = 'suggestions';
+      inlineSuggestions.style.display = 'none';
+      inlineSearchContainer.appendChild(inlineSuggestions);
 
-  const advancedSearchBtn = document.createElement('button');
-  advancedSearchBtn.className = 'btn btn-outline-primary mb-3';
-  advancedSearchBtn.textContent = 'Tìm kiếm theo tên môn học';
-  advancedSearchBtn.addEventListener('click', () => {
-    const subjectSearchModal = new bootstrap.Modal(document.getElementById('customSearchModal'));
-    subjectSearchModal.show();
-  });
-  container.appendChild(advancedSearchBtn);
+      const advancedSearchBtn = document.createElement('button');
+      advancedSearchBtn.className = 'btn btn-outline-primary mb-3';
+      advancedSearchBtn.textContent = 'Tìm kiếm theo tên môn học';
+      advancedSearchBtn.addEventListener('click', () => {
+        const subjectSearchModal = new bootstrap.Modal(document.getElementById('customSearchModal'));
+        subjectSearchModal.show();
+      });
+      container.appendChild(advancedSearchBtn);
 
-  // Tạo danh sách file/folder
-  const list = document.createElement('ul');
-  list.className = 'file-list';
-  if (Array.isArray(data)) {
-    data.forEach(item => {
-      if (path.length === 0) {
-        // Ở cấp trường: sử dụng hàm renderSchoolFolderItem để chèn icon cộng đồng
-        renderSchoolFolderItem(list, item.name, path, updatePath, item.count || 0, item.id);
-      } else if (path.length < 3) {
-        if (typeof item.count !== 'undefined') {
-          renderFolderItem(list, item.name, path, updatePath, item.count, item.id);
-        } else {
-          renderFolderItem(list, item.name, path, updatePath, 0, item.id);
-        }
-      } else if (path.length === 3) {
-        renderFolderItem(list, item.name, path, updatePath, item.count || 0, item.id);
-      } else if (path.length === 4) {
-        renderFileItem(list, item, documentType);
+      // Tạo danh sách file/folder
+      const list = document.createElement('ul');
+      list.className = 'file-list';
+      if (Array.isArray(data)) {
+        data.forEach(item => {
+          if (path.length === 0) {
+            // Ở cấp trường: sử dụng hàm renderSchoolFolderItem để chèn icon cộng đồng
+            renderSchoolFolderItem(list, item.name, path, updatePath, item.count || 0, item.id);
+          } else if (path.length < 3) {
+            if (typeof item.count !== 'undefined') {
+              renderFolderItem(list, item.name, path, updatePath, item.count, item.id);
+            } else {
+              renderFolderItem(list, item.name, path, updatePath, 0, item.id);
+            }
+          } else if (path.length === 3) {
+            renderFolderItem(list, item.name, path, updatePath, item.count || 0, item.id);
+          } else if (path.length === 4) {
+            renderFileItem(list, item, documentType);
+          }
+        });
       }
-    });
-  }
-  container.appendChild(list);
+      container.appendChild(list);
 
-  // Nếu danh sách folder trống thì hiển thị thông báo "Thư mục rỗng"
-  if (!list.hasChildNodes()) {
-    const emptyMsg = document.createElement('p');
-    emptyMsg.className = 'empty-folder';
-    emptyMsg.textContent = 'Thư mục rỗng';
-    container.appendChild(emptyMsg);
-  }
+      // Nếu danh sách folder trống thì hiển thị thông báo "Thư mục rỗng"
+      if (!list.hasChildNodes()) {
+        const emptyMsg = document.createElement('p');
+        emptyMsg.className = 'empty-folder';
+        emptyMsg.textContent = 'Thư mục rỗng';
+        container.appendChild(emptyMsg);
+      }
 
-  // Xử lý tìm kiếm inline
-  // Thêm CSS trực tiếp vào trang
-  const style = document.createElement('style');
-  style.textContent = `
+      // Xử lý tìm kiếm inline
+      // Thêm CSS trực tiếp vào trang
+      const style = document.createElement('style');
+      style.textContent = `
   /* Container gợi ý tìm kiếm */
   .inline-suggestions {
     position: absolute;
@@ -5645,66 +5669,66 @@ async function renderDrive(containerId, path, updatePathCallback) {
     }
   }
 `;
-  document.head.appendChild(style);
+      document.head.appendChild(style);
 
-  // Xử lý tìm kiếm inline
-  const inlineSearchInput = inlineSearchContainer.querySelector('input');
-  inlineSearchInput.addEventListener('input', (e) => {
-    const term = e.target.value.toLowerCase().trim();
-    const suggestions = [];
+      // Xử lý tìm kiếm inline
+      const inlineSearchInput = inlineSearchContainer.querySelector('input');
+      inlineSearchInput.addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase().trim();
+        const suggestions = [];
 
-    // Lọc và hiển thị các item phù hợp
-    Array.from(list.children).forEach(item => {
-      const text = item.textContent.toLowerCase();
-      const isVisible = text.includes(term);
-      item.style.display = isVisible ? 'flex' : 'none';
+        // Lọc và hiển thị các item phù hợp
+        Array.from(list.children).forEach(item => {
+          const text = item.textContent.toLowerCase();
+          const isVisible = text.includes(term);
+          item.style.display = isVisible ? 'flex' : 'none';
 
-      if (isVisible) {
-        const name = item.querySelector('.file-name').textContent;
-        if (!suggestions.includes(name)) suggestions.push(name);
-      }
-    });
-
-    // Xóa gợi ý cũ
-    inlineSuggestions.innerHTML = '';
-
-    if (term) {
-      if (suggestions.length > 0) {
-        // Hiển thị gợi ý
-        suggestions.forEach(suggestion => {
-          const div = document.createElement('div');
-          div.className = 'suggestion-item';
-          div.textContent = suggestion;
-
-          div.addEventListener('click', () => {
-            inlineSearchInput.value = suggestion;
-            inlineSearchInput.dispatchEvent(new Event('input'));
-            inlineSuggestions.style.display = 'none';
-          });
-
-          inlineSuggestions.appendChild(div);
+          if (isVisible) {
+            const name = item.querySelector('.file-name').textContent;
+            if (!suggestions.includes(name)) suggestions.push(name);
+          }
         });
-      } else {
-        // Hiển thị thông báo không có kết quả
-        const p = document.createElement('p');
-        p.className = 'no-results-message';
-        p.textContent = 'Không tìm thấy kết quả phù hợp';
-        inlineSuggestions.appendChild(p);
-      }
 
-      inlineSuggestions.style.display = 'block';
-    } else {
-      inlineSuggestions.style.display = 'none';
-    }
-  });
+        // Xóa gợi ý cũ
+        inlineSuggestions.innerHTML = '';
 
-  // Ẩn gợi ý khi click ra ngoài
-  document.addEventListener('click', (e) => {
-    if (!inlineSearchContainer.contains(e.target)) {
-      inlineSuggestions.style.display = 'none';
+        if (term) {
+          if (suggestions.length > 0) {
+            // Hiển thị gợi ý
+            suggestions.forEach(suggestion => {
+              const div = document.createElement('div');
+              div.className = 'suggestion-item';
+              div.textContent = suggestion;
+
+              div.addEventListener('click', () => {
+                inlineSearchInput.value = suggestion;
+                inlineSearchInput.dispatchEvent(new Event('input'));
+                inlineSuggestions.style.display = 'none';
+              });
+
+              inlineSuggestions.appendChild(div);
+            });
+          } else {
+            // Hiển thị thông báo không có kết quả
+            const p = document.createElement('p');
+            p.className = 'no-results-message';
+            p.textContent = 'Không tìm thấy kết quả phù hợp';
+            inlineSuggestions.appendChild(p);
+          }
+
+          inlineSuggestions.style.display = 'block';
+        } else {
+          inlineSuggestions.style.display = 'none';
+        }
+      });
+
+      // Ẩn gợi ý khi click ra ngoài
+      document.addEventListener('click', (e) => {
+        if (!inlineSearchContainer.contains(e.target)) {
+          inlineSuggestions.style.display = 'none';
+        }
+      });
     }
-  });
-}
     function renderBreadcrumb(container, path, callback) {
       if (path.length === 0) return;
       const breadcrumb = document.createElement('nav');
@@ -6085,86 +6109,86 @@ async function renderDrive(containerId, path, updatePathCallback) {
       list.appendChild(li);
     }
     // Hàm xử lý click file (giữ nguyên)
-function handleFileClick(file, documentType, filePath) {
-  fetch('/api/check-login', { method: 'GET', credentials: 'include' })
-    .then(response => response.json())
-    .then(data => {
-      if (data.loggedIn) {
-        fetch('/api/account_status', { method: 'GET', credentials: 'include' })
-          .then(response => response.json())
-          .then(statusData => {
-            if (statusData.account_status === 'đã duyệt') {
-              fetch('/api/check-file-open-timer', { method: 'GET', credentials: 'include' })
-                .then(response => response.json())
-                .then(timerData => {
-                  if (timerData.can_open) {
-                    fetch('/api/log-file-open', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      credentials: 'include',
-                      body: JSON.stringify({ documentId: file.id })
-                    })
-                      .then(() => {
-                        if (documentType === 'exam') {
-                          fetch('/api/log-view-exam-v2', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            credentials: 'include',
-                            body: JSON.stringify({ documentId: file.id })
-                          })
-                            .then(response => {
-                              if (!response.ok) {
-                                return response.json().then(data => {
-                                  triggerNotification('danger', 'Lỗi', data.error);
-                                  throw new Error(data.error);
+    function handleFileClick(file, documentType, filePath) {
+      fetch('/api/check-login', { method: 'GET', credentials: 'include' })
+        .then(response => response.json())
+        .then(data => {
+          if (data.loggedIn) {
+            fetch('/api/account_status', { method: 'GET', credentials: 'include' })
+              .then(response => response.json())
+              .then(statusData => {
+                if (statusData.account_status === 'đã duyệt') {
+                  fetch('/api/check-file-open-timer', { method: 'GET', credentials: 'include' })
+                    .then(response => response.json())
+                    .then(timerData => {
+                      if (timerData.can_open) {
+                        fetch('/api/log-file-open', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          credentials: 'include',
+                          body: JSON.stringify({ documentId: file.id })
+                        })
+                          .then(() => {
+                            if (documentType === 'exam') {
+                              fetch('/api/log-view-exam-v2', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                credentials: 'include',
+                                body: JSON.stringify({ documentId: file.id })
+                              })
+                                .then(response => {
+                                  if (!response.ok) {
+                                    return response.json().then(data => {
+                                      triggerNotification('danger', 'Lỗi', data.error);
+                                      throw new Error(data.error);
+                                    });
+                                  }
+                                  return response.json();
+                                })
+                                .then(() => {
+                                  window.open(filePath, '_blank');
+                                })
+                                .catch(error => {
+                                  console.error('Lỗi khi log view exam:', error);
                                 });
-                              }
-                              return response.json();
-                            })
-                            .then(() => {
+                            } else {
                               window.open(filePath, '_blank');
-                            })
-                            .catch(error => {
-                              console.error('Lỗi khi log view exam:', error);
-                            });
-                        } else {
-                          window.open(filePath, '_blank');
-                        }
-                      })
-                      .catch(error => {
-                        console.error('Lỗi khi log file:', error);
-                        window.open(filePath, '_blank');
-                      });
-                  } else {
-                    triggerNotification('warning', 'Thông báo', `Vui lòng chờ ${Math.ceil(timerData.seconds_left)} giây trước khi thực hiện thao tác tiếp theo`);
-                  }
-                })
-                .catch(error => {
-                  console.error('Lỗi khi kiểm tra thời gian mở file:', error);
-                });
-            } else if (statusData.account_status === 'bình thường') {
-              const modal = new bootstrap.Modal(document.getElementById('verificationModal-v2'));
-              modal.show();
-            } else if (statusData.account_status === 'đang duyệt') {
-              triggerNotification('warning', 'Lỗi', 'Tài khoản của bạn đang được xét duyệt');
-            }
-          })
-          .catch(error => {
-            console.error('Lỗi khi kiểm tra trạng thái tài khoản:', error);
-            const modal = new bootstrap.Modal(document.getElementById('verificationModal-v2'));
-            modal.show();
-          });
-      } else {
-        // ❗ Chưa đăng nhập → chuyển về trang login
-        window.location.href = '/login';
-      }
-    })
-    .catch(error => {
-      console.error('Lỗi kiểm tra đăng nhập:', error);
-      // ❗ Nếu lỗi khi gọi /api/check-login → cũng chuyển về login
-      window.location.href = '/login';
-    });
-}
+                            }
+                          })
+                          .catch(error => {
+                            console.error('Lỗi khi log file:', error);
+                            window.open(filePath, '_blank');
+                          });
+                      } else {
+                        triggerNotification('warning', 'Thông báo', `Vui lòng chờ ${Math.ceil(timerData.seconds_left)} giây trước khi thực hiện thao tác tiếp theo`);
+                      }
+                    })
+                    .catch(error => {
+                      console.error('Lỗi khi kiểm tra thời gian mở file:', error);
+                    });
+                } else if (statusData.account_status === 'bình thường') {
+                  const modal = new bootstrap.Modal(document.getElementById('verificationModal-v2'));
+                  modal.show();
+                } else if (statusData.account_status === 'đang duyệt') {
+                  triggerNotification('warning', 'Lỗi', 'Tài khoản của bạn đang được xét duyệt');
+                }
+              })
+              .catch(error => {
+                console.error('Lỗi khi kiểm tra trạng thái tài khoản:', error);
+                const modal = new bootstrap.Modal(document.getElementById('verificationModal-v2'));
+                modal.show();
+              });
+          } else {
+            // ❗ Chưa đăng nhập → chuyển về trang login
+            window.location.href = '/login';
+          }
+        })
+        .catch(error => {
+          console.error('Lỗi kiểm tra đăng nhập:', error);
+          // ❗ Nếu lỗi khi gọi /api/check-login → cũng chuyển về login
+          window.location.href = '/login';
+        });
+    }
 
     function openFile(filePath) {
       if (isInAppBrowser()) {

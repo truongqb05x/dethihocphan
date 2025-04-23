@@ -325,7 +325,6 @@ def get_schools():
           SELECT s.id, s.name,
             (SELECT COUNT(*) FROM faculties f WHERE f.school_id = s.id) AS count
           FROM schools s
-          WHERE s.id IN (1, 2,3,4,5)
           ORDER BY s.name
         """)
         schools = cursor.fetchall()
@@ -337,7 +336,6 @@ def get_schools():
             cursor.close()
         if conn:
             conn.close()
-
 
 # -----------------------------------------------------------------
 # Route lấy danh sách khoa theo trường
