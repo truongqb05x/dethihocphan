@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cảnh báo vi phạm tiêu chuẩn cộng đồng</title>
+    <!-- Bootstrap 5 CSS tối giản -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #e74c3c;
+            --light-gray: #f8f9fa;
+            --dark-gray: #343a40;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+            line-height: 1.6;
+        }
+        
+        .violation-card {
+            max-width: 640px;
+            margin: 4rem auto;
+            border: none;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            border-bottom: none;
+        }
+        
+        .card-body {
+            padding: 2.5rem;
+        }
+        
+        .standards-link {
+            color: var(--secondary-color);
+            font-weight: 600;
+            text-decoration: none;
+            border-bottom: 1px dashed currentColor;
+            cursor: pointer;
+        }
+        
+        .ip-display {
+            background-color: rgba(0,0,0,0.03);
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            font-family: 'SFMono-Regular', Menlo, Monaco, Consolas, monospace;
+            margin: 1.5rem 0;
+            display: inline-block;
+        }
+        
+        .contact-icons {
+            margin: 2rem 0;
+        }
+        
+        .contact-icons a {
+            color: var(--primary-color);
+            margin: 0 0.75rem;
+            font-size: 1.25rem;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        
+        .contact-icons a:hover {
+            opacity: 1;
+            text-decoration: none;
+        }
+        
+        /* Modal tối giản */
+        .modal-content {
+            border: none;
+            border-radius: 8px;
+        }
+        
+        .modal-header {
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            padding: 1.25rem 1.5rem;
+        }
+        
+        .modal-title {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .standard-item {
+            margin-bottom: 1.25rem;
+            padding-left: 1.75rem;
+            position: relative;
+        }
+        
+        .standard-item:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+        
+        .btn-minimal {
+            border-radius: 4px;
+            padding: 0.5rem 1.25rem;
+            font-weight: 500;
+            border: 1px solid rgba(0,0,0,0.1);
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="violation-card card">
+            <div class="card-header">
+                <i class="fas fa-exclamation-circle fa-2x mb-3"></i>
+                <h3 class="h4 mb-0">Cảnh báo vi phạm</h3>
+            </div>
+            
+            <div class="card-body text-center">
+                <p class="lead">Hệ thống đã phát hiện hoạt động không phù hợp với <span class="standards-link" data-bs-toggle="modal" data-bs-target="#standardsModal">tiêu chuẩn cộng đồng</span> của chúng tôi.</p>
+                
+                <div class="ip-display">
+                    <i class="fas fa-network-wired me-2"></i>
+                    Địa chỉ IP: <span id="ip-address">192.168.1.1</span>
+                </div>
+                
+                <p>Nếu đây là sự nhầm lẫn, vui lòng liên hệ với chúng tôi:</p>
+                
+                <div class="contact-icons">
+                    <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="mailto:support@example.com" title="Email"><i class="fas fa-envelope"></i></a>
+                    <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Tiêu chuẩn Cộng đồng -->
+    <div class="modal fade" id="standardsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tiêu chuẩn Cộng đồng</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+                <div class="modal-body">
+                    <h6 class="fw-bold mb-3 text-danger">Nội dung không được phép:</h6>
+                    <div class="standard-item">Ngôn ngữ thù hận hoặc phân biệt đối xử</div>
+                    <div class="standard-item">Thông tin sai lệch có chủ đích</div>
+                    <div class="standard-item">Nội dung xâm phạm quyền riêng tư</div>
+                    <div class="standard-item">Hành vi quấy rối hoặc bắt nạt</div>
+                    
+                    <hr class="my-4">
+                    
+                    <h6 class="fw-bold mb-3 text-success">Chúng tôi khuyến khích:</h6>
+                    <div class="standard-item">Giao tiếp tôn trọng và mang tính xây dựng</div>
+                    <div class="standard-item">Chia sẻ thông tin chính xác, có nguồn dẫn</div>
+                    <div class="standard-item">Tôn trọng sự khác biệt trong cộng đồng</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-minimal" data-bs-dismiss="modal">Đã hiểu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    
+    <script>
+        // Lấy IP thực (chỉ hoạt động khi triển khai)
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('https://api.ipify.org?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('ip-address').textContent = data.ip;
+                })
+                .catch(() => {
+                    document.getElementById('ip-address').textContent = 'Không xác định';
+                });
+        });
+        
+    </script>
+</body>
+</html>

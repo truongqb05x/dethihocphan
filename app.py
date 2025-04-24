@@ -1,22 +1,21 @@
-import os
-import logging
-from datetime import datetime, timedelta
-import hashlib
-from flask import Flask, request, jsonify, session, render_template, redirect, url_for, abort, send_from_directory,current_app
-from flask_cors import CORS
-from werkzeug.utils import secure_filename
-import mysql.connector
-from mysql.connector import pooling, Error
-import smtplib
+import os, logging, time, random, string, datetime, hashlib, smtplib, traceback, requests
+from datetime import datetime, timedelta, timezone
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-import random
-import string
-import datetime
 
+from flask import (
+    Flask, request, jsonify, render_template, redirect, url_for,
+    abort, send_from_directory, session, current_app, make_response
+)
+from flask_cors import CORS
+from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash
+
+import mysql.connector
+from mysql.connector import pooling, Error
 import bcrypt
-import requests
+
+logging.basicConfig(level=logging.DEBUG)
 app = Flask(__name__, static_folder='static', static_url_path='/static')
 @app.route('/9aff3a5a6b3483b13230a7d1e8dece49.html')
 def verify_file():
@@ -85,8 +84,6 @@ app.secret_key = 'your_secret_key'
 # Hàm mã hóa mật khẩu (sử dụng SHA-256)
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
-from datetime import timedelta
-from flask import make_response
 
 @app.route('/api/login', methods=['POST'])
 def login():
@@ -889,83 +886,6 @@ def log_file_open():
 
 
 # -----------------------------------------------------------------
-# Route lấy nhật ký hoạt động người dùng
-# Endpoint: /api/user-activity
-# Phương thức: GET
-# Mô tả:
-#   - Truy vấn bảng file_open_logs kết hợp với bảng documents
-#   - Lấy thông tin file_name và thời gian mở (opened_at)
-#   - Sắp xếp theo thời gian mở giảm dần, giới hạn kết quả (ví dụ: 3 dòng)
-#   - Chuyển đổi datetime sang chuỗi ISO nếu cần
-# -----------------------------------------------------------------
-@app.route('/api/user-activity', methods=['GET'])
-def get_user_activity():
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
-        sql = """
-            SELECT d.file_name, fol.opened_at
-            FROM file_open_logs AS fol
-            JOIN documents AS d ON fol.document_id = d.id
-            ORDER BY fol.opened_at DESC
-            LIMIT 3
-        """
-        cursor.execute(sql)
-        activities = cursor.fetchall()
-        cursor.close()
-        conn.close()
-
-        for activity in activities:
-            if isinstance(activity['opened_at'], datetime):
-                activity['opened_at'] = activity['opened_at'].isoformat()
-
-        return jsonify(activities), 200
-    except Exception as e:
-        print("Error fetching user activity:", e)
-        return jsonify({"error": "Internal server error", "details": str(e)}), 500
-
-
-# -----------------------------------------------------------------
-# Route đăng ký nhận thông báo
-# Endpoint: /api/register_notification
-# Phương thức: POST
-# Mô tả:
-#   - Nhận dữ liệu JSON gồm school_id, faculty_id, email
-#   - Kiểm tra tính đầy đủ của thông tin
-#   - Chèn dữ liệu vào bảng subscriptions để lưu đăng ký nhận thông báo
-# -----------------------------------------------------------------
-@app.route('/api/register_notification', methods=['POST'])
-def register_notification():
-    data = request.get_json()
-    school_id = data.get('school_id')
-    faculty_id = data.get('faculty_id')
-    email = data.get('email')
-
-    if not (school_id and faculty_id and email):
-        return jsonify({"error": "Thiếu thông tin yêu cầu"}), 400
-
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    
-    query = """
-        INSERT INTO subscriptions (school_id, faculty_id, email)
-        VALUES (%s, %s, %s)
-    """
-    try:
-        cursor.execute(query, (school_id, faculty_id, email))
-        conn.commit()
-    except Exception as e:
-        app.logger.error("Lỗi khi lưu đăng ký: %s", e)
-        conn.rollback()
-        return jsonify({"error": "Lỗi khi lưu đăng ký"}), 500
-    finally:
-        cursor.close()
-        conn.close()
-    
-    return jsonify({"message": "Đăng ký nhận thông báo thành công!"}), 200
-
-
-# -----------------------------------------------------------------
 # Thiết lập thư mục upload cho exam_donggop
 # Nếu thư mục chưa tồn tại, tạo mới
 # -----------------------------------------------------------------
@@ -1093,9 +1013,6 @@ def upload_file_v2():
 #   - Cập nhật trạng thái tài khoản của user thành "đang duyệt" trong bảng users
 #   - Trả về thông báo thành công hoặc lỗi nếu có
 # -----------------------------------------------------------------
-import logging
-import traceback
-from flask import request, jsonify, session
 
 # Cấu hình logging (đặt ở đầu file, nếu chưa có)
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -1170,8 +1087,6 @@ def log_view_exam():
     finally:
         cursor.close()
         conn.close()
-import datetime
-from flask import jsonify, session, request
 
 @app.route('/api/check-file-open-timer', methods=['GET'])
 def check_file_open_timer():
@@ -1208,158 +1123,6 @@ def check_file_open_timer():
         if conn is not None:
             conn.close()
 
-# get pr5
-@app.route('/api/profile', methods=['GET'])
-def profile():
-    if 'user_id' not in session:
-        return jsonify({"error": "Người dùng chưa đăng nhập"}), 401
-
-    try:
-        conn = get_db_connection()
-
-        # Query 1: Lấy thông tin người dùng, bao gồm họ tên và tên trường học
-        # Giả sử cột "university" trong bảng users lưu trữ id của trường học
-        cursor = conn.cursor()
-        query_user = """
-            SELECT u.fullname, s.name AS school_name
-            FROM users u
-            JOIN schools s ON u.university = s.id
-            WHERE u.id = %s
-        """
-        cursor.execute(query_user, (session['user_id'],))
-        user = cursor.fetchone()
-        cursor.close()
-        if not user:
-            return jsonify({"error": "User not found"}), 404
-        # user là tuple: (fullname, school_name)
-        fullname, school_name = user
-
-        # Query 2: Đếm số tài liệu đã xem (chỉ đếm activity_type 'view_exam')
-        cursor = conn.cursor()
-        query_viewed = """
-            SELECT COUNT(*) 
-            FROM user_activity_logs 
-            WHERE user_id = %s AND activity_type = 'view_exam'
-        """
-        cursor.execute(query_viewed, (session['user_id'],))
-        result_viewed = cursor.fetchone()
-        cursor.close()
-        viewed_count = result_viewed[0] if result_viewed else 0
-
-        # Query 3: Lấy 5 hoạt động gần đây
-        cursor = conn.cursor()
-        query_activities = """
-            SELECT activity_type, activity_time 
-            FROM user_activity_logs 
-            WHERE user_id = %s 
-            ORDER BY activity_time DESC 
-            LIMIT 5
-        """
-        cursor.execute(query_activities, (session['user_id'],))
-        recent_activities = cursor.fetchall()
-        cursor.close()
-
-        # Chuyển đổi dữ liệu cho hoạt động gần đây
-        activities = []
-        for activity in recent_activities:
-            act_type, act_time = activity
-            if act_type == 'login':
-                description = 'Đăng nhập hệ thống'
-            elif act_type == 'view_exam':
-                description = 'Đã xem đề thi'
-            else:
-                description = act_type
-            formatted_time = act_time.strftime('%I:%M %p') if hasattr(act_time, 'strftime') else str(act_time)
-            activities.append({
-                "activity_type": act_type,
-                "description": description,
-                "activity_time": formatted_time
-            })
-
-        return jsonify({
-            "fullname": fullname,
-            "university": school_name,  # Trả về tên trường học thay vì id
-            "viewed_count": viewed_count,
-            "recent_activities": activities
-        }), 200
-
-    except mysql.connector.Error as err:
-        return jsonify({"error": f"Lỗi cơ sở dữ liệu: {str(err)}"}), 500
-    finally:
-        conn.close()
-# get log từ hệ thống
-@app.route('/api/system-activities', methods=['GET'])
-def system_activities():
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
-        
-        # Lấy thông tin hoạt động của tất cả người dùng,
-        # mỗi loại hoạt động (activity_type) lấy 5 bản ghi,
-        # bao gồm thông tin người dùng, trường và tên đề thi (nếu có)
-        query = """
-            WITH cte AS (
-                SELECT 
-                    u.id AS user_id, 
-                    u.fullname, 
-                    s.name AS school_name, 
-                    ua.activity_type, 
-                    ua.activity_time,
-                    d.file_name AS document_name,
-                    ROW_NUMBER() OVER (PARTITION BY ua.activity_type ORDER BY ua.activity_time DESC) as rn
-                FROM user_activity_logs ua
-                JOIN users u ON ua.user_id = u.id
-                JOIN schools s ON u.university = s.id
-                LEFT JOIN documents d ON ua.document_id = d.id
-            )
-            SELECT 
-                user_id, fullname, school_name, activity_type, activity_time, document_name
-            FROM cte
-            WHERE rn <= 5
-            ORDER BY activity_time DESC
-        """
-        cursor.execute(query)
-        activities = cursor.fetchall()
-        cursor.close()
-
-        result = []
-        for record in activities:
-            act_time = record['activity_time']
-            # Trả về thời gian đầy đủ ở định dạng ISO (nếu có thể)
-            if hasattr(act_time, 'isoformat'):
-                full_time = act_time.isoformat()
-            else:
-                full_time = str(act_time)
-                
-            act_type = record['activity_type']
-            if act_type == 'login':
-                description = 'Đăng nhập hệ thống'
-            elif act_type == 'view_exam':
-                if record.get('document_name'):
-                    description = f'{record["document_name"]}'
-                else:
-                    description = ''
-            elif act_type == 'register':
-                description = ''
-            else:
-                description = act_type
-
-            result.append({
-                "user_id": record['user_id'],
-                "fullname": record['fullname'],
-                "school": record['school_name'],
-                "activity_type": act_type,
-                "description": description,
-                "activity_time": full_time,  # trả về full timestamp
-                "document_name": record.get("document_name")
-            })
-
-        return jsonify(result), 200
-
-    except mysql.connector.Error as err:
-        return jsonify({"error": f"Lỗi cơ sở dữ liệu: {str(err)}"}), 500
-    finally:
-        conn.close()
 # get user theo trường
 @app.route('/api/users/statistics', methods=['GET'])
 def user_statistics():
@@ -1547,185 +1310,6 @@ def get_user_university():
     finally:
         cursor.close()
         conn.close()
-@app.route('/api/accounts_by_ip', methods=['GET'])
-def accounts_by_ip():
-    ip_addr = request.remote_addr
-    conn = None
-    cursor = None
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True, buffered=True)
-        # Lấy danh sách username từ các tài khoản có log tương ứng với IP hiện tại
-        query = """
-            SELECT DISTINCT u.username
-            FROM users u
-            JOIN user_activity_logs l ON u.id = l.user_id
-            WHERE l.ip_address = %s
-        """
-        cursor.execute(query, (ip_addr,))
-        results = cursor.fetchall()
-        # Chỉ lấy username từ kết quả
-        usernames = [row['username'] for row in results]
-        return jsonify({
-            "ip": ip_addr,
-            "usernames": usernames
-        }), 200
-
-    except mysql.connector.Error as err:
-        return jsonify({"error": f"Lỗi cơ sở dữ liệu: {str(err)}"}), 500
-    finally:
-        if cursor is not None:
-            cursor.close()
-        if conn is not None:
-            conn.close()
-def generate_random_password(length=12):
-    """Sinh mật khẩu ngẫu nhiên với chữ hoa, chữ thường, số và ký tự đặc biệt."""
-    characters = string.ascii_letters + string.digits + "!@#$%^&*()"
-    return ''.join(random.choice(characters) for _ in range(length))
-
-def send_password_email(new_password, email_to):
-    # Cấu hình email bên trong hàm
-    email_from = "truongqb05x@gmail.com"
-    email_password = "ggcw xthp gwko hurm"  # Mật khẩu ứng dụng Gmail
-
-    # Sử dụng multipart/related để hỗ trợ nhúng inline image
-    msg = MIMEMultipart('related')
-    msg['From'] = email_from
-    msg['To'] = email_to
-    msg['Subject'] = "🔐 Thông báo cấp lại mật khẩu - Hue Hub"
-
-    # Nội dung HTML sử dụng Content-ID để tham chiếu hình ảnh nhúng
-    html_content = """
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <style>
-            body {{ font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: 1.6; }}
-            .container {{ max-width: 600px; margin: 20px auto; padding: 30px; border-radius: 10px; background: #f8f9fa; }}
-            .header {{ text-align: center; margin-bottom: 30px; }}
-            .logo {{ max-width: 150px; margin-bottom: 20px; }}
-            .password-box {{ 
-                background: #ffffff; 
-                padding: 20px; 
-                border-radius: 8px;
-                border: 1px solid #e0e0e0;
-                font-size: 18px;
-                color: #2c3e50;
-                margin: 25px 0;
-                text-align: center;
-                font-weight: bold;
-            }}
-            .button {{
-                background-color: #007bff;
-                color: white !important;
-                padding: 12px 25px;
-                border-radius: 5px;
-                text-decoration: none;
-                display: inline-block;
-                margin-top: 20px;
-            }}
-            .footer {{ 
-                margin-top: 40px; 
-                text-align: center; 
-                color: #6c757d;
-                font-size: 14px;
-            }}
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="header">
-                <img src="https://huehub.fun/static/logo.png" class="logo" alt="Hue Hub Logo">
-                <h2 style="color: #2c3e50; margin-bottom: 5px;">Xin chào bạn,</h2>
-                <p style="color: #6c757d;">Bạn vừa yêu cầu cấp lại mật khẩu truy cập Hue Hub</p>
-            </div>
-            <p>Mật khẩu mới của bạn:</p>
-            <div class="password-box">{password}</div>
-            <p>Vui lòng:</p>
-            <ol>
-                <li>Đăng nhập bằng mật khẩu trên</li>
-                <li>Truy cập Cài đặt tài khoản</li>
-                <li>Đổi mật khẩu mới để bảo mật</li>
-            </ol>
-            <center>
-                <a href="http://huehub.fun" class="button">TRUY CẬP NGAY</a>
-            </center>
-            <div class="footer">
-                <p>📧 Bạn cần hỗ trợ? Liên hệ ngay: support@huehub.vn</p>
-                <p>© 2025 Hue Hub. All rights reserved.</p>
-            </div>
-        </div>
-    </body>
-    </html>
-    """
-    html_content = html_content.format(password=new_password)
-    html_part = MIMEText(html_content, 'html')
-    msg.attach(html_part)
-
-    # Đính kèm hình ảnh logo dưới dạng inline
-    try:
-        with open("static/logo.png", "rb") as img_file:
-            img = MIMEImage(img_file.read())
-            img.add_header('Content-ID', '<logo_image>')
-            img.add_header('Content-Disposition', 'inline', filename="logo.png")
-            msg.attach(img)
-    except Exception as e:
-        current_app.logger.debug("Không thể đính kèm hình ảnh logo: %s", e)
-
-    try:
-        with smtplib.SMTP('smtp.gmail.com', 587) as server:
-            server.starttls()
-            server.login(email_from, email_password)
-            server.sendmail(email_from, email_to, msg.as_string())
-        current_app.logger.debug("Email đã gửi thành công!")
-    except Exception as e:
-        current_app.logger.debug("Lỗi khi gửi email: %s", e)
-
-@app.route('/api/request_password_reset', methods=['POST'])
-def request_password_reset():
-    data = request.get_json()
-    username = data.get('username')
-    email = data.get('email')
-    
-    if not username or not email:
-        return jsonify({"error": "Username và email là bắt buộc"}), 400
-
-    # Sinh mật khẩu mới (plain text)
-    new_password = generate_random_password()
-    # Mã hóa mật khẩu mới giống route đăng kí
-    hashed_new_password = hash_password(new_password)
-
-    conn = None
-    cursor = None
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-
-        # Kiểm tra xem người dùng có tồn tại trong bảng users
-        select_query = "SELECT id FROM users WHERE username = %s"
-        cursor.execute(select_query, (username,))
-        result = cursor.fetchone()
-        if not result:
-            return jsonify({"error": "Người dùng không tồn tại"}), 404
-
-        # Cập nhật mật khẩu mới (đã mã hóa) vào bảng users (cột password)
-        update_query = "UPDATE users SET password = %s WHERE username = %s"
-        cursor.execute(update_query, (hashed_new_password, username))
-        conn.commit()
-
-        # Gọi hàm gửi email ngay sau khi update thành công
-        # Gửi mật khẩu gốc (plain text) để người dùng có thể đăng nhập và đổi mật khẩu sau đó
-        send_password_email(new_password, email)
-
-        return jsonify({"message": "Mật khẩu đã được cập nhật và email đã được gửi."}), 200
-
-    except mysql.connector.Error as err:
-        return jsonify({"error": f"Lỗi cơ sở dữ liệu: {str(err)}"}), 500
-    finally:
-        if cursor is not None:
-            cursor.close()
-        if conn is not None:
-            conn.close()
 
 # view của user
 @app.route('/api/log-view-exam-v2', methods=['POST'])
@@ -1896,22 +1480,6 @@ def report_document():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-import datetime
-import time
-import logging
-
-logging.basicConfig(level=logging.DEBUG)
-
-import datetime
-import time
-import logging
-from flask import Flask, jsonify, request, session
-import mysql.connector
-from datetime import datetime, timedelta, timezone
-import logging
-import time
-
-# Giả định app và get_db_connection đã được định nghĩa ở đâu đó
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -2222,7 +1790,6 @@ def get_comment_count():
     except Exception as e:
         print("Error fetching comment count:", e)
         return jsonify({"error": "Internal Server Error"}), 500
-from datetime import datetime
 
 # Route 1: Lấy danh sách thông báo
 @app.route('/api/notifications', methods=['GET'])
@@ -2384,6 +1951,27 @@ def get_update_details(id):
         return jsonify(result)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+# get block ip
+@app.route('/api/check-ip-blocked', methods=['GET'])
+def check_ip_blocked():
+    # Lấy IP client; nếu bạn deploy sau proxy/nginx, có thể cần dùng X-Forwarded-For
+    ip = request.headers.get('X-Forwarded-For', request.remote_addr).split(',')[0].strip()
+
+    conn = get_db_connection()
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT 1 FROM ip_blocks WHERE ip_address = %s LIMIT 1",
+            (ip,)
+        )
+        blocked = cursor.fetchone() is not None
+    finally:
+        cursor.close()
+        conn.close()
+
+    return jsonify({ "blocked": blocked })
+
+
 if __name__ == '__main__':
 
     app.run(port=8080, debug=True)

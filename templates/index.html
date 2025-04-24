@@ -722,7 +722,7 @@
               </div>
               <div class="js-notification-footer">
                 <button class="js-view-all-btn" id="jsViewAllNotifications">
-                    <i class="bi bi-x-lg"></i> Đóng
+                  <i class="bi bi-x-lg"></i> Đóng
                 </button>
               </div>
             </div>
@@ -4969,14 +4969,14 @@
     // Nếu muốn mở lại, bỏ comment đoạn logic bên dưới.
     // Hàm renderSchoolFolderItem: dùng cho folder trường (path.length === 0)
     // === 1. Định nghĩa map logo và default logo ===
-const SCHOOL_LOGOS = {
-  1: '/static/image/logo_uni/husc.ico',
-  2: '/static/image/logo_uni/logo_dhsp2.gif',
-  3: '/static/image/logo_uni/hus.ico',
-  5: '/static/image/logo_uni/hcmu.png',
-  8: '/static/image/logo_uni/sgu.jpg',
-  9: '/static/image/logo_uni/qnu.jpg'
-};
+    const SCHOOL_LOGOS = {
+      1: '/static/image/logo_uni/husc.ico',
+      2: '/static/image/logo_uni/logo_dhsp2.gif',
+      3: '/static/image/logo_uni/hus.ico',
+      5: '/static/image/logo_uni/hcmu.png',
+      8: '/static/image/logo_uni/sgu.jpg',
+      9: '/static/image/logo_uni/qnu.jpg'
+    };
 
     const DEFAULT_SCHOOL_LOGO = '/static/logo3.png';
 
@@ -6610,6 +6610,81 @@ const SCHOOL_LOGOS = {
       });
     });  
   </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Tạo loading screen hiện đại
+      const loadingScreen = document.createElement('div');
+      loadingScreen.style.position = 'fixed';
+      loadingScreen.style.top = '0';
+      loadingScreen.style.left = '0';
+      loadingScreen.style.width = '100%';
+      loadingScreen.style.height = '100%';
+      loadingScreen.style.backgroundColor = '#121212';
+      loadingScreen.style.display = 'flex';
+      loadingScreen.style.flexDirection = 'column';
+      loadingScreen.style.justifyContent = 'center';
+      loadingScreen.style.alignItems = 'center';
+      loadingScreen.style.zIndex = '9999';
+      loadingScreen.style.color = '#ffffff';
+      loadingScreen.style.fontFamily = 'Arial, sans-serif';
+
+      // Tạo animation loading
+      const spinner = document.createElement('div');
+      spinner.style.width = '50px';
+      spinner.style.height = '50px';
+      spinner.style.border = '5px solid rgba(255, 255, 255, 0.3)';
+      spinner.style.borderRadius = '50%';
+      spinner.style.borderTop = '5px solid #4285f4';
+      spinner.style.animation = 'spin 1s linear infinite';
+
+      // Tạo keyframes cho animation
+      const style = document.createElement('style');
+      style.innerHTML = `
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    `;
+      document.head.appendChild(style);
+
+      // Thêm text loading
+      const loadingText = document.createElement('p');
+      loadingText.textContent = 'Đang kiểm tra hệ thống...';
+      loadingText.style.marginTop = '20px';
+      loadingText.style.fontSize = '18px';
+
+      loadingScreen.appendChild(spinner);
+      loadingScreen.appendChild(loadingText);
+      document.body.appendChild(loadingScreen);
+
+      // Hàm ẩn loading screen
+      const hideLoading = () => {
+        loadingScreen.style.opacity = '0';
+        loadingScreen.style.transition = 'opacity 0.5s ease';
+        setTimeout(() => {
+          document.body.removeChild(loadingScreen);
+        }, 500);
+      };
+
+      // Gọi API để kiểm tra IP
+      fetch('/api/check-ip-blocked', {
+        credentials: 'include'
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.blocked) {
+            window.location.href = 'block.html';
+          } else {
+            hideLoading();
+          }
+        })
+        .catch(err => {
+          console.error('Lỗi khi kiểm tra IP block:', err);
+          hideLoading(); // Vẫn ẩn loading dù có lỗi
+        });
+    });
+  </script>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
