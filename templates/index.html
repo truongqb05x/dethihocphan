@@ -3141,7 +3141,7 @@
 
               <div class="input-group mb-3">
                 <div id="copyContent_v2" class="form-control bg-light">
-                  Kho lưu trữ đề thi và đề cương qua các năm, tại: huehub.fun
+                  Kho lưu trữ đề thi và đề cương qua các năm, tại: https://dethihocphan.com
                 </div>
                 <button class="btn btn-success btn-copy-v2" onclick="copyText_v2()">
                   <i class="bi bi-clipboard"></i>
@@ -3207,7 +3207,7 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      fetch('https://huehub.fun/get_verification_info', {
+      fetch('https://dethihocphan.com//get_verification_info', {
         method: 'GET',
         credentials: 'include', // Gửi cookie session để server nhận diện người dùng
         headers: {
@@ -3849,350 +3849,6 @@
     </div>
   </div>
 
-  <!-- Modal -->
-  <!-- Modal đăng ký tài khoản & cấp lại mật khẩu -->
-  <div class="modal fade" id="accountModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content border-0 shadow-lg">
-        <div class="modal-header gradient-bg text-white">
-          <h5 class="modal-title">
-            <i class="bi bi-shield-lock-fill me-2"></i>
-            Cấp lại mật khẩu
-          </h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-        </div>
-
-        <div class="modal-body">
-          <!-- Thông báo IP -->
-          <div class="alert alert-warning small d-flex align-items-center">
-            <i class="bi bi-info-circle-fill me-2"></i>
-            <div>
-              Địa chỉ IP của bạn: <span id="userIP" class="fw-bold">...</span>
-              <br>Mỗi IP chỉ được tạo tối đa 1 tài khoản
-            </div>
-          </div>
-
-          <!-- Danh sách tài khoản -->
-          <div id="accountList" class="mb-4 d-none">
-            <h6 class="mb-3 fw-bold text-muted">
-              <i class="bi bi-person-lines-fill me-2"></i>
-              Tài khoản đã đăng ký:
-            </h6>
-            <div class="row g-3" id="accountCards"></div>
-          </div>
-
-          <!-- Form bước 1: Nhập username (kiểm tra xem đã đăng ký hay chưa) -->
-          <form id="step1Form">
-            <div class="instruction-box">
-              <h6 class="fw-bold mb-3">
-                <i class="bi bi-info-circle me-2"></i>
-                Hướng dẫn nhập username:
-              </h6>
-              <p class="small mb-0">
-                Nhập username của bạn vào ô bên dưới. Chúng tôi sẽ kiểm tra và cho phép cấp lại mật khẩu nếu tài khoản
-                đã đăng ký.
-              </p>
-            </div>
-
-            <div class="mb-4">
-              <label class="form-label fw-bold">Nhập username:</label>
-              <div class="input-group">
-                <span class="input-group-text">
-                  <i class="bi bi-person-fill"></i>
-                </span>
-                <input type="text" class="form-control" name="username" required placeholder="Nhập username..."
-                  pattern="[A-Za-z0-9]{4,20}">
-              </div>
-              <div class="form-text">Username từ 4-20 ký tự, chỉ chứa chữ và số</div>
-            </div>
-            <div class="d-grid">
-              <button type="submit" class="btn btn-custom">
-                <span class="submit-text">Tiếp tục</span>
-                <span class="spinner-border spinner-border-sm d-none" role="status"></span>
-              </button>
-            </div>
-          </form>
-
-          <!-- Form bước 2: Nhập email để nhận mật khẩu mới -->
-          <form id="step2Form" class="d-none">
-            <div class="instruction-box">
-              <h6 class="fw-bold mb-3">
-                <i class="bi bi-info-circle me-2"></i>
-                Hướng dẫn nhập email:
-              </h6>
-              <p class="small mb-0">
-                Vui lòng nhập địa chỉ email của bạn. Chúng tôi sẽ gửi mật khẩu mới nhất về email này.
-                <br>Đảm bảo email chính xác để nhận được thông tin tài khoản.
-              </p>
-            </div>
-
-            <div class="mb-4">
-              <label class="form-label fw-bold">Nhập email nhận mật khẩu mới:</label>
-              <div class="input-group">
-                <span class="input-group-text">
-                  <i class="bi bi-envelope-fill"></i>
-                </span>
-                <input type="email" class="form-control" name="email" required placeholder="Nhập email...">
-              </div>
-              <div class="form-text">Vui lòng kiểm tra cả hộp thư spam nếu không thấy email</div>
-            </div>
-            <div class="d-grid">
-              <button type="submit" class="btn btn-custom">
-                <span class="submit-text">Gửi mật khẩu</span>
-                <span class="spinner-border spinner-border-sm d-none" role="status"></span>
-              </button>
-            </div>
-          </form>
-
-          <!-- Thông báo (lỗi hoặc thành công) -->
-          <div id="responseMessage" class="mt-3 d-none"></div>
-          <!-- Thông báo lỗi riêng cho form kiểm tra username -->
-          <div id="errorMessage" class="alert alert-danger mt-3 d-none"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Import Bootstrap JS và dependencies -->
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      // 1. Chèn CSS mới, scope chỉ cho modal #accountModal
-      const dynamicStyle = document.createElement('style');
-      dynamicStyle.textContent = `
-        /* Các biến CSS nếu cần thiết */
-        #accountModal .gradient-bg {
-          background: linear-gradient(135deg, #6a11cb, #2575fc);
-        }
-        #accountModal .custom-card {
-          border: none;
-          border-radius: 15px;
-          background: rgba(255, 255, 255, 0.1);
-          backdrop-filter: blur(10px);
-          box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-          transition: all 0.3s ease;
-        }
-        #accountModal .custom-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
-        }
-        #accountModal .btn-custom {
-          background: linear-gradient(135deg, #6a11cb, #2575fc);
-          border: none;
-          color: white;
-          padding: 12px 30px;
-          border-radius: 30px;
-          font-weight: 500;
-          letter-spacing: 0.5px;
-          transition: all 0.3s ease;
-        }
-        #accountModal .btn-custom:hover {
-          transform: scale(1.05);
-          box-shadow: 0 8px 25px rgba(106, 17, 203, 0.4);
-        }
-        #accountModal .form-control {
-          border-radius: 10px;
-          padding: 12px 20px;
-          border: 2px solid #e9ecef;
-          transition: all 0.3s ease;
-        }
-        #accountModal .form-control:focus {
-          border-color: #6a11cb;
-          box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
-        }
-        #accountModal .instruction-box {
-          background: rgba(255, 255, 255, 0.9);
-          border-radius: 15px;
-          padding: 25px;
-          margin-bottom: 25px;
-          border: 1px solid rgba(0, 0, 0, 0.05);
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-        }
-        #accountModal .modal-content {
-          border-radius: 20px;
-          overflow: hidden;
-          border: none;
-        }
-        #accountModal .error-shake {
-          animation: shake 0.5s;
-        }
-        @keyframes shake {
-          0% { transform: translateX(0); }
-          25% { transform: translateX(-10px); }
-          50% { transform: translateX(10px); }
-          75% { transform: translateX(-5px); }
-          100% { transform: translateX(0); }
-        }
-        #accountModal .input-group-text {
-          background: white;
-          border: 2px solid #e9ecef;
-          border-right: none;
-          border-radius: 10px 0 0 10px;
-        }
-        #accountModal .form-text {
-          font-size: 0.85rem;
-          color: #6c757d !important;
-        }
-        #accountModal .alert {
-          border-radius: 10px;
-          padding: 15px 20px;
-        }
-      `;
-      document.head.appendChild(dynamicStyle);
-
-      // 2. Các xử lý DOM bên trong modal
-      // Khởi tạo modal với backdrop tắt (không có nền đen)
-      const modal = new bootstrap.Modal(document.getElementById('accountModal'), { backdrop: false });
-      const userIP = document.getElementById('userIP');
-      const accountCards = document.getElementById('accountCards');
-      const step1Form = document.getElementById('step1Form');
-      const step2Form = document.getElementById('step2Form');
-      const errorMessage = document.getElementById('errorMessage');
-      const responseMessage = document.getElementById('responseMessage');
-
-      // Biến chứa danh sách username đã đăng ký (được cập nhật từ API)
-      let registeredUsernames = [];
-      // Biến toàn cục lưu username hợp lệ đã kiểm tra ở bước 1
-      let validatedUsername = "";
-
-      // Lấy IP thực tế qua ipify
-      fetch('https://api.ipify.org?format=json')
-        .then(response => response.json())
-        .then(data => {
-          userIP.textContent = data.ip;
-          checkIPLimit(data.ip);
-        })
-        .catch(error => {
-          console.error('Lỗi khi lấy IP:', error);
-          userIP.textContent = 'Không lấy được IP';
-        });
-
-      // Hàm format username: ẩn phần giữa (ví dụ: "us****23")
-      function formatUsername(username) {
-        if (username.length <= 4) return username;
-        return username.substr(0, 2) +
-          '*'.repeat(username.length - 4) +
-          username.substr(-2);
-      }
-
-      // Kiểm tra IP và hiển thị danh sách tài khoản nếu có
-      function checkIPLimit(ip) {
-        fetch('/api/accounts_by_ip')
-          .then(response => response.json())
-          .then(data => {
-            registeredUsernames = data.usernames || [];
-            if (registeredUsernames.length > 0) {
-              document.getElementById('accountList').classList.remove('d-none');
-              accountCards.innerHTML = registeredUsernames
-                .map(acc => `
-                  <div class="col-md-6">
-                    <div class="custom-card p-3 bg-light">
-                      <div class="d-flex align-items-center">
-                        <i class="bi bi-person-circle me-3 fs-4 text-primary"></i>
-                        <div>
-                          <div class="fw-bold">${formatUsername(acc)}</div>
-                          <small class="text-muted">Đã đăng ký</small>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                `).join('');
-            }
-          })
-          .catch(error => {
-            console.error('Lỗi khi lấy danh sách tài khoản:', error);
-          });
-      }
-
-      // Xử lý form bước 1: Kiểm tra username
-      step1Form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        const btn = this.querySelector('button');
-        const spinner = btn.querySelector('.spinner-border');
-        const text = btn.querySelector('.submit-text');
-        const usernameInput = this.querySelector('input[name="username"]');
-        const username = usernameInput.value.trim();
-
-        // Hiển thị loading
-        text.classList.add('d-none');
-        spinner.classList.remove('d-none');
-        btn.disabled = true;
-        errorMessage.classList.add('d-none');
-
-        // Kiểm tra username dựa trên danh sách lấy từ API
-        setTimeout(() => {
-          const isUsernameValid = registeredUsernames.includes(username);
-
-          if (isUsernameValid) {
-            validatedUsername = username; // lưu username đã được kiểm tra
-            step1Form.classList.add('d-none');
-            step2Form.classList.remove('d-none');
-          } else {
-            errorMessage.innerHTML = `
-              <i class="bi bi-exclamation-circle-fill me-2"></i>
-              Vui lòng nhập đúng username bạn đã đăng ký!
-            `;
-            errorMessage.classList.remove('d-none');
-            usernameInput.classList.add('error-shake');
-            setTimeout(() => usernameInput.classList.remove('error-shake'), 500);
-            usernameInput.focus();
-          }
-
-          // Ẩn loading
-          text.classList.remove('d-none');
-          spinner.classList.add('d-none');
-          btn.disabled = false;
-        }, 1000);
-      });
-
-      // Xử lý form bước 2: Gửi yêu cầu cấp lại mật khẩu (lưu email và username)
-      step2Form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        const btn = this.querySelector('button');
-        const spinner = btn.querySelector('.spinner-border');
-        const text = btn.querySelector('.submit-text');
-        const emailInput = this.querySelector('input[name="email"]');
-        const email = emailInput.value.trim();
-
-        // Hiển thị loading
-        text.classList.add('d-none');
-        spinner.classList.remove('d-none');
-        btn.disabled = true;
-        responseMessage.classList.add('d-none');
-        responseMessage.innerHTML = "";
-
-        // Gửi yêu cầu qua API
-        fetch('/api/request_password_reset', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username: validatedUsername, email: email })
-        })
-          .then(response => response.json())
-          .then(data => {
-            if (data.error) {
-              responseMessage.innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
-            } else {
-              responseMessage.innerHTML = `<div class="alert alert-success">${data.message}</div>`;
-            }
-            responseMessage.classList.remove('d-none');
-          })
-          .catch(error => {
-            console.error('Lỗi:', error);
-            responseMessage.innerHTML = `<div class="alert alert-danger">Đã xảy ra lỗi khi gửi yêu cầu.</div>`;
-            responseMessage.classList.remove('d-none');
-          })
-          .finally(() => {
-            text.classList.remove('d-none');
-            spinner.classList.add('d-none');
-            btn.disabled = false;
-            // Ẩn modal sau vài giây (nếu muốn)
-            setTimeout(() => modal.hide(), 3000);
-          });
-      });
-    });
-  </script>
   <!-- Modal Tìm kiếm Môn học -->
   <div class="modal fade" id="customSearchModal" tabindex="-1" aria-labelledby="customSearchModalLabel"
     aria-hidden="true">
@@ -4975,10 +4631,11 @@
       3: '/static/image/logo_uni/hus.ico',
       5: '/static/image/logo_uni/hcmu.png',
       8: '/static/image/logo_uni/sgu.jpg',
+      11: '/static/image/logo_uni/HCMULAW.png',
       9: '/static/image/logo_uni/qnu.jpg'
     };
 
-    const DEFAULT_SCHOOL_LOGO = '/static/logo3.png';
+    const DEFAULT_SCHOOL_LOGO = '/static/logo.png';
 
     /**
      * renderSchoolFolderItem: render folder cấp trường với logo
@@ -5312,8 +4969,86 @@
       // Thêm phần tử li vừa tạo vào danh sách
       list.appendChild(li);
     }
+document.addEventListener('DOMContentLoaded', async () => {
+  // Khôi phục đường dẫn từ localStorage
+  const savedExamPath = localStorage.getItem('examCurrentPath');
+  const savedSyllabusPath = localStorage.getItem('syllabusCurrentPath');
+  if (savedExamPath) examCurrentPath = JSON.parse(savedExamPath);
+  if (savedSyllabusPath) syllabusCurrentPath = JSON.parse(savedSyllabusPath);
 
-    /* Hàm renderDrive: Hiển thị danh sách file/folder theo đường dẫn */
+  // Kiểm tra và reset lịch sử nếu trường không khớp
+  await checkAndResetHistory();
+
+  // Tiếp tục với logic render các tab
+  const examTab = document.getElementById('de-thi-tab');
+  const syllabusTab = document.getElementById('de-cuong-tab');
+  const examContent = document.getElementById('de-thi');
+  const syllabusContent = document.getElementById('de-cuong');
+  let activeTab = localStorage.getItem('activeTab') || 'exam';
+
+  function switchTab(tab) {
+    if (tab === 'exam') {
+      examTab.classList.add('active');
+      syllabusTab.classList.remove('active');
+      examContent.classList.add('show', 'active');
+      syllabusContent.classList.remove('show', 'active');
+      localStorage.setItem('activeTab', 'exam');
+      renderExamDrive(examCurrentPath);
+    } else {
+      syllabusTab.classList.add('active');
+      examTab.classList.remove('active');
+      syllabusContent.classList.add('show', 'active');
+      examContent.classList.remove('show', 'active');
+      localStorage.setItem('activeTab', 'syllabus');
+      renderSyllabusDrive(syllabusCurrentPath);
+    }
+  }
+
+  examTab.addEventListener('click', () => switchTab('exam'));
+  syllabusTab.addEventListener('click', () => switchTab('syllabus'));
+  switchTab(activeTab);
+
+  // Hiển thị modal resume nếu đường dẫn hợp lệ
+  if (activeTab === 'exam' && examCurrentPath.length > 0) {
+    const resumeModal = new bootstrap.Modal(document.getElementById('resumeModal'));
+    document.getElementById('resumeTabName').textContent = 'Đề Thi';
+    document.getElementById('resumePathDisplay').textContent = 'Bạn đã dừng tại: ' + examCurrentPath.map(item => item.name).join(' > ');
+    resumeModal.show();
+
+    document.getElementById('resumeContinueBtn')?.addEventListener('click', () => {
+      resumeModal.hide();
+    });
+    document.getElementById('resumeCancelBtn')?.addEventListener('click', () => {
+      examCurrentPath = [];
+      localStorage.removeItem('examCurrentPath');
+      renderExamDrive(examCurrentPath);
+      resumeModal.hide();
+    });
+    document.getElementById('viewHistoryBtn')?.addEventListener('click', () => {
+      resumeModal.hide();
+      showHistoryModal();
+    });
+  } else if (activeTab === 'syllabus' && syllabusCurrentPath.length > 0) {
+    const resumeModal = new bootstrap.Modal(document.getElementById('resumeModal'));
+    document.getElementById('resumeTabName').textContent = 'Đề Cương';
+    document.getElementById('resumePathDisplay').textContent = 'Bạn đã dừng tại: ' + syllabusCurrentPath.map(item => item.name).join(' > ');
+    resumeModal.show();
+
+    document.getElementById('resumeContinueBtn')?.addEventListener('click', () => {
+      resumeModal.hide();
+    });
+    document.getElementById('resumeCancelBtn')?.addEventListener('click', () => {
+      syllabusCurrentPath = [];
+      localStorage.removeItem('syllabusCurrentPath');
+      renderSyllabusDrive(syllabusCurrentPath);
+      resumeModal.hide();
+    });
+    document.getElementById('viewHistoryBtn')?.addEventListener('click', () => {
+      resumeModal.hide();
+      showHistoryModal();
+    });
+  }
+});
     /* Hàm renderDrive: Hiển thị danh sách file/folder theo đường dẫn */
     async function renderDrive(containerId, path, updatePathCallback) {
       const documentType = containerId.includes('exam') ? 'exam' : 'syllabus';
@@ -6610,81 +6345,29 @@
       });
     });  
   </script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // Tạo loading screen hiện đại
-      const loadingScreen = document.createElement('div');
-      loadingScreen.style.position = 'fixed';
-      loadingScreen.style.top = '0';
-      loadingScreen.style.left = '0';
-      loadingScreen.style.width = '100%';
-      loadingScreen.style.height = '100%';
-      loadingScreen.style.backgroundColor = '#121212';
-      loadingScreen.style.display = 'flex';
-      loadingScreen.style.flexDirection = 'column';
-      loadingScreen.style.justifyContent = 'center';
-      loadingScreen.style.alignItems = 'center';
-      loadingScreen.style.zIndex = '9999';
-      loadingScreen.style.color = '#ffffff';
-      loadingScreen.style.fontFamily = 'Arial, sans-serif';
-
-      // Tạo animation loading
-      const spinner = document.createElement('div');
-      spinner.style.width = '50px';
-      spinner.style.height = '50px';
-      spinner.style.border = '5px solid rgba(255, 255, 255, 0.3)';
-      spinner.style.borderRadius = '50%';
-      spinner.style.borderTop = '5px solid #4285f4';
-      spinner.style.animation = 'spin 1s linear infinite';
-
-      // Tạo keyframes cho animation
-      const style = document.createElement('style');
-      style.innerHTML = `
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-    `;
-      document.head.appendChild(style);
-
-      // Thêm text loading
-      const loadingText = document.createElement('p');
-      loadingText.textContent = 'Đang kiểm tra hệ thống...';
-      loadingText.style.marginTop = '20px';
-      loadingText.style.fontSize = '18px';
-
-      loadingScreen.appendChild(spinner);
-      loadingScreen.appendChild(loadingText);
-      document.body.appendChild(loadingScreen);
-
-      // Hàm ẩn loading screen
-      const hideLoading = () => {
-        loadingScreen.style.opacity = '0';
-        loadingScreen.style.transition = 'opacity 0.5s ease';
-        setTimeout(() => {
-          document.body.removeChild(loadingScreen);
-        }, 500);
-      };
-
-      // Gọi API để kiểm tra IP
-      fetch('/api/check-ip-blocked', {
-        credentials: 'include'
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.blocked) {
-            window.location.href = 'block.html';
-          } else {
-            hideLoading();
-          }
-        })
-        .catch(err => {
-          console.error('Lỗi khi kiểm tra IP block:', err);
-          hideLoading(); // Vẫn ẩn loading dù có lỗi
-        });
-    });
-  </script>
-
+<script>
+   document.addEventListener('DOMContentLoaded', () => {
+     // Gọi API để kiểm tra IP
+     fetch('/api/check-ip-blocked', {
+       credentials: 'include'
+     })
+       .then(res => res.json())
+       .then(data => {
+         if (data.blocked) {
+           // Nếu IP bị chặn, chuyển hướng đến trang block.html
+           window.location.href = 'block.html';
+         } else {
+           // Nếu không bị chặn, không làm gì cả (hoặc thêm logic khác nếu cần)
+           console.log('IP không bị chặn.');
+         }
+       })
+       .catch(err => {
+         // Xử lý lỗi nếu có khi gọi API
+         console.error('Lỗi khi kiểm tra IP block:', err);
+         // Có thể thêm logic xử lý lỗi tại đây, ví dụ hiển thị thông báo
+       });
+   });
+ </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
