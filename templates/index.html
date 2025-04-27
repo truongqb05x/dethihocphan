@@ -757,42 +757,45 @@
     });
   </script>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      // Kiểm tra trạng thái đăng nhập qua API
-      fetch("/api/check-login")
-        .then(response => response.json())
-        .then(data => {
-          if (data.loggedIn) {
-            // Nếu đã đăng nhập, hiển thị nút Đăng xuất, Notification Container và nút chuông
-            document.getElementById("logoutBtn").style.display = "block";
-            document.getElementById("loginBtn").style.display = "none";
-            document.querySelector(".js-notification-container").style.display = "block";
-            document.getElementById("jsNotificationBell").style.display = "block"; // Hiển thị nút chuông
-          } else {
-            // Nếu chưa đăng nhập, hiển thị nút Đăng nhập, ẩn thông báo và nút chuông
-            document.getElementById("loginBtn").style.display = "block";
-            document.getElementById("logoutBtn").style.display = "none";
-            document.querySelector(".js-notification-container").style.display = "none";
-            document.getElementById("jsNotificationBell").style.display = "none"; // Ẩn nút chuông
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Kiểm tra trạng thái đăng nhập qua API
+    fetch("/api/check-login", {
+      method: 'GET',
+      credentials: 'include'       // ← thêm dòng này
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.loggedIn) {
+          // Nếu đã đăng nhập, hiển thị nút Đăng xuất, Notification Container và nút chuông
+          document.getElementById("logoutBtn").style.display = "block";
+          document.getElementById("loginBtn").style.display = "none";
+          document.querySelector(".js-notification-container").style.display = "block";
+          document.getElementById("jsNotificationBell").style.display = "block";
+        } else {
+          // Nếu chưa đăng nhập, hiển thị nút Đăng nhập, ẩn thông báo và nút chuông
+          document.getElementById("loginBtn").style.display = "block";
+          document.getElementById("logoutBtn").style.display = "none";
+          document.querySelector(".js-notification-container").style.display = "none";
+          document.getElementById("jsNotificationBell").style.display = "none";
 
-            var contributeBtn = document.querySelector(".btn.btn-primary.contribute-btn");
-            if (contributeBtn) {
-              contributeBtn.style.display = "none";
-            }
+          const contributeBtn = document.querySelector(".btn.btn-primary.contribute-btn");
+          if (contributeBtn) {
+            contributeBtn.style.display = "none";
           }
-        })
-        .catch(error => console.error("Lỗi kiểm tra đăng nhập:", error));
+        }
+      })
+      .catch(error => console.error("Lỗi kiểm tra đăng nhập:", error));
 
-      // Khi nhấn nút Đăng nhập, chuyển hướng về trang /login
-      var loginBtn = document.getElementById("loginBtn");
-      if (loginBtn) {
-        loginBtn.addEventListener("click", function () {
-          window.location.href = '/login'; // Chuyển hướng đến trang /login
-        });
-      }
-    });
-  </script>
+    // Khi nhấn nút Đăng nhập, chuyển hướng về trang /login
+    const loginBtn = document.getElementById("loginBtn");
+    if (loginBtn) {
+      loginBtn.addEventListener("click", () => {
+        window.location.href = '/login';
+      });
+    }
+  });
+</script>
   <!-- Full Notification Panel -->
   <div class="js-notification-panel" id="jsNotificationPanel">
     <div class="js-notification-panel-header">
@@ -4734,7 +4737,6 @@
         background: white;
         border-radius: 8px;
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        z-index: 10;
         display: none;
         min-width: 120px;
         overflow: hidden;

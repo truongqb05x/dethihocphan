@@ -17,12 +17,24 @@ import bcrypt
 
 logging.basicConfig(level=logging.DEBUG)
 app = Flask(__name__, static_folder='static', static_url_path='/static')
-@app.route('/9aff3a5a6b3483b13230a7d1e8dece49.html')
+@app.route('/592084a55f0128e2e002c067612e3c00.html')
 def verify_file():
-    return send_from_directory('.', '9aff3a5a6b3483b13230a7d1e8dece49.html')
+    return send_from_directory('html', '592084a55f0128e2e002c067612e3c00.html')
 
 CORS(app)
 app.config['SECRET_KEY'] = 'your-secret-key-here'  # Đặt secret key cho Flask
+# ======= Cấu hình Flask Session & CORS =======
+app.config['SECRET_KEY'] = 'YOUR_SECRET_KEY'
+app.config.update(
+    SESSION_COOKIE_SAMESITE='None',   # Bắt buộc để Safari/iOS chấp nhận
+    SESSION_COOKIE_SECURE=True,       # Chỉ gửi qua HTTPS
+    SESSION_COOKIE_HTTPONLY=True      # JS phía client không đọc được
+)
+# Cho phép FE gửi kèm cookie; thay https://your-frontend.com bằng domain/port FE của bạn
+CORS(app,
+     supports_credentials=True,
+     origins=["https://dethihocphan.com/"]
+)
 
 @app.route('/static/image/<filename>')
 def serve_image(filename):
@@ -32,14 +44,6 @@ def serve_image(filename):
 @app.route('/html/<path:filename>')
 def send_html(filename):
     return send_from_directory('html', filename)
-@app.route('/get-private-html')
-def get_private_html():
-    try:
-        with open('html/index.html', 'r', encoding='utf-8') as file:
-            html_content = file.read()
-        return {"html": html_content}
-    except Exception as e:
-        return {"error": str(e)}, 500
 
 # Trang chủ
 @app.route('/')
@@ -102,27 +106,39 @@ def login():
         cursor.execute(query, (username, hash_password(password)))
         user = cursor.fetchone()
 
-        if user:
-            # Ghi nhận hoạt động đăng nhập vào bảng user_activity_logs
-            log_query = """
-                INSERT INTO user_activity_logs (user_id, activity_type, ip_address)
-                VALUES (%s, %s, %s)
-            """
-            cursor.execute(log_query, (user['id'], 'login', request.remote_addr))
-            conn.commit()
-
-            session['user_id'] = user['id']
-            session['username'] = user['username']
-            session.permanent = True  # Lưu phiên vĩnh viễn
-            
-            resp = make_response(jsonify({"message": "Đăng nhập thành công", "user": {"username": user['username']}}))
-            resp.set_cookie('login_token', str(user['id']), max_age=3*24*60*60)  # Lưu cookie 3 ngày
-            return resp, 200
-        else:
+        if not user:
             return jsonify({"error": "Tên đăng nhập hoặc mật khẩu không đúng"}), 401
 
+        # Ghi nhận hoạt động đăng nhập
+        cursor.execute(
+            "INSERT INTO user_activity_logs (user_id, activity_type, ip_address) VALUES (%s, %s, %s)",
+            (user['id'], 'login', request.remote_addr)
+        )
+        conn.commit()
+
+        # Thiết lập session
+        session['user_id'] = user['id']
+        session['username'] = user['username']
+        session.permanent = True
+
+        # Tạo response và set cookie với đủ flag
+        resp = make_response(jsonify({
+            "message": "Đăng nhập thành công",
+            "user": {"username": user['username']}
+        }))
+        resp.set_cookie(
+            'login_token',
+            str(user['id']),
+            max_age=3*24*60*60,   # 3 ngày
+            secure=True,          # chỉ HTTPS
+            httponly=True,        # JS không đọc được
+            samesite='None'       # để Safari/iOS chấp nhận
+        )
+        return resp, 200
+
     except mysql.connector.Error as err:
-        return jsonify({"error": f"Lỗi cơ sở dữ liệu: {str(err)}"}), 500
+        return jsonify({"error": f"Lỗi cơ sở dữ liệu: {err}"}), 500
+
     finally:
         cursor.close()
         conn.close()
@@ -220,11 +236,11 @@ def register():
 # -----------------------------------------------------------------
 @app.route('/api/check-login', methods=['GET'])
 def check_login():
-    # Nếu session đã chứa thông tin user, trả về loggedIn: True
+    # 1) Nếu session còn lưu
     if 'user_id' in session:
         return jsonify({"loggedIn": True, "username": session['username']})
 
-    # Nếu không có session, kiểm tra cookie 'login_token'
+    # 2) Fallback: kiểm tra cookie
     user_id = request.cookies.get('login_token')
     if user_id:
         conn = get_db_connection()
@@ -235,12 +251,12 @@ def check_login():
         conn.close()
 
         if user:
-            # Phục hồi session từ cookie
+            # Phục hồi session
             session['user_id'] = user_id
             session['username'] = user['username']
             return jsonify({"loggedIn": True, "username": user['username']})
 
-    # Nếu không tìm thấy thông tin đăng nhập, trả về loggedIn: False
+    # 3) Không có thông tin
     return jsonify({"loggedIn": False})
 
 
