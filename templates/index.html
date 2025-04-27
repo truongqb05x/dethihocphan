@@ -127,222 +127,339 @@
       color: #0056b3;
     }
 
-    .file-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
+/* File List */
+.file-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Maintain spacing between items */
+}
 
-    .file-item {
-      display: flex;
-      align-items: center;
-      padding: 12px 15px;
-      border-radius: 10px;
-      margin-bottom: 8px;
-      transition: all 0.2s;
-      cursor: pointer;
-      background: #fff;
-    }
+/* File Item */
+.file-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  transition: all 0.3s ease-out, border-left 0.2s ease-out; /* Smooth transitions */
+  cursor: pointer;
+  background: transparent; /* Transparent background to remove white */
+  opacity: 0; /* Start invisible for appearance animation */
+  transform: translateY(10px); /* Slight offset for animation */
+  animation: fadeInUp 0.5s ease-out forwards; /* Appearance animation */
+}
 
-    .file-item:hover {
-      background-color: #f8f9fa;
-      transform: translateX(5px);
-    }
+/* Appearance animation for file items */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-    .file-icon {
-      font-size: 24px;
-      margin-right: 15px;
-      width: 30px;
-    }
+/* Staggered animation for each file item */
+.file-list .file-item {
+  animation-delay: calc(0.05s * var(--index)); /* Staggered delay based on index */
+}
 
-    .file-icon.folder {
-      color: #ffc107;
-    }
+.file-item:hover {
+  background-color: rgba(248, 249, 250, 0.8); /* Semi-transparent hover background */
+  transform: translateY(-2px) scale(1.02); /* Lift and slight zoom on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+  border-left: 4px solid var(--primary-color); /* Colored left border on hover */
+}
 
-    .file-icon.pdf {
-      color: #dc3545;
-    }
+/* File Icon */
+.file-icon {
+  font-size: 24px;
+  margin-right: 15px;
+  width: 30px;
+  transition: transform 0.3s ease-out, color 0.3s ease-out; /* Smooth icon transitions */
+}
 
-    .file-icon.word {
-      color: #2b579a;
-    }
+.file-item:hover .file-icon {
+  transform: scale(1.15) rotate(5deg); /* Icon zoom and slight rotation on hover */
+  color: var(--primary-color); /* Shift to primary color on hover */
+}
 
-    .file-name {
-      flex-grow: 1;
-      font-size: 1rem;
-    }
+/* File Name */
+.file-name {
+  flex-grow: 1;
+  font-size: 1rem;
+  transition: color 0.3s ease-out; /* Smooth color transition */
+}
 
-    .file-info {
-      font-size: 0.8rem;
-      color: var(--secondary-color);
-    }
+.file-item:hover .file-name {
+  color: var(--primary-color); /* Highlight file name on hover */
+}
 
-    /* CSS cho gợi ý tìm kiếm (autocomplete) */
-    .suggestions {
-      position: absolute;
-      background: rgba(255, 255, 255, 0.9);
-      border: 1px solid #ccc;
-      width: 100%;
-      max-height: 200px;
-      overflow-y: auto;
-      z-index: 1000;
-      opacity: 0.8;
-      transition: opacity 0.3s;
-    }
+/* File Info */
+.file-info {
+  font-size: 0.8rem;
+  color: var(--secondary-color);
+  transition: color 0.3s ease-out; /* Smooth color transition */
+}
 
-    .suggestions .suggestion-item {
-      padding: 8px 12px;
-      cursor: pointer;
-    }
+.file-item:hover .file-info {
+  color: #5a6268; /* Slightly darker for emphasis on hover */
+}
 
-    .suggestions .suggestion-item:hover {
-      background-color: #f8f9fa;
-      opacity: 1;
-    }
+/* Compatibility with new-file-item */
+.new-file-item {
+  padding: 12px 15px;
+  border-radius: 10px;
+  transition: all 0.3s ease-out, border-left 0.2s ease-out; /* Match transition */
+  background: transparent; /* Transparent background to match */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Match shadow */
+  opacity: 0; /* Start invisible for animation */
+  transform: translateY(10px); /* Match offset */
+  animation: fadeInUp 0.5s ease-out forwards; /* Match appearance animation */
+  border-left: 4px solid transparent; /* Match initial border */
+}
 
-    /* Modern Modal Styles */
-    .modal-content {
-      border: none;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-      background: #ffffff;
-      animation: fadeInScale 0.4s ease;
-    }
+.new-file-item:hover {
+  background-color: rgba(248, 249, 250, 0.8); /* Match semi-transparent hover background */
+  transform: translateY(-2px) scale(1.02); /* Match hover transform */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Match hover shadow */
+  border-left: 4px solid var(--primary-color); /* Match colored border on hover */
+}
 
-    @keyframes fadeInScale {
-      0% {
-        opacity: 0;
-        transform: scale(0.8);
-      }
+.new-file-icon {
+  font-size: 1.8rem; /* Match dynamic CSS */
+  transition: transform 0.3s ease-out, color 0.3s ease-out; /* Match icon transitions */
+}
 
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
+.new-file-item:hover .new-file-icon {
+  transform: scale(1.15) rotate(5deg); /* Match icon hover effect */
+  color: var(--primary-color); /* Match color shift */
+}
 
-    .modal-header {
-      background: linear-gradient(135deg, #6a11cb, #2575fc);
-      color: #fff;
-      border-bottom: none;
-      padding: 1.25rem 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+.new-file-name {
+  transition: color 0.3s ease-out; /* Match name transition */
+}
 
-    .modal-header .modal-title {
-      font-size: 1.75rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-    }
+.new-file-item:hover .new-file-name {
+  color: var(--primary-color); /* Match name hover color */
+}
 
-    .modal-header .btn-close {
-      background: transparent;
-      border: none;
-      font-size: 1.5rem;
-      opacity: 0.9;
-      transition: opacity 0.3s ease;
-    }
+.new-file-info {
+  transition: color 0.3s ease-out; /* Match info transition */
+}
 
-    .modal-header .btn-close:hover {
-      opacity: 1;
-    }
+.new-file-item:hover .new-file-info {
+  color: #5a6268; /* Match info hover color */
+}
 
-    .modal-body {
-      padding: 1.5rem;
-      font-size: 1rem;
-      color: #444;
-      line-height: 1.6;
-    }
+.new-file-views {
+  transition: color 0.3s ease-out; /* Add transition for views */
+}
 
-    .modal-footer {
-      background: #f5f5f5;
-      border-top: none;
-      padding: 1rem 1.5rem;
-      display: flex;
-      justify-content: flex-end;
-      gap: 0.75rem;
-    }
+.new-file-item:hover .new-file-views {
+  color: #5a6268; /* Match hover color */
+}
 
-    .modal-footer .btn {
-      min-width: 120px;
-      border-radius: 8px;
-      font-weight: 500;
-      transition: background 0.3s ease, transform 0.3s ease;
-    }
+/* Action Menu Button */
+.new-btn-menu {
+  transition: background-color 0.3s ease-out, transform 0.3s ease-out; /* Smooth button transitions */
+}
 
-    .modal-footer .btn-primary {
-      background: #2575fc;
-      border: none;
-    }
+.new-btn-menu:hover {
+  background-color: #e9ecef; /* Subtle hover background */
+  transform: scale(1.1); /* Slight zoom on hover */
+}
 
-    .modal-footer .btn-primary:hover {
-      background: #1a5bb8;
-      transform: translateY(-2px);
-    }
+/* Responsive Adjustments */
+@media (max-width: 576px) {
+  .file-item,
+  .new-file-item {
+    animation: fadeInUp 0.4s ease-out forwards; /* Slightly faster animation on mobile */
+    border-left-width: 3px; /* Slightly thinner border on mobile */
+  }
 
-    .modal-footer .btn-secondary {
-      background: #e0e0e0;
-      border: none;
-      color: #555;
-    }
+  .file-item:hover,
+  .new-file-item:hover {
+    transform: translateY(-1px) scale(1.01); /* Reduced scale for mobile */
+    border-left: 3px solid var(--primary-color); /* Match border width on hover */
+  }
 
-    .modal-footer .btn-secondary:hover {
-      background: #cfcfcf;
-      transform: translateY(-2px);
-    }
+  .file-icon,
+  .new-file-icon {
+    transform: scale(1.1) rotate(3deg); /* Reduced rotation for mobile */
+  }
+}
+/* File List */
+.file-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Maintain spacing between items */
+}
 
-    .modal-footer .btn-info {
-      background: #17a2b8;
-      border: none;
-      color: #fff;
-    }
+/* File Item */
+.file-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  border-radius: 10px;
+  transition: all 0.3s ease-out, border-left 0.2s ease-out; /* Smooth transitions */
+  cursor: pointer;
+  background: transparent; /* Transparent background to remove white */
+  opacity: 0; /* Start invisible for appearance animation */
+  transform: translateY(10px); /* Slight offset for animation */
+  animation: fadeInUp 0.5s ease-out forwards; /* Appearance animation */
+  border-left: 4px solid transparent; /* Initial transparent border */
+}
 
-    .modal-footer .btn-info:hover {
-      background: #138496;
-      transform: translateY(-2px);
-    }
+/* Appearance animation for file items */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-    @media (max-width: 576px) {
+/* Staggered animation for each file item */
+.file-list .file-item {
+  animation-delay: calc(0.05s * var(--index)); /* Staggered delay based on index */
+}
 
-      .modal-header,
-      .modal-body,
-      .modal-footer {
-        padding: 1rem;
-      }
+.file-item:hover {
+  background-color: rgba(248, 249, 250, 0.8); /* Semi-transparent hover background */
+  transform: translateY(-2px) scale(1.02); /* Lift and slight zoom on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+  border-left: 4px solid var(--primary-color); /* Colored left border on hover */
+}
 
-      .modal-header .modal-title {
-        font-size: 1.5rem;
-      }
-    }
+/* File Icon */
+.file-icon {
+  font-size: 24px;
+  margin-right: 15px;
+  width: 30px;
+  transition: transform 0.3s ease-out, color 0.3s ease-out; /* Smooth icon transitions */
+}
 
-    /* Modal Resume Header màu xanh lá */
-    #resumeModal .modal-header {
-      background: linear-gradient(135deg, #28a745, #70db70);
-    }
+.file-item:hover .file-icon {
+  transform: scale(1.15) rotate(5deg); /* Icon zoom and slight rotation on hover */
+  color: var(--primary-color); /* Shift to primary color on hover */
+}
 
-    .about-links {
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      margin: 20px 0;
-    }
+/* File Name */
+.file-name {
+  flex-grow: 1;
+  font-size: 1rem;
+  transition: color 0.3s ease-out; /* Smooth color transition */
+}
 
-    .about-links h3 {
-      font-size: 20px;
-      color: #333;
-      margin-bottom: 15px;
-    }
+.file-item:hover .file-name {
+  color: var(--primary-color); /* Highlight file name on hover */
+}
 
-    .about-links ul {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 20px 0;
-    }
+/* File Info */
+.file-info {
+  font-size: 0.8rem;
+  color: var(--secondary-color);
+  transition: color 0.3s ease-out; /* Smooth color transition */
+}
 
-    .about-links li {
+.file-item:hover .file-info {
+  color: #5a6268; /* Slightly darker for emphasis on hover */
+}
+
+/* Compatibility with new-file-item */
+.new-file-item {
+  padding: 12px 15px;
+  border-radius: 10px;
+  transition: all 0.3s ease-out, border-left 0.2s ease-out; /* Match transition */
+  background: transparent; /* Transparent background to match */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Match shadow */
+  opacity: 0; /* Start invisible for animation */
+  transform: translateY(10px); /* Match offset */
+  animation: fadeInUp 0.5s ease-out forwards; /* Match appearance animation */
+  border-left: 4px solid transparent; /* Match initial border */
+}
+
+.new-file-item:hover {
+  background-color: rgba(248, 249, 250, 0.8); /* Match semi-transparent hover background */
+  transform: translateY(-2px) scale(1.02); /* Match hover transform */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Match hover shadow */
+  border-left: 4px solid var(--primary-color); /* Match colored border on hover */
+}
+
+.new-file-icon {
+  font-size: 1.8rem; /* Match dynamic CSS */
+  transition: transform 0.3s ease-out, color 0.3s ease-out; /* Match icon transitions */
+}
+
+.new-file-item:hover .new-file-icon {
+  transform: scale(1.15) rotate(5deg); /* Match icon hover effect */
+  color: var(--primary-color); /* Match color shift */
+}
+
+.new-file-name {
+  transition: color 0.3s ease-out; /* Match name transition */
+}
+
+.new-file-item:hover .new-file-name {
+  color: var(--primary-color); /* Match name hover color */
+}
+
+.new-file-info {
+  transition: color 0.3s ease-out; /* Match info transition */
+}
+
+.new-file-item:hover .new-file-info {
+  color: #5a6268; /* Match info hover color */
+}
+
+.new-file-views {
+  transition: color 0.3s ease-out; /* Add transition for views */
+}
+
+.new-file-item:hover .new-file-views {
+  color: #5a6268; /* Match hover color */
+}
+
+/* Action Menu Button */
+.new-btn-menu {
+  transition: background-color 0.3s ease-out, transform 0.3s ease-out; /* Smooth button transitions */
+}
+
+.new-btn-menu:hover {
+  background-color: #e9ecef; /* Subtle hover background */
+  transform: scale(1.1); /* Slight zoom on hover */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 576px) {
+  .file-item,
+  .new-file-item {
+    animation: fadeInUp 0.4s ease-out forwards; /* Slightly faster animation on mobile */
+    border-left-width: 3px; /* Slightly thinner border on mobile */
+  }
+
+  .file-item:hover,
+  .new-file-item:hover {
+    transform: translateY(-1px) scale(1.01); /* Reduced scale for mobile */
+    border-left: 3px solid var(--primary-color); /* Match border width on hover */
+  }
+
+  .file-icon,
+  .new-file-icon {
+    transform: scale(1.1) rotate(3deg); /* Reduced rotation for mobile */
+  }
+}
+.about-links li {
       display: flex;
       align-items: center;
       padding: 8px 0;
@@ -650,6 +767,7 @@
     .btn-hover-tooltip:hover::after {
       opacity: 1;
     }
+    
   </style>
 
 </head>
@@ -2188,7 +2306,7 @@
               <div class="version-info"
                 style="position: absolute; bottom: 0; right: 0; padding: 5px; font-size: 0.9rem; color: #666;"
                 data-bs-toggle="modal" data-bs-target="#updateHistoryModal">
-                Version 2.0.5
+                Version 2.0.6
               </div>
             </div>
           </div>
@@ -2427,7 +2545,7 @@
 
   <!-- Nút đóng góp đề thi -->
   <button type="button" class="btn btn-primary contribute-btn"
-    style="position: fixed; bottom: 0; right: 0; margin: 10px; z-index: 1050;" data-bs-toggle="modal"
+    style="position: fixed; bottom: 0; right: 0; margin: 10px; " data-bs-toggle="modal"
     data-bs-target="#contributeExamModal">
     <i class="bi bi-pencil-square"></i> Đóng góp đề thi
   </button>
@@ -3101,7 +3219,9 @@
                   <p class="text-muted small mb-0">
                     Chia sẻ ảnh đề thi bất kỳ để cộng đồng cùng học tập
                   </p>
+                  
                 </div>
+                
               </div>
               <div class="position-relative">
                 <!-- File input cho ảnh đề thi -->
@@ -3116,10 +3236,17 @@
               <button class="btn btn-success btn-sm mt-2" onclick="submitExamImage_v2()" id="submitExamBtn_v2">
                 <i class="bi bi-send me-2"></i>Gửi ảnh đề thi
               </button>
+              
               <div id="examUploadLoading_v2" class="text-primary small mt-2" style="display:none;">
                 <i class="bi bi-hourglass-split"></i> Đang upload, vui lòng chờ...
               </div>
             </div>
+                    <!-- Thêm dòng cảnh báo nghiêm cấm -->
+        <div class="alert alert-danger alert-sm mb-3 p-2 text-center" style="font-size: 0.8rem;">
+          <i class="bi bi-exclamation-triangle-fill me-1"></i>
+          <strong>NGHIÊM CẤM</strong> xác thực bằng tài nguyên lấy từ nền tảng. Nếu vi phạm sẽ bị <strong>BAN</strong> vĩnh viễn!
+        </div>
+
           </div>
 
           <!-- Phương thức 2: Chia sẻ với bạn bè -->
