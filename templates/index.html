@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <!-- Mobile meta -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
 
   <!-- Title + Description -->
   <title>Ngân Hàng Đề Thi Kết Thúc Học Phần</title>
@@ -127,339 +128,222 @@
       color: #0056b3;
     }
 
-/* File List */
-.file-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px; /* Maintain spacing between items */
-}
+    .file-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
 
-/* File Item */
-.file-item {
-  display: flex;
-  align-items: center;
-  padding: 12px 15px;
-  transition: all 0.3s ease-out, border-left 0.2s ease-out; /* Smooth transitions */
-  cursor: pointer;
-  background: transparent; /* Transparent background to remove white */
-  opacity: 0; /* Start invisible for appearance animation */
-  transform: translateY(10px); /* Slight offset for animation */
-  animation: fadeInUp 0.5s ease-out forwards; /* Appearance animation */
-}
+    .file-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 15px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      transition: all 0.2s;
+      cursor: pointer;
+      background: #fff;
+    }
 
-/* Appearance animation for file items */
-@keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+    .file-item:hover {
+      background-color: #f8f9fa;
+      transform: translateX(5px);
+    }
 
-/* Staggered animation for each file item */
-.file-list .file-item {
-  animation-delay: calc(0.05s * var(--index)); /* Staggered delay based on index */
-}
+    .file-icon {
+      font-size: 24px;
+      margin-right: 15px;
+      width: 30px;
+    }
 
-.file-item:hover {
-  background-color: rgba(248, 249, 250, 0.8); /* Semi-transparent hover background */
-  transform: translateY(-2px) scale(1.02); /* Lift and slight zoom on hover */
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
-  border-left: 4px solid var(--primary-color); /* Colored left border on hover */
-}
+    .file-icon.folder {
+      color: #ffc107;
+    }
 
-/* File Icon */
-.file-icon {
-  font-size: 24px;
-  margin-right: 15px;
-  width: 30px;
-  transition: transform 0.3s ease-out, color 0.3s ease-out; /* Smooth icon transitions */
-}
+    .file-icon.pdf {
+      color: #dc3545;
+    }
 
-.file-item:hover .file-icon {
-  transform: scale(1.15) rotate(5deg); /* Icon zoom and slight rotation on hover */
-  color: var(--primary-color); /* Shift to primary color on hover */
-}
+    .file-icon.word {
+      color: #2b579a;
+    }
 
-/* File Name */
-.file-name {
-  flex-grow: 1;
-  font-size: 1rem;
-  transition: color 0.3s ease-out; /* Smooth color transition */
-}
+    .file-name {
+      flex-grow: 1;
+      font-size: 1rem;
+    }
 
-.file-item:hover .file-name {
-  color: var(--primary-color); /* Highlight file name on hover */
-}
+    .file-info {
+      font-size: 0.8rem;
+      color: var(--secondary-color);
+    }
 
-/* File Info */
-.file-info {
-  font-size: 0.8rem;
-  color: var(--secondary-color);
-  transition: color 0.3s ease-out; /* Smooth color transition */
-}
+    /* CSS cho gợi ý tìm kiếm (autocomplete) */
+    .suggestions {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid #ccc;
+      width: 100%;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 1000;
+      opacity: 0.8;
+      transition: opacity 0.3s;
+    }
 
-.file-item:hover .file-info {
-  color: #5a6268; /* Slightly darker for emphasis on hover */
-}
+    .suggestions .suggestion-item {
+      padding: 8px 12px;
+      cursor: pointer;
+    }
 
-/* Compatibility with new-file-item */
-.new-file-item {
-  padding: 12px 15px;
-  border-radius: 10px;
-  transition: all 0.3s ease-out, border-left 0.2s ease-out; /* Match transition */
-  background: transparent; /* Transparent background to match */
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Match shadow */
-  opacity: 0; /* Start invisible for animation */
-  transform: translateY(10px); /* Match offset */
-  animation: fadeInUp 0.5s ease-out forwards; /* Match appearance animation */
-  border-left: 4px solid transparent; /* Match initial border */
-}
+    .suggestions .suggestion-item:hover {
+      background-color: #f8f9fa;
+      opacity: 1;
+    }
 
-.new-file-item:hover {
-  background-color: rgba(248, 249, 250, 0.8); /* Match semi-transparent hover background */
-  transform: translateY(-2px) scale(1.02); /* Match hover transform */
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Match hover shadow */
-  border-left: 4px solid var(--primary-color); /* Match colored border on hover */
-}
+    /* Modern Modal Styles */
+    .modal-content {
+      border: none;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      background: #ffffff;
+      animation: fadeInScale 0.4s ease;
+    }
 
-.new-file-icon {
-  font-size: 1.8rem; /* Match dynamic CSS */
-  transition: transform 0.3s ease-out, color 0.3s ease-out; /* Match icon transitions */
-}
+    @keyframes fadeInScale {
+      0% {
+        opacity: 0;
+        transform: scale(0.8);
+      }
 
-.new-file-item:hover .new-file-icon {
-  transform: scale(1.15) rotate(5deg); /* Match icon hover effect */
-  color: var(--primary-color); /* Match color shift */
-}
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
 
-.new-file-name {
-  transition: color 0.3s ease-out; /* Match name transition */
-}
+    .modal-header {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: #fff;
+      border-bottom: none;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
-.new-file-item:hover .new-file-name {
-  color: var(--primary-color); /* Match name hover color */
-}
+    .modal-header .modal-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
 
-.new-file-info {
-  transition: color 0.3s ease-out; /* Match info transition */
-}
+    .modal-header .btn-close {
+      background: transparent;
+      border: none;
+      font-size: 1.5rem;
+      opacity: 0.9;
+      transition: opacity 0.3s ease;
+    }
 
-.new-file-item:hover .new-file-info {
-  color: #5a6268; /* Match info hover color */
-}
+    .modal-header .btn-close:hover {
+      opacity: 1;
+    }
 
-.new-file-views {
-  transition: color 0.3s ease-out; /* Add transition for views */
-}
+    .modal-body {
+      padding: 1.5rem;
+      font-size: 1rem;
+      color: #444;
+      line-height: 1.6;
+    }
 
-.new-file-item:hover .new-file-views {
-  color: #5a6268; /* Match hover color */
-}
+    .modal-footer {
+      background: #f5f5f5;
+      border-top: none;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+    }
 
-/* Action Menu Button */
-.new-btn-menu {
-  transition: background-color 0.3s ease-out, transform 0.3s ease-out; /* Smooth button transitions */
-}
+    .modal-footer .btn {
+      min-width: 120px;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
 
-.new-btn-menu:hover {
-  background-color: #e9ecef; /* Subtle hover background */
-  transform: scale(1.1); /* Slight zoom on hover */
-}
+    .modal-footer .btn-primary {
+      background: #2575fc;
+      border: none;
+    }
 
-/* Responsive Adjustments */
-@media (max-width: 576px) {
-  .file-item,
-  .new-file-item {
-    animation: fadeInUp 0.4s ease-out forwards; /* Slightly faster animation on mobile */
-    border-left-width: 3px; /* Slightly thinner border on mobile */
-  }
+    .modal-footer .btn-primary:hover {
+      background: #1a5bb8;
+      transform: translateY(-2px);
+    }
 
-  .file-item:hover,
-  .new-file-item:hover {
-    transform: translateY(-1px) scale(1.01); /* Reduced scale for mobile */
-    border-left: 3px solid var(--primary-color); /* Match border width on hover */
-  }
+    .modal-footer .btn-secondary {
+      background: #e0e0e0;
+      border: none;
+      color: #555;
+    }
 
-  .file-icon,
-  .new-file-icon {
-    transform: scale(1.1) rotate(3deg); /* Reduced rotation for mobile */
-  }
-}
-/* File List */
-.file-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px; /* Maintain spacing between items */
-}
+    .modal-footer .btn-secondary:hover {
+      background: #cfcfcf;
+      transform: translateY(-2px);
+    }
 
-/* File Item */
-.file-item {
-  display: flex;
-  align-items: center;
-  padding: 12px 15px;
-  border-radius: 10px;
-  transition: all 0.3s ease-out, border-left 0.2s ease-out; /* Smooth transitions */
-  cursor: pointer;
-  background: transparent; /* Transparent background to remove white */
-  opacity: 0; /* Start invisible for appearance animation */
-  transform: translateY(10px); /* Slight offset for animation */
-  animation: fadeInUp 0.5s ease-out forwards; /* Appearance animation */
-  border-left: 4px solid transparent; /* Initial transparent border */
-}
+    .modal-footer .btn-info {
+      background: #17a2b8;
+      border: none;
+      color: #fff;
+    }
 
-/* Appearance animation for file items */
-@keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+    .modal-footer .btn-info:hover {
+      background: #138496;
+      transform: translateY(-2px);
+    }
 
-/* Staggered animation for each file item */
-.file-list .file-item {
-  animation-delay: calc(0.05s * var(--index)); /* Staggered delay based on index */
-}
+    @media (max-width: 576px) {
 
-.file-item:hover {
-  background-color: rgba(248, 249, 250, 0.8); /* Semi-transparent hover background */
-  transform: translateY(-2px) scale(1.02); /* Lift and slight zoom on hover */
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
-  border-left: 4px solid var(--primary-color); /* Colored left border on hover */
-}
+      .modal-header,
+      .modal-body,
+      .modal-footer {
+        padding: 1rem;
+      }
 
-/* File Icon */
-.file-icon {
-  font-size: 24px;
-  margin-right: 15px;
-  width: 30px;
-  transition: transform 0.3s ease-out, color 0.3s ease-out; /* Smooth icon transitions */
-}
+      .modal-header .modal-title {
+        font-size: 1.5rem;
+      }
+    }
 
-.file-item:hover .file-icon {
-  transform: scale(1.15) rotate(5deg); /* Icon zoom and slight rotation on hover */
-  color: var(--primary-color); /* Shift to primary color on hover */
-}
+    /* Modal Resume Header màu xanh lá */
+    #resumeModal .modal-header {
+      background: linear-gradient(135deg, #28a745, #70db70);
+    }
 
-/* File Name */
-.file-name {
-  flex-grow: 1;
-  font-size: 1rem;
-  transition: color 0.3s ease-out; /* Smooth color transition */
-}
+    .about-links {
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      margin: 20px 0;
+    }
 
-.file-item:hover .file-name {
-  color: var(--primary-color); /* Highlight file name on hover */
-}
+    .about-links h3 {
+      font-size: 20px;
+      color: #333;
+      margin-bottom: 15px;
+    }
 
-/* File Info */
-.file-info {
-  font-size: 0.8rem;
-  color: var(--secondary-color);
-  transition: color 0.3s ease-out; /* Smooth color transition */
-}
+    .about-links ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 20px 0;
+    }
 
-.file-item:hover .file-info {
-  color: #5a6268; /* Slightly darker for emphasis on hover */
-}
-
-/* Compatibility with new-file-item */
-.new-file-item {
-  padding: 12px 15px;
-  border-radius: 10px;
-  transition: all 0.3s ease-out, border-left 0.2s ease-out; /* Match transition */
-  background: transparent; /* Transparent background to match */
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Match shadow */
-  opacity: 0; /* Start invisible for animation */
-  transform: translateY(10px); /* Match offset */
-  animation: fadeInUp 0.5s ease-out forwards; /* Match appearance animation */
-  border-left: 4px solid transparent; /* Match initial border */
-}
-
-.new-file-item:hover {
-  background-color: rgba(248, 249, 250, 0.8); /* Match semi-transparent hover background */
-  transform: translateY(-2px) scale(1.02); /* Match hover transform */
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Match hover shadow */
-  border-left: 4px solid var(--primary-color); /* Match colored border on hover */
-}
-
-.new-file-icon {
-  font-size: 1.8rem; /* Match dynamic CSS */
-  transition: transform 0.3s ease-out, color 0.3s ease-out; /* Match icon transitions */
-}
-
-.new-file-item:hover .new-file-icon {
-  transform: scale(1.15) rotate(5deg); /* Match icon hover effect */
-  color: var(--primary-color); /* Match color shift */
-}
-
-.new-file-name {
-  transition: color 0.3s ease-out; /* Match name transition */
-}
-
-.new-file-item:hover .new-file-name {
-  color: var(--primary-color); /* Match name hover color */
-}
-
-.new-file-info {
-  transition: color 0.3s ease-out; /* Match info transition */
-}
-
-.new-file-item:hover .new-file-info {
-  color: #5a6268; /* Match info hover color */
-}
-
-.new-file-views {
-  transition: color 0.3s ease-out; /* Add transition for views */
-}
-
-.new-file-item:hover .new-file-views {
-  color: #5a6268; /* Match hover color */
-}
-
-/* Action Menu Button */
-.new-btn-menu {
-  transition: background-color 0.3s ease-out, transform 0.3s ease-out; /* Smooth button transitions */
-}
-
-.new-btn-menu:hover {
-  background-color: #e9ecef; /* Subtle hover background */
-  transform: scale(1.1); /* Slight zoom on hover */
-}
-
-/* Responsive Adjustments */
-@media (max-width: 576px) {
-  .file-item,
-  .new-file-item {
-    animation: fadeInUp 0.4s ease-out forwards; /* Slightly faster animation on mobile */
-    border-left-width: 3px; /* Slightly thinner border on mobile */
-  }
-
-  .file-item:hover,
-  .new-file-item:hover {
-    transform: translateY(-1px) scale(1.01); /* Reduced scale for mobile */
-    border-left: 3px solid var(--primary-color); /* Match border width on hover */
-  }
-
-  .file-icon,
-  .new-file-icon {
-    transform: scale(1.1) rotate(3deg); /* Reduced rotation for mobile */
-  }
-}
-.about-links li {
+    .about-links li {
       display: flex;
       align-items: center;
       padding: 8px 0;
@@ -767,7 +651,6 @@
     .btn-hover-tooltip:hover::after {
       opacity: 1;
     }
-    
   </style>
 
 </head>
@@ -2247,6 +2130,18 @@
     .nav-link.active:hover::after {
       width: 0;
     }
+    /* Override outline-secondary chỉ về màu primary */
+.btn-outline-secondary {
+  color: #0d6efd !important;
+  border-color: #0d6efd !important;
+}
+
+/* Hover đổi nền xanh, chữ trắng */
+.btn-outline-secondary:hover {
+  background-color: #0d6efd !important;
+  color: #fff !important;
+}
+
   </style>
 
 
@@ -2285,6 +2180,14 @@
                 Các đề thi và tài liệu trên website này đều được đóng góp bởi các cựu sinh viên, mang lại sự gần gũi và
                 trải nghiệm thực tế trong học tập.
               </p>
+              <!-- Nút Báo lỗi / Góp ý -->
+  <div class="d-flex gap-2 mt-3">
+    <!-- (1) NÚT MỞ MODAL -->
+<button type="button" class="btn btn-outline-secondary btn-sm" id="openFeedbackBtn">
+    <i class="fas fa-envelope-open-text me-1"></i> Hòm thư hỗ trợ
+</button>
+</div>
+
               <div class="about-links mt-3">
                 <footer class="custom-footer mt-4">
                   <div class="footer-item">
@@ -4705,6 +4608,2220 @@
     }
 
   </script>
+<!--hòm thuw hoox tro-->
+<div class="feedback-system-fb">
+    <!-- Toast Notification Container -->
+    <div class="toast-container_fb" id="toastContainer_fb"></div>
+
+    <!-- Preview Modal -->
+    <div class="preview-modal_fb" id="previewModal_fb">
+        <div class="preview-content_fb">
+            <button class="preview-close_fb" id="previewCloseBtn_fb">×</button>
+            <div class="preview-body_fb" id="previewBody_fb">
+                <!-- Content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Feedback Modal -->
+  <div class="modal-backdrop_fb" id="feedbackModal_fb">
+        <div class="feedback-modal_fb">
+            <div class="modal-header_fb">
+                <div class="modal-title_fb">
+                    <i class="fas fa-comment-medical"></i>
+                    <span>Đóng góp ý kiến & Báo lỗi hệ thống</span>
+                </div>
+                <button class="close-btn_fb" id="closeModalBtn_fb">×</button>
+            </div>
+            
+            <div class="feedback-tabs_fb">
+                <div class="tab-indicator_fb" style="width: 140px; left: 0;"></div>
+                <button class="tab-btn_fb active" data-tab="new-feedback_fb">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Gửi phản hồi mới</span>
+                </button>
+                <button class="tab-btn_fb" data-tab="feedback-history_fb">
+                    <i class="fas fa-history"></i>
+                    <span>Lịch sử phản hồi</span>
+                </button>
+            </div>
+            
+            <div class="modal-body_fb">
+                <!-- Tab 1: New Feedback -->
+                <div class="tab-content_fb active" id="new-feedback_fb">
+                    <form id="feedbackForm_fb">
+                        <div class="form-group_fb">
+                            <label for="feedbackType_fb" class="form-label_fb required">Loại phản hồi</label>
+                            <select id="feedbackType_fb" class="form-control_fb" required>
+                                <option value="">-- Chọn loại phản hồi --</option>
+                                <option value="bug">Báo lỗi hệ thống</option>
+                                <option value="suggestion">Đóng góp ý kiến</option>
+                                <option value="complaint">Khiếu nại</option>
+                                <option value="other">Khác</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group_fb">
+                            <label for="feedbackTitle_fb" class="form-label_fb required">Tiêu đề</label>
+                            <input type="text" id="feedbackTitle_fb" class="form-control_fb" placeholder="Mô tả ngắn gọn vấn đề" required>
+                        </div>
+                        
+                        <div class="form-group_fb">
+                            <label for="feedbackContent_fb" class="form-label_fb required">Nội dung chi tiết</label>
+                            <textarea id="feedbackContent_fb" class="form-control_fb" placeholder="Mô tả chi tiết vấn đề hoặc ý kiến của bạn..." required></textarea>
+                        </div>
+                        
+                        <div class="form-group_fb">
+                            <label class="form-label_fb">Tệp đính kèm (nếu có)</label>
+                            <div class="file-upload_fb">
+                                <div class="file-upload-btn_fb">
+                                    <div class="file-upload-text_fb">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <span>Kéo thả file vào đây hoặc click để chọn file</span>
+                                        <small style="color: var(--text-light);">Hỗ trợ: JPG, PNG, PDF, DOCX (tối đa 5MB)</small>
+                                    </div>
+                                    <input type="file" id="feedbackAttachment_fb" class="file-upload-input_fb" multiple>
+                                </div>
+                                <div class="file-list_fb" id="fileList_fb"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions_fb">
+                            <button type="button" class="btn_fb btn-secondary_fb" id="cancelFeedbackBtn_fb">
+                                <i class="fas fa-times"></i> Hủy bỏ
+                            </button>
+                            <button type="submit" class="btn_fb btn-primary_fb">
+                                <i class="fas fa-paper-plane"></i> Gửi phản hồi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Tab 2: Feedback History -->
+                <div class="tab-content_fb" id="feedback-history_fb">
+                    <div class="feedback-toolbar_fb">
+                        <div class="filter-group_fb">
+                            <span class="filter-label_fb">Lọc theo:</span>
+                            <select id="statusFilter_fb" class="filter-select_fb">
+                                <option value="all">Tất cả trạng thái</option>
+                                <option value="pending">Đang chờ</option>
+                                <option value="approved">Đã chấp thuận</option>
+                                <option value="rejected">Đã từ chối</option>
+                                <option value="resolved">Đã giải quyết</option>
+                            </select>
+                            
+                            <select id="typeFilter_fb" class="filter-select_fb">
+                                <option value="all">Tất cả loại</option>
+                                <option value="bug">Báo lỗi</option>
+                                <option value="suggestion">Góp ý</option>
+                                <option value="complaint">Khiếu nại</option>
+                                <option value="other">Khác</option>
+                            </select>
+                        </div>
+                        
+                        <div class="search-box_fb">
+                            <input type="text" id="searchFeedback_fb" class="search-input_fb" placeholder="Tìm kiếm phản hồi...">
+                        </div>
+                    </div>
+                    
+                    <div class="feedback-list-container_fb">
+                        <div class="feedback-list_fb" id="feedbackList_fb">
+                            <!-- Feedback Item 1 -->
+                            <div class="feedback-item_fb" data-status="pending" data-type="bug">
+                                <div class="feedback-header_fb">
+                                    <div class="feedback-title_fb">
+                                        <span class="feedback-type_fb">Báo lỗi</span>
+                                        Không thể đăng nhập vào hệ thống
+                                    </div>
+                                    <div class="feedback-status_fb status-pending_fb">Đang chờ</div>
+                                </div>
+                                <div class="feedback-date_fb">
+                                    <i class="far fa-clock"></i> 15/04/2023 - 14:30
+                                </div>
+                                <div class="feedback-content_fb">
+                                    <p>Khi nhấn nút đăng nhập, hệ thống báo lỗi "Internal Server Error" và không thể tiếp tục. Đã thử trên trình duyệt Chrome và Firefox đều bị.</p>
+                                </div>
+                                <div class="feedback-response_fb">
+                                    <div class="response-header_fb">
+                                        <div class="response-label_fb">
+                                            <i class="fas fa-user-shield"></i>
+                                            Phản hồi từ quản trị viên
+                                        </div>
+                                        <div class="response-date_fb">16/04/2023 - 09:15</div>
+                                    </div>
+                                    <div class="response-content_fb">
+                                        <p>Chúng tôi đã tiếp nhận vấn đề của bạn và đang kiểm tra hệ thống. Cảm ơn bạn đã báo cáo. Chúng tôi sẽ cập nhật cho bạn ngay khi có kết quả.</p>
+                                    </div>
+                                </div>
+                                <button class="btn-view-details_fb">
+                                    <span>Xem phản hồi</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                            </div>
+                            
+                            <!-- Feedback Item 2 -->
+                            <div class="feedback-item_fb" data-status="approved" data-type="suggestion">
+                                <div class="feedback-header_fb">
+                                    <div class="feedback-title_fb">
+                                        <span class="feedback-type_fb">Góp ý</span>
+                                        Thêm chức năng xuất báo cáo Excel
+                                    </div>
+                                    <div class="feedback-status_fb status-approved_fb">Đã chấp thuận</div>
+                                </div>
+                                <div class="feedback-date_fb">
+                                    <i class="far fa-clock"></i> 12/04/2023 - 09:15
+                                </div>
+                                <div class="feedback-content_fb">
+                                    <p>Xin đề xuất thêm chức năng xuất báo cáo dưới định dạng Excel để thuận tiện cho việc phân tích dữ liệu. Hiện tại chỉ có PDF là không đủ cho nhu cầu làm báo cáo chi tiết.</p>
+                                </div>
+                                <div class="feedback-attachments_fb">
+                                    <a href="#" class="attachment-item_fb" data-file="proposal.docx">
+                                        <i class="fas fa-file-word"></i> proposal.docx
+                                    </a>
+                                </div>
+                                <div class="feedback-response_fb">
+                                    <div class="response-header_fb">
+                                        <div class="response-label_fb">
+                                            <i class="fas fa-user-shield"></i>
+                                            Phản hồi từ quản trị viên
+                                        </div>
+                                        <div class="response-date_fb">13/04/2023 - 14:20</div>
+                                    </div>
+                                    <div class="response-content_fb">
+                                        <p>Ý kiến của bạn đã được chấp thuận. Chức năng này sẽ được triển khai trong bản cập nhật tháng 5 tới. Cảm ơn bạn đã đóng góp ý kiến để cải thiện hệ thống.</p>
+                                    </div>
+                                </div>
+                                <button class="btn-view-details_fb active">
+                                    <span>Ẩn phản hồi</span>
+                                    <i class="fas fa-chevron-up"></i>
+                                </button>
+                            </div>
+                            
+                            <!-- Feedback Item 3 -->
+                            <div class="feedback-item_fb" data-status="resolved" data-type="bug">
+                                <div class="feedback-header_fb">
+                                    <div class="feedback-title_fb">
+                                        <span class="feedback-type_fb">Báo lỗi</span>
+                                        Hiển thị sai thông tin người dùng
+                                    </div>
+                                    <div class="feedback-status_fb status-resolved_fb">Đã giải quyết</div>
+                                </div>
+                                <div class="feedback-date_fb">
+                                    <i class="far fa-clock"></i> 05/04/2023 - 16:45
+                                </div>
+                                <div class="feedback-content_fb">
+                                    <p>Trang thông tin cá nhân hiển thị sai email và số điện thoại của tôi, mặc dù tôi đã cập nhật đúng thông tin. Đã thử cập nhật lại nhiều lần nhưng vẫn bị sai.</p>
+                                </div>
+                                <div class="feedback-attachments_fb">
+                                    <a href="#" class="attachment-item_fb" data-file="screenshot1.png">
+                                        <i class="fas fa-file-image"></i> screenshot1.png
+                                    </a>
+                                    <a href="#" class="attachment-item_fb" data-file="screenshot2.png">
+                                        <i class="fas fa-file-image"></i> screenshot2.png
+                                    </a>
+                                </div>
+                                <div class="feedback-response_fb">
+                                    <div class="response-header_fb">
+                                        <div class="response-label_fb">
+                                            <i class="fas fa-user-shield"></i>
+                                            Phản hồi từ quản trị viên
+                                        </div>
+                                        <div class="response-date_fb">07/04/2023 - 10:30</div>
+                                    </div>
+                                    <div class="response-content_fb">
+                                        <p>Lỗi đã được khắc phục trong bản cập nhật ngày 07/04. Vui lòng làm mới trình duyệt (Ctrl+F5) để xem thông tin chính xác. Nếu vẫn gặp vấn đề, vui lòng phản hồi lại cho chúng tôi.</p>
+                                    </div>
+                                </div>
+                                <button class="btn-view-details_fb">
+                                    <span>Xem phản hồi</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="pagination_fb">
+                        <button class="btn_fb btn-secondary_fb btn-sm_fb" id="prevPageBtn_fb">
+                            <i class="fas fa-chevron-left"></i> Trước
+                        </button>
+                        <span class="page-info_fb">Trang 1/3</span>
+                        <button class="btn_fb btn-secondary_fb btn-sm_fb" id="nextPageBtn_fb">
+                            Sau <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Inject CSS styles
+    function injectStyles_baoloi_fb() {
+        const style = document.createElement('style');
+        style.textContent = `
+            .feedback-system-fb {
+                --primary-color: #4361ee;
+                --primary-hover: #3a56d4;
+                --primary-light: rgba(67, 97, 238, 0.1);
+                --success-color: #4cc9a0;
+                --success-hover: #44b590;
+                --warning-color: #f8961e;
+                --warning-hover: #e0871b;
+                --danger-color: #f94144;
+                --danger-hover: #e0383b;
+                --info-color: #4895ef;
+                --info-hover: #3f86d7;
+                --gray-light: #f8f9fa;
+                --gray-medium: #e9ecef;
+                --gray-dark: #adb5bd;
+                --text-dark: #212529;
+                --text-medium: #495057;
+                --text-light: #6c757d;
+                --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+                --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+                --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+                --shadow-primary: 0 4px 14px rgba(67, 97, 238, 0.3);
+                --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+                --transition-fast: all 0.15s ease;
+                --border-radius: 10px;
+                --border-radius-sm: 6px;
+                --border-radius-lg: 12px;
+            }
+            
+            .feedback-system-fb * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            
+            .feedback-system-fb {
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+                background-color: #f5f7ff;
+                color: var(--text-dark);
+                line-height: 1.6;
+            }
+            
+            /* Toast Notification */
+            .feedback-system-fb .toast-container_fb {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 1100;
+                max-width: 350px;
+                width: 100%;
+            }
+            
+            .feedback-system-fb .toast_fb {
+                padding: 16px 20px;
+                border-radius: var(--border-radius);
+                box-shadow: var(--shadow-lg);
+                margin-bottom: 12px;
+                display: flex;
+                align-items: flex-start;
+                opacity: 0;
+                transform: translateX(100%);
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .feedback-system-fb .toast_fb.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            
+            .feedback-system-fb .toast_fb.success {
+                background-color: white;
+                border-left: 4px solid var(--success-color);
+            }
+            
+            .feedback-system-fb .toast_fb.error {
+                background-color: white;
+                border-left: 4px solid var(--danger-color);
+            }
+            
+            .feedback-system-fb .toast-icon_fb {
+                font-size: 20px;
+                margin-right: 12px;
+                flex-shrink: 0;
+            }
+            
+            .feedback-system-fb .toast_fb.success .toast-icon_fb {
+                color: var(--success-color);
+            }
+            
+            .feedback-system-fb .toast_fb.error .toast-icon_fb {
+                color: var(--danger-color);
+            }
+            
+            .feedback-system-fb .toast-content_fb {
+                flex: 1;
+            }
+            
+            .feedback-system-fb .toast-title_fb {
+                font-weight: 600;
+                margin-bottom: 4px;
+                font-size: 15px;
+            }
+            
+            .feedback-system-fb .toast-message_fb {
+                font-size: 14px;
+                color: var(--text-medium);
+            }
+            
+            .feedback-system-fb .toast-close_fb {
+                background: none;
+                border: none;
+                color: var(--text-light);
+                font-size: 16px;
+                margin-left: 12px;
+                cursor: pointer;
+                transition: var(--transition-fast);
+                padding: 0;
+                line-height: 1;
+            }
+            
+            .feedback-system-fb .toast-close_fb:hover {
+                color: var(--text-dark);
+            }
+            
+            /* Modal Backdrop */
+            .feedback-system-fb .modal-backdrop_fb {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+                opacity: 0;
+                visibility: hidden;
+                transition: var(--transition);
+                backdrop-filter: blur(5px);
+            }
+            
+            .feedback-system-fb .modal-backdrop_fb.active {
+                opacity: 1;
+                visibility: visible;
+            }
+            
+            /* Modal Container */
+.feedback-system-fb .feedback-modal_fb {
+    width: 90%;
+    max-width: 850px;
+    background: white;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    transform: translate(-50%, -50%) scale(0.98);
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    transition: var(--transition);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+            
+.feedback-system-fb .modal-backdrop_fb.active .feedback-modal_fb {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+
+
+
+
+            /* Modal Header */
+            .feedback-system-fb .modal-header_fb {
+                padding: 20px 28px;
+                background: linear-gradient(135deg, #4361ee, #3a0ca3);
+                color: white;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                position: relative;
+            }
+            
+            .feedback-system-fb .modal-header_fb::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, #4361ee, #3a0ca3);
+            }
+            
+            .feedback-system-fb .modal-title_fb {
+                font-size: 20px;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+            
+            .feedback-system-fb .modal-title_fb i {
+                font-size: 22px;
+            }
+            
+            .feedback-system-fb .close-btn_fb {
+                background: none;
+                border: none;
+                color: white;
+                font-size: 24px;
+                cursor: pointer;
+                transition: var(--transition);
+                width: 36px;
+                height: 36px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+            }
+            
+            .feedback-system-fb .close-btn_fb:hover {
+                background: rgba(255,255,255,0.15);
+                transform: rotate(90deg);
+            }
+            
+            /* Tab Navigation */
+            .feedback-system-fb .feedback-tabs_fb {
+                display: flex;
+                border-bottom: 1px solid var(--gray-medium);
+                background: white;
+                position: relative;
+            }
+            
+            .feedback-system-fb .tab-btn_fb {
+                padding: 16px 28px;
+                background: none;
+                border: none;
+                cursor: pointer;
+                font-size: 15px;
+                font-weight: 600;
+                color: var(--text-light);
+                position: relative;
+                transition: var(--transition);
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .feedback-system-fb .tab-btn_fb i {
+                font-size: 17px;
+            }
+            
+            .feedback-system-fb .tab-btn_fb.active {
+                color: var(--primary-color);
+            }
+            
+            .feedback-system-fb .tab-btn_fb:hover:not(.active) {
+                color: var(--primary-hover);
+                background: var(--primary-light);
+            }
+            
+            .feedback-system-fb .tab-indicator_fb {
+                position: absolute;
+                bottom: -1px;
+                left: 0;
+                height: 3px;
+                background: var(--primary-color);
+                border-radius: 3px 3px 0 0;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            
+            /* Modal Body */
+            .feedback-system-fb .modal-body_fb {
+                padding: 0;
+                overflow-y: auto;
+                flex-grow: 1;
+            }
+            
+            /* Tab Content */
+            .feedback-system-fb .tab-content_fb {
+                display: none;
+                padding: 28px;
+                animation: fadeIn 0.3s ease;
+            }
+            
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            
+            .feedback-system-fb .tab-content_fb.active {
+                display: block;
+            }
+            
+            /* Form Styles */
+            .feedback-system-fb .form-group_fb {
+                margin-bottom: 24px;
+            }
+            
+            .feedback-system-fb .form-label_fb {
+                display: block;
+                margin-bottom: 10px;
+                font-weight: 500;
+                font-size: 15px;
+                color: var(--text-medium);
+            }
+            
+            .feedback-system-fb .form-label_fb.required::after {
+                content: '*';
+                color: var(--danger-color);
+                margin-left: 4px;
+            }
+            
+            .feedback-system-fb .form-control_fb {
+                width: 100%;
+                padding: 14px 16px;
+                border: 1px solid var(--gray-medium);
+                border-radius: var(--border-radius-sm);
+                font-size: 15px;
+                transition: var(--transition);
+                background-color: white;
+                font-family: inherit;
+            }
+            
+            .feedback-system-fb .form-control_fb:focus {
+                outline: none;
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+            }
+            
+            .feedback-system-fb textarea.form-control_fb {
+                min-height: 160px;
+                resize: vertical;
+                line-height: 1.6;
+            }
+            
+            .feedback-system-fb .file-upload_fb {
+                position: relative;
+                overflow: hidden;
+                display: inline-block;
+                width: 100%;
+            }
+            
+            .feedback-system-fb .file-upload-btn_fb {
+                border: 2px dashed var(--gray-medium);
+                border-radius: var(--border-radius-sm);
+                padding: 24px;
+                text-align: center;
+                cursor: pointer;
+                transition: var(--transition);
+                background-color: var(--gray-light);
+            }
+            
+            .feedback-system-fb .file-upload-btn_fb:hover {
+                border-color: var(--primary-color);
+                background-color: rgba(67, 97, 238, 0.05);
+            }
+            
+            .feedback-system-fb .file-upload-input_fb {
+                position: absolute;
+                left: 0;
+                top: 0;
+                opacity: 0;
+                width: 100%;
+                height: 100%;
+                cursor: pointer;
+            }
+            
+            .feedback-system-fb .file-upload-text_fb {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+                color: var(--text-light);
+            }
+            
+            .feedback-system-fb .file-upload-text_fb i {
+                font-size: 28px;
+                color: var(--primary-color);
+            }
+            
+            .feedback-system-fb .file-upload-text_fb span {
+                font-size: 15px;
+            }
+            
+            .feedback-system-fb .file-list_fb {
+                margin-top: 12px;
+                display: none;
+            }
+            
+            .feedback-system-fb .file-list_fb.has-files {
+                display: block;
+            }
+            
+            .feedback-system-fb .file-item_fb {
+                display: flex;
+                align-items: center;
+                padding: 10px 14px;
+                background: var(--gray-light);
+                border-radius: var(--border-radius-sm);
+                margin-bottom: 10px;
+                transition: var(--transition);
+            }
+            
+            .feedback-system-fb .file-item_fb:hover {
+                background: var(--gray-medium);
+            }
+            
+            .feedback-system-fb .file-icon_fb {
+                margin-right: 12px;
+                color: var(--primary-color);
+                font-size: 18px;
+                flex-shrink: 0;
+            }
+            
+            .feedback-system-fb .file-info_fb {
+                flex: 1;
+                min-width: 0;
+            }
+            
+            .feedback-system-fb .file-name_fb {
+                font-size: 14px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                margin-bottom: 2px;
+            }
+            
+            .feedback-system-fb .file-size_fb {
+                font-size: 12px;
+                color: var(--text-light);
+            }
+            
+            .feedback-system-fb .file-preview_fb {
+                color: var(--primary-color);
+                background: none;
+                border: none;
+                margin-right: 10px;
+                cursor: pointer;
+                font-size: 14px;
+                transition: var(--transition-fast);
+            }
+            
+            .feedback-system-fb .file-preview_fb:hover {
+                color: var(--primary-hover);
+            }
+            
+            .feedback-system-fb .file-remove_fb {
+                color: var(--danger-color);
+                cursor: pointer;
+                background: none;
+                border: none;
+                font-size: 16px;
+                transition: var(--transition-fast);
+            }
+            
+            .feedback-system-fb .file-remove_fb:hover {
+                color: var(--danger-hover);
+            }
+            
+            .feedback-system-fb .form-actions_fb {
+                display: flex;
+                justify-content: flex-end;
+                gap: 16px;
+                margin-top: 28px;
+                padding-top: 20px;
+                border-top: 1px solid var(--gray-medium);
+            }
+            
+            .feedback-system-fb .btn_fb {
+                padding: 12px 24px;
+                border-radius: var(--border-radius-sm);
+                cursor: pointer;
+                font-size: 15px;
+                font-weight: 500;
+                border: 1px solid transparent;
+                transition: var(--transition);
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .feedback-system-fb .btn-sm_fb {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+            
+            .feedback-system-fb .btn-secondary_fb {
+                background: white;
+                border-color: var(--gray-medium);
+                color: var(--text-medium);
+            }
+            
+            .feedback-system-fb .btn-secondary_fb:hover {
+                background: var(--gray-light);
+                transform: translateY(-1px);
+            }
+            
+            .feedback-system-fb .btn-primary_fb {
+                background: var(--primary-color);
+                color: white;
+                border-color: var(--primary-color);
+                box-shadow: var(--shadow-sm);
+            }
+            
+            .feedback-system-fb .btn-primary_fb:hover {
+                background: var(--primary-hover);
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-md);
+            }
+            
+            .feedback-system-fb .btn-primary_fb:active {
+                transform: translateY(0);
+                box-shadow: var(--shadow-sm);
+            }
+            
+            /* Feedback List Styles */
+            .feedback-system-fb .feedback-list-container_fb {
+                margin-top: 20px;
+                border-radius: var(--border-radius);
+                overflow: hidden;
+                box-shadow: var(--shadow-sm);
+                border: 1px solid var(--gray-medium);
+            }
+            
+            .feedback-system-fb .feedback-list_fb {
+                background: white;
+            }
+            
+            .feedback-system-fb .feedback-item_fb {
+                border-bottom: 1px solid var(--gray-medium);
+                padding: 20px 24px;
+                transition: var(--transition);
+            }
+            
+            .feedback-system-fb .feedback-item_fb:last-child {
+                border-bottom: none;
+            }
+            
+            .feedback-system-fb .feedback-item_fb:hover {
+                background: rgba(67, 97, 238, 0.03);
+            }
+            
+            .feedback-system-fb .feedback-header_fb {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 14px;
+                gap: 14px;
+            }
+            
+            .feedback-system-fb .feedback-title_fb {
+                font-weight: 600;
+                flex: 1;
+                font-size: 16px;
+                color: var(--text-dark);
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .feedback-system-fb .feedback-type_fb {
+                font-size: 13px;
+                padding: 4px 10px;
+                border-radius: 12px;
+                background: var(--gray-light);
+                color: var(--text-medium);
+            }
+            
+            .feedback-system-fb .feedback-date_fb {
+                color: var(--text-light);
+                font-size: 14px;
+                white-space: nowrap;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+            
+            .feedback-system-fb .feedback-date_fb i {
+                font-size: 14px;
+            }
+            
+            .feedback-system-fb .feedback-status_fb {
+                padding: 5px 12px;
+                border-radius: 12px;
+                font-size: 13px;
+                font-weight: 600;
+                text-transform: uppercase;
+                margin-left: 14px;
+                white-space: nowrap;
+            }
+            
+            .feedback-system-fb .status-pending_fb {
+                background: rgba(248, 150, 30, 0.1);
+                color: var(--warning-color);
+            }
+            
+            .feedback-system-fb .status-approved_fb {
+                background: rgba(76, 201, 160, 0.1);
+                color: var(--success-color);
+            }
+            
+            .feedback-system-fb .status-rejected_fb {
+                background: rgba(249, 65, 68, 0.1);
+                color: var(--danger-color);
+            }
+            
+            .feedback-system-fb .status-resolved_fb {
+                background: rgba(72, 149, 239, 0.1);
+                color: var(--info-color);
+            }
+            
+            .feedback-system-fb .feedback-content_fb {
+                margin-bottom: 14px;
+                font-size: 15px;
+                color: var(--text-medium);
+                line-height: 1.6;
+            }
+            
+            .feedback-system-fb .feedback-attachments_fb {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-top: 14px;
+            }
+            
+            .feedback-system-fb .attachment-item_fb {
+                display: flex;
+                align-items: center;
+                padding: 6px 12px;
+                background: var(--gray-light);
+                border-radius: var(--border-radius-sm);
+                font-size: 13px;
+                color: var(--text-medium);
+                text-decoration: none;
+                transition: var(--transition);
+            }
+            
+            .feedback-system-fb .attachment-item_fb:hover {
+                background: var(--gray-medium);
+                transform: translateY(-1px);
+            }
+            
+            .feedback-system-fb .attachment-item_fb i {
+                margin-right: 6px;
+                font-size: 15px;
+            }
+            
+            .feedback-system-fb .feedback-response_fb {
+                padding: 18px;
+                background: var(--gray-light);
+                border-radius: var(--border-radius-sm);
+                margin-top: 18px;
+                border-left: 4px solid var(--primary-color);
+                font-size: 15px;
+                display: none;
+                animation: fadeIn 0.3s ease;
+            }
+            
+            .feedback-system-fb .response-header_fb {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 10px;
+            }
+            
+            .feedback-system-fb .response-label_fb {
+                font-weight: 600;
+                color: var(--primary-color);
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .feedback-system-fb .response-label_fb i {
+                font-size: 16px;
+            }
+            
+            .feedback-system-fb .response-date_fb {
+                font-size: 13px;
+                color: var(--text-light);
+            }
+            
+            .feedback-system-fb .response-content_fb {
+                color: var(--text-medium);
+                line-height: 1.6;
+            }
+            
+            .feedback-system-fb .btn-view-details_fb {
+                background: none;
+                border: none;
+                color: var(--primary-color);
+                cursor: pointer;
+                font-size: 14px;
+                font-weight: 500;
+                padding: 0;
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                transition: var(--transition);
+            }
+            
+            .feedback-system-fb .btn-view-details_fb:hover {
+                text-decoration: underline;
+                color: var(--primary-hover);
+            }
+            
+            .feedback-system-fb .btn-view-details_fb i {
+                font-size: 13px;
+                transition: var(--transition);
+            }
+            
+            .feedback-system-fb .btn-view-details_fb.active i {
+                transform: rotate(180deg);
+            }
+            
+            /* Filter and Pagination */
+            .feedback-system-fb .feedback-toolbar_fb {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 24px;
+                flex-wrap: wrap;
+                gap: 16px;
+            }
+            
+            .feedback-system-fb .filter-group_fb {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                flex-wrap: wrap;
+            }
+            
+            .feedback-system-fb .filter-label_fb {
+                font-size: 15px;
+                color: var(--text-medium);
+                font-weight: 500;
+            }
+            
+            .feedback-system-fb .filter-select_fb {
+                padding: 10px 14px;
+                border-radius: var(--border-radius-sm);
+                border: 1px solid var(--gray-medium);
+                font-size: 14px;
+                background-color: white;
+                cursor: pointer;
+                transition: var(--transition);
+                min-width: 160px;
+            }
+            
+            .feedback-system-fb .filter-select_fb:focus {
+                outline: none;
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+            }
+            
+            .feedback-system-fb .search-box_fb {
+                position: relative;
+                min-width: 240px;
+            }
+            
+            .feedback-system-fb .search-input_fb {
+                padding: 10px 14px 10px 40px;
+                border: 1px solid var(--gray-medium);
+                border-radius: var(--border-radius-sm);
+                font-size: 14px;
+                width: 100%;
+                transition: var(--transition);
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23adb5bd' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E");
+                background-repeat: no-repeat;
+                background-position: 14px center;
+                background-size: 16px;
+            }
+            
+            .feedback-system-fb .search-input_fb:focus {
+                outline: none;
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+            }
+            
+            .feedback-system-fb .pagination_fb {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-top: 28px;
+                gap: 10px;
+            }
+            
+            .feedback-system-fb .page-info_fb {
+                font-size: 15px;
+                color: var(--text-medium);
+                margin: 0 16px;
+            }
+            
+            /* Preview Modal */
+            .feedback-system-fb .preview-modal_fb {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1100;
+                opacity: 0;
+                visibility: hidden;
+                transition: var(--transition);
+                backdrop-filter: blur(8px);
+            }
+            
+            .feedback-system-fb .preview-modal_fb.active {
+                opacity: 1;
+                visibility: visible;
+            }
+            
+            .feedback-system-fb .preview-content_fb {
+                max-width: 90%;
+                max-height: 90vh;
+                background: white;
+                border-radius: var(--border-radius);
+                overflow: hidden;
+                box-shadow: var(--shadow-lg);
+                position: relative;
+                transform: scale(0.9);
+                transition: var(--transition);
+            }
+            
+            .feedback-system-fb .preview-modal_fb.active .preview-content_fb {
+                transform: scale(1);
+            }
+            
+            .feedback-system-fb .preview-body_fb {
+                padding: 20px;
+                text-align: center;
+            }
+            
+            .feedback-system-fb .preview-image_fb {
+                max-width: 100%;
+                max-height: 70vh;
+                border-radius: var(--border-radius-sm);
+            }
+            
+            .feedback-system-fb .preview-file_fb {
+                padding: 40px;
+                text-align: center;
+            }
+            
+            .feedback-system-fb .preview-file_fb i {
+                font-size: 60px;
+                color: var(--primary-color);
+                margin-bottom: 20px;
+            }
+            
+            .feedback-system-fb .preview-file-name_fb {
+                font-size: 18px;
+                font-weight: 600;
+                margin-bottom: 10px;
+                word-break: break-all;
+            }
+            
+            .feedback-system-fb .preview-file-size_fb {
+                color: var(--text-light);
+                font-size: 16px;
+            }
+            
+            .feedback-system-fb .preview-close_fb {
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                background: var(--danger-color);
+                color: white;
+                border: none;
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                font-size: 18px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: var(--transition);
+            }
+            
+            .feedback-system-fb .preview-close_fb:hover {
+                background: var(--danger-hover);
+                transform: rotate(90deg);
+            }
+            
+            /* Empty State */
+            .feedback-system-fb .empty-state_fb {
+                text-align: center;
+                padding: 50px 20px;
+                color: var(--text-light);
+            }
+            
+            .feedback-system-fb .empty-state_fb i {
+                font-size: 52px;
+                color: var(--gray-dark);
+                margin-bottom: 20px;
+            }
+            
+            .feedback-system-fb .empty-state_fb h4 {
+                font-size: 18px;
+                margin-bottom: 12px;
+                color: var(--text-medium);
+            }
+            
+            .feedback-system-fb .empty-state_fb p {
+                font-size: 15px;
+                max-width: 400px;
+                margin: 0 auto;
+            }
+            
+            /* Loading Spinner */
+            .feedback-system-fb .spinner_fb {
+                animation: rotate 1s linear infinite;
+                width: 20px;
+                height: 20px;
+            }
+            
+            .feedback-system-fb .spinner_fb .path {
+                stroke: white;
+                stroke-linecap: round;
+                animation: dash 1.5s ease-in-out infinite;
+            }
+            
+            @keyframes rotate {
+                100% { transform: rotate(360deg); }
+            }
+            
+            @keyframes dash {
+                0% { stroke-dasharray: 1, 150; stroke-dashoffset: 0; }
+                50% { stroke-dasharray: 90, 150; stroke-dashoffset: -35; }
+                100% { stroke-dasharray: 90, 150; stroke-dashoffset: -124; }
+            }
+            .modal-backdrop_fb {
+    display: none;
+}
+.modal-backdrop_fb.active {
+    display: block;
+}
+            /* Responsive */
+            @media (max-width: 768px) {
+                .feedback-system-fb .feedback-header_fb {
+                    flex-wrap: wrap;
+                }
+                
+                .feedback-system-fb .feedback-date_fb {
+                    order: 3;
+                    width: 100%;
+                    margin-top: 6px;
+                    margin-left: 0;
+                    padding-left: 32px;
+                }
+                
+                .feedback-system-fb .feedback-toolbar_fb {
+                    flex-direction: column;
+                    align-items: stretch;
+                }
+                
+                .feedback-system-fb .filter-group_fb {
+                    width: 100%;
+                    justify-content: space-between;
+                }
+                
+                .feedback-system-fb .search-box_fb {
+                    width: 100%;
+                }
+                
+                .feedback-system-fb .modal-header_fb {
+                    padding: 16px 20px;
+                }
+                
+                .feedback-system-fb .tab-btn_fb {
+                    padding: 14px 20px;
+                    font-size: 14px;
+                }
+                
+                .feedback-system-fb .tab-content_fb {
+                    padding: 20px;
+                }
+            }
+            
+            @media (max-width: 480px) {
+                .feedback-system-fb .modal-header_fb {
+                    padding: 14px 16px;
+                }
+                
+                .feedback-system-fb .modal-title_fb {
+                    font-size: 18px;
+                }
+                
+                .feedback-system-fb .tab-btn_fb {
+                    padding: 12px 16px;
+                    font-size: 13px;
+                    flex: 1;
+                    justify-content: center;
+                }
+                
+                .feedback-system-fb .tab-content_fb {
+                    padding: 16px;
+                }
+                
+                .feedback-system-fb .form-actions_fb {
+                    flex-direction: column-reverse;
+                    gap: 10px;
+                }
+                
+                .feedback-system-fb .btn_fb {
+                    width: 100%;
+                    justify-content: center;
+                }
+                
+                .feedback-system-fb .filter-group_fb {
+                    gap: 10px;
+                }
+                
+                .feedback-system-fb .filter-select_fb {
+                    min-width: 100%;
+                }
+            }
+            /* Append these styles to your existing CSS within the injectStyles_baoloi_fb function */
+
+/* Base styles for modal to respect safe areas */
+/* Append these styles to your existing CSS within the injectStyles_baoloi_fb function */
+
+/* Base styles for modal to respect safe areas */
+.feedback-system-fb .modal-backdrop_fb {
+    padding-top: env(safe-area-inset-top, 0);
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    padding-left: env(safe-area-inset-left, 0);
+    padding-right: env(safe-area-inset-right, 0);
+    box-sizing: border-box;
+}
+
+/* Ensure modal content is scrollable within safe areas */
+.feedback-system-fb .feedback-modal_fb {
+    max-height: calc(100vh - env(safe-area-inset-top, 0) - env(safe-area-inset-bottom, 0));
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Mobile-specific adjustments with increased spacing */
+@media (max-width: 768px) {
+    /* Modal backdrop with more padding to avoid nav overlap */
+    .feedback-system-fb .modal-backdrop_fb {
+        padding: 24px; /* Increased from 16px for more edge spacing */
+        padding-top: calc(env(safe-area-inset-top, 0) + 24px); /* More space for top nav */
+        padding-bottom: calc(env(safe-area-inset-bottom, 0) + 24px); /* More space for bottom nav */
+    }
+
+    /* Modal container with increased internal padding */
+    .feedback-system-fb .feedback-modal_fb {
+        width: 100%;
+        max-width: 92%; /* Slightly reduced from 95% to allow more edge space */
+        max-height: calc(82vh - env(safe-area-inset-top, 0) - env(safe-area-inset-bottom, 0)); /* Adjusted for more space */
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: var(--border-radius-sm);
+        padding: 20px; /* Increased from 12px for more internal space */
+    }
+
+    .feedback-system-fb .modal-backdrop_fb.active .feedback-modal_fb {
+        transform: translate(-50%, -50%);
+    }
+
+    /* Modal header with more padding */
+    .feedback-system-fb .modal-header_fb {
+        padding: 16px 20px; /* Increased from 12px 16px */
+    }
+
+    .feedback-system-fb .modal-title_fb {
+        font-size: 16px;
+        padding-right: 40px; /* Increased from 32px to avoid close button overlap */
+    }
+
+    .feedback-system-fb .close-btn_fb {
+        padding: 10px;
+        width: 36px; /* Slightly larger for touch */
+        height: 36px;
+    }
+
+    /* Tabs with more spacing */
+    .feedback-system-fb .feedback-tabs_fb {
+        padding: 12px 16px; /* Added padding for tab container */
+        gap: 16px; /* Space between tabs */
+    }
+
+    .feedback-system-fb .tab-btn_fb {
+        padding: 12px 16px; /* Increased from 10px 12px */
+        font-size: 13px;
+    }
+
+    /* Modal body with significantly more padding */
+    .feedback-system-fb .modal-body_fb {
+        padding: 24px; /* Increased from 16px for more content space */
+        max-height: calc(100vh - env(safe-area-inset-top, 0) - env(safe-area-inset-bottom, 0) - 140px); /* Adjusted for larger header */
+    }
+
+    .feedback-system-fb .tab-content_fb {
+        padding: 24px; /* Increased from 16px */
+    }
+
+    /* Form elements with more spacing */
+    .feedback-system-fb .form-group_fb {
+        margin-bottom: 24px; /* Increased from 16px */
+        padding: 0 8px; /* Increased from 4px for alignment */
+    }
+
+    .feedback-system-fb .form-label_fb {
+        margin-bottom: 12px; /* Increased from 10px */
+    }
+
+    .feedback-system-fb .form-control_fb {
+        padding: 12px 16px; /* Increased from 10px 12px */
+        font-size: 14px;
+    }
+
+    .feedback-system-fb textarea.form-control_fb {
+        padding: 16px; /* Increased from 12px */
+        min-height: 120px; /* Slightly taller for comfort */
+    }
+
+    .feedback-system-fb .file-upload-btn_fb {
+        padding: 24px; /* Increased from 16px */
+    }
+
+    .feedback-system-fb .file-upload-text_fb {
+        gap: 12px; /* Increased from 10px */
+    }
+
+    .feedback-system-fb .file-list_fb {
+        margin-top: 16px; /* Increased from 12px */
+    }
+
+    .feedback-system-fb .file-item_fb {
+        padding: 12px 16px; /* Increased from 10px 14px */
+        margin-bottom: 12px; /* Increased from 10px */
+    }
+
+    /* Buttons with more padding */
+    .feedback-system-fb .btn_fb {
+        padding: 12px 20px; /* Increased from 10px 16px */
+        min-height: 48px; /* Increased from 44px for touch */
+    }
+
+    .feedback-system-fb .form-actions_fb {
+        padding: 24px 0; /* Increased from 16px */
+        gap: 16px; /* Increased from 12px */
+    }
+
+    /* Feedback list with more spacing */
+    .feedback-system-fb .feedback-list-container_fb {
+        margin-top: 24px; /* Increased from 20px */
+    }
+
+    .feedback-system-fb .feedback-item_fb {
+        padding: 20px 16px; /* Increased from 16px 12px */
+        margin-bottom: 16px; /* Added margin between items */
+    }
+
+    .feedback-system-fb .feedback-header_fb {
+        padding-bottom: 12px; /* Increased from 8px */
+        gap: 12px; /* Increased from 8px */
+    }
+
+    .feedback-system-fb .feedback-content_fb {
+        padding: 12px 0; /* Increased from 8px */
+    }
+
+    .feedback-system-fb .feedback-attachments_fb {
+        margin-top: 20px; /* Increased from 14px */
+        gap: 12px; /* Increased from 10px */
+    }
+
+    .feedback-system-fb .feedback-response_fb {
+        padding: 16px; /* Increased from 12px */
+        margin-top: 24px; /* Increased from 18px */
+    }
+
+    /* Toolbar and filters with more spacing */
+    .feedback-system-fb .feedback-toolbar_fb {
+        padding: 16px 0; /* Increased from 12px */
+        gap: 16px; /* Increased from 12px */
+    }
+
+    .feedback-system-fb .filter-group_fb {
+        padding: 0 8px; /* Increased from 4px */
+        gap: 12px; /* Increased from 8px */
+    }
+
+    .feedback-system-fb .filter-select_fb {
+        padding: 10px 16px; /* Increased from 8px 12px */
+    }
+
+    .feedback-system-fb .search-box_fb {
+        padding: 12px 0; /* Increased from 8px */
+    }
+
+    /* Pagination with more spacing */
+    .feedback-system-fb .pagination_fb {
+        padding: 24px 0; /* Increased from 16px */
+        gap: 12px; /* Increased from 8px */
+    }
+
+    /* Toast notification with more padding */
+    .feedback-system-fb .toast-container_fb {
+        padding: 12px; /* Increased from 8px */
+        top: calc(env(safe-area-inset-top, 0) + 12px); /* Adjusted for nav */
+        right: 12px;
+        max-width: calc(100% - 24px);
+    }
+
+    .feedback-system-fb .toast_fb {
+        padding: 16px 20px; /* Increased from 12px 16px */
+    }
+
+    /* Preview modal with more padding */
+    .feedback-system-fb .preview-modal_fb {
+        padding: 24px; /* Increased from 16px */
+        padding-top: calc(env(safe-area-inset-top, 0) + 24px);
+        padding-bottom: calc(env(safe-area-inset-bottom, 0) + 24px);
+    }
+
+    .feedback-system-fb .preview-content_fb {
+        padding: 20px; /* Increased from 12px */
+    }
+
+    .feedback-system-fb .preview-body_fb {
+        padding: 24px; /* Increased from 16px */
+    }
+}
+
+@media (max-width: 480px) {
+    /* Tighter but still spacious for smaller screens */
+    .feedback-system-fb .modal-backdrop_fb {
+        padding: 20px; /* Increased from 12px */
+        padding-top: calc(env(safe-area-inset-top, 0) + 20px);
+        padding-bottom: calc(env(safe-area-inset-bottom, 0) + 20px);
+    }
+
+    .feedback-system-fb .feedback-modal_fb {
+        max-width: 95%; /* Adjusted from 98% */
+        padding: 16px; /* Increased from 8px */
+    }
+
+    .feedback-system-fb .modal-header_fb {
+        padding: 12px 16px; /* Increased from 10px 12px */
+    }
+
+    .feedback-system-fb .modal-body_fb {
+        padding: 20px; /* Increased from 12px */
+    }
+
+    .feedback-system-fb .tab-content_fb {
+        padding: 20px; /* Increased from 12px */
+    }
+
+    .feedback-system-fb .form-group_fb {
+        margin-bottom: 20px; /* Increased from 16px */
+    }
+
+    .feedback-system-fb .form-control_fb {
+        padding: 10px 12px; /* Increased from 8px 10px */
+    }
+
+    .feedback-system-fb .btn_fb {
+        padding: 10px 16px; /* Increased from 8px 12px */
+    }
+
+    .feedback-system-fb .feedback-item_fb {
+        padding: 16px 12px; /* Increased from 12px 8px */
+        margin-bottom: 12px; /* Increased from 0 */
+    }
+
+    .feedback-system-fb .toast-container_fb {
+        padding: 10px; /* Increased from 6px */
+        top: calc(env(safe-area-inset-top, 0) + 10px);
+    }
+}
+
+/* Ensure scrollable content respects nav */
+.feedback-system-fb .modal-body_fb {
+    max-height: calc(100vh - env(safe-area-inset-top, 0) - env(safe-area-inset-bottom, 0) - 160px); /* Increased offset for larger header/footer */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent zoom on inputs */
+.feedback-system-fb input,
+.feedback-system-fb textarea,
+.feedback-system-fb select {
+    font-size: 16px;
+}
+
+/* Touch-friendly adjustments */
+.feedback-system-fb .btn_fb,
+.feedback-system-fb .close-btn_fb,
+.feedback-system-fb .tab-btn_fb {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+@media (max-width: 480px) {
+    /* Tighter padding for smaller screens */
+    .feedback-system-fb .modal-backdrop_fb {
+        padding: 12px;
+        padding-top: calc(env(safe-area-inset-top, 0) + 12px);
+        padding-bottom: calc(env(safe-area-inset-bottom, 0) + 12px);
+    }
+
+    .feedback-system-fb .feedback-modal_fb {
+        max-width: 98%;
+        padding: 8px;
+    }
+
+    .feedback-system-fb .modal-header_fb {
+        padding: 10px 12px;
+    }
+
+    .feedback-system-fb .modal-body_fb {
+        padding: 12px;
+    }
+
+    .feedback-system-fb .tab-content_fb {
+        padding: 12px;
+    }
+
+    .feedback-system-fb .form-control_fb {
+        padding: 8px 10px;
+    }
+
+    .feedback-system-fb .btn_fb {
+        padding: 8px 12px;
+    }
+
+    .feedback-system-fb .feedback-item_fb {
+        padding: 12px 8px;
+    }
+
+    .feedback-system-fb .toast-container_fb {
+        padding: 6px;
+        top: calc(env(safe-area-inset-top, 0) + 6px);
+    }
+}
+
+/* Ensure modal content is scrollable without overlapping nav */
+.feedback-system-fb .modal-body_fb {
+    max-height: calc(100vh - env(safe-area-inset-top, 0) - env(safe-area-inset-bottom, 0) - 120px); /* Adjust for header/footer */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent zoom on input focus */
+.feedback-system-fb input,
+.feedback-system-fb textarea,
+.feedback-system-fb select {
+    font-size: 16px; /* Prevent iOS zoom */
+}
+
+/* Touch-friendly adjustments */
+.feedback-system-fb .btn_fb,
+.feedback-system-fb .close-btn_fb,
+.feedback-system-fb .tab-btn_fb {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+        `;
+        document.head.appendChild(style);
+    }
+
+    // Call the function to inject styles when the DOM is loaded
+    document.addEventListener('DOMContentLoaded', injectStyles_baoloi_fb);
+
+// Đợi cho DOM được tải hoàn toàn trước khi thực thi script
+document.addEventListener('DOMContentLoaded', () => {
+
+    // ==== Toast Notification ====
+    // Hàm hiển thị thông báo Toast
+    function showToast_fb(message, type) {
+        const toastContainer = document.getElementById('toastContainer_fb');
+        // Kiểm tra container có tồn tại không
+        if (!toastContainer) {
+            console.error('Toast container #toastContainer_fb not found!');
+            return;
+        }
+
+        const toast = document.createElement('div');
+        toast.className = `toast_fb ${type}`; // Thêm class loại (success/error)
+
+        const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+        const title = type === 'success' ? 'Thành công' : 'Lỗi';
+
+        toast.innerHTML = `
+            <i class="fas ${icon} toast-icon_fb"></i>
+            <div class="toast-content_fb">
+                <div class="toast-title_fb">${title}</div>
+                <div class="toast-message_fb">${message}</div>
+            </div>
+            <button class="toast-close_fb">×</button>
+        `;
+
+        toastContainer.appendChild(toast);
+
+        // Hiển thị toast với hiệu ứng (thêm class 'show' sau một chút delay)
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 10); // Delay nhỏ để animation CSS kịp hoạt động
+
+        // Tự động xóa toast sau 5 giây
+        const autoRemoveTimer = setTimeout(() => {
+            toast.classList.remove('show');
+            // Chờ hiệu ứng ẩn kết thúc rồi xóa phần tử khỏi DOM
+            setTimeout(() => {
+                toast.remove();
+            }, 300); // Thời gian chờ khớp với transition trong CSS
+        }, 5000); // Thời gian hiển thị toast
+
+        // Xử lý khi nhấn nút đóng toast
+        toast.querySelector('.toast-close_fb').addEventListener('click', () => {
+            clearTimeout(autoRemoveTimer); // Hủy bỏ việc tự động xóa
+            toast.classList.remove('show');
+            // Chờ hiệu ứng ẩn kết thúc rồi xóa phần tử khỏi DOM
+            setTimeout(() => {
+                toast.remove();
+            }, 300); // Thời gian chờ khớp với transition trong CSS
+        });
+    }
+
+// ==== Xử lý mở/đóng Modal chính (Feedback Modal) ====
+// Lấy các phần tử cần thiết
+const btnOpenFeedbackModal = document.getElementById('openFeedbackBtn'); // Nút mở modal
+const feedbackModal = document.getElementById('feedbackModal_fb');
+const btnCloseFeedbackModal = document.getElementById('closeModalBtn_fb'); // Nút X
+const btnCancelFeedback = document.getElementById('cancelFeedbackBtn_fb'); // Nút Hủy
+
+// Kiểm tra sự tồn tại
+if (!btnOpenFeedbackModal || !feedbackModal || !btnCloseFeedbackModal || !btnCancelFeedback) {
+    console.error('Không tìm thấy một hoặc nhiều phần tử cần thiết cho Modal phản hồi.');
+} else {
+    // Hàm đóng modal
+    function closeModal_fb() {
+        feedbackModal.classList.remove('active'); // Đúng: phải remove 'active'
+        document.body.style.overflow = ''; // Khôi phục scroll
+    }
+
+    // Mở modal
+    btnOpenFeedbackModal.addEventListener('click', function(e) {
+        e.preventDefault();
+        feedbackModal.classList.add('active'); // Mở: thêm 'active'
+        document.body.style.overflow = 'hidden';
+        resetFeedbackForm_fb();
+        activateTab_fb('new-feedback_fb');
+    });
+
+    // Đóng modal bằng các nút
+    btnCloseFeedbackModal.addEventListener('click', closeModal_fb);
+    btnCancelFeedback.addEventListener('click', closeModal_fb);
+
+    // Đóng modal bằng click backdrop
+    feedbackModal.addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeModal_fb();
+        }
+    });
+
+    // Đóng modal bằng phím ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && feedbackModal.classList.contains('active')) { // Đổi từ 'show' thành 'active'
+            closeModal_fb();
+        }
+    });
+}
+
+
+    // ==== Xử lý chuyển Tab ====
+    const tabBtns = document.querySelectorAll('.feedback-tabs_fb .tab-btn_fb');
+    const tabContents = document.querySelectorAll('.modal-body_fb .tab-content_fb');
+    const tabIndicator = document.querySelector('.feedback-tabs_fb .tab-indicator_fb');
+
+    if (tabBtns.length > 0 && tabContents.length > 0 && tabIndicator) {
+         // Hàm để di chuyển thanh chỉ báo tab
+         function moveIndicator_fb(btn) {
+             const left = btn.offsetLeft; // Vị trí bên trái của nút so với container offsetParent
+             const width = btn.offsetWidth; // Chiều rộng của nút
+             tabIndicator.style.left = `${left}px`;
+             tabIndicator.style.width = `${width}px`;
+         }
+
+        // Hàm kích hoạt tab dựa trên ID nội dung tab
+        function activateTab_fb(targetTabId) {
+             // Xóa class 'active' khỏi tất cả các nút và nội dung tab
+             tabBtns.forEach(btn => btn.classList.remove('active'));
+             tabContents.forEach(content => content.classList.remove('active'));
+
+             // Tìm nút và nội dung tab tương ứng với targetTabId
+             const targetButton = document.querySelector(`.feedback-tabs_fb .tab-btn_fb[data-tab="${targetTabId}"]`);
+             const targetContent = document.getElementById(targetTabId);
+
+             if (targetButton && targetContent) {
+                 // Thêm class 'active' vào nút và nội dung tab được chọn
+                 targetButton.classList.add('active');
+                 targetContent.classList.add('active');
+
+                 // Cập nhật vị trí và chiều rộng của thanh chỉ báo
+                 moveIndicator_fb(targetButton);
+             } else {
+                 console.warn(`Tab with ID "${targetTabId}" not found.`);
+             }
+        }
+
+        // Lắng nghe sự kiện click vào các nút tab
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab'); // Lấy ID của tab mục tiêu từ thuộc tính data-tab
+                activateTab_fb(tabId); // Kích hoạt tab tương ứng
+            });
+        });
+
+        // Khởi tạo vị trí indicator cho tab đang active mặc định khi tải trang
+        const initialActiveButton = document.querySelector('.feedback-tabs_fb .tab-btn_fb.active');
+        if (initialActiveButton) {
+             moveIndicator_fb(initialActiveButton);
+        }
+
+
+    } else {
+         console.warn('Không tìm thấy các phần tử cần thiết cho chức năng tab.');
+    }
+
+
+    // ==== Xử lý xem/ẩn chi tiết phản hồi trong lịch sử ====
+    // Lắng nghe sự kiện click cho tất cả các nút xem chi tiết
+    document.querySelectorAll('.feedback-list_fb .btn-view-details_fb').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Tìm phần tử chứa phản hồi (response) và biểu tượng/text trong nút
+            const responseDiv = this.parentElement.querySelector('.feedback-response_fb');
+            const icon = this.querySelector('i');
+            const textSpan = this.querySelector('span');
+
+            if (responseDiv) {
+                // Toggle class 'show-response' để điều khiển hiển thị (cần CSS)
+                responseDiv.classList.toggle('show-response');
+                // Toggle class 'active' cho nút (để thay đổi style/màu sắc)
+                this.classList.toggle('active');
+
+                // Cập nhật text và icon của nút
+                if (this.classList.contains('active')) {
+                    textSpan.textContent = 'Ẩn phản hồi';
+                    icon.classList.remove('fa-chevron-down');
+                    icon.classList.add('fa-chevron-up');
+                } else {
+                     textSpan.textContent = 'Xem phản hồi';
+                     icon.classList.remove('fa-chevron-up');
+                     icon.classList.add('fa-chevron-down');
+                }
+            }
+        });
+    });
+
+    // ==== Xử lý lọc phản hồi trong lịch sử ====
+    const statusFilter = document.getElementById('statusFilter_fb');
+    const typeFilter = document.getElementById('typeFilter_fb');
+    const searchInput = document.getElementById('searchFeedback_fb');
+    const feedbackListContainer = document.getElementById('feedbackList_fb');
+
+    if (statusFilter && typeFilter && searchInput && feedbackListContainer) {
+        // Hàm lọc và tìm kiếm phản hồi
+        function filterFeedbacks_fb() {
+            const status = statusFilter.value; // Lấy giá trị bộ lọc trạng thái
+            const type = typeFilter.value;     // Lấy giá trị bộ lọc loại
+            const searchText = searchInput.value.toLowerCase(); // Lấy giá trị tìm kiếm và chuyển sang chữ thường
+
+            // Lặp qua từng mục phản hồi trong danh sách
+            feedbackListContainer.querySelectorAll('.feedback-item_fb').forEach(item => {
+                const itemStatus = item.getAttribute('data-status'); // Lấy trạng thái từ data-status
+                const itemType = item.getAttribute('data-type');     // Lấy loại từ data-type
+                const itemText = item.textContent.toLowerCase();     // Lấy toàn bộ text của item để tìm kiếm
+
+                // Kiểm tra điều kiện lọc và tìm kiếm
+                const statusMatch = status === 'all' || itemStatus === status;
+                const typeMatch = type === 'all' || itemType === type;
+                const searchMatch = itemText.includes(searchText);
+
+                // Hiển thị hoặc ẩn item dựa trên kết quả lọc/tìm kiếm
+                if (statusMatch && typeMatch && searchMatch) {
+                    item.style.display = 'block'; // Hiển thị item
+                } else {
+                    item.style.display = 'none';  // Ẩn item
+                }
+            });
+        }
+
+        // Lắng nghe sự kiện thay đổi trên các bộ lọc và nhập liệu tìm kiếm
+        statusFilter.addEventListener('change', filterFeedbacks_fb);
+        typeFilter.addEventListener('change', filterFeedbacks_fb);
+        searchInput.addEventListener('input', filterFeedbacks_fb); // 'input' tốt hơn 'keyup' cho tìm kiếm tức thời
+
+        // Áp dụng bộ lọc ban đầu khi tải trang (để hiển thị đúng theo mặc định)
+        filterFeedbacks_fb();
+
+    } else {
+         console.warn('Không tìm thấy các phần tử cần thiết cho chức năng lọc phản hồi.');
+    }
+
+     // TODO: Bổ sung logic Phân trang nếu cần (prevPageBtn_fb, nextPageBtn_fb)
+
+    // ==== Xử lý Upload File ====
+    const fileInput = document.getElementById('feedbackAttachment_fb');
+    const fileListDiv = document.getElementById('fileList_fb'); // Sử dụng tên biến rõ ràng hơn
+    const fileUploadBtn = document.querySelector('.file-upload-btn_fb');
+
+    if (fileInput && fileListDiv && fileUploadBtn) {
+
+        // Hàm định dạng kích thước file
+        function formatFileSize_fb(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Hàm cập nhật danh sách file hiển thị
+        function updateFileList_fb() {
+            fileListDiv.innerHTML = ''; // Xóa danh sách cũ
+
+            if (fileInput.files.length > 0) {
+                fileListDiv.classList.add('has-files'); // Thêm class để style khi có file
+                fileUploadBtn.classList.add('files-added'); // Thêm class cho khu vực upload khi có file
+
+                Array.from(fileInput.files).forEach((file, index) => {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-item_fb';
+
+                    let iconClass = 'fa-file'; // Icon mặc định
+                    if (file.type.includes('image')) iconClass = 'fa-file-image';
+                    else if (file.type.includes('pdf')) iconClass = 'fa-file-pdf';
+                    else if (file.type.includes('word')) iconClass = 'fa-file-word';
+                    else if (file.type.includes('excel')) iconClass = 'fa-file-excel';
+                     else if (file.type.includes('zip') || file.type.includes('rar')) iconClass = 'fa-file-archive';
+
+                    fileItem.innerHTML = `
+                        <i class="fas ${iconClass} file-icon_fb"></i>
+                        <div class="file-info_fb">
+                            <div class="file-name_fb">${file.name}</div>
+                            <div class="file-size_fb">${formatFileSize_fb(file.size)}</div>
+                        </div>
+                        <button type="button" class="file-preview_fb" data-index="${index}" title="Xem trước">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button type="button" class="file-remove_fb" data-index="${index}" title="Xóa">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+
+                    fileListDiv.appendChild(fileItem);
+                });
+
+                // Thêm listener cho nút xóa sau khi các mục file được tạo
+                fileListDiv.querySelectorAll('.file-remove_fb').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        removeFile_fb(index); // Gọi hàm xóa file
+                    });
+                });
+
+                 // Thêm listener cho nút xem trước sau khi các mục file được tạo
+                fileListDiv.querySelectorAll('.file-preview_fb').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                         const index = parseInt(this.getAttribute('data-index'));
+                         const fileToPreview = fileInput.files[index]; // Lấy file từ input
+                         if (fileToPreview) {
+                             previewFile_fb(fileToPreview); // Mở modal xem trước
+                         }
+                    });
+                });
+
+
+            } else {
+                fileListDiv.classList.remove('has-files');
+                 fileUploadBtn.classList.remove('files-added'); // Xóa class khi không còn file
+            }
+        }
+
+        // Hàm xóa file khỏi input FileList
+        function removeFile_fb(index) {
+            const dt = new DataTransfer();
+            const files = fileInput.files;
+
+            for (let i = 0; i < files.length; i++) {
+                if (index !== i) dt.items.add(files[i]); // Thêm các file không bị xóa vào DataTransfer
+            }
+
+            fileInput.files = dt.files; // Cập nhật FileList của input
+            // Kích hoạt sự kiện 'change' để cập nhật lại danh sách hiển thị
+            fileInput.dispatchEvent(new Event('change'));
+        }
+
+
+        // Lắng nghe sự kiện 'change' trên input file
+        fileInput.addEventListener('change', updateFileList_fb);
+
+         // ==== Xử lý Kéo thả File ====
+         fileUploadBtn.addEventListener('dragover', (e) => {
+             e.preventDefault(); // Ngăn hành vi mặc định (mở file)
+             fileUploadBtn.classList.add('dragover'); // Thêm class để tạo hiệu ứng hover khi kéo
+         });
+
+         fileUploadBtn.addEventListener('dragleave', () => {
+             fileUploadBtn.classList.remove('dragover'); // Xóa class khi rời khỏi vùng kéo
+         });
+
+         fileUploadBtn.addEventListener('drop', (e) => {
+             e.preventDefault(); // Ngăn hành vi mặc định
+             fileUploadBtn.classList.remove('dragover'); // Xóa class dragover
+
+             const droppedFiles = e.dataTransfer.files; // Lấy FileList từ sự kiện drop
+             fileInput.files = droppedFiles; // Gán FileList này vào input file
+             fileInput.dispatchEvent(new Event('change')); // Kích hoạt sự kiện change để xử lý hiển thị
+         });
+
+    } else {
+        console.warn('Không tìm thấy các phần tử cần thiết cho chức năng upload file.');
+    }
+
+
+    // ==== Xử lý Preview Modal ====
+    const previewModal = document.getElementById('previewModal_fb');
+    const previewBody = document.getElementById('previewBody_fb');
+    const previewCloseBtn = document.getElementById('previewCloseBtn_fb');
+
+    if (previewModal && previewBody && previewCloseBtn) {
+        // Hàm mở modal xem trước và hiển thị nội dung file
+        function previewFile_fb(file) {
+            previewBody.innerHTML = ''; // Xóa nội dung xem trước cũ
+
+            // Kiểm tra loại file để hiển thị xem trước phù hợp
+            if (file.type.startsWith('image/')) { // Xem trước ảnh
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewBody.innerHTML = `<img src="${e.target.result}" class="preview-image_fb" alt="Preview">`;
+                };
+                reader.readAsDataURL(file); // Đọc file thành Data URL
+            } else if (file.type === 'application/pdf') { // Xem trước PDF (nếu trình duyệt hỗ trợ)
+                 // Có thể nhúng PDF bằng <object> hoặc <embed> hoặc <iframe>
+                 // Tuy nhiên, cách phổ biến và đáng tin cậy hơn thường là mở trong tab mới
+                 const fileUrl = URL.createObjectURL(file);
+                 previewBody.innerHTML = `
+                     <div class="preview-file_fb">
+                          <i class="fas fa-file-pdf"></i>
+                          <div class="preview-file-name_fb">${file.name}</div>
+                          <p style="margin-top: 20px; color: var(--text-light);">Trình duyệt không hỗ trợ xem trước PDF tại đây. <a href="${fileUrl}" target="_blank">Click để mở trong tab mới</a></p>
+                     </div>
+                 `;
+                 // Giải phóng URL object sau khi không cần thiết nữa
+                 previewModal.addEventListener('hidden.bs.modal', () => URL.revokeObjectURL(fileUrl), { once: true }); // Tùy thuộc vào cách modal đóng
+            }
+             else { // Các loại file khác (docx, xlsx, v.v.)
+                previewBody.innerHTML = `
+                    <div class="preview-file_fb">
+                        <i class="fas fa-file"></i>
+                        <div class="preview-file-name_fb">${file.name}</div>
+                        <div class="preview-file-size_fb">${formatFileSize_fb(file.size)}</div>
+                        <p style="margin-top: 20px; color: var(--text-light);">Không có bản xem trước cho loại file này.</p>
+                    </div>
+                `;
+            }
+
+            previewModal.classList.add('active'); // Hiển thị modal xem trước (cần CSS)
+            document.body.style.overflow = 'hidden'; // Ngăn scroll trên body
+        }
+
+        // Lắng nghe sự kiện click để đóng preview modal (nút X)
+        previewCloseBtn.addEventListener('click', function() {
+            previewModal.classList.remove('active'); // Ẩn modal xem trước
+            document.body.style.overflow = ''; // Khôi phục scroll
+        });
+
+        // Lắng nghe sự kiện click vào vùng backdrop để đóng preview modal
+        previewModal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                previewModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Lắng nghe sự kiện nhấn phím ESC để đóng preview modal
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && previewModal.classList.contains('active')) {
+                 previewModal.classList.remove('active');
+                 document.body.style.overflow = '';
+            }
+        });
+
+         // ==== Xử lý xem trước file đính kèm trong lịch sử (chỉ demo) ====
+         // Lắng nghe click cho tất cả các link file đính kèm trong lịch sử
+         document.querySelectorAll('.feedback-list_fb .attachment-item_fb').forEach(item => {
+             item.addEventListener('click', function(e) {
+                 e.preventDefault(); // Ngăn link chuyển trang
+
+                 const fileName = this.getAttribute('data-file');
+                 const fileType = fileName.split('.').pop().toLowerCase(); // Lấy đuôi file giả định
+                 let iconClass = 'fa-file';
+                 if (['jpg', 'jpeg', 'png', 'gif'].includes(fileType)) iconClass = 'fa-file-image';
+                 else if (fileType === 'pdf') iconClass = 'fa-file-pdf';
+                 else if (fileType === 'docx') iconClass = 'fa-file-word';
+                 else if (fileType === 'xlsx') iconClass = 'fa-file-excel';
+
+                 // Hiển thị placeholder trong modal xem trước
+                 previewBody.innerHTML = `
+                     <div class="preview-file_fb">
+                         <i class="fas ${iconClass}"></i>
+                         <div class="preview-file-name_fb">${fileName}</div>
+                         <p style="margin-top: 20px; color: var(--text-light);">Đây chỉ là bản demo. Trong thực tế, nhấn vào link này sẽ tải xuống file hoặc mở file.</p>
+                     </div>
+                 `;
+
+                 previewModal.classList.add('active'); // Hiển thị modal xem trước
+                 document.body.style.overflow = 'hidden'; // Ngăn scroll
+             });
+         });
+
+    } else {
+        console.warn('Không tìm thấy các phần tử cần thiết cho Preview Modal.');
+        // Định nghĩa hàm previewFile_fb rỗng để tránh lỗi nếu các phần tử không tồn tại
+        window.previewFile_fb = function(file) { console.warn('Preview modal not available.'); };
+    }
+
+
+    // ==== Xử lý Submit Form Phản hồi mới ====
+    const feedbackForm = document.getElementById('feedbackForm_fb');
+    if (feedbackForm) {
+        feedbackForm.addEventListener('submit', function(e) {
+            e.preventDefault(); // Ngăn gửi form theo cách truyền thống
+
+            // Lấy dữ liệu từ form
+            const type = document.getElementById('feedbackType_fb').value;
+            const title = document.getElementById('feedbackTitle_fb').value;
+            const content = document.getElementById('feedbackContent_fb').value;
+            const files = document.getElementById('feedbackAttachment_fb').files; // Lấy FileList
+
+            // Validate cơ bản
+            if (!type || !title || !content) {
+                showToast_fb('Vui lòng điền đầy đủ thông tin bắt buộc (Loại, Tiêu đề, Nội dung).', 'error');
+                return; // Dừng xử lý nếu validation thất bại
+            }
+
+             // TODO: Thêm validation kích thước/loại file nếu cần thiết
+
+            // Chuẩn bị dữ liệu để gửi đi (ví dụ dùng FormData cho file)
+            const formData = new FormData();
+            formData.append('type', type);
+            formData.append('title', title);
+            formData.append('content', content);
+            // Thêm các file đính kèm vào formData
+            for (let i = 0; i < files.length; i++) {
+                formData.append('attachments', files[i]); // Tên 'attachments' phải khớp với tên trường trên server
+            }
+
+            console.log('Chuẩn bị gửi dữ liệu:', {
+                type: type,
+                title: title,
+                content: content,
+                fileCount: files.length
+            });
+            // console.log('FormData object:', formData); // Có thể log formData, nhưng không xem được nội dung file
+
+            // Hiển thị trạng thái loading trên nút submit
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML; // Lưu nội dung ban đầu của nút
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang gửi...'; // Đổi text và thêm spinner
+            submitBtn.disabled = true; // Vô hiệu hóa nút để ngăn double click
+
+            // ==== BẮT ĐẦU Gửi dữ liệu đến Server (Sử dụng Fetch API làm ví dụ) ====
+            // Thay thế URL '/api/submit-feedback' bằng endpoint thực tế của bạn
+            fetch('/api/submit-feedback', {
+                method: 'POST', // Hoặc 'PUT' tùy API
+                body: formData // Sử dụng FormData để gửi dữ liệu kèm file
+                // headers: { 'Content-Type': 'application/json' }, // KHÔNG set Content-Type khi dùng FormData, trình duyệt tự set
+            })
+            .then(response => {
+                 // Kiểm tra xem response có thành công (status 2xx) không
+                 if (!response.ok) {
+                     // Nếu không thành công, throw error để chuyển sang block .catch()
+                     // response.json() hoặc response.text() để lấy chi tiết lỗi từ server
+                     return response.json().then(err => { throw new Error(err.message || 'Lỗi khi gửi phản hồi.'); });
+                 }
+                 // Nếu thành công, parse JSON response
+                 return response.json();
+            })
+            .then(data => {
+                // Xử lý response thành công từ server
+                console.log('Phản hồi từ server:', data);
+
+                // Hiển thị thông báo thành công
+                showToast_fb('Phản hồi của bạn đã được gửi thành công! Cảm ơn bạn đã đóng góp.', 'success');
+
+                // Reset form sau khi gửi thành công
+                resetFeedbackForm_fb(); // Gọi hàm reset form
+                // Cập nhật danh sách lịch sử phản hồi (TODO: Cần fetch dữ liệu mới từ server)
+
+                // Tùy chọn: Đóng modal sau khi gửi thành công
+                 // closeModal_fb();
+
+                // Tùy chọn: Chuyển sang tab lịch sử sau khi gửi thành công
+                 activateTab_fb('feedback-history_fb');
+
+            })
+            .catch(error => {
+                // Xử lý lỗi trong quá trình gửi hoặc từ server
+                console.error('Lỗi gửi phản hồi:', error);
+                // Hiển thị thông báo lỗi cho người dùng
+                showToast_fb(`Gửi phản hồi thất bại: ${error.message}`, 'error');
+            })
+            .finally(() => {
+                // Luôn chạy sau khi fetch hoàn thành (dù thành công hay thất bại)
+                // Khôi phục trạng thái ban đầu của nút submit
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            });
+            // ==== KẾT THÚC Gửi dữ liệu đến Server ====
+        });
+
+         // Hàm reset form phản hồi mới
+         function resetFeedbackForm_fb() {
+             feedbackForm.reset(); // Reset các trường input/select/textarea
+
+             // Reset file input và danh sách file hiển thị thủ công
+             const dt = new DataTransfer(); // Tạo DataTransfer trống
+             fileInput.files = dt.files; // Gán cho file input để xóa hết file đã chọn
+             updateFileList_fb(); // Cập nhật lại danh sách hiển thị (sẽ xóa hết các item)
+
+             // Reset vị trí indicator về tab đầu tiên (nếu cần)
+             // activateTab_fb('new-feedback_fb');
+         }
+
+    } else {
+        console.warn('Không tìm thấy form phản hồi (#feedbackForm_fb).');
+    }
+
+    // TODO: Bổ sung các logic khác như phân trang, xử lý dữ liệu lịch sử thực tế, v.v.
+});
+
+// Lưu ý quan trọng:
+// 1. Mã này giả định bạn đã có CSS tương ứng cho tất cả các class và ID
+//    với hậu tố "_fb" để tạo kiểu dáng và hiệu ứng (ẩn/hiện modal, toast, tabs, v.v.).
+// 2. Phần gửi form sử dụng Fetch API là ví dụ. Bạn cần thay thế URL
+//    và xử lý dữ liệu gửi đi/nhận về theo API backend thực tế của bạn.
+// 3. Chức năng xem trước file PDF chỉ là placeholder. Để xem trước PDF thực sự
+//    trong modal, bạn sẽ cần các thư viện JavaScript chuyên dụng hoặc mở trong tab mới.
+// 4. Chức năng xem trước file đính kèm trong lịch sử chỉ là demo hiển thị tên file.
+//    Trong thực tế, bạn sẽ cần link tải xuống hoặc cơ chế xem trước thực tế.
+</script>
+<!--end hòm thư hỗ trợ-->
 
 
   <script>
@@ -4801,296 +6918,7 @@
       list.appendChild(li);
     }
 
-    /* Hàm renderFileItem: Tạo file item (giữ nguyên logic ban đầu) */
-    function renderFileItem(list, file, documentType) {
-      // Nếu CSS động cho phần tử file mới chưa được thêm vào, tạo và chèn thẻ <style>
-      if (!document.getElementById('dynamic-new-file-item-css')) {
-        const style = document.createElement('style');
-        style.id = 'dynamic-new-file-item-css';
-        style.textContent = `
-      /* CSS cho phần tử file mới với lớp "new-file-item" */
-      .new-file-item {
-        padding: 12px 15px;
-        border-radius: 8px;
-        transition: background-color 0.2s;
-        margin-bottom: 8px;
-        background-color: #ffffff;
-        position: relative;
-      }
-      .new-file-info-section {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        cursor: pointer;
-        flex: 1;
-      }
-      .new-file-text-info {
-        flex: 1;
-      }
-      .new-file-views {
-        font-size: 0.75em;
-        color: #666;
-        margin-top: 2px;
-      }
-      .new-file-actions {
-        display: flex;
-        gap: 8px;
-      }
-      .new-btn-menu {
-        width: 36px;
-        height: 36px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        padding: 0;
-        border: none;
-        background-color: transparent;
-        color: #555;
-        transition: all 0.2s;
-        cursor: pointer;
-        position: absolute;
-        right: 0;
-        top: 50%;
-        transform: translateY(-50%);
-      }
-      .new-btn-menu:hover {
-        background-color: #f0f0f0;
-      }
-      .new-action-menu {
-        position: absolute;
-        right: 15px;
-        top: 50px;
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        display: none;
-        min-width: 120px;
-        overflow: hidden;
-      }
-      .new-action-menu.show {
-        display: block;
-      }
-      .new-menu-item {
-        padding: 8px 16px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        cursor: pointer;
-        color: #333;
-        text-decoration: none;
-        white-space: nowrap;
-      }
-      .new-menu-item:hover {
-        background-color: #f5f5f5;
-      }
-      .new-menu-item i {
-        font-size: 1rem;
-      }
-      .new-file-icon {
-        font-size: 1.8rem;
-        color: #5f6368;
-      }
-      .new-file-icon.pdf {
-        color: #d93025;
-      }
-      .new-file-icon.word {
-        color: #2a5699;
-      }
-      
-    `;
-        document.head.appendChild(style);
-      }
 
-      // Kiểm tra file có đường dẫn hợp lệ; nếu không có thì dừng hàm và in cảnh báo
-      if (!file.file_path) {
-        console.warn('File không có đường dẫn hợp lệ:', file);
-        return;
-      }
-
-      // Kiểm tra quyền truy cập file theo trường (school_id)
-      if (file.school_id && window.userSchoolId && file.school_id != window.userSchoolId) {
-        console.warn("File không thuộc trường của user! File school_id:", file.school_id, "User's school id:", window.userSchoolId);
-        triggerNotification('danger', 'Lỗi', "Bạn không được phép mở file của trường khác!");
-        return;
-      }
-
-      // Đảm bảo đường dẫn file có dấu "/" đầu tiên
-      const filePath = file.file_path.startsWith('/') ? file.file_path : `/${file.file_path}`;
-      // Lấy phần mở rộng của file và chọn icon tương ứng dựa trên một mapping
-      const ext = filePath.split('.').pop().toLowerCase();
-      const iconClass = {
-        pdf: 'bi-file-pdf pdf',
-        doc: 'bi-file-earmark-word word',
-        docx: 'bi-file-earmark-word word',
-        jpg: 'bi-file-image',
-        jpeg: 'bi-file-image',
-        png: 'bi-file-image',
-        gif: 'bi-file-image'
-      }[ext] || 'bi-file-earmark';
-
-      // Tạo phần tử list item <li> cho file
-      const li = document.createElement('li');
-      li.className = 'file-item new-file-item';
-      // Chọn nhãn cho file dựa trên documentType: 'exam' hoặc 'other'
-      const typeLabel = documentType === 'exam' ? 'Đề Thi' : 'Đề Cương';
-
-      console.log('File object:', file);
-      console.log('View count:', file.view_count);
-
-      // Xây dựng nội dung HTML cho file item
-      li.innerHTML = `
-    <div class="file-item-container new-file-item-container">
-      <div class="file-info-section new-file-info-section">
-        <i class="bi ${iconClass} file-icon new-file-icon"></i>
-        <div class="file-text-info new-file-text-info">
-          <div class="file-name new-file-name">${typeLabel} ${file.file_name}</div>
-          <div class="file-info new-file-info">${file.file_info || ''}</div>
-          <div class="file-views new-file-views">Lượt xem: ${file.view_count || 0}</div>
-        </div>
-      </div>
-      <div class="file-actions new-file-actions">
-        <button class="btn btn-menu new-btn-menu" title="Menu">
-          <i class="bi bi-three-dots-vertical"></i>
-        </button>
-        <div class="action-menu new-action-menu">
-          <a class="menu-item btn-download new-menu-item">
-            <i class="bi bi-download"></i>
-            <span>Tải xuống</span>
-          </a>
-          <a href="#" class="menu-item btn-share new-menu-item">
-            <i class="bi bi-exclamation-triangle"></i>
-            <span>Báo lỗi</span>
-          </a>
-          <a class="menu-item btn-discuss new-menu-item">
-            <i class="bi bi-chat"></i>
-            <span>Thảo luận</span>
-          </a>
-        </div>
-      </div>
-    </div>
-  `;
-
-      // Lấy các nút tương tác từ phần tử HTML vừa tạo
-      const menuBtn = li.querySelector('.new-btn-menu');
-      const actionMenu = li.querySelector('.new-action-menu');
-      const downloadBtn = li.querySelector('.btn-download');
-      const shareBtn = li.querySelector('.btn-share');
-      const discussBtn = li.querySelector('.btn-discuss');
-
-      // Sự kiện click nút menu: hiển thị/ẩn menu hành động
-      menuBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        actionMenu.classList.toggle('show');
-      });
-
-      // Sự kiện click nút download
-      downloadBtn.addEventListener('click', async (e) => {
-        e.stopPropagation();
-        actionMenu.classList.remove('show');
-        // Kiểm tra đăng nhập trước khi cho phép tải file
-        try {
-          const res = await fetch('/api/check-login');
-          const data = await res.json();
-          if (!data.loggedIn) {
-            triggerNotification('danger', 'Lỗi', 'Bạn cần đăng nhập để thực hiện thao tác này!');
-            return;
-          }
-        } catch (error) {
-          console.error('Lỗi khi kiểm tra đăng nhập:', error);
-          triggerNotification('danger', 'Lỗi', 'Không thể kiểm tra đăng nhập lúc này!');
-          return;
-        }
-
-        console.log('Download button clicked for file:', file.file_name);
-        // Xử lý file khi nhấn download (ví dụ: tăng lượt xem,...)
-        handleFileClick(file, documentType, filePath);
-        // Tạo link tải và kích hoạt sự kiện click để tải file
-        const downloadLink = document.createElement('a');
-        downloadLink.href = filePath;
-        downloadLink.download = file.file_name;
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-      });
-
-      // Sự kiện click nút báo lỗi (share)
-      shareBtn.addEventListener('click', async (e) => {
-        e.stopPropagation();
-        actionMenu.classList.remove('show');
-        // Kiểm tra đăng nhập trước khi báo lỗi
-        try {
-          const res = await fetch('/api/check-login');
-          const data = await res.json();
-          if (!data.loggedIn) {
-            triggerNotification('danger', 'Lỗi', 'Bạn cần đăng nhập để thực hiện thao tác này!');
-            return;
-          }
-        } catch (error) {
-          console.error('Lỗi khi kiểm tra đăng nhập:', error);
-          triggerNotification('danger', 'Lỗi', 'Không thể kiểm tra đăng nhập lúc này!');
-          return;
-        }
-        // Gọi hàm mở modal báo lỗi cho file
-        openReportModal(file);
-      });
-
-      // Sự kiện click nút thảo luận
-      discussBtn.addEventListener('click', async function (e) {
-        e.stopPropagation();
-        // Kiểm tra đăng nhập trước khi chuyển sang trang thảo luận
-        try {
-          const res = await fetch('/api/check-login');
-          const data = await res.json();
-          if (!data.loggedIn) {
-            triggerNotification('danger', 'Lỗi', 'Bạn cần đăng nhập để thực hiện thao tác này!');
-            return;
-          }
-        } catch (error) {
-          console.error('Lỗi khi kiểm tra đăng nhập:', error);
-          triggerNotification('danger', 'Lỗi', 'Không thể kiểm tra đăng nhập lúc này!');
-          return;
-        }
-
-        // Ẩn container compact-container trên trang hiện tại
-        const compactContainer = document.querySelector('.compact-container.my-4');
-        if (compactContainer) {
-          compactContainer.style.display = 'none';
-        } else {
-          console.warn('Không tìm thấy phần tử compact-container.');
-        }
-        // Hiển thị container chứa thảo luận và tải trang thảo luận vào iframe
-        const discussionContainer = document.getElementById('discussion-container');
-        if (discussionContainer) {
-          discussionContainer.style.display = 'block';
-          const iframe = document.getElementById('discussion-iframe');
-          if (iframe) {
-            // Gán trang thảo luận vào iframe (có thể chuyển đổi URL nếu cần)
-            iframe.src = '/html/thaoluan.html';
-          }
-        } else {
-          console.warn('Không tìm thấy phần tử discussion-container.');
-        }
-      });
-
-      // Khi click bên ngoài phần tử li, ẩn action menu
-      document.addEventListener('click', (e) => {
-        if (!li.contains(e.target)) {
-          actionMenu.classList.remove('show');
-        }
-      });
-
-      // Nếu nhấn vào li (ngoại trừ các nút menu) thì gọi hàm xử lý file
-      li.addEventListener('click', (e) => {
-        if (e.target.closest('.new-btn-menu') || e.target.closest('.new-action-menu')) {
-          return;
-        }
-        handleFileClick(file, documentType, filePath);
-      });
-
-      // Thêm phần tử li vừa tạo vào danh sách
-      list.appendChild(li);
-    }
 document.addEventListener('DOMContentLoaded', async () => {
   // Khôi phục đường dẫn từ localStorage
   const savedExamPath = localStorage.getItem('examCurrentPath');
@@ -5628,7 +7456,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         border-radius: 8px;
         transition: background-color 0.2s;
         margin-bottom: 8px;
-        background-color: #ffffff;
         position: relative;
           overflow: visible;  /* Nếu menu vượt ra ngoài phạm vi, tránh bị ẩn */
 
@@ -5652,29 +7479,33 @@ document.addEventListener('DOMContentLoaded', async () => {
         display: flex;
         gap: 8px;
       }
-      .new-btn-menu {
-        width: 36px;
-        height: 36px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        padding: 0;
-        border: none;
-        background-color: transparent;
-        color: #555;
-        transition: all 0.2s;
-        cursor: pointer;
-        position: absolute;
-        right: 0;
-        top: 50%;
-        z-index: 9999;
-        transform: translateY(-50%);
-      }
-      .new-btn-menu:hover {
-        background-color: #f0f0f0;
-        z-index: 9999;
-      }
+.new-btn-menu {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    color: #555;
+    transition: background-color 0.2s, box-shadow 0.2s; /* Chỉ thêm hiệu ứng cho màu nền và box-shadow */
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    z-index: 9999;
+    transform: translateY(-50%); /* Giữ cho nút ở vị trí chính giữa */
+}
+
+/* Khi hover */
+.new-btn-menu:hover {
+    background-color: rgba(240, 240, 240, 0.8); /* Thay đổi màu nền */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Thêm bóng đổ */
+    transform: translateY(-50%); /* Không thay đổi vị trí của nút khi hover */
+    z-index: 9999; /* Đảm bảo nút vẫn luôn ở trên cùng */
+}
       .new-action-menu {
         position: absolute;
         right: 15px;
@@ -5721,6 +7552,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       .new-file-icon.word {
         color: #2a5699;
       }
+
+/* Bỏ background cho phần tử li có lớp file-item */
+.file-item.new-file-item {
+    background: none !important;  /* Loại bỏ background */
+    box-shadow: none !important;   /* Loại bỏ shadow nếu có */
+}
+
+
+
     `;
         document.head.appendChild(style);
       }
@@ -5856,69 +7696,74 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       // Xử lý sự kiện "Thảo luận": chuyển hướng sang trang thaoluan.html và truyền document_id
       // Xử lý khi nhấn nút thảo luận
-      discussBtn.addEventListener('click', async function (e) {
-        e.stopPropagation();
-        try {
-          const res = await fetch('/api/check-login');
-          const data = await res.json();
-          if (!data.loggedIn) {
-            triggerNotification('danger', 'Lỗi', 'Bạn cần đăng nhập để thực hiện thao tác này!');
-            return;
-          }
-        } catch (error) {
-          console.error('Lỗi khi kiểm tra đăng nhập:', error);
-          triggerNotification('danger', 'Lỗi', 'Không thể kiểm tra đăng nhập lúc này!');
-          return;
-        }
+// Xử lý khi nhấn nút thảo luận
+discussBtn.addEventListener('click', async function (e) {
+  e.stopPropagation();
+  try {
+    const res = await fetch('/api/check-login');
+    const data = await res.json();
+    if (!data.loggedIn) {
+      triggerNotification('danger', 'Lỗi', 'Bạn cần đăng nhập để thực hiện thao tác này!');
+      return;
+    }
+  } catch (error) {
+    console.error('Lỗi khi kiểm tra đăng nhập:', error);
+    triggerNotification('danger', 'Lỗi', 'Không thể kiểm tra đăng nhập lúc này!');
+    return;
+  }
 
-        // Ẩn container compact-container
-        const compactContainer = document.querySelector('.compact-container.my-4');
-        if (compactContainer) {
-          compactContainer.style.display = 'none';
-        } else {
-          console.warn('Không tìm thấy phần tử compact-container.');
-        }
+  // In ra document_id để kiểm tra
+  const docId = file.document_id || file.id;
+  console.log('Document ID: ', docId);  // Đây là dòng sẽ in ra document_id
 
-        // Ẩn nút đóng góp đề thi
-        const contributeButton = document.querySelector('.btn.btn-primary.contribute-btn');
-        if (contributeButton) {
-          contributeButton.style.display = 'none';
-        } else {
-          console.warn('Không tìm thấy nút đóng góp đề thi.');
-        }
+  // Kiểm tra và chuyển sang trang thảo luận với document_id
+  if (!docId) {
+    console.error('Không tìm thấy document_id hợp lệ trong file:', file);
+    triggerNotification('danger', 'Lỗi', 'File không có document_id hợp lệ!');
+    return;
+  }
 
-        // Ẩn thanh cuộn của trang gốc
-        document.documentElement.style.overflow = 'hidden';
-        document.body.style.overflow = 'hidden';
+  // Ẩn container compact-container
+  const compactContainer = document.querySelector('.compact-container.my-4');
+  if (compactContainer) {
+    compactContainer.style.display = 'none';
+  } else {
+    console.warn('Không tìm thấy phần tử compact-container.');
+  }
 
-        // Đảm bảo iframe vẫn có thanh cuộn
-        const iframe = document.getElementById('discussion-iframe');
-        if (iframe) {
-          iframe.style.overflow = 'auto';
-          iframe.style.scrollbarWidth = 'auto'; // Firefox
-          iframe.style.webkitScrollbar = 'auto'; // Chrome, Safari
-        }
+  // Ẩn nút đóng góp đề thi
+  const contributeButton = document.querySelector('.btn.btn-primary.contribute-btn');
+  if (contributeButton) {
+    contributeButton.style.display = 'none';
+  } else {
+    console.warn('Không tìm thấy nút đóng góp đề thi.');
+  }
 
-        // Hiển thị container chứa iframe thảo luận và chuyển document_id qua URL
-        const discussionContainer = document.getElementById('discussion-container');
-        if (discussionContainer) {
-          discussionContainer.style.display = 'block';
-          const iframe = document.getElementById('discussion-iframe');
-          if (iframe) {
-            // Sử dụng file.document_id nếu có, nếu không thì sử dụng file.id
-            const docId = file.document_id || file.id;
-            if (!docId) {
-              console.error('Không tìm thấy document_id hợp lệ trong file:', file);
-              triggerNotification('danger', 'Lỗi', 'File không có document_id hợp lệ!');
-              return;
-            }
-            // Truyền document_id qua query string
-            iframe.src = '/html/thaoluan.html?document_id=' + docId;
-          }
-        } else {
-          console.warn('Không tìm thấy phần tử discussion-container.');
-        }
-      });
+  // Ẩn thanh cuộn của trang gốc
+  document.documentElement.style.overflow = 'hidden';
+  document.body.style.overflow = 'hidden';
+
+  // Đảm bảo iframe vẫn có thanh cuộn
+  const iframe = document.getElementById('discussion-iframe');
+  if (iframe) {
+    iframe.style.overflow = 'auto';
+    iframe.style.scrollbarWidth = 'auto'; // Firefox
+    iframe.style.webkitScrollbar = 'auto'; // Chrome, Safari
+  }
+
+  // Hiển thị container chứa iframe thảo luận và chuyển document_id qua URL
+  const discussionContainer = document.getElementById('discussion-container');
+  if (discussionContainer) {
+    discussionContainer.style.display = 'block';
+    const iframe = document.getElementById('discussion-iframe');
+    if (iframe) {
+      iframe.src = '/html/thaoluan.html?document_id=' + docId;
+    }
+  } else {
+    console.warn('Không tìm thấy phần tử discussion-container.');
+  }
+});
+
 
       // Hàm đóng container thảo luận và khôi phục lại các trạng thái của trang chính
       function closeDiscussion() {
@@ -6490,6 +8335,7 @@ document.addEventListener('DOMContentLoaded', async () => {
        });
    });
  </script>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
