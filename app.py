@@ -60,9 +60,6 @@ def home():
 def dangnhap():
     return send_from_directory('html', 'login.html')
 
-@app.route('/exam')
-def dethi():
-    return send_from_directory('html', 'dethi.html')
 # Xử lý lỗi 404
 @app.errorhandler(404)
 def page_not_found(e):
@@ -129,10 +126,11 @@ def login():
         resp.set_cookie(
             'login_token',
             str(user['id']),
-            max_age=3*24*60*60,   # 3 ngày
-            secure=True,          # chỉ HTTPS
-            httponly=True,        # JS không đọc được
-            samesite='None'       # để Safari/iOS chấp nhận
+            max_age=3*24*60*60,
+            secure=False,       # dev HTTP
+            httponly=True,
+            samesite='None',
+            path='/'            # <-- đảm bảo gửi cho mọi route
         )
         return resp, 200
 
@@ -238,7 +236,11 @@ def register():
 def check_login():
     # 1) Nếu session còn lưu
     if 'user_id' in session:
-        return jsonify({"loggedIn": True, "username": session['username']})
+        return jsonify({
+            "loggedIn": True,
+            "username": session['username'],
+            "userId":   session['user_id']    # <- thêm trường này
+        })
 
     # 2) Fallback: kiểm tra cookie
     user_id = request.cookies.get('login_token')
@@ -252,9 +254,13 @@ def check_login():
 
         if user:
             # Phục hồi session
-            session['user_id'] = user_id
+            session['user_id']  = user_id
             session['username'] = user['username']
-            return jsonify({"loggedIn": True, "username": user['username']})
+            return jsonify({
+                "loggedIn": True,
+                "username": session['username'],
+                "userId":   session['user_id']  # <- và ở đây nữa
+            })
 
     # 3) Không có thông tin
     return jsonify({"loggedIn": False})
@@ -1610,7 +1616,6 @@ app.config['DISCUSSION_UPLOAD_FOLDER'] = DISCUSSION_UPLOAD_FOLDER
 # Đảm bảo thư mục tồn tại
 if not os.path.exists(DISCUSSION_UPLOAD_FOLDER):
     os.makedirs(DISCUSSION_UPLOAD_FOLDER)
-
 @app.route('/comment', methods=['POST'])
 def post_comment():
     """
@@ -1620,57 +1625,80 @@ def post_comment():
       - file (nếu có, dưới dạng multipart/form-data)
     """
     try:
+        # nếu muốn dừng tại đây để inspect, bỏ comment dòng sau:
+        # breakpoint()
+
+        # Lấy dữ liệu form
         user_id = request.form.get('user_id')
         document_id = request.form.get('document_id')
         content = request.form.get('content')
+        app.logger.debug("Form data ➔ user_id=%s, document_id=%s, content=%r",
+                         user_id, document_id, content)
 
         # Kiểm tra các trường bắt buộc
         if not user_id or not document_id or not content:
+            app.logger.debug("Missing required fields: user_id=%s, document_id=%s, content=%r",
+                             user_id, document_id, content)
             return jsonify({"error": "Missing required fields"}), 400
 
         # Xử lý file upload (nếu có)
         file_url = None
         if 'file' in request.files:
             file = request.files['file']
-            if file.filename != '':
+            app.logger.debug("File part detected: filename=%r, content_type=%s",
+                             file.filename, file.content_type)
+            if file.filename:
                 UPLOAD_FOLDER_THAOLUAN = "static/thaoluan"
                 os.makedirs(UPLOAD_FOLDER_THAOLUAN, exist_ok=True)
                 file_path = os.path.join(UPLOAD_FOLDER_THAOLUAN, file.filename)
+                app.logger.debug("Saving file to %s", file_path)
                 file.save(file_path)
-                file_url = f"/{file_path}"  # Trả về URL file
+                file_url = f"/{file_path}"
+                app.logger.debug("File saved, accessible at %s", file_url)
 
+        # Kết nối DB và chèn comment
         conn = get_db_connection()
         cursor = conn.cursor()
+        app.logger.debug("DB connection opened")
 
-        # Chèn comment mới vào database
         sql = """
             INSERT INTO Comments (document_id, user_id, parent_id, content)
             VALUES (%s, %s, %s, %s)
         """
+        app.logger.debug("Executing SQL ➔ %s with %s",
+                         sql.strip(), (document_id, user_id, None, content))
         cursor.execute(sql, (document_id, user_id, None, content))
         comment_id = cursor.lastrowid
+        app.logger.debug("Inserted comment_id=%s", comment_id)
 
-        # Nếu có file, lưu vào Attachments
+        # Lưu attachment nếu có
         if file_url:
             sql_attach = """
                 INSERT INTO Attachments (comment_id, file_name, file_type, file_url)
                 VALUES (%s, %s, %s, %s)
             """
+            app.logger.debug("Executing Attachment SQL ➔ %s with %s",
+                             sql_attach.strip(), (comment_id, file.filename, file.content_type, file_url))
             cursor.execute(sql_attach, (comment_id, file.filename, file.content_type, file_url))
+            app.logger.debug("Attachment record inserted")
 
         conn.commit()
+        app.logger.debug("Transaction committed")
         cursor.close()
         conn.close()
+        app.logger.debug("DB connection closed")
 
         return jsonify({
             "message": "Comment posted successfully",
             "comment_id": comment_id,
-            "file_url": file_url  # Trả về URL file đã lưu
+            "file_url": file_url
         }), 201
 
     except mysql.connector.Error as err:
+        app.logger.error("MySQL Error: %s", err)
         return jsonify({"error": str(err)}), 500
     except Exception as e:
+        app.logger.error("Unhandled Exception: %s", e)
         return jsonify({"error": str(e)}), 500
 
 # Route để truy cập file trong static/thaoluan/
@@ -1987,7 +2015,243 @@ def check_ip_blocked():
 
     return jsonify({ "blocked": blocked })
 
+# hòm thư hỗ trợ
+@app.route('/api/feedback-types', methods=['GET'])
+def get_feedback_types():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT id, type_name FROM feedback_types WHERE is_active = TRUE")
+    types = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return jsonify(types)
 
+@app.route('/api/feedback-statuses', methods=['GET'])
+def get_feedback_statuses():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT id, status_name, status_color FROM feedback_statuses WHERE is_active = TRUE")
+    statuses = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return jsonify(statuses)
+@app.route('/api/feedbacks', methods=['GET'])
+def get_feedbacks():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    query = """
+        SELECT f.*, ft.type_name, fs.status_name
+        FROM feedbacks f
+        JOIN feedback_types ft ON f.type_id = ft.id
+        JOIN feedback_statuses fs ON f.status_id = fs.id
+    """
+    cursor.execute(query)
+    feedbacks = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return jsonify(feedbacks)
+@app.route('/api/feedbacks/<int:feedback_id>', methods=['GET'])
+def get_feedback_by_id(feedback_id):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT f.*, ft.type_name, fs.status_name
+        FROM feedbacks f
+        JOIN feedback_types ft ON f.type_id = ft.id
+        JOIN feedback_statuses fs ON f.status_id = fs.id
+        WHERE f.id = %s
+    """, (feedback_id,))
+    feedback = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    if feedback:
+        return jsonify(feedback)
+    return jsonify({'error': 'Feedback not found'}), 404
+@app.route('/api/feedbacks/<int:feedback_id>/attachments', methods=['GET'])
+def get_feedback_attachments(feedback_id):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM feedback_attachments WHERE feedback_id = %s", (feedback_id,))
+    attachments = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return jsonify(attachments)
+@app.route('/api/feedbacks', methods=['GET', 'POST'])
+def handle_feedbacks():
+    if request.method == 'GET':
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        query = """
+            SELECT f.*, ft.type_name, fs.status_name, fs.status_color
+            FROM feedbacks f
+            JOIN feedback_types ft ON f.type_id = ft.id
+            JOIN feedback_statuses fs ON f.status_id = fs.id
+            ORDER BY f.created_at DESC
+        """
+        cursor.execute(query)
+        feedbacks = cursor.fetchall()
+        
+        # Lấy attachments cho mỗi feedback
+        for feedback in feedbacks:
+            cursor.execute("SELECT * FROM feedback_attachments WHERE feedback_id = %s", (feedback['id'],))
+            feedback['attachments'] = cursor.fetchall()
+            
+            # Lấy responses cho mỗi feedback
+            cursor.execute("""
+                SELECT fr.*, u.full_name as admin_name 
+                FROM feedback_responses fr
+                LEFT JOIN users u ON fr.admin_id = u.id
+                WHERE fr.feedback_id = %s
+                ORDER BY fr.created_at DESC
+            """, (feedback['id'],))
+            feedback['responses'] = cursor.fetchall()
+        
+        cursor.close()
+        conn.close()
+        return jsonify(feedbacks)
+    
+    elif request.method == 'POST':
+        try:
+            data = request.form
+            files = request.files.getlist('attachments')
+            
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            
+            # Thêm feedback mới
+            cursor.execute("""
+                INSERT INTO feedbacks 
+                (user_id, guest_name, guest_email, type_id, title, content, ip_address, user_agent)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            """, (
+                None,  # user_id có thể thay bằng ID người dùng nếu đã đăng nhập
+                data.get('senderName'),
+                data.get('senderEmail'),
+                data.get('type_id'),
+                data.get('title'),
+                data.get('content'),
+                request.remote_addr,
+                request.headers.get('User-Agent')
+            ))
+            
+            feedback_id = cursor.lastrowid
+            
+            # Xử lý file đính kèm
+            for file in files:
+                if file and allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+                    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                    file.save(filepath)
+                    
+                    cursor.execute("""
+                        INSERT INTO feedback_attachments
+                        (feedback_id, file_name, file_path, file_size, file_type)
+                        VALUES (%s, %s, %s, %s, %s)
+                    """, (
+                        feedback_id,
+                        filename,
+                        filepath,
+                        os.path.getsize(filepath),
+                        file.content_type
+                    ))
+            
+            conn.commit()
+            cursor.close()
+            conn.close()
+            
+            return jsonify({'success': True, 'message': 'Feedback submitted successfully'}), 201
+        
+        except Exception as e:
+            if conn:
+                conn.rollback()
+            return jsonify({'error': str(e)}), 500
+# Cấu hình thư mục upload
+UPLOAD_FOLDER = 'uploads'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'pdf', 'doc', 'docx'}
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+# Tạo thư mục upload nếu chưa tồn tại
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+# post
+import os, time
+@app.route('/api/feedbacks', methods=['POST'])
+def create_feedback():
+    # —— Lấy user_id từ session ——
+    user_id = session.get('user_id')
+
+    print("\n=== DEBUG USER ID ===")
+    print(f"Session user_id: {user_id}")
+    print(f"Cookie login_token: {request.cookies.get('login_token')}")
+    print("======================\n")
+
+    if not user_id:
+        return jsonify({"error": "Vui lòng đăng nhập trước khi gửi phản hồi."}), 401
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        type_id = request.form.get('type_id')
+        title = request.form.get('title')
+        content = request.form.get('content')
+
+        print("\n=== DEBUG FORM DATA ===")
+        print(f"type_id: {type_id}")
+        print(f"title: {title}")
+        print(f"content: {content}")
+        print("========================\n")
+
+        # —— Lưu phản hồi ——
+        cursor.execute(
+            """
+            INSERT INTO feedbacks
+              (user_id, type_id, title, content, ip_address, user_agent)
+            VALUES (%s, %s, %s, %s, %s, %s)
+            """,
+            (user_id, type_id, title, content,
+             request.remote_addr, request.headers.get('User-Agent'))
+        )
+        feedback_id = cursor.lastrowid
+
+        # —— Lưu file đính kèm ——
+        files = request.files.getlist('attachments')
+        for file in files:
+            if file.filename == '': continue
+            filename = secure_filename(file.filename)
+            data = file.read()
+            file.seek(0)
+            timestamp = int(time.time())
+            filepath = f"uploads/feedbacks/{feedback_id}_{timestamp}_{filename}"
+            os.makedirs(os.path.dirname(filepath), exist_ok=True)
+            file.save(filepath)
+
+            cursor.execute(
+                """
+                INSERT INTO feedback_attachments
+                  (feedback_id, file_name, file_path, file_size, file_type)
+                VALUES (%s, %s, %s, %s, %s)
+                """,
+                (feedback_id, filename, filepath, len(data), file.content_type)
+            )
+
+        conn.commit()
+        return jsonify({"message": "Feedback created", "id": feedback_id}), 201
+
+    except Exception as e:
+        conn.rollback()
+        print(f"Error: {str(e)}")
+        return jsonify({"error": "Có lỗi xảy ra khi lưu phản hồi"}), 500
+
+    finally:
+        cursor.close()
+        conn.close()
+# end
 if __name__ == '__main__':
 
     app.run(port=8080, debug=True)
