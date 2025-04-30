@@ -987,6 +987,17 @@ os.makedirs(upload_folder_v2, exist_ok=True)
 #   - Nếu người dùng đã đăng nhập, lưu thông tin file vào bảng user_images
 #   - Trả về thông báo upload thành công và đường dẫn file
 # -----------------------------------------------------------------
+import os
+import requests
+import base64
+from PIL import Image
+from io import BytesIO
+from flask import jsonify, request, session
+from werkzeug.utils import secure_filename
+
+API_KEY = "AIzaSyD9EAIhLpfgpV120ygqPizMs2tKkqVmnow"
+API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={API_KEY}"
+
 @app.route('/upload_v2', methods=['POST'])
 def upload_file_v2():
     if 'file' not in request.files:
@@ -997,16 +1008,60 @@ def upload_file_v2():
         return jsonify({"error": "Không có file nào được chọn"}), 400
 
     try:
+        # Đọc dữ liệu file và chuyển thành base64
+        file_data = file.read()
+        image_data = base64.b64encode(file_data).decode("utf-8")
+
+        # Tạo payload cho API Gemini
+        payload = {
+            "contents": [
+                {
+                    "parts": [
+                        {
+                            "inline_data": {
+                                "mime_type": "image/png",
+                                "data": image_data
+                            }
+                        },
+                        {
+                            "text": (
+                                "Ảnh này có thỏa mãn một trong hai điều kiện sau không: "
+                                "1. Là đoạn hội thoại có chia sẻ link trang web 'dethihocphan.com', hoặc "
+                                "2. Là hình ảnh của đề thi học phần (ví dụ đề kiểm tra, đề thi cuối kỳ)? "
+                                "Chỉ trả lời true hoặc false. Không giải thích gì thêm."
+                            )
+                        }
+                    ]
+                }
+            ]
+        }
+
+        # Gửi yêu cầu đến API Gemini
+        response = requests.post(API_URL, json=payload)
+        if response.status_code != 200:
+            return jsonify({"error": f"Lỗi khi kiểm tra hình ảnh: {response.text}"}), 500
+
+        result = response.json()
+        is_valid = result["candidates"][0]["content"]["parts"][0]["text"].strip().lower() == "true"
+
+        if not is_valid:
+            return jsonify({"error": "Ảnh không phù hợp vui lòng tuân thủ quy tắc chung!"}), 403
+
+        # Nếu hình ảnh hợp lệ, tiếp tục lưu file
         filename = secure_filename(file.filename)
         file_type = request.form.get('type', '')
         if file_type:
             filename = f"{file_type}_{filename}"
         
         file_path = os.path.join(app.config['UPLOAD_FOLDER_V2'], filename)
+        
+        # Reset con trỏ file và lưu file
+        file.seek(0)
         file.save(file_path)
         
         relative_path = f"/static/xacthuctaikhoan/{filename}"
 
+        # Lưu thông tin vào database nếu có user_id
         user_id = session.get('user_id')
         if user_id:
             conn = get_db_connection()
@@ -1023,9 +1078,7 @@ def upload_file_v2():
         }), 200
 
     except Exception as e:
-        return jsonify({"error": f"Lỗi khi lưu file: {str(e)}"}), 500
-
-
+        return jsonify({"error": f"Lỗi khi xử lý file: {str(e)}"}), 500
 # -----------------------------------------------------------------
 # Route cập nhật trạng thái tài khoản - phiên bản 2
 # Endpoint: /update_account_status_v2
