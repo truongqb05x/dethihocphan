@@ -6,6 +6,7 @@ from config.config import UPLOAD_FOLDER, EXAM_UPLOAD_DIR
 import os
 from datetime import datetime
 documents_bp = Blueprint('documents', __name__)
+from app import app  # nếu file chính tên là app.py
 
 @documents_bp.route('/api/subjects/<int:subject_id>/documents_by_year', methods=['GET'])
 def get_documents_by_subject_grouped(subject_id):
@@ -500,3 +501,82 @@ def get_verification_info():
         return jsonify({"error": f"Database error: {str(db_error)}"}), 500
     except Exception as e:
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+@documents_bp.route('/api/user_images')
+def api_user_images():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    query = "SELECT id, user_id, image_path, note, uploaded_at FROM user_images WHERE status = 'normal'"
+    cursor.execute(query)
+    images = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return jsonify(images)
+
+# Route cập nhật ghi chú cho một ảnh
+@documents_bp.route('/update_image_note', methods=['POST'])
+def update_image_note():
+    image_id = request.form.get('image_id')
+    new_note = request.form.get('note', '')
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    query = "UPDATE user_images SET note = %s WHERE id = %s"
+    cursor.execute(query, (new_note, image_id))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({'status': 'success', 'message': 'Ghi chú của ảnh đã được cập nhật thành công'})
+@documents_bp.route('/handle_approval', methods=['POST'])
+def handle_approval1111():
+    image_id = request.form.get('image_id')
+    action = request.form.get('action')
+    note = request.form.get('note', '')
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    # Lấy user_id từ bảng user_images dựa theo image_id
+    cursor.execute("SELECT user_id FROM user_images WHERE id = %s", (image_id,))
+    result = cursor.fetchone()
+    if not result:
+        cursor.close()
+        conn.close()
+        return jsonify({'status': 'error', 'message': 'Không tìm thấy yêu cầu'}), 404
+
+    user_id = result['user_id']
+
+    if action == 'approve':
+        # Cập nhật account_status của user thành 'đã duyệt'
+        cursor.execute("UPDATE users SET account_status = 'đã duyệt' WHERE id = %s", (user_id,))
+        # Xóa TẤT CẢ các yêu cầu của user đó trong bảng user_images
+        cursor.execute("DELETE FROM user_images WHERE user_id = %s", (user_id,))
+        # Tạo thông báo hệ thống cho user
+        system_message = "Yêu cầu xác thực tài khoản của bạn đã được duyệt."
+        cursor.execute(
+            "INSERT INTO notifications (user_id, type, action) VALUES (%s, 'system', %s)",
+            (user_id, system_message)
+        )
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return jsonify({'status': 'success', 'message': 'Yêu cầu đã được duyệt và tất cả yêu cầu của user đã được xóa.'})
+    
+    elif action == 'reject':
+        # Cập nhật trạng thái của TẤT CẢ các yêu cầu của user thành 'rejected' và cập nhật ghi chú
+        cursor.execute("UPDATE user_images SET status = 'rejected', note = %s WHERE user_id = %s", (note, user_id))
+        # Chuyển trạng thái của user trong bảng users về 'bình thường'
+        cursor.execute("UPDATE users SET account_status = 'bình thường' WHERE id = %s", (user_id,))
+        # Tạo thông báo hệ thống cho user với lí do từ chối
+        system_message = "Yêu cầu xác thực tài khoản của bạn đã bị từ chối. Lí do: " + note
+        cursor.execute(
+            "INSERT INTO notifications (user_id, type, action) VALUES (%s, 'system', %s)",
+            (user_id, system_message)
+        )
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return jsonify({'status': 'success', 'message': 'Yêu cầu đã bị từ chối, lí do đã được lưu và trạng thái user đã chuyển về bình thường.'})
+    
+    else:
+        cursor.close()
+        conn.close()
+        return jsonify({'status': 'error', 'message': 'Hành động không hợp lệ.'}), 400
