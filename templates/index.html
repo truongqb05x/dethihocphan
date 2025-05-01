@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -3570,7 +3571,7 @@ function submitExamImage_v2() {
     .catch(error => {
       console.error('ERROR: Lỗi trong quá trình upload hoặc cập nhật:', error);
       // Hiển thị thông báo lỗi cụ thể từ server
-      triggerNotification('error', 'Lỗi', error.message || 'Đã xảy ra lỗi. Vui lòng thử lại.');
+      triggerNotification('danger', 'Lỗi', error.message || 'Đã xảy ra lỗi. Vui lòng thử lại.');
       document.getElementById('examUploadLoading_v2').style.display = 'none';
       document.getElementById('submitExamBtn_v2').disabled = false;
     });
@@ -3620,7 +3621,7 @@ function confirmShare_v2() {
 
   // Kiểm tra xem người dùng đã chọn ảnh chưa
   if (!shareFile_v2) {
-    triggerNotification('error', 'Lỗi', 'Vui lòng chọn ảnh màn hình trước khi xác nhận.');
+    triggerNotification('danger', 'Lỗi', 'Vui lòng chọn ảnh màn hình trước khi xác nhận.');
     document.getElementById('shareUploadLoading_v2').style.display = 'none';
     document.getElementById('confirmShareBtn_v2').disabled = false;
     return;
@@ -3844,166 +3845,333 @@ function confirmShare_v2() {
   </div>
   </div>
 
-  <!-- Modal Resume: Gợi ý "Tiếp tục xem" có nút Lịch sử xem -->
-  <!-- Modal Resume: Gợi ý "Tiếp tục xem" có nút Lịch sử xem -->
-  <div class="modal fade" id="resumeModal" tabindex="-1" aria-labelledby="resumeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header bg-gradient-primary text-white">
-          <h5 class="modal-title" id="resumeModalLabel">Welcome back!</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
-        </div>
-        <div class="modal-body p-4">
-          <div class="d-flex align-items-center mb-3">
-            <div class="flex-shrink-0 me-3">
-              <div
-                class="avatar avatar-lg bg-light-primary rounded-circle d-flex align-items-center justify-content-center">
-                <i class="bi bi-arrow-repeat fs-4 text-primary"></i>
-              </div>
-            </div>
-            <div class="flex-grow-1">
-              <p class="mb-1">Bạn có muốn tiếp tục xem từ chỗ dở dang của <strong id="resumeTabName"
-                  class="text-primary"></strong>?</p>
-              <p id="resumePathDisplay" class="text-muted small mb-0"></p>
+<!-- Modal Resume: Gợi ý "Tiếp tục xem" có nút Lịch sử xem -->
+<div class="modal fade" id="resumeModal" tabindex="-1" aria-labelledby="resumeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-gradient-primary text-white position-relative">
+        <div class="d-flex align-items-center w-100">
+          <div class="flex-shrink-0 me-3">
+            <div class="avatar-wave-container">
+              <img
+                src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcW5uY3l1dGJ1Y2p2dW1yNnV4dW5qY2J4a3VjY2J6dWZ0Z3R6eWZ5ZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ASd0Ukj0y3qMM/giphy.gif"
+                alt="Anime vẫy tay"
+                class="avatar-wave rounded-circle"
+              />
+              <div class="wave-circle"></div>
             </div>
           </div>
-
-          <div class="progress mb-3" style="height: 6px;">
-            <div class="progress-bar bg-primary" role="progressbar" style="width: 75%" aria-valuenow="75"
-              aria-valuemin="0" aria-valuemax="100"></div>
-          </div>
-
-          <div class="d-flex justify-content-between small text-muted mb-3">
-            <span>15 phút trước</span>
+          <div class="flex-grow-1">
+            <h5 class="modal-title mb-0" id="resumeModalLabel">Tiếp tục từ chỗ bạn dừng lại?</h5>
+            <p class="mb-0 small opacity-75">Chào mừng bạn quay trở lại!</p>
           </div>
         </div>
-        <div class="modal-footer bg-light">
-          <button type="button" class="btn btn-outline-secondary rounded-pill px-4" id="resumeCancelBtn"
-            data-bs-dismiss="modal">Bắt đầu mới</button>
-          <button type="button" class="btn btn-primary rounded-pill px-4" id="resumeContinueBtn">Tiếp tục xem</button>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
+      <div class="modal-body p-4">
+        <div class="mb-4">
+          <p class="mb-2">Bạn có phiên làm việc chưa hoàn thành ở:</p>
+          <div class="card card-body bg-light border-0 mb-3 hover-effect">
+            <div class="d-flex align-items-center">
+              <i class="bi bi-folder2-open text-primary me-2"></i>
+              <span id="resumeTabName" class="fw-semibold"></span>
+            </div>
+            <div class="text-muted small mt-1" id="resumePathDisplay"></div>
+          </div>
+          
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="small text-muted">Tiến độ</span>
+            <span class="small fw-semibold text-primary" id="progressPercentage">75%</span>
+          </div>
+          <div class="progress mb-3" style="height: 8px;">
+            <div class="progress-bar bg-primary progress-bar-striped" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+          
+          <div class="d-flex justify-content-between small text-muted">
+            <span><i class="bi bi-clock-history me-1"></i> <span id="resumeTimeDisplay">…</span></span>
+            <span><i class="bi bi-calendar me-1"></i> <span id="resumeDateDisplay">Hôm nay</span></span>
+          </div>
         </div>
+      </div>
+      <div class="modal-footer bg-light d-flex justify-content-between">
+        <button type="button" class="btn btn-outline-secondary rounded-pill px-4 hover-scale" id="resumeCancelBtn" data-bs-dismiss="modal">
+          <i class="bi bi-arrow-counterclockwise me-2"></i>Bắt đầu lại
+        </button>
+        <button type="button" class="btn btn-primary rounded-pill px-4 hover-scale" id="resumeContinueBtn">
+          <i class="bi bi-play-fill me-2"></i>Tiếp tục
+        </button>
       </div>
     </div>
   </div>
+</div>
 
-  <style>
-    /* Custom Modal Styles */
-    #resumeModal .modal-content {
-      border: none;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+<style>
+  /* Custom Modal Styles */
+  #resumeModal .modal-content {
+    border: none;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+    transform: translateY(0);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  #resumeModal.show .modal-content {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  }
+
+  #resumeModal .modal-header {
+    padding: 1.5rem;
+    border-bottom: none;
+    background: linear-gradient(135deg, #4361ee, #3f37c9);
+    position: relative;
+    overflow: hidden;
+  }
+
+  #resumeModal .modal-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  #resumeModal .modal-title {
+    font-weight: 600;
+    font-size: 1.35rem;
+  }
+
+  #resumeModal .modal-body {
+    padding: 1.75rem;
+  }
+
+  #resumeModal .modal-footer {
+    padding: 1.25rem 1.75rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    background-color: #f8f9fa;
+  }
+
+  /* Avatar Wave Animation */
+  .avatar-wave-container {
+    position: relative;
+    width: 50px;
+    height: 50px;
+  }
+
+  .avatar-wave {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: relative;
+    z-index: 2;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .wave-circle {
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    animation: wavePulse 2s infinite;
+    z-index: 1;
+  }
+
+  @keyframes wavePulse {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    70% {
+      transform: scale(1.2);
+      opacity: 0.5;
+    }
+    100% {
+      transform: scale(1.3);
+      opacity: 0;
+    }
+  }
+
+  /* Button Styles */
+  #resumeModal .btn {
+    font-weight: 500;
+    transition: all 0.2s ease;
+    min-width: 130px;
+  }
+
+  .hover-scale {
+    transition: transform 0.2s ease;
+  }
+
+  .hover-scale:hover {
+    transform: translateY(-2px);
+  }
+
+  #resumeModal .btn-outline-secondary {
+    border-color: #dee2e6;
+  }
+
+  #resumeModal .btn-outline-secondary:hover {
+    background-color: #f8f9fa;
+    border-color: #adb5bd;
+  }
+
+  #resumeModal .btn-primary {
+    background-color: #4361ee;
+    border-color: #4361ee;
+    box-shadow: 0 4px 12px rgba(67, 97, 238, 0.25);
+  }
+
+  #resumeModal .btn-primary:hover {
+    background-color: #3a0ca3;
+    border-color: #3a0ca3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(58, 12, 163, 0.3);
+  }
+
+  /* Progress Bar */
+  #resumeModal .progress {
+    border-radius: 100px;
+    background-color: #f1f3f5;
+  }
+
+  #resumeModal .progress-bar {
+    border-radius: 100px;
+    transition: width 0.6s ease;
+  }
+
+  /* Card Styles */
+  #resumeModal .card {
+    border-radius: 12px;
+    background-color: #f8f9fa;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .hover-effect:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  #resumeModal .text-muted {
+    color: #6c757d !important;
+  }
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    const resumeTimeDisplay = document.getElementById('resumeTimeDisplay');
+    const resumeDateDisplay = document.getElementById('resumeDateDisplay');
+    const progressEl        = document.getElementById('progressPercentage');
+    const progressBar       = document.querySelector('#resumeModal .progress-bar');
+
+    // 1. Hiển thị thời gian "x trước"
+    const savedTime = localStorage.getItem('lastResumeTime');
+    if (savedTime && resumeTimeDisplay) {
+      resumeTimeDisplay.textContent = formatTimeAgo(new Date(savedTime));
+    }
+    if (resumeDateDisplay) {
+      const today = new Date();
+      resumeDateDisplay.textContent = 
+        `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
+    }
+    // Lưu lại thời điểm hiện tại
+    localStorage.setItem('lastResumeTime', new Date().toISOString());
+
+    // 2. Lấy dữ liệu đường dẫn đã lưu (exam và syllabus)
+    const rawExam = localStorage.getItem('examCurrentPath');
+    const rawSyl  = localStorage.getItem('syllabusCurrentPath');
+    let examArr = [], sylArr = [];
+
+    if (rawExam) {
+      try { examArr = JSON.parse(rawExam); }
+      catch (e) { console.error('parse examCurrentPath lỗi:', e); }
+    }
+    if (rawSyl) {
+      try { sylArr = JSON.parse(rawSyl); }
+      catch (e) { console.error('parse syllabusCurrentPath lỗi:', e); }
     }
 
-    #resumeModal .modal-header {
-      padding: 1.25rem 1.5rem;
-      border-bottom: none;
-      background: linear-gradient(135deg, #4361ee, #3a0ca3);
+    // 3. Chọn mảng path ưu tiên: examArr nếu có, không thì sylArr
+    const pathArray = examArr.length > 0
+      ? examArr
+      : sylArr.length > 0
+        ? sylArr
+        : [];
+
+    console.log('>> Resume path segments:', pathArray);
+
+    // 4. Hiển thị TabName và path
+    const isExam = examArr.length > 0;
+    document.getElementById('resumeTabName').textContent =
+      isExam ? 'Đề thi' : 'Giáo trình';
+    document.getElementById('resumePathDisplay').textContent =
+      pathArray.join(' → ');
+
+    // 5. Tính tiến độ theo 5 cấp độ: trường → khoa → môn → năm → file
+    const totalLevels  = 5;
+    const currentLevel = Math.min(pathArray.length, totalLevels);
+    const percent = totalLevels
+      ? Math.floor((currentLevel / totalLevels) * 100)
+      : 0;
+
+    console.log(`>> currentLevel=${currentLevel}, percent=${percent}%`);
+
+    // 6. Cập nhật UI tiến độ
+    if (progressEl) {
+      progressEl.textContent = `${percent}%`;
+    }
+    if (progressBar) {
+      progressBar.style.width = `${percent}%`;
+      progressBar.setAttribute('aria-valuenow', percent);
     }
 
-    #resumeModal .modal-title {
-      font-weight: 600;
-      font-size: 1.25rem;
-    }
+    // Hoàn tất khôi phục
+    await checkAndResetHistory();
+  });
 
-    #resumeModal .modal-body {
-      padding: 1.5rem;
-    }
+  /**
+   * Đổi thời gian thành "x giây/phút/giờ/ngày tháng năm trước"
+   * @param {Date} pastTime
+   * @returns {string}
+   */
+  function formatTimeAgo(pastTime) {
+    const now     = new Date();
+    const diffMs  = now - pastTime;
+    const seconds = Math.floor(diffMs / 1000);
+    if (seconds < 60) return `${seconds} giây trước`;
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes} phút trước`;
+    const hours   = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours} giờ trước`;
+    const days    = Math.floor(hours / 24);
+    if (days < 30)  return `${days} ngày trước`;
+    const months  = Math.floor(days / 30);
+    if (months < 12) return `${months} tháng trước`;
+    const years   = Math.floor(months / 12);
+    return `${years} năm trước`;
+  }
 
-    #resumeModal .modal-footer {
-      padding: 1rem 1.5rem;
-      border-top: none;
-      background-color: #f8f9fa;
-    }
-
-    #resumeModal .avatar {
-      width: 48px;
-      height: 48px;
-    }
-
-    #resumeModal .btn {
-      font-weight: 500;
-      transition: all 0.2s ease;
-    }
-
-    #resumeModal .btn-outline-secondary {
-      border-color: #dee2e6;
-    }
-
-    #resumeModal .btn-outline-secondary:hover {
-      background-color: #f8f9fa;
-    }
-
-    #resumeModal .btn-primary {
-      background-color: #4361ee;
-      border-color: #4361ee;
-    }
-
-    #resumeModal .btn-primary:hover {
-      background-color: #3a0ca3;
-      border-color: #3a0ca3;
-    }
-
-    #resumeModal .progress {
-      border-radius: 100px;
-      background-color: #e9ecef;
-    }
-  </style>
-  <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-      const resumeTimeDisplay = document.querySelector('#resumeModal .text-muted span');
-
-      // Lấy thời gian lưu trước đó
-      const savedTime = localStorage.getItem('lastResumeTime');
-      if (savedTime) {
-        const previousTime = new Date(savedTime);
-        const now = new Date();
-        const diffMs = now - previousTime;
-        const diffMins = Math.floor(diffMs / 60000); // 1 phút = 60,000 ms
-
-        if (resumeTimeDisplay) {
-          resumeTimeDisplay.textContent = `${diffMins} phút trước`;
-        }
-      }
-
-      // Cập nhật lại thời gian mỗi lần mở trang
-      localStorage.setItem('lastResumeTime', new Date().toISOString());
-
-      // Đoạn khôi phục dữ liệu của bạn
-      const savedExamPath = localStorage.getItem('examCurrentPath');
-      const savedSyllabusPath = localStorage.getItem('syllabusCurrentPath');
-      if (savedExamPath) examCurrentPath = JSON.parse(savedExamPath);
-      if (savedSyllabusPath) syllabusCurrentPath = JSON.parse(savedSyllabusPath);
-
-      await checkAndResetHistory();
-    });
-
-    // Đảm bảo Modal được đóng hoàn toàn và backdrop được xóa
-    const resumeModal = document.getElementById('resumeModal');
-
-    document.getElementById('resumeContinueBtn').addEventListener('click', function () {
-      // Đóng modal và xóa backdrop thủ công nếu cần
-      const modalInstance = bootstrap.Modal.getInstance(resumeModal);
-      if (modalInstance) modalInstance.hide();
-
-      document.body.classList.remove('modal-open');
-      document.querySelectorAll('.modal-backdrop').forEach(e => e.remove());
-
-      // Tiếp tục thao tác của bạn ở đây...
-      console.log("Đã chọn tiếp tục");
-    });
-
-    document.getElementById('resumeCancelBtn').addEventListener('click', function () {
-      // Đóng modal và xóa backdrop thủ công nếu cần
-      const modalInstance = bootstrap.Modal.getInstance(resumeModal);
-      if (modalInstance) modalInstance.hide();
-
-      document.body.classList.remove('modal-open');
-      document.querySelectorAll('.modal-backdrop').forEach(e => e.remove());
-
-      console.log("Đã chọn bắt đầu mới");
-    });
-  </script>
+  // Đảm bảo modal đóng và backdrop xóa sạch
+  const resumeModal = document.getElementById('resumeModal');
+  document.getElementById('resumeContinueBtn').addEventListener('click', () => {
+    const m = bootstrap.Modal.getInstance(resumeModal);
+    if (m) m.hide();
+    document.body.classList.remove('modal-open');
+    document.querySelectorAll('.modal-backdrop').forEach(e => e.remove());
+    console.log("Đã chọn tiếp tục");
+  });
+  document.getElementById('resumeCancelBtn').addEventListener('click', () => {
+    const m = bootstrap.Modal.getInstance(resumeModal);
+    if (m) m.hide();
+    document.body.classList.remove('modal-open');
+    document.querySelectorAll('.modal-backdrop').forEach(e => e.remove());
+    console.log("Đã chọn bắt đầu mới");
+  });
+</script>
 
   <!-- Modal Tìm kiếm Môn học -->
   <div class="modal fade" id="customSearchModal" tabindex="-1" aria-labelledby="customSearchModalLabel"
@@ -5677,6 +5845,67 @@ function confirmShare_v2() {
                 .tab-content_fb { padding: 12px; }
                 .form-control_fb { padding: 10px 12px; }
             }
+            /* Mobile-friendly pagination */
+.pagination_fb {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 28px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.page-info_fb {
+  font-size: 15px;
+  color: var(--text-medium);
+  margin: 0 16px;
+  order: 2; /* Keeps page info in the middle */
+}
+
+#prevPageBtn_fb {
+  order: 1; /* Moves prev button to left */
+}
+
+#nextPageBtn_fb {
+  order: 3; /* Moves next button to right */
+}
+
+/* For mobile devices */
+@media (max-width: 480px) {
+  .pagination_fb {
+    flex-wrap: nowrap; /* Ensures all items stay in one row */
+    justify-content: space-between;
+    gap: 8px;
+  }
+  
+  .page-info_fb {
+    margin: 0 8px;
+    white-space: nowrap; /* Prevents line breaks */
+    font-size: 14px;
+  }
+  
+  .btn-sm_fb {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+}
+
+/* For very small screens */
+@media (max-width: 360px) {
+  .pagination_fb {
+    gap: 4px;
+  }
+  
+  .page-info_fb {
+    font-size: 13px;
+    margin: 0 4px;
+  }
+  
+  .btn-sm_fb {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+}
         `;
         document.head.appendChild(style);
       }

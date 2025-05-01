@@ -33,9 +33,6 @@ app.register_blueprint(feedback_bp)
 app.register_blueprint(notifications_bp)
 app.register_blueprint(comments_bp)
 
-@app.route('/592084a55f0128e2e002c067612e3c00.html')
-def verify_file():
-    return send_from_directory('html', '592084a55f0128e2e002c067612e3c00.html')
 
 @app.route('/static/image/<filename>')
 def serve_image(filename):
@@ -51,9 +48,6 @@ def index():
         abort(403)
     return render_template('index.html')
 
-@app.route('/home')
-def home():
-    return send_from_directory('html', 'dethi.html')
 
 @app.route('/login')
 def dangnhap():
