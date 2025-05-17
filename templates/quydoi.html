@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quy đổi lượt xem</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="Tra cứu, tải xuống và chia sẻ ngân hàng đề thi học phần từ các trường đại học. Tìm kiếm đề thi theo năm, ngành học và môn học.">
+    <meta name="keywords"
+        content="ngân hàng đề thi, đề thi học phần, đề thi đại học, tài liệu học tập, đề thi kết thúc học phần sư phạm huế, đề thi kết thúc học phần khoa học huế,đề thi kết thúc học phần khoa học tự nhiên, đề thi kết thúc học phần luật, đề thi kết thúc học phần quy nhơn">
+    <meta name="author" content="đề thi học phần">
+
+    <!-- Social Media (Open Graph) -->
+    <meta property="og:title" content="Ngân hàng đề thi học phần">
+    <meta property="og:description"
+        content="Tổng hợp đề thi học phần các trường đại học, hỗ trợ sinh viên học tập và ôn luyện hiệu quả.">
+    <meta property="og:image" content="../static/img/logo.png"> <!-- Thay bằng link ảnh thực -->
+    <meta property="og:url" content="https://dethihocphan.com/"> <!-- Đường dẫn chính xác của trang -->
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ngân hàng đề thi học phần">
+    <meta name="twitter:description" content="Tìm kiếm và chia sẻ đề thi học phần từ các trường đại học.">
+    <meta name="twitter:image" content="https://example.com/static/img/preview.jpg"> <!-- Link ảnh thumbnail -->
+
+    <!-- Favicon & Fonts -->
+    <link rel="shortcut icon" href="../static/img/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../static/css/app.css">
+    <link rel="stylesheet" href="../static/css/quydoi.css">
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+            <h1 class="header-title">Quy đổi lượt xem</h1>
+            <div class="header-actions">
+                <div class="header-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </div>
+                <div class="header-icon theme-icon">
+                    <i class="fas fa-moon"></i>
+                </div>
+                <div class="user-avatar">NM</div>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+       <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo" style="font-size: 32px; color: #007bff;">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div>
+                    <div class="sidebar-title" style="font-weight: bold; font-size: 18px;">Dethihocphan.com</div>
+                    <div class="sidebar-group" style="font-size: 14px; color: #666;">Cùng bạn chinh phục</div>
+                </div>
+            </div>
+
+            <div class="sidebar-nav">
+                <!-- 1. Trang chủ -->
+                <a href="/" class="nav-item">
+                    <div class="nav-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <div class="nav-text">Trang chủ</div>
+                </a>
+
+                <!-- 2. Đề Thi -->
+                <a href="/exams" class="nav-item">
+                    <div class="nav-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="nav-text">Đề Thi</div>
+                </a>
+
+                <!-- 3. Tài liệu của bạn (lịch sử mua hoặc upload) -->
+                <a href="/lichsumua" class="nav-item">
+                    <div class="nav-icon">
+                        <i class="fas fa-folder-open"></i>
+                    </div>
+                    <div class="nav-text">Tài liệu của bạn</div>
+                </a>
+
+                <!-- 4. Quy đổi lượt xem -->
+                <a href="#" class="nav-item active">
+                    <div class="nav-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <div class="nav-text">Quy đổi lượt xem</div>
+                </a>
+            </div>
+
+
+            <div class="sidebar-footer">
+                <div class="theme-toggle">
+                    <div class="theme-btn active" data-theme="light">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <div class="theme-btn" data-theme="dark">
+                        <i class="fas fa-moon"></i>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <!-- Main content -->
+       <main class="main-content">
+    <!-- Container chứa các card -->
+    <div class="card-container">
+        <!-- Card 1: Đóng góp tài liệu -->
+        <div class="card">
+            <!-- Phần header của card -->
+            <div class="card-header">
+                <div>
+                    <h3 class="card-title">Đóng góp tài liệu</h3>
+                    <p class="card-desc">Nhận lượt xem khi chia sẻ tài liệu hữu ích</p>
+                </div>
+            </div>
+            <!-- Phần nội dung chính của card -->
+            <div class="card-body">
+                <div class="card-points">+3 lượt xem <span>cho mỗi tài liệu được duyệt</span></div>
+                <p>Tải lên bất kỳ tài liệu nào (bài giảng, đề thi, đề cương, v.v.). Tài liệu sẽ được kiểm duyệt trong 24h.</p>
+            </div>
+            <!-- Nút tải lên tài liệu, kích hoạt input file -->
+            <button class="btn btn-primary" id="uploadBtn">
+                <i class="fas fa-cloud-upload-alt" style="margin-right: 8px;"></i> Tải lên tài liệu
+            </button>
+            <!-- Input file ẩn để chọn file, chấp nhận mọi định dạng -->
+            <input type="file" id="fileInput" style="display: none;" accept="*/*">
+        </div>
+
+        <!-- Card 2: Mua lượt xem -->
+        <div style=" display: none;"  class="card">
+            <!-- Phần header của card -->
+            <div class="card-header">
+                <div>
+                    <h3 class="card-title">Mua lượt xem</h3>
+                    <p class="card-desc">Nạp tiền để nhận lượt xem nhanh chóng</p>
+                </div>
+            </div>
+            <!-- Phần nội dung chính của card -->
+            <div class="card-body">
+                <div class="card-points">1.000 VNĐ <span>= 1 lượt xem</span></div>
+                <p>Mua lượt xem với giá ưu đãi, mua càng nhiều càng tiết kiệm.</p>
+            </div>
+            <button class="btn btn-secondary" id="buyViewsBtn">
+                <i class="fas fa-shopping-cart" style="margin-right: 8px;"></i> Mua lượt xem
+            </button>
+        </div>
+    </div>
+
+    <!-- Card 3: Danh sách đóng góp -->
+    <div class="card">
+        <!-- Phần header của card -->
+        <div class="card-header">
+            <div class="card-icon">
+                <i class="fas fa-list"></i>
+            </div>
+            <div>
+                <h3 class="card-title">Danh sách đóng góp</h3>
+                <p class="card-desc">Theo dõi trạng thái tài liệu đã tải lên</p>
+            </div>
+        </div>
+        <!-- Phần nội dung chính của card -->
+        <div class="card-body">
+            <p>Xem trạng thái kiểm duyệt và lượt xem nhận được từ các tài liệu của bạn.</p>
+        </div>
+        <!-- Nút xem danh sách tài liệu đã đóng góp -->
+        <button class="btn btn-outline" id="viewContributionsBtn">
+            <i class="fas fa-clipboard-list" style="margin-right: 8px;"></i> Xem danh sách đóng góp
+        </button>
+    </div>
+</main>
+
+    </div>
+
+    <!-- Modal Upload File -->
+   <!-- Modal để tải lên tài liệu -->
+<div class="modal" id="uploadModal">
+    <div class="modal-content">
+        <!-- Phần header của modal -->
+        <div class="modal-header">
+            <h3 class="modal-title">Tải lên tài liệu</h3>
+            <button class="modal-close">×</button>
+        </div>
+        <!-- Phần nội dung chính của modal -->
+        <div class="modal-body">
+            <form id="uploadForm">
+                <!-- Khu vực kéo thả hoặc chọn file -->
+                <div class="file-upload" id="dropArea">
+                    <i class="fas fa-file-upload"></i>
+                    <h4 class="file-upload-text">Kéo thả tài liệu vào đây hoặc nhấn để chọn</h4>
+                    <p class="file-upload-hint">Hỗ trợ mọi loại file (tối đa 20MB)</p>
+                    <!-- Input file chấp nhận mọi định dạng -->
+                    <input type="file" id="fileInput" name="file" class="file-input" accept="*/*" required>
+                </div>
+                <!-- Thông báo lỗi nếu không chọn file -->
+                <p class="error-message" id="fileError">Vui lòng chọn một file trước khi gửi.</p>
+                <!-- Nút gửi tài liệu -->
+                <button type="submit" class="btn btn-primary" style="margin-top: 1.5rem;">
+                    <i class="fas fa-paper-plane" style="margin-right: 8px;"></i> Gửi đóng góp
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+    <!-- Modal Contributions List -->
+    <div class="modal" id="contributionsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Danh sách đóng góp</h3>
+                <button class="modal-close">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tên tài liệu</th>
+                                <th>Ngày đóng góp</th>
+                                <th>Trạng thái</th>
+                                <th>Lượt xem nhận</th>
+                            </tr>
+                        </thead>
+                        <tbody id="contributionsTableBody">
+                            <!-- Dữ liệu sẽ được điền động qua API -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Buy Views -->
+    <div class="modal" id="buyViewsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Mua lượt xem</h3>
+                <button class="modal-close">×</button>
+            </div>
+            <div class="modal-body">
+                <p>Chọn gói lượt xem bạn muốn mua:</p>
+                <div class="pricing-table">
+                    <div class="pricing-card">
+                        <h4>Gói cơ bản</h4>
+                        <div class="pricing-amount">50.000₫</div>
+                        <div class="pricing-views">50 lượt xem</div>
+                        <button class="btn btn-outline select-package" data-amount="50000" data-views="50">Chọn gói</button>
+                    </div>
+                    <div class="pricing-card recommended">
+                        <div class="recommended-badge">Phổ biến</div>
+                        <h4>Gói tiết kiệm</h4>
+                        <div class="pricing-amount">90.000₫</div>
+                        <div class="pricing-views">100 lượt xem</div>
+                        <button class="btn btn-primary select-package" data-amount="90000" data-views="100">Chọn gói</button>
+                    </div>
+                    <div class="pricing-card">
+                        <h4>Gói nhiều</h4>
+                        <div class="pricing-amount">400.000₫</div>
+                        <div class="pricing-views">500 lượt xem</div>
+                        <button class="btn btn-outline select-package" data-amount="400000" data-views="500">Chọn gói</button>
+                    </div>
+                </div>
+                <div id="paymentSection" style="margin-top: 2rem; display: none;">
+                    <h4>Phương thức thanh toán</h4>
+                    <div class="payment-method">
+                        <div class="payment-option" id="walletOption">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; align-items: center;">
+                                    <i class="fas fa-wallet" style="margin-right: 8px; color: var(--primary);"></i>
+                                    <span>Ví điện tử</span>
+                                </div>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="payment-details" id="walletDetails">
+                                <p>Chọn ví điện tử:</p>
+                                <div class="wallet-list">
+                                    <div class="wallet-item">
+                                        <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Logo-MoMo.png" class="wallet-icon">
+                                        <span>Ví MoMo</span>
+                                    </div>
+                                    <div class="wallet-item">
+                                        <img src="https://seeklogo.com/images/Z/ZaloPay-logo-6DE3D1A331-seeklogo.com.png" class="wallet-icon">
+                                        <span>ZaloPay</span>
+                                    </div>
+                                    <div class="wallet-item">
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/ShopeePay_logo.svg/2560px-ShopeePay_logo.svg.png" class="wallet-icon">
+                                        <span>ShopeePay</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="payment-option" id="bankOption">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; align-items: center;">
+                                    <i class="fas fa-credit-card" style="margin-right: 8px; color: var(--primary);"></i>
+                                    <span>Thẻ ngân hàng</span>
+                                </div>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="payment-details" id="bankDetails">
+                                <p>Chọn ngân hàng:</p>
+                                <div class="bank-list">
+                                    <div class="bank-item">
+                                        <img src="https://logo.vn/wp-content/uploads/2017/11/logo-vietcombank-1.png" class="bank-icon">
+                                        <span class="bank-name">Vietcombank</span>
+                                    </div>
+                                    <div class="bank-item">
+                                        <img src="https://logo.vn/wp-content/uploads/2017/11/logo-techcombank-1.png" class="bank-icon">
+                                        <span class="bank-name">Techcombank</span>
+                                    </div>
+                                    <div class="bank-item">
+                                        <img src="https://logo.vn/wp-content/uploads/2017/11/logo-vietinbank-1.png" class="bank-icon">
+                                        <span class="bank-name">VietinBank</span>
+                                    </div>
+                                    <div class="bank-item">
+                                        <img src="https://logo.vn/wp-content/uploads/2017/11/logo-bidv-1.png" class="bank-icon">
+                                        <span class="bank-name">BIDV</span>
+                                    </div>
+                                    <div class="bank-item">
+                                        <img src="https://logo.vn/wp-content/uploads/2017/11/logo-agribank-1.png" class="bank-icon">
+                                        <span class="bank-name">Agribank</span>
+                                    </div>
+                                    <div class="bank-item">
+                                        <img src="https://logo.vn/wp-content/uploads/2017/11/logo-mbbank-1.png" class="bank-icon">
+                                        <span class="bank-name">MB Bank</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="confirm-payment" id="confirmPayment">
+                        <div style="background-color: rgba(0, 0, 0, 0.02); padding: 1rem; border-radius: var(--radius-sm); margin-bottom: 1rem;">
+                            <h4 style="margin-bottom: 0.5rem;">Thông tin thanh toán</h4>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                <span>Gói lượt xem:</span>
+                                <span id="selectedPackageText" style="font-weight: 500;">100 lượt xem</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                <span>Phương thức:</span>
+                                <span id="selectedMethodText" style="font-weight: 500;">Ví MoMo</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-weight: 600;">
+                                <span>Tổng thanh toán:</span>
+                                <span id="totalAmountText" style="color: var(--primary);">90.000₫</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" id="confirmPaymentBtn">
+                            <i class="fas fa-check-circle" style="margin-right: 8px;"></i> Xác nhận thanh toán
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Loading -->
+    <div class="modal" id="loadingModal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-body">
+                <div class="loader"></div>
+                <h3 class="modal-title">Vui lòng đợi</h3>
+                <p>Đang xử lý...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Success -->
+    <div class="modal" id="successModal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-body">
+                <i class="fas fa-check-circle success-icon"></i>
+                <h3 class="modal-title">Thành công!</h3>
+                <p id="successMessage">Tài liệu đã được gửi để kiểm duyệt.</p>
+                <button class="btn btn-primary" id="successCloseBtn" style="margin-top: 1rem;">
+                    <i class="fas fa-check" style="margin-right: 8px;"></i> Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+<script src="../static/js/quydoi.js"></script>
+    <script src="../static/js/app.js"></script>
+</body>
+</html>

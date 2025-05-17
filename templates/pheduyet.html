@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phê Duyệt Tài Liệu</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/app.css">
+    <style>
+
+        /* Document Approval Styles */
+        .document-approval-container {
+            background-color: var(--card-bg);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: 2rem;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-header h2 {
+            font-size: 1.75rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: var(--text-light);
+        }
+
+        .approval-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .filter-group select, 
+        .filter-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background-color: var(--card-bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .documents-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+
+        .documents-table th {
+            text-align: left;
+            padding: 1rem;
+            background-color: rgba(255, 109, 40, 0.1);
+            color: var(--primary);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .documents-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        .documents-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .documents-table tr:hover {
+            background-color: rgba(255, 109, 40, 0.05);
+        }
+
+        .document-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .document-icon {
+            font-size: 1.5rem;
+            color: var(--secondary);
+        }
+
+        .document-details {
+            flex: 1;
+        }
+
+        .document-name {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            color: var(--text);
+        }
+
+        .document-meta {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .document-user {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-avatar-sm {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .document-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-sm);
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-sm {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.85rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #0ea371;
+        }
+
+        .btn-error {
+            background-color: var(--error);
+            color: white;
+        }
+
+        .btn-error:hover {
+            background-color: #dc2626;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .status-approved {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .status-rejected {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+        }
+
+        .document-preview-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .document-preview-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .preview-container {
+            background-color: var(--card-bg);
+            border-radius: var(--radius-md);
+            width: 90%;
+            max-width: 1000px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .preview-title {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .preview-close {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        .preview-content {
+            flex: 1;
+            padding: 1.5rem;
+            overflow: auto;
+        }
+
+        .preview-iframe {
+            width: 100%;
+            height: 70vh;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+        }
+
+        .preview-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+            gap: 0.5rem;
+        }
+
+        .pagination-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--card-bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .pagination-btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .pagination-btn:hover:not(.active) {
+            background-color: rgba(255, 109, 40, 0.1);
+        }
+
+        .pagination-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 1024px) {
+            .app-container {
+                grid-template-columns: 240px 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto 1fr;
+            }
+
+            .header {
+                grid-column: 1 / 2;
+                padding: 1rem;
+            }
+
+            .sidebar {
+                grid-column: 1 / 2;
+                grid-row: 2 / 3;
+               height: auto;
+                position: static;
+                display: none;
+            }
+
+            .sidebar.active {
+                display: flex;
+            }
+
+            .main-content {
+                grid-column: 1 / 2;
+                grid-row: 3 / 4;
+                padding: 1.5rem;
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 40px;
+                height: 40px;
+                border-radius: var(--radius-sm);
+                background-color: rgba(255, 109, 40, 0.1);
+                color: var(--primary);
+                font-size: 1.25rem;
+                cursor: pointer;
+                transition: var(--transition);
+            }
+
+            .mobile-menu-btn:hover {
+                background-color: rgba(255, 109, 40, 0.2);
+            }
+
+            .document-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .documents-table th:nth-child(3),
+            .documents-table td:nth-child(3) {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-title {
+                font-size: 1.25rem;
+            }
+
+            .header-actions {
+                gap: 1rem;
+            }
+
+            .documents-table th:nth-child(4),
+            .documents-table td:nth-child(4) {
+                display: none;
+            }
+
+            .document-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .document-icon {
+                display: none;
+            }
+
+            .preview-container {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+            <h1 class="header-title">Phê Duyệt Tài Liệu</h1>
+            <div class="header-actions">
+                <div class="header-icon theme-icon">
+                    <i class="fas fa-moon"></i>
+                </div>
+                <div class="user-avatar">NM</div>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div>
+                    <div class="sidebar-title">Hệ Thống Quản Lý</div>
+                    <div class="sidebar-group">Phê duyệt tài liệu</div>
+                </div>
+            </div>
+
+            <div class="sidebar-nav">
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <div class="nav-text">Trang chủ</div>
+                </a>
+                <a href="#" class="nav-item active">
+                    <div class="nav-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="nav-text">Phê duyệt</div>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <i class="fas fa-upload"></i>
+                    </div>
+                    <div class="nav-text">Tải lên</div>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <i class="fas fa-folder"></i>
+                    </div>
+                    <div class="nav-text">Tài liệu</div>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="nav-text">Người dùng</div>
+                </a>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="theme-toggle">
+                    <div class="theme-btn active" data-theme="light">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <div class="theme-btn" data-theme="dark">
+                        <i class="fas fa-moon"></i>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="main-content">
+            <div class="document-approval-container">
+                <div class="page-header">
+                    <h2>Phê Duyệt Tài Liệu</h2>
+                    <p>Danh sách tài liệu chờ phê duyệt</p>
+                </div>
+
+                <table class="documents-table">
+                    <thead>
+                        <tr>
+                            <th>Tài liệu</th>
+                            <th>Người gửi</th>
+                            <th>Ngày gửi</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="documents-table-body">
+                        <!-- Documents will be populated dynamically -->
+                    </tbody>
+                </table>
+
+                <div class="pagination" id="pagination-container">
+                    <!-- Pagination will be populated dynamically -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Document Preview Modal -->
+    <div class="document-preview-modal">
+        <div class="preview-container">
+            <div class="preview-header">
+                <h3 class="preview-title">Xem trước tài liệu</h3>
+                <button class="preview-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="preview-content">
+                <iframe class="preview-iframe" frameborder="0"></iframe>
+            </div>
+            <div class="preview-footer">
+                <button class="btn btn-success approve-btn" data-upload-id="">
+                    <i class="fas fa-check"></i> Phê duyệt
+                </button>
+                <button class="btn btn-error reject-btn" data-upload-id="">
+                    <i class="fas fa-times"></i> Từ chối
+                </button>
+                <button class="btn btn-outline preview-close-btn">
+                    <i class="fas fa-times"></i> Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ITEMS_PER_PAGE = 10;
+    let currentPage = 1;
+    let allDocuments = [];
+
+    // Mobile menu toggle
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const sidebar = document.querySelector('.sidebar');
+    
+    mobileMenuBtn.addEventListener('click', function() {
+        sidebar.classList.toggle('active');
+        mobileMenuBtn.innerHTML = sidebar.classList.contains('active') 
+            ? '<i class="fas fa-times"></i>' 
+            : '<i class="fas fa-bars"></i>';
+    });
+
+    // Theme toggle function
+    const toggleTheme = (theme) => {
+        const themeBtns = document.querySelectorAll('.theme-btn');
+        const body = document.body;
+        
+        themeBtns.forEach(b => b.classList.remove('active'));
+        const activeThemeBtn = document.querySelector(`.theme-btn[data-theme="${theme}"]`);
+        if (activeThemeBtn) {
+            activeThemeBtn.classList.add('active');
+        }
+        
+        body.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        
+        const themeIcon = document.querySelector('.theme-icon i');
+        themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    };
+
+    // Theme toggle events
+    const themeBtns = document.querySelectorAll('.theme-btn');
+    themeBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            toggleTheme(this.getAttribute('data-theme'));
+        });
+    });
+
+    const themeIcon = document.querySelector('.theme-icon');
+    themeIcon.addEventListener('click', function() {
+        const currentTheme = document.body.getAttribute('data-theme') || 'light';
+        toggleTheme(currentTheme === 'light' ? 'dark' : 'light');
+    });
+
+    // Initialize theme
+    toggleTheme(localStorage.getItem('theme') || 'light');
+
+    // Document preview modal
+    const previewModal = document.querySelector('.document-preview-modal');
+    const previewIframe = document.querySelector('.preview-iframe');
+    const previewTitle = document.querySelector('.preview-title');
+    const modalApproveBtn = document.querySelector('.preview-footer .approve-btn');
+    const modalRejectBtn = document.querySelector('.preview-footer .reject-btn');
+    const closePreviewBtns = document.querySelectorAll('.preview-close, .preview-close-btn');
+
+    // Fetch and render documents
+    async function fetchDocuments() {
+        try {
+            const response = await fetch('/api/documents/pending');
+            const result = await response.json();
+            
+            if (result.success) {
+                allDocuments = result.data;
+                renderDocuments();
+                renderPagination();
+            } else {
+                alert('Lỗi khi tải danh sách tài liệu: ' + result.error);
+            }
+        } catch (error) {
+            alert('Lỗi khi tải danh sách tài liệu: ' + error.message);
+        }
+    }
+
+    function renderDocuments() {
+        const tbody = document.querySelector('#documents-table-body');
+        tbody.innerHTML = '';
+        
+        const start = (currentPage - 1) * ITEMS_PER_PAGE;
+        const end = start + ITEMS_PER_PAGE;
+        const pageDocuments = allDocuments.slice(start, end);
+
+        pageDocuments.forEach(doc => {
+            const fileExtension = doc.file_name.split('.').pop().toLowerCase();
+            const iconClass = {
+                'pdf': 'file-pdf',
+                'doc': 'file-word',
+                'docx': 'file-word',
+                'xls': 'file-excel',
+                'xlsx': 'file-excel',
+                'ppt': 'file-powerpoint',
+                'pptx': 'file-powerpoint',
+                'jpg': 'file-image',
+                'jpeg': 'file-image',
+                'png': 'file-image'
+            }[fileExtension] || 'file';
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>
+                    <div class="document-info">
+                        <div class="document-icon">
+                            <i class="fas fa-${iconClass}"></i>
+                        </div>
+                        <div class="document-details">
+                            <div class="document-name">${doc.file_name}</div>
+                            <div class="document-meta">
+                                <span>${fileExtension.toUpperCase()} • ${doc.file_size}</span>
+                                <span>${doc.school_name} - ${doc.faculty_name} - ${doc.subject_name}</span>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="document-user">
+                        <span>${doc.username} (ID: ${doc.user_id})</span>
+                    </div>
+                </td>
+                <td>${doc.created_at}</td>
+                <td><span class="status-badge status-pending">Chờ phê duyệt</span></td>
+                <td>
+                    <div class="document-actions">
+                        <button class="btn btn-outline btn-sm preview-btn" data-file="${doc.file_name}" data-upload-id="${doc.upload_id}">
+                            <i class="fas fa-eye"></i> Xem
+                        </button>
+                        <button class="btn btn-success btn-sm approve-btn" data-upload-id="${doc.upload_id}">
+                            <i class="fas fa-check"></i> Duyệt
+                        </button>
+                        <button class="btn btn-error btn-sm reject-btn" data-upload-id="${doc.upload_id}">
+                            <i class="fas fa-times"></i> Từ chối
+                        </button>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        // Attach event listeners to new buttons
+        attachButtonListeners();
+    }
+
+    function renderPagination() {
+        const paginationContainer = document.querySelector('#pagination-container');
+        const pageCount = Math.ceil(allDocuments.length / ITEMS_PER_PAGE);
+        
+        paginationContainer.innerHTML = `
+            <button class="pagination-btn ${currentPage === 1 ? 'disabled' : ''}">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            ${Array.from({length: pageCount}, (_, i) => `
+                <button class="pagination-btn ${currentPage === i + 1 ? 'active' : ''}">${i + 1}</button>
+            `).join('')}
+            <button class="pagination-btn ${currentPage === pageCount ? 'disabled' : ''}">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        `;
+
+        // Attach pagination event listeners
+        document.querySelectorAll('.pagination-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (this.classList.contains('disabled') || this.classList.contains('active')) return;
+                
+                if (this.querySelector('i.fa-chevron-left')) {
+                    currentPage--;
+                } else if (this.querySelector('i.fa-chevron-right')) {
+                    currentPage++;
+                } else {
+                    currentPage = parseInt(this.textContent);
+                }
+                
+                renderDocuments();
+                renderPagination();
+            });
+        });
+    }
+
+    async function handleApprove(uploadId) {
+        try {
+            const response = await fetch(`/api/documents/approve/${uploadId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const result = await response.json();
+            
+            if (result.success) {
+                alert('Tài liệu đã được phê duyệt thành công!');
+                allDocuments = allDocuments.filter(doc => doc.upload_id !== uploadId);
+                renderDocuments();
+                renderPagination();
+                previewModal.classList.remove('active');
+            } else {
+                alert('Lỗi khi phê duyệt: ' + result.error);
+            }
+        } catch (error) {
+            alert('Lỗi khi phê duyệt: ' + error.message);
+        }
+    }
+
+    async function handleReject(uploadId) {
+        try {
+            const response = await fetch(`/api/documents/reject/${uploadId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const result = await response.json();
+            
+            if (result.success) {
+                alert('Tài liệu đã bị từ chối!');
+                allDocuments = allDocuments.filter(doc => doc.upload_id !== uploadId);
+                renderDocuments();
+                renderPagination();
+                previewModal.classList.remove('active');
+            } else {
+                alert('Lỗi khi từ chối: ' + result.error);
+            }
+        } catch (error) {
+            alert('Lỗi khi từ chối: ' + error.message);
+        }
+    }
+
+    function attachButtonListeners() {
+        // Preview buttons
+        document.querySelectorAll('.preview-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const fileName = this.getAttribute('data-file');
+                const uploadId = this.getAttribute('data-upload-id');
+                
+                previewTitle.textContent = `Xem trước: ${fileName}`;
+                // In production, use actual file path from backend
+                previewIframe.src = `https://docs.google.com/gview?url=https://example.com/documents/${encodeURIComponent(fileName)}&embedded=true`;
+                
+                modalApproveBtn.setAttribute('data-upload-id', uploadId);
+                modalRejectBtn.setAttribute('data-upload-id', uploadId);
+                
+                previewModal.classList.add('active');
+            });
+        });
+
+        // Approve buttons
+        document.querySelectorAll('.approve-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const uploadId = parseInt(this.getAttribute('data-upload-id'));
+                handleApprove(uploadId);
+            });
+        });
+
+        // Reject buttons
+        document.querySelectorAll('.reject-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const uploadId = parseInt(this.getAttribute('data-upload-id'));
+                handleReject(uploadId);
+            });
+        });
+    }
+
+    // Close preview modal
+    closePreviewBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            previewModal.classList.remove('active');
+            previewIframe.src = '';
+        });
+    });
+
+    // Initial fetch
+    fetchDocuments();
+});
+    </script>
+</body>
+</html>

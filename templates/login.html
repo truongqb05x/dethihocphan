@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập | Ngân hàng đề thi học phần</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="../static/img/logo.png" type="image/x-icon">
+        <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="Tra cứu, tải xuống và chia sẻ ngân hàng đề thi học phần từ các trường đại học. Tìm kiếm đề thi theo năm, ngành học và môn học.">
+    <meta name="keywords"
+        content="ngân hàng đề thi, đề thi học phần, đề thi đại học, tài liệu học tập, đề thi kết thúc học phần sư phạm huế, đề thi kết thúc học phần khoa học huế,đề thi kết thúc học phần khoa học tự nhiên, đề thi kết thúc học phần luật, đề thi kết thúc học phần quy nhơn">
+    <meta name="author" content="đề thi học phần">
+
+    <!-- Social Media (Open Graph) -->
+    <meta property="og:title" content="Ngân hàng đề thi học phần">
+    <meta property="og:description"
+        content="Tổng hợp đề thi học phần các trường đại học, hỗ trợ sinh viên học tập và ôn luyện hiệu quả.">
+    <meta property="og:image" content="../static/img/logo.png"> <!-- Thay bằng link ảnh thực -->
+    <meta property="og:url" content="https://dethihocphan.com/"> <!-- Đường dẫn chính xác của trang -->
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ngân hàng đề thi học phần">
+    <meta name="twitter:description" content="Tìm kiếm và chia sẻ đề thi học phần từ các trường đại học.">
+    <meta name="twitter:image" content="https://example.com/static/img/preview.jpg"> <!-- Link ảnh thumbnail -->
+
+    <!-- Favicon & Fonts -->
+    <link rel="shortcut icon" href="../static/img/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../static/css/login.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-logo">
+                <i class="fas fa-user-shield"></i>
+            </div>
+            <h1 class="login-title" id="formTitle">Đăng nhập hệ thống</h1>
+            <p class="login-subtitle" id="formSubtitle">Vui lòng nhập thông tin tài khoản của bạn</p>
+            <div class="server-error" id="serverError"></div>
+            
+            <form id="authForm" aria-label="Form đăng nhập hoặc đăng ký">
+                <div class="form-group">
+                    <label for="username" class="form-label">Tên đăng nhập</label>
+                    <div class="input-group">
+                        <input type="text" id="username" class="form-control" placeholder="Nhập tên đăng nhập" required aria-describedby="username-error">
+                        <i class="fas fa-user input-icon"></i>
+                    </div>
+                    <div class="error-message" id="username-error">Vui lòng nhập tên đăng nhập</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password" class="form-label">Mật khẩu</label>
+                    <div class="input-group">
+                        <input type="password" id="password" class="form-control" placeholder="Nhập mật khẩu" required aria-describedby="password-error">
+                        <i class="fas fa-eye input-icon password-toggle" id="togglePassword"></i>
+                    </div>
+                    <div class="error-message" id="password-error">Vui lòng nhập mật khẩu</div>
+                </div>
+                
+                <div class="form-group" id="confirmPasswordGroup" style="display: none;">
+                    <label for="confirmPassword" class="form-label">Nhập lại mật khẩu</label>
+                    <div class="input-group">
+                        <input type="password" id="confirmPassword" class="form-control" placeholder="Nhập lại mật khẩu" aria-describedby="confirmPassword-error">
+                        <i class="fas fa-eye input-icon password-toggle" id="toggleConfirmPassword"></i>
+                    </div>
+                    <div class="error-message" id="confirmPassword-error">Mật khẩu không khớp</div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" id="authButton">
+                    <i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i> Đăng nhập
+                </button>
+            </form>
+            
+            <div class="login-footer">
+                <p id="toggleText">Chưa có tài khoản? <a href="#" class="login-link" id="toggleAuth">Đăng ký ngay</a></p>
+                <button class="theme-toggle" id="themeToggle" aria-label="Chuyển đổi giao diện sáng/tối">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+<script src="../static/js/login.js"></script>
+</body>
+</html>

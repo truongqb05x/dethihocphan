@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Tạo Đề Thi Tự Động</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-light: #6366F1;
+            --primary-dark: #4338CA;
+            --secondary: #10B981;
+            --accent: #F59E0B;
+            --text: #333333;
+            --text-light: #6B7280;
+            --text-lighter: #9CA3AF;
+            --bg: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --error: #EF4444;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --transition: all 0.2s ease;
+        }
+
+        [data-theme="dark"] {
+            --primary: #818CF8;
+            --primary-light: #A5B4FC;
+            --primary-dark: #6366F1;
+            --secondary: #34D399;
+            --accent: #FBBF24;
+            --text: #F3F4F6;
+            --text-light: #D1D5DB;
+            --text-lighter: #9CA3AF;
+            --bg: #1F2937;
+            --card-bg: #374151;
+            --border: #4B5563;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            transition: var(--transition);
+            line-height: 1.5;
+        }
+
+        .app-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            grid-template-rows: 80px 1fr;
+            min-height: 100vh;
+        }
+
+        .header {
+            grid-column: 2 / 3;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            background-color: var(--card-bg);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .header-icon {
+            font-size: 1.25rem;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .header-icon:hover {
+            color: var(--primary);
+        }
+
+        .badge {
+            position: absolute;
+            top: -6px;
+            right: -8px;
+            background-color: var(--error);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+
+        .sidebar {
+            grid-column: 1 / 2;
+            grid-row: 1 / 3;
+            background-color: var(--card-bg);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar-logo {
+            font-size: 1.75rem;
+            color: var(--primary);
+        }
+
+        .sidebar-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sidebar-group {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 1rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-sm);
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .nav-item:hover {
+            background-color: rgba(79, 70, 229, 0.1);
+            color: var(--primary);
+        }
+
+        .nav-item.active {
+            background-color: rgba(79, 70, 229, 0.1);
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .nav-icon {
+            font-size: 1.1rem;
+            margin-right: 0.75rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .nav-text {
+            font-size: 0.95rem;
+        }
+
+        .sidebar-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: rgba(0, 0, 0, 0.05);
+            border-radius: 50px;
+            padding: 0.25rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        [data-theme="dark"] .theme-toggle {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .theme-btn {
+            width: 50%;
+            padding: 0.5rem;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .theme-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .main-content {
+            grid-column: 2 / 3;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Custom styles for exam generator */
+        .upload-section {
+            background-color: var(--card-bg);
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-md);
+            padding: 3rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 1.5rem;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background-color: rgba(79, 70, 229, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .upload-text {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .upload-hint {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .form-select, .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background-color: var(--card-bg);
+            color: var(--text);
+            font-family: inherit;
+            transition: var(--transition);
+        }
+
+        .form-select:focus, .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background-color: var(--card-bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--border);
+        }
+
+        .btn-icon {
+            margin-right: 0.5rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        /* Modal styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            border-radius: var(--radius-md);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .modal-close {
+            font-size: 1.5rem;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: var(--transition);
+            background: none;
+            border: none;
+        }
+
+        .modal-close:hover {
+            color: var(--error);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            max-height: 70vh;
+        }
+
+        .exam-content {
+            white-space: pre-line;
+            line-height: 1.6;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .preview-container {
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 2rem;
+            margin-top: 1rem;
+        }
+
+        .preview-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .preview-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .preview-subtitle {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .preview-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .question {
+            margin-bottom: 1.5rem;
+        }
+
+        .question-text {
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+        }
+
+        .options {
+            margin-left: 1.5rem;
+        }
+
+        .option {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .option:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(79, 70, 229, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        .loading-text {
+            color: var(--text-light);
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 1024px) {
+            .app-container {
+                grid-template-columns: 240px 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto 1fr;
+            }
+
+            .header {
+                grid-column: 1 / 2;
+                padding: 1rem;
+            }
+
+            .sidebar {
+                grid-column: 1 / 2;
+                grid-row: 2 / 3;
+               height: auto;
+                position: static;
+                display: none;
+            }
+
+            .sidebar.active {
+                display: flex;
+            }
+
+            .main-content {
+                grid-column: 1 / 2;
+                grid-row: 3 / 4;
+                padding: 1.5rem;
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 40px;
+                height: 40px;
+                border-radius: var(--radius-sm);
+                background-color: rgba(79, 70, 229, 0.1);
+                color: var(--primary);
+                font-size: 1.25rem;
+                cursor: pointer;
+                transition: var(--transition);
+            }
+
+            .mobile-menu-btn:hover {
+                background-color: rgba(79, 70, 229, 0.2);
+            }
+
+            .modal-content {
+                width: 95%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-title {
+                font-size: 1.25rem;
+            }
+
+            .header-actions {
+                gap: 1rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+            <h1 class="header-title">Tạo Đề Thi Tự Động</h1>
+            <div class="header-actions">
+                <div class="header-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </div>
+                <div class="header-icon theme-icon">
+                    <i class="fas fa-moon"></i>
+                </div>
+                <div class="user-avatar">GV</div>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <div class="sidebar-title">Hệ Thống Tạo Đề Thi</div>
+                    <div class="sidebar-group">Trường Đại Học Công Nghệ</div>
+                </div>
+            </div>
+
+            <div class="sidebar-nav">
+                <a href="#" class="nav-item active">
+                    <div class="nav-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <div class="nav-text">Trang chủ</div>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <i class="fas fa-file-upload"></i>
+                    </div>
+                    <div class="nav-text">Tải lên giáo trình</div>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                    <div class="nav-text">Ngân hàng câu hỏi</div>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <div class="nav-text">Đề thi đã tạo</div>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div class="nav-text">Thống kê</div>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="nav-text">Quản lý lớp học</div>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <div class="nav-text">Cài đặt</div>
+                </a>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="theme-toggle">
+                    <div class="theme-btn active" data-theme="light">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <div class="theme-btn" data-theme="dark">
+                        <i class="fas fa-moon"></i>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="main-content">
+            <div class="upload-section">
+                <h2 class="section-title">Tạo đề thi từ giáo trình</h2>
+                
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="upload-text">Kéo thả file PDF giáo trình vào đây hoặc nhấn để chọn file</div>
+                    <div class="upload-hint">Chỉ hỗ trợ file PDF với kích thước tối đa 10MB</div>
+                    <input type="file" id="fileInput" accept=".pdf" style="display: none;">
+                </div>
+                
+                <div class="form-group">
+                    <label for="faculty" class="form-label">Khoa</label>
+                    <select id="faculty" class="form-select">
+                        <option value="">-- Chọn khoa --</option>
+                        <option value="cntt">Công nghệ thông tin</option>
+                        <option value="dtvt">Điện tử viễn thông</option>
+                        <option value="ck">Cơ khí</option>
+                        <option value="xd">Xây dựng</option>
+                        <option value="kt">Kinh tế</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="department" class="form-label">Bộ môn</label>
+                    <select id="department" class="form-select">
+                        <option value="">-- Chọn bộ môn --</option>
+                        <option value="httt">Hệ thống thông tin</option>
+                        <option value="mmt">Mạng máy tính</option>
+                        <option value="khmt">Khoa học máy tính</option>
+                        <option value="ktpm">Kỹ thuật phần mềm</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="subject" class="form-label">Môn học</label>
+                    <select id="subject" class="form-select">
+                        <option value="">-- Chọn môn học --</option>
+                        <option value="csdl">Cơ sở dữ liệu</option>
+                        <option value="ltw">Lập trình web</option>
+                        <option value="ptud">Phân tích thiết kế hệ thống</option>
+                        <option value="ai">Trí tuệ nhân tạo</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="examType" class="form-label">Loại đề thi</label>
+                    <select id="examType" class="form-select">
+                        <option value="multiple">Trắc nghiệm</option>
+                        <option value="essay">Tự luận</option>
+                        <option value="mixed">Trắc nghiệm + Tự luận</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="questionCount" class="form-label">Số lượng câu hỏi</label>
+                    <input type="number" id="questionCount" class="form-input" min="5" max="50" value="20">
+                </div>
+                
+                <div class="form-group">
+                    <label for="difficulty" class="form-label">Độ khó</label>
+                    <select id="difficulty" class="form-select">
+                        <option value="easy">Dễ</option>
+                        <option value="medium" selected>Trung bình</option>
+                        <option value="hard">Khó</option>
+                        <option value="mixed">Hỗn hợp</option>
+                    </select>
+                </div>
+                
+                <div class="action-buttons">
+                    <button id="generateBtn" class="btn btn-primary">
+                        <i class="fas fa-magic btn-icon"></i> Tạo đề thi
+                    </button>
+                    <button id="resetBtn" class="btn btn-secondary">
+                        <i class="fas fa-redo btn-icon"></i> Làm mới
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal for exam preview -->
+    <div class="modal" id="examModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Xem trước đề thi</h3>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Content will be inserted here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="closeModalBtn">
+                    <i class="fas fa-times btn-icon"></i> Đóng
+                </button>
+                <button class="btn btn-primary" id="prettifyBtn">
+                    <i class="fas fa-eye btn-icon"></i> Xem bản đẹp
+                </button>
+                <button class="btn btn-primary" id="downloadBtn">
+                    <i class="fas fa-download btn-icon"></i> Tải xuống
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for pretty preview -->
+    <div class="modal" id="prettyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Bản đẹp đề thi</h3>
+                <button class="modal-close" id="prettyModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="preview-container" id="prettyPreview">
+                    <!-- Pretty content will be inserted here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="closePrettyModalBtn">
+                    <i class="fas fa-times btn-icon"></i> Đóng
+                </button>
+                <button class="btn btn-primary" id="downloadPrettyBtn">
+                    <i class="fas fa-download btn-icon"></i> Tải xuống
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const sidebar = document.querySelector('.sidebar');
+            
+            mobileMenuBtn.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                mobileMenuBtn.innerHTML = sidebar.classList.contains('active') 
+                    ? '<i class="fas fa-times"></i>' 
+                    : '<i class="fas fa-bars"></i>';
+            });
+
+            // Theme toggle
+            const themeToggle = document.querySelector('.theme-toggle');
+            const themeBtns = document.querySelectorAll('.theme-btn');
+            const body = document.body;
+            
+            themeBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const theme = this.getAttribute('data-theme');
+                    
+                    themeBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    body.setAttribute('data-theme', theme);
+                    localStorage.setItem('theme', theme);
+                    
+                    const themeIcon = document.querySelector('.theme-icon i');
+                    themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+                });
+            });
+
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            body.setAttribute('data-theme', savedTheme);
+            
+            const activeThemeBtn = document.querySelector(`.theme-btn[data-theme="${savedTheme}"]`);
+            if (activeThemeBtn) {
+                themeBtns.forEach(b => b.classList.remove('active'));
+                activeThemeBtn.classList.add('active');
+                
+                const themeIcon = document.querySelector('.theme-icon i');
+                themeIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+
+            // Exam generator functionality
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const generateBtn = document.getElementById('generateBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const examModal = document.getElementById('examModal');
+            const modalClose = document.getElementById('modalClose');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const modalBody = document.getElementById('modalBody');
+            const prettifyBtn = document.getElementById('prettifyBtn');
+            const prettyModal = document.getElementById('prettyModal');
+            const prettyModalClose = document.getElementById('prettyModalClose');
+            const closePrettyModalBtn = document.getElementById('closePrettyModalBtn');
+            const prettyPreview = document.getElementById('prettyPreview');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const downloadPrettyBtn = document.getElementById('downloadPrettyBtn');
+
+            // Upload area click handler
+            uploadArea.addEventListener('click', function() {
+                fileInput.click();
+            });
+
+            // File input change handler
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    const file = e.target.files[0];
+                    if (file.type !== 'application/pdf') {
+                        alert('Vui lòng chọn file PDF');
+                        return;
+                    }
+                    if (file.size > 10 * 1024 * 1024) {
+                        alert('File quá lớn. Kích thước tối đa là 10MB');
+                        return;
+                    }
+                    
+                    // Update upload area UI
+                    uploadArea.innerHTML = `
+                        <div class="upload-icon">
+                            <i class="fas fa-check-circle" style="color: var(--success)"></i>
+                        </div>
+                        <div class="upload-text">${file.name}</div>
+                        <div class="upload-hint">${(file.size / 1024 / 1024).toFixed(2)} MB</div>
+                    `;
+                }
+            });
+
+            // Drag and drop handlers
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                // uploadArea.style.borderColor = var('--primary');
+                uploadArea.style.backgroundColor = 'rgba(79, 70, 229, 0.1)';
+            });
+
+            uploadArea.addEventListener('dragleave', function() {
+                // uploadArea.style.borderColor = var('--border');
+                uploadArea.style.backgroundColor = '';
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                // uploadArea.style.borderColor = var('--border');
+                uploadArea.style.backgroundColor = '';
+                
+                if (e.dataTransfer.files.length > 0) {
+                    fileInput.files = e.dataTransfer.files;
+                    const event = new Event('change');
+                    fileInput.dispatchEvent(event);
+                }
+            });
+
+            // Generate exam button handler
+            generateBtn.addEventListener('click', function() {
+                if (!fileInput.files.length) {
+                    alert('Vui lòng tải lên file giáo trình');
+                    return;
+                }
+                
+                const faculty = document.getElementById('faculty').value;
+                const department = document.getElementById('department').value;
+                const subject = document.getElementById('subject').value;
+                
+                if (!faculty || !department || !subject) {
+                    alert('Vui lòng chọn đầy đủ thông tin khoa, bộ môn và môn học');
+                    return;
+                }
+                
+                // Show loading state
+                modalBody.innerHTML = `
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                        <div class="loading-text">Đang tạo đề thi từ giáo trình...</div>
+                    </div>
+                `;
+                
+                examModal.classList.add('active');
+                
+                // Simulate AI processing delay
+                setTimeout(() => {
+                    // Get form values
+                    const examType = document.getElementById('examType').value;
+                    const questionCount = document.getElementById('questionCount').value;
+                    const difficulty = document.getElementById('difficulty').value;
+                    
+                    // Generate sample exam based on selected options
+                    const examContent = generateSampleExam(
+                        faculty, 
+                        department, 
+                        subject, 
+                        examType, 
+                        questionCount, 
+                        difficulty
+                    );
+                    
+                    // Display in modal
+                    modalBody.innerHTML = `
+                        <div class="exam-content">${examContent}</div>
+                    `;
+                    
+                    // Generate pretty preview
+                    generatePrettyPreview(
+                        faculty, 
+                        department, 
+                        subject, 
+                        examType, 
+                        questionCount, 
+                        difficulty
+                    );
+                }, 2000);
+            });
+
+            // Reset button handler
+            resetBtn.addEventListener('click', function() {
+                fileInput.value = '';
+                uploadArea.innerHTML = `
+                    <div class="upload-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="upload-text">Kéo thả file PDF giáo trình vào đây hoặc nhấn để chọn file</div>
+                    <div class="upload-hint">Chỉ hỗ trợ file PDF với kích thước tối đa 10MB</div>
+                `;
+                
+                document.getElementById('faculty').value = '';
+                document.getElementById('department').value = '';
+                document.getElementById('subject').value = '';
+                document.getElementById('examType').value = 'multiple';
+                document.getElementById('questionCount').value = '20';
+                document.getElementById('difficulty').value = 'medium';
+            });
+
+            // Modal close handlers
+            modalClose.addEventListener('click', closeModal);
+            closeModalBtn.addEventListener('click', closeModal);
+            prettyModalClose.addEventListener('click', closePrettyModal);
+            closePrettyModalBtn.addEventListener('click', closePrettyModal);
+
+            function closeModal() {
+                examModal.classList.remove('active');
+            }
+
+            function closePrettyModal() {
+                prettyModal.classList.remove('active');
+            }
+
+            // Prettify button handler
+            prettifyBtn.addEventListener('click', function() {
+                prettyModal.classList.add('active');
+            });
+
+            // Download buttons handlers
+            downloadBtn.addEventListener('click', function() {
+                alert('Tính năng tải xuống sẽ được thêm sau');
+            });
+
+            downloadPrettyBtn.addEventListener('click', function() {
+                alert('Tính năng tải xuống sẽ được thêm sau');
+            });
+
+            // Function to generate sample exam (simulating AI output)
+            function generateSampleExam(faculty, department, subject, examType, questionCount, difficulty) {
+                const facultyName = getFacultyName(faculty);
+                const departmentName = getDepartmentName(department);
+                const subjectName = getSubjectName(subject);
+                const examTypeName = getExamTypeName(examType);
+                
+                let examContent = `ĐỀ THI ${examTypeName.toUpperCase()}\n`;
+                examContent += `Môn: ${subjectName}\n`;
+                examContent += `Khoa: ${facultyName} - Bộ môn: ${departmentName}\n`;
+                examContent += `Số câu hỏi: ${questionCount} - Độ khó: ${difficulty}\n\n`;
+                
+                if (examType === 'multiple' || examType === 'mixed') {
+                    const mcqCount = examType === 'mixed' ? Math.floor(questionCount * 0.7) : questionCount;
+                    
+                    examContent += `PHẦN TRẮC NGHIỆM (${mcqCount} câu)\n\n`;
+                    
+                    for (let i = 1; i <= mcqCount; i++) {
+                        examContent += `Câu ${i}: ${getRandomQuestion(subject, difficulty)}\n`;
+                        examContent += `A. ${getRandomOption()}\n`;
+                        examContent += `B. ${getRandomOption()}\n`;
+                        examContent += `C. ${getRandomOption()}\n`;
+                        examContent += `D. ${getRandomOption()}\n\n`;
+                    }
+                }
+                
+                if (examType === 'essay' || examType === 'mixed') {
+                    const essayCount = examType === 'mixed' ? questionCount - Math.floor(questionCount * 0.7) : questionCount;
+                    
+                    examContent += `PHẦN TỰ LUẬN (${essayCount} câu)\n\n`;
+                    
+                    for (let i = 1; i <= essayCount; i++) {
+                        examContent += `Câu ${i}: ${getRandomEssayQuestion(subject, difficulty)}\n\n`;
+                    }
+                }
+                
+                return examContent;
+            }
+            
+            // Function to generate pretty preview
+            function generatePrettyPreview(faculty, department, subject, examType, questionCount, difficulty) {
+                const facultyName = getFacultyName(faculty);
+                const departmentName = getDepartmentName(department);
+                const subjectName = getSubjectName(subject);
+                const examTypeName = getExamTypeName(examType);
+                
+                let html = `
+                    <div class="preview-header">
+                        <div class="preview-title">ĐỀ THI ${examTypeName.toUpperCase()}</div>
+                        <div class="preview-subtitle">Môn: ${subjectName}</div>
+                        <div class="preview-info">
+                            <div>Khoa: ${facultyName}</div>
+                            <div>Bộ môn: ${departmentName}</div>
+                            <div>Thời gian: 60 phút</div>
+                        </div>
+                    </div>
+                `;
+                
+                if (examType === 'multiple' || examType === 'mixed') {
+                    const mcqCount = examType === 'mixed' ? Math.floor(questionCount * 0.7) : questionCount;
+                    
+                    html += `<h3>PHẦN TRẮC NGHIỆM (${mcqCount} câu - ${mcqCount * 0.5} điểm)</h3>`;
+                    
+                    for (let i = 1; i <= mcqCount; i++) {
+                        html += `
+                            <div class="question">
+                                <div class="question-text">Câu ${i}: ${getRandomQuestion(subject, difficulty)}</div>
+                                <div class="options">
+                                    <div class="option">A. ${getRandomOption()}</div>
+                                    <div class="option">B. ${getRandomOption()}</div>
+                                    <div class="option">C. ${getRandomOption()}</div>
+                                    <div class="option">D. ${getRandomOption()}</div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+                
+                if (examType === 'essay' || examType === 'mixed') {
+                    const essayCount = examType === 'mixed' ? questionCount - Math.floor(questionCount * 0.7) : questionCount;
+                    
+                    html += `<h3>PHẦN TỰ LUẬN (${essayCount} câu - ${essayCount * 1.5} điểm)</h3>`;
+                    
+                    for (let i = 1; i <= essayCount; i++) {
+                        html += `
+                            <div class="question">
+                                <div class="question-text">Câu ${i}: ${getRandomEssayQuestion(subject, difficulty)}</div>
+                                <div style="height: 100px; border-bottom: 1px dashed var(--border); margin-top: 1rem;"></div>
+                            </div>
+                        `;
+                    }
+                }
+                
+                prettyPreview.innerHTML = html;
+            }
+            
+            // Helper functions
+            function getFacultyName(code) {
+                const faculties = {
+                    'cntt': 'Công nghệ thông tin',
+                    'dtvt': 'Điện tử viễn thông',
+                    'ck': 'Cơ khí',
+                    'xd': 'Xây dựng',
+                    'kt': 'Kinh tế'
+                };
+                return faculties[code] || code;
+            }
+            
+            function getDepartmentName(code) {
+                const departments = {
+                    'httt': 'Hệ thống thông tin',
+                    'mmt': 'Mạng máy tính',
+                    'khmt': 'Khoa học máy tính',
+                    'ktpm': 'Kỹ thuật phần mềm'
+                };
+                return departments[code] || code;
+            }
+            
+            function getSubjectName(code) {
+                const subjects = {
+                    'csdl': 'Cơ sở dữ liệu',
+                    'ltw': 'Lập trình web',
+                    'ptud': 'Phân tích thiết kế hệ thống',
+                    'ai': 'Trí tuệ nhân tạo'
+                };
+                return subjects[code] || code;
+            }
+            
+            function getExamTypeName(code) {
+                const types = {
+                    'multiple': 'Trắc nghiệm',
+                    'essay': 'Tự luận',
+                    'mixed': 'Trắc nghiệm + Tự luận'
+                };
+                return types[code] || code;
+            }
+            
+            function getRandomQuestion(subject, difficulty) {
+                const questions = {
+                    'csdl': [
+                        'Mô hình dữ liệu quan hệ được đề xuất bởi ai?',
+                        'Khóa chính trong CSDL là gì?',
+                        'Chức năng của mệnh đề GROUP BY trong SQL là gì?',
+                        'Ràng buộc toàn vẹn nào đảm bảo mỗi bộ dữ liệu là duy nhất?',
+                        'Phép chiếu trong đại số quan hệ dùng để làm gì?'
+                    ],
+                    'ltw': [
+                        'Giao thức HTTP là gì?',
+                        'Thẻ HTML nào dùng để chèn hình ảnh?',
+                        'CSS dùng để làm gì trong trang web?',
+                        'JavaScript là ngôn ngữ lập trình phía nào?',
+                        'AJAX là viết tắt của cụm từ gì?'
+                    ],
+                    'ptud': [
+                        'Mục đích của phân tích yêu cầu là gì?',
+                        'Sơ đồ use case dùng để làm gì?',
+                        'Mô hình ERD là viết tắt của gì?',
+                        'SDLC là viết tắt của cụm từ nào?',
+                        'Phương pháp Agile có đặc điểm gì nổi bật?'
+                    ],
+                    'ai': [
+                        'Học máy là gì?',
+                        'Mạng neural nhân tạo mô phỏng cái gì?',
+                        'Thuật toán nào dùng cho bài toán phân loại?',
+                        'Overfitting trong học máy là gì?',
+                        'Học có giám sát khác gì học không giám sát?'
+                    ]
+                };
+                
+                const hardQuestions = {
+                    'csdl': [
+                        'Phân biệt giữa 2PL và timestamp ordering protocol',
+                        'Giải thích hiện tượng phantom read trong transaction',
+                        'Các bước chuẩn hóa CSDL lên dạng BCNF',
+                        'Ưu nhược điểm của index trong CSDL',
+                        'Cơ chế hoạt động của materialized view'
+                    ],
+                    'ltw': [
+                        'Cơ chế hoạt động của virtual DOM trong React',
+                        'So sánh REST và GraphQL',
+                        'Cách thức JWT hoạt động trong xác thực',
+                        'Giải thích Same-Origin Policy và CORS',
+                        'WebSockets khác gì HTTP thông thường'
+                    ],
+                    'ptud': [
+                        'Phân biệt giữa cohesion và coupling',
+                        'Các nguyên tắc SOLID trong thiết kế phần mềm',
+                        'Ưu nhược điểm của microservices architecture',
+                        'Các mẫu thiết kế thường dùng trong ứng dụng enterprise',
+                        'Cách thức triển khai CI/CD pipeline'
+                    ],
+                    'ai': [
+                        'Giải thích vanishing gradient problem trong deep learning',
+                        'So sánh RNN và LSTM',
+                        'Cơ chế attention trong transformer hoạt động như thế nào',
+                        'Ưu nhược điểm của GAN so với VAE',
+                        'Cách thức hoạt động của reinforcement learning'
+                    ]
+                };
+                
+                const questionPool = difficulty === 'hard' 
+                    ? hardQuestions[subject] || questions[subject] 
+                    : questions[subject];
+                
+                return questionPool ? questionPool[Math.floor(Math.random() * questionPool.length)] : 'Câu hỏi mẫu về ' + subject;
+            }
+            
+            function getRandomOption() {
+                const options = [
+                    'Là một thành phần quan trọng trong hệ thống',
+                    'Giúp cải thiện hiệu suất đáng kể',
+                    'Được sử dụng rộng rãi trong các ứng dụng',
+                    'Cung cấp tính năng bảo mật nâng cao',
+                    'Hỗ trợ đa nền tảng',
+                    'Yêu cầu cấu hình phần cứng mạnh',
+                    'Tương thích với nhiều ngôn ngữ lập trình',
+                    'Được phát triển bởi các công ty lớn',
+                    'Có cộng đồng hỗ trợ đông đảo',
+                    'Đang là xu hướng trong những năm gần đây'
+                ];
+                return options[Math.floor(Math.random() * options.length)];
+            }
+            
+            function getRandomEssayQuestion(subject, difficulty) {
+                const questions = {
+                    'csdl': [
+                        'Trình bày các bước thiết kế một CSDL quan hệ từ yêu cầu nghiệp vụ.',
+                        'Phân tích các dạng chuẩn hóa CSDL và lợi ích của việc chuẩn hóa.',
+                        'So sánh giữa transaction trong CSDL và ACID properties.'
+                    ],
+                    'ltw': [
+                        'Trình bày kiến trúc của một ứng dụng web hiện đại và vai trò của từng thành phần.',
+                        'Phân tích các phương pháp tối ưu hiệu suất cho ứng dụng web.',
+                        'So sánh giữa các framework front-end phổ biến hiện nay.'
+                    ],
+                    'ptud': [
+                        'Trình bày quy trình phát triển phần mềm theo mô hình Agile.',
+                        'Phân tích các yếu tố ảnh hưởng đến chất lượng phần mềm.',
+                        'Thiết kế sơ đồ use case cho hệ thống quản lý thư viện.'
+                    ],
+                    'ai': [
+                        'Trình bày các bước xây dựng một mô hình học máy từ dữ liệu thô.',
+                        'Phân tích ưu nhược điểm của các thuật toán phân loại phổ biến.',
+                        'Ứng dụng của xử lý ngôn ngữ tự nhiên trong thực tế.'
+                    ]
+                };
+                
+                const hardQuestions = {
+                    'csdl': [
+                        'Phân tích các giải pháp tối ưu hóa truy vấn phức tạp trong hệ quản trị CSDL quan hệ.',
+                        'Đánh giá các cơ chế phục hồi sau sự cố trong các hệ thống CSDL phân tán.',
+                        'Thiết kế lược đồ CSDL cho hệ thống lớn với yêu cầu hiệu năng cao.'
+                    ],
+                    'ltw': [
+                        'Phân tích các vấn đề bảo mật trong ứng dụng web và giải pháp phòng ngừa.',
+                        'Thiết kế kiến trúc microservices cho ứng dụng web quy mô enterprise.',
+                        'Đánh giá hiệu năng của các phương pháp render phía server so với client.'
+                    ],
+                    'ptud': [
+                        'Phân tích các thách thức khi chuyển đổi từ mô hình waterfall sang agile.',
+                        'Thiết kế hệ thống phần mềm có khả năng mở rộng cao.',
+                        'Đánh giá các phương pháp kiểm thử phần mềm tự động.'
+                    ],
+                    'ai': [
+                        'Phân tích các thách thức trong training mô hình deep learning với dữ liệu không cân bằng.',
+                        'Thiết kế hệ thống recommendation cho nền tảng thương mại điện tử lớn.',
+                        'Đánh giá các phương pháp xử lý vấn đề overfitting trong học máy.'
+                    ]
+                };
+                
+                const questionPool = difficulty === 'hard' 
+                    ? hardQuestions[subject] || questions[subject] 
+                    : questions[subject];
+                
+                return questionPool ? questionPool[Math.floor(Math.random() * questionPool.length)] : 'Câu hỏi tự luận mẫu về ' + subject;
+            }
+        });
+    </script>
+</body>
+</html>
