@@ -16,14 +16,15 @@ from werkzeug.utils import secure_filename
 # Cấu hình kết nối đến MySQL
 DB_CONFIG = {
     'host': 'localhost',
-    'user': 'root',
-    'password': '',
-    'database': 'test',
+    'user': 'mmddllg_huehub',
+    'password': 'Ngoctruong123@',
+    'database': 'mmddllg_huehub',
     'charset': 'utf8mb4'
 }
 
+
 # Khởi tạo ứng dụng Flask
-app = Flask(__name__, template_folder='templates')
+app = Flask(__name__, template_folder='templates_v2')
 app.secret_key = 'your_secret_key'  # Nên là chuỗi bảo mật, dùng riêng tư
 
 # Hàm tiện lợi để lấy kết nối
@@ -511,13 +512,14 @@ def get_viewed_documents():
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
 
-        # Truy vấn join qua document_id
+        # Truy vấn join qua document_id, đã có d.document_type
         query = """
             SELECT 
                 d.id AS document_id,
                 d.file_path,
                 d.file_name,
                 d.file_size,
+                d.year,
                 d.document_type,
                 vd.viewed_at,
                 s.name AS subject_name,
@@ -541,16 +543,17 @@ def get_viewed_documents():
         viewed_list = []
         for row in rows:
             viewed_list.append({
-                'id': row['document_id'],
-                'name': row['file_name'],
-                'type': get_file_type(row['file_name']),
-                'size': format_file_size(row['file_size']),
-                'purchaseDate': row['viewed_at'].strftime('%d/%m/%Y'),
-                'path': row['file_path'],
-                'document_type': row['document_type'],
-                'subject_name': row['subject_name'],
-                'faculty_name': row['faculty_name'],
-                'school_name': row['school_name']
+                'id'           : row['document_id'],
+                'name'         : row['file_name'],
+                'file_type'    : get_file_type(row['file_name']),  # giữ phần mở rộng
+                'size'         : format_file_size(row['file_size']),
+                'purchaseDate' : row['viewed_at'].strftime('%d/%m/%Y'),
+                'path'         : row['file_path'],
+                'year'         : row['year'],
+                'type'         : row['document_type'],             # exam|syllabus
+                'subject_name' : row['subject_name'],
+                'faculty_name' : row['faculty_name'],
+                'school_name'  : row['school_name']
             })
 
         return jsonify(viewed_list), 200
