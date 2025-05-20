@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Tạo Đề Thi Tự Động</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <link rel="stylesheet" href="../static/css/app.css">
+    <link rel="stylesheet" href="../static/css/tao-de-thi.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+            <h1 class="header-title">Tạo Đề Thi Tự Động</h1>
+            <div class="header-actions">
+                <div class="header-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </div>
+                <div class="header-icon theme-icon">
+                    <i class="fas fa-moon"></i>
+                </div>
+                <div class="user-avatar">GV</div>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <div class="sidebar-title">Hệ Thống Tạo Đề Thi</div>
+                    <div class="sidebar-group">Trường Đại Học Công Nghệ</div>
+                </div>
+            </div>
+
+            <div class="sidebar-nav">
+                <a href="#" class="nav-item active">
+                    <div class="nav-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <div class="nav-text">Trang chủ</div>
+                </a>
+               
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="theme-toggle">
+                    <div class="theme-btn active" data-theme="light">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <div class="theme-btn" data-theme="dark">
+                        <i class="fas fa-moon"></i>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="main-content">
+            <div class="upload-section">
+                <!-- <h2 class="section-title">Tạo đề thi từ giáo trình và đề cương</h2> -->
+                
+                <div class="upload-group">
+                    <!-- Curriculum Upload -->
+                    <div class="upload-area" id="curriculumUploadArea">
+                        <div class="upload-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div class="upload-text">Kéo thả file PDF giáo trình vào đây hoặc nhấn để chọn file</div>
+                        <div class="upload-hint">Chỉ hỗ trợ file PDF với kích thước tối đa 10MB</div>
+                        <div class="progress-bar" id="curriculumProgressBar">
+                            <div class="progress-fill" id="curriculumProgressFill"></div>
+                        </div>
+                        <input type="file" id="curriculumFileInput" accept=".pdf" style="display: none;">
+                    </div>
+                    
+                    <!-- Syllabus Upload -->
+                    <div class="upload-area" id="syllabusUploadArea">
+                        <div class="upload-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="upload-text">Kéo thả file PDF đề cương vào đây hoặc nhấn để chọn file (tùy chọn)</div>
+                        <div class="upload-hint">Chỉ hỗ trợ file PDF với kích thước tối đa 10MB</div>
+                        <div class="progress-bar" id="syllabusProgressBar">
+                            <div class="progress-fill" id="syllabusProgressFill"></div>
+                        </div>
+                        <input type="file" id="syllabusFileInput" accept=".pdf" style="display: none;">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="faculty" class="form-label">Khoa</label>
+                    <select id="faculty" class="form-select">
+                        <option value="">-- Chọn khoa --</option>
+                        <option value="cntt">Công nghệ thông tin</option>
+                        <option value="dtvt">Điện tử viễn thông</option>
+                        <option value="ck">Cơ khí</option>
+                        <option value="xd">Xây dựng</option>
+                        <option value="kt">Kinh tế</option>
+                    </select>
+                    <div class="error-message">Vui lòng chọn khoa</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="department" class="form-label">Bộ môn</label>
+                    <select id="department" class="form-select">
+                        <option value="">-- Chọn bộ môn --</option>
+                        <option value="httt">Hệ thống thông tin</option>
+                        <option value="mmt">Mạng máy tính</option>
+                        <option value="khmt">Khoa học máy tính</option>
+                        <option value="ktpm">Kỹ thuật phần mềm</option>
+                    </select>
+                    <div class="error-message">Vui lòng chọn bộ môn</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="subject" class="form-label">Môn học</label>
+                    <select id="subject" class="form-select">
+                        <option value="">-- Chọn môn học --</option>
+                        <option value="csdl">Cơ sở dữ liệu</option>
+                        <option value="ltw">Lập trình web</option>
+                        <option value="ptud">Phân tích thiết kế hệ thống</option>
+                        <option value="ai">Trí tuệ nhân tạo</option>
+                    </select>
+                    <div class="error-message">Vui lòng chọn môn học</div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button id="generateBtn" class="btn btn-primary">
+                        <i class="fas fa-magic btn-icon"></i> Tạo đề thi
+                    </button>
+                    <button id="resetBtn" class="btn btn-secondary">
+                        <i class="fas fa-redo btn-icon"></i> Làm mới
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal for exam preview -->
+    <div class="modal" id="examModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Xem trước đề thi</h3>
+                <button class="modal-close" id="modalClose">×</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Content will be inserted here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="closeModalBtn">
+                    <i class="fas fa-times btn-icon"></i> Đóng
+                </button>
+                <button class="btn btn-primary" id="copyBtn">
+                    <i class="fas fa-copy btn-icon"></i> Sao chép
+                </button>
+                <button class="btn btn-primary" id="prettifyBtn">
+                    <i class="fas fa-eye btn-icon"></i> Xem bản đẹp
+                </button>
+                <button class="btn btn-primary" id="downloadBtn">
+                    <i class="fas fa-download btn-icon"></i> Tải PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for pretty preview -->
+    <div class="modal" id="prettyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Bản đẹp đề thi</h3>
+                <button class="modal-close" id="prettyModalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="preview-container" id="prettyPreview">
+                    <!-- Pretty content will be inserted here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="closePrettyModalBtn">
+                    <i class="fas fa-times btn-icon"></i> Đóng
+                </button>
+                <button class="btn btn-primary" id="downloadPrettyBtn">
+                    <i class="fas fa-download btn-icon"></i> Tải PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const sidebar = document.querySelector('.sidebar');
+            
+            mobileMenuBtn.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                mobileMenuBtn.innerHTML = sidebar.classList.contains('active') 
+                    ? '<i class="fas fa-times"></i>' 
+                    : '<i class="fas fa-bars"></i>';
+            });
+
+            // Theme toggle
+            const themeToggle = document.querySelector('.theme-toggle');
+            const themeBtns = document.querySelectorAll('.theme-btn');
+            const body = document.body;
+            
+            themeBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const theme = this.getAttribute('data-theme');
+                    
+                    themeBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    body.setAttribute('data-theme', theme);
+                    localStorage.setItem('theme', theme);
+                    
+                    const themeIcon = document.querySelector('.theme-icon i');
+                    themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+                });
+            });
+
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            body.setAttribute('data-theme', savedTheme);
+            
+            const activeThemeBtn = document.querySelector(`.theme-btn[data-theme="${savedTheme}"]`);
+            if (activeThemeBtn) {
+                themeBtns.forEach(b => b.classList.remove('active'));
+                activeThemeBtn.classList.add('active');
+                
+                const themeIcon = document.querySelector('.theme-icon i');
+                themeIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+
+            // Exam generator functionality
+            const curriculumUploadArea = document.getElementById('curriculumUploadArea');
+            const curriculumFileInput = document.getElementById('curriculumFileInput');
+            const curriculumProgressBar = document.getElementById('curriculumProgressBar');
+            const curriculumProgressFill = document.getElementById('curriculumProgressFill');
+            const syllabusUploadArea = document.getElementById('syllabusUploadArea');
+            const syllabusFileInput = document.getElementById('syllabusFileInput');
+            const syllabusProgressBar = document.getElementById('syllabusProgressBar');
+            const syllabusProgressFill = document.getElementById('syllabusProgressFill');
+            const generateBtn = document.getElementById('generateBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const examModal = document.getElementById('examModal');
+            const modalClose = document.getElementById('modalClose');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const modalBody = document.getElementById('modalBody');
+            const prettifyBtn = document.getElementById('prettifyBtn');
+            const prettyModal = document.getElementById('prettyModal');
+            const prettyModalClose = document.getElementById('prettyModalClose');
+            const closePrettyModalBtn = document.getElementById('closePrettyModalBtn');
+            const prettyPreview = document.getElementById('prettyPreview');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const downloadPrettyBtn = document.getElementById('downloadPrettyBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            const facultySelect = document.getElementById('faculty');
+            const departmentSelect = document.getElementById('department');
+            const subjectSelect = document.getElementById('subject');
+            const { jsPDF } = window.jspdf;
+
+            // Real-time form validation
+            [facultySelect, departmentSelect, subjectSelect].forEach(select => {
+                select.addEventListener('change', function() {
+                    if (this.value) {
+                        this.classList.remove('invalid');
+                    } else {
+                        this.classList.add('invalid');
+                    }
+                });
+            });
+
+            // Upload area click handlers
+            curriculumUploadArea.addEventListener('click', function() {
+                curriculumFileInput.click();
+            });
+
+            syllabusUploadArea.addEventListener('click', function() {
+                syllabusFileInput.click();
+            });
+
+            // File input change handler with progress simulation
+            function handleFileInputChange(input, uploadArea, progressBar, progressFill) {
+                return function(e) {
+                    if (e.target.files.length > 0) {
+                        const file = e.target.files[0];
+                        if (file.type !== 'application/pdf') {
+                            alert('Vui lòng chọn file PDF');
+                            return;
+                        }
+                        if (file.size > 10 * 1024 * 1024) {
+                            alert('File quá lớn. Kích thước tối đa là 10MB');
+                            return;
+                        }
+                        
+                        // Show progress bar
+                        progressBar.classList.add('active');
+                        let progress = 0;
+                        const interval = setInterval(() => {
+                            progress += 10;
+                            progressFill.style.width = `${progress}%`;
+                            if (progress >= 100) {
+                                clearInterval(interval);
+                                progressBar.classList.remove('active');
+                                uploadArea.innerHTML = `
+                                    <div class="upload-icon">
+                                        <i class="fas fa-check-circle" style="color: var(--success)"></i>
+                                    </div>
+                                    <div class="upload-text">${file.name}</div>
+                                    <div class="upload-hint">${(file.size / 1024 / 1024).toFixed(2)} MB</div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill"></div>
+                                    </div>
+                                `;
+                                uploadArea.classList.add('active');
+                            }
+                        }, 200);
+                    }
+                };
+            }
+
+            curriculumFileInput.addEventListener('change', handleFileInputChange(
+                curriculumFileInput,
+                curriculumUploadArea,
+                curriculumProgressBar,
+                curriculumProgressFill
+            ));
+
+            syllabusFileInput.addEventListener('change', handleFileInputChange(
+                syllabusFileInput,
+                syllabusUploadArea,
+                syllabusProgressBar,
+                syllabusProgressFill
+            ));
+
+            // Drag and drop handlers
+            function handleDragAndDrop(uploadArea, fileInput) {
+                uploadArea.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    uploadArea.classList.add('active');
+                });
+
+                uploadArea.addEventListener('dragleave', function() {
+                    uploadArea.classList.remove('active');
+                });
+
+                uploadArea.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    uploadArea.classList.remove('active');
+                    
+                    if (e.dataTransfer.files.length > 0) {
+                        fileInput.files = e.dataTransfer.files;
+                        const event = new Event('change');
+                        fileInput.dispatchEvent(event);
+                    }
+                });
+            }
+
+            handleDragAndDrop(curriculumUploadArea, curriculumFileInput);
+            handleDragAndDrop(syllabusUploadArea, syllabusFileInput);
+
+            // Generate exam button handler
+            generateBtn.addEventListener('click', function() {
+                if (!curriculumFileInput.files.length) {
+                    alert('Vui lòng tải lên file giáo trình');
+                    return;
+                }
+                
+                const faculty = facultySelect.value;
+                const department = departmentSelect.value;
+                const subject = subjectSelect.value;
+                
+                if (!faculty || !department || !subject) {
+                    if (!faculty) facultySelect.classList.add('invalid');
+                    if (!department) departmentSelect.classList.add('invalid');
+                    if (!subject) subjectSelect.classList.add('invalid');
+                    alert('Vui lòng chọn đầy đủ thông tin khoa, bộ môn và môn học');
+                    return;
+                }
+                
+                // Show loading state
+                modalBody.innerHTML = `
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                        <div class="loading-text">Đang tạo đề thi từ giáo trình và đề cương...</div>
+                    </div>
+                `;
+                
+                examModal.classList.add('active');
+                
+                // Simulate AI processing delay
+                setTimeout(() => {
+                    // Generate sample exam
+                    const examContent = generateSampleExam(faculty, department, subject);
+                    
+                    // Display in modal
+                    modalBody.innerHTML = `
+                        <div class="exam-content">${examContent}</div>
+                    `;
+                    
+                    // Generate pretty preview
+                    generatePrettyPreview(faculty, department, subject);
+                }, 2000);
+            });
+
+            // Reset button handler with confirmation
+            resetBtn.addEventListener('click', function() {
+                if (confirm('Bạn có chắc muốn làm mới biểu mẫu? Tất cả dữ liệu sẽ bị xóa.')) {
+                    curriculumFileInput.value = '';
+                    syllabusFileInput.value = '';
+                    curriculumUploadArea.innerHTML = `
+                        <div class="upload-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div class="upload-text">Kéo thả file PDF giáo trình vào đây hoặc nhấn để chọn file</div>
+                        <div class="upload-hint">Chỉ hỗ trợ file PDF với kích thước tối đa 10MB</div>
+                        <div class="progress-bar" id="curriculumProgressBar">
+                            <div class="progress-fill" id="curriculumProgressFill"></div>
+                        </div>
+                    `;
+                    syllabusUploadArea.innerHTML = `
+                        <div class="upload-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="upload-text">Kéo thả file PDF đề cương vào đây hoặc nhấn để chọn file (tùy chọn)</div>
+                        <div class="upload-hint">Chỉ hỗ trợ file PDF với kích thước tối đa 10MB</div>
+                        <div class="progress-bar" id="syllabusProgressBar">
+                            <div class="progress-fill" id="syllabusProgressFill"></div>
+                        </div>
+                    `;
+                    curriculumUploadArea.classList.remove('active');
+                    syllabusUploadArea.classList.remove('active');
+                    facultySelect.value = '';
+                    departmentSelect.value = '';
+                    subjectSelect.value = '';
+                    [facultySelect, departmentSelect, subjectSelect].forEach(select => {
+                        select.classList.remove('invalid');
+                    });
+                }
+            });
+
+            // Modal close handlers
+            modalClose.addEventListener('click', closeModal);
+            closeModalBtn.addEventListener('click', closeModal);
+            prettyModalClose.addEventListener('click', closePrettyModal);
+            closePrettyModalBtn.addEventListener('click', closePrettyModal);
+
+            function closeModal() {
+                examModal.classList.remove('active');
+            }
+
+            function closePrettyModal() {
+                prettyModal.classList.remove('active');
+            }
+
+            // Prettify button handler
+            prettifyBtn.addEventListener('click', function() {
+                prettyModal.classList.add('active');
+            });
+
+            // Copy to clipboard
+            copyBtn.addEventListener('click', function() {
+                const examText = modalBody.querySelector('.exam-content').innerText;
+                navigator.clipboard.writeText(examText).then(() => {
+                    copyBtn.innerHTML = '<i class="fas fa-check btn-icon"></i> Đã sao chép';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = '<i class="fas fa-copy btn-icon"></i> Sao chép';
+                    }, 2000);
+                }).catch(() => {
+                    alert('Không thể sao chép nội dung');
+                });
+            });
+
+            // Download buttons handlers for PDF
+            downloadBtn.addEventListener('click', async function() {
+                const examContent = modalBody.querySelector('.exam-content');
+                const doc = new jsPDF();
+                
+                // Use html2canvas to capture the exam content as an image
+                const canvas = await html2canvas(examContent, {
+                    scale: 2,
+                    useCORS: true,
+                    logging: false
+                });
+                
+                const imgData = canvas.toDataURL('image/png');
+                const imgWidth = 190; // A4 width in mm minus margins
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 10;
+
+                doc.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                heightLeft -= 297 - 20; // A4 height minus margins
+
+                // Handle pagination
+                while (heightLeft > 0) {
+                    position = heightLeft - imgHeight + 10;
+                    doc.addPage();
+                    doc.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                    heightLeft -= 297 - 20;
+                }
+
+                doc.save('de_thi_tu_luan.pdf');
+            });
+
+            downloadPrettyBtn.addEventListener('click', async function() {
+                const previewContent = prettyPreview;
+                const doc = new jsPDF();
+                
+                // Add header
+                doc.setFontSize(16);
+                doc.setFont("helvetica", "bold");
+                doc.text("ĐỀ THI TỰ LUẬN", 105, 20, { align: "center" });
+                doc.setFontSize(14);
+                doc.text(`Môn: ${getSubjectName(subjectSelect.value)}`, 105, 30, { align: "center" });
+                doc.setFontSize(12);
+                doc.setFont("helvetica", "normal");
+                doc.text(`Khoa: ${getFacultyName(facultySelect.value)}`, 20, 45);
+                doc.text(`Bộ môn: ${getDepartmentName(departmentSelect.value)}`, 20, 55);
+                doc.text(`Đề cương: ${syllabusFileInput.files.length ? syllabusFileInput.files[0].name : 'Không có'}`, 20, 65);
+                doc.text("Thời gian: 90 phút", 20, 75);
+                doc.setFont("helvetica", "bold");
+                doc.text("PHẦN TỰ LUẬN (5 câu - 10 điểm)", 20, 85);
+
+                let y = 95;
+
+                // Process the preview content
+                const questions = previewContent.querySelectorAll('.question');
+                for (let i = 0; i < questions.length; i++) {
+                    const question = questions[i];
+                    const questionText = question.querySelector('.question-text').innerHTML;
+                    const images = question.querySelectorAll('img');
+                    const tables = question.querySelectorAll('table');
+
+                    if (y > 270) {
+                        doc.addPage();
+                        y = 20;
+                    }
+
+                    // Add question text
+                    doc.setFont("helvetica", "bold");
+                    doc.text(questionText, 20, y);
+                    y += 10;
+
+                    // Handle images
+                    for (let img of images) {
+                        if (y > 270) {
+                            doc.addPage();
+                            y = 20;
+                        }
+                        const imgData = await getImageData(img);
+                        if (imgData) {
+                            const imgWidth = 100; // Limit image width
+                            const imgHeight = (img.height * imgWidth) / img.width;
+                            doc.addImage(imgData, 'PNG', 20, y, imgWidth, imgHeight);
+                            y += imgHeight + 10;
+                        }
+                    }
+
+                    // Handle tables
+                    for (let table of tables) {
+                        if (y > 270) {
+                            doc.addPage();
+                            y = 20;
+                        }
+                        const tableData = parseTable(table);
+                        doc.autoTable({
+                            startY: y,
+                            head: tableData.head,
+                            body: tableData.body,
+                            theme: 'grid',
+                            styles: { fontSize: 10 },
+                            headStyles: { fillColor: [79, 70, 229], textColor: [255, 255, 255] },
+                            margin: { left: 20 }
+                        });
+                        y = doc.lastAutoTable.finalY + 10;
+                    }
+                }
+
+                doc.save('de_thi_tu_luan_dep.pdf');
+            });
+
+            // Helper function to get image data
+            async function getImageData(imgElement) {
+                if (imgElement.src.startsWith('data:image')) {
+                    return imgElement.src;
+                }
+                try {
+                    const response = await fetch(imgElement.src, { mode: 'cors' });
+                    const blob = await response.blob();
+                    return new Promise(resolve => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => resolve(reader.result);
+                        reader.readAsDataURL(blob);
+                    });
+                } catch (e) {
+                    console.error('Error fetching image:', e);
+                    return null;
+                }
+            }
+
+            // Helper function to parse table
+            function parseTable(tableElement) {
+                const head = [];
+                const body = [];
+                const thead = tableElement.querySelector('thead');
+                if (thead) {
+                    const headers = thead.querySelectorAll('th');
+                    head.push(Array.from(headers).map(th => th.innerText));
+                }
+                const rows = tableElement.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    body.push(Array.from(cells).map(cell => cell.innerText));
+                });
+                return { head, body };
+            }
+
+            // Function to generate sample exam (simulating AI output as HTML)
+            function generateSampleExam(faculty, department, subject) {
+                const facultyName = getFacultyName(faculty);
+                const departmentName = getDepartmentName(department);
+                const subjectName = getSubjectName(subject);
+                const syllabusFileName = syllabusFileInput.files.length ? syllabusFileInput.files[0].name : 'Không có';
+                
+                let examContent = `
+                    <h2>ĐỀ THI TỰ LUẬN</h2>
+                    <p><strong>Môn:</strong> ${subjectName}</p>
+                    <p><strong>Khoa:</strong> ${facultyName} - <strong>Bộ môn:</strong> ${departmentName}</p>
+                    <p><strong>Đề cương:</strong> ${syllabusFileName}</p>
+                    <p><strong>Số câu hỏi:</strong> 5</p>
+                    <h3>PHẦN TỰ LUẬN (5 câu)</h3>
+                `;
+                
+                for (let i = 1; i <= 5; i++) {
+                    const question = getRandomEssayQuestion(subject, syllabusFileInput.files.length > 0);
+                    examContent += `
+                        <div class="question">
+                            <p class="question-text">Câu ${i} (2 điểm): ${question}</p>
+                            ${i % 2 === 0 ? `
+                                <img src="https://via.placeholder.com/200x100" alt="Sample Image">
+                            ` : ''}
+                            ${i === 3 ? `
+                                <table>
+                                    <thead>
+                                        <tr><th>Tiêu chí</th><th>Điểm</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>Nội dung</td><td>1.0</td></tr>
+                                        <tr><td>Trình bày</td><td>0.5</td></tr>
+                                        <tr><td>Tính chính xác</td><td>0.5</td></tr>
+                                    </tbody>
+                                </table>
+                            ` : ''}
+                        </div>
+                    `;
+                }
+                
+                return examContent;
+            }
+            
+            // Function to generate pretty preview
+            function generatePrettyPreview(faculty, department, subject) {
+                const facultyName = getFacultyName(faculty);
+                const departmentName = getDepartmentName(department);
+                const subjectName = getSubjectName(subject);
+                const syllabusFileName = syllabusFileInput.files.length ? syllabusFileInput.files[0].name : 'Không có';
+                
+                let html = `
+                    <div class="preview-header">
+                        <div class="preview-title">ĐỀ THI TỰ LUẬN</div>
+                        <div class="preview-subtitle">Môn: ${subjectName}</div>
+                        <div class="preview-info">
+                            <div>Khoa: ${facultyName}</div>
+                            <div>Bộ môn: ${departmentName}</div>
+                            <div>Đề cương: ${syllabusFileName}</div>
+                            <div>Thời gian: 90 phút</div>
+                        </div>
+                    </div>
+                    <h3>PHẦN TỰ LUẬN (5 câu - 10 điểm)</h3>
+                `;
+                
+                for (let i = 1; i <= 5; i++) {
+                    const question = getRandomEssayQuestion(subject, syllabusFileInput.files.length > 0);
+                    html += `
+                        <div class="question">
+                            <div class="question-text">Câu ${i} (2 điểm): ${question}</div>
+                            ${i % 2 === 0 ? `
+                                <img src="https://via.placeholder.com/200x100" alt="Sample Image">
+                            ` : ''}
+                            ${i === 3 ? `
+                                <table>
+                                    <thead>
+                                        <tr><th>Tiêu chí</th><th>Điểm</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>Nội dung</td><td>1.0</td></tr>
+                                        <tr><td>Trình bày</td><td>0.5</td></tr>
+                                        <tr><td>Tính chính xác</td><td>0.5</td></tr>
+                                    </tbody>
+                                </table>
+                            ` : ''}
+                        </div>
+                    `;
+                }
+                
+                prettyPreview.innerHTML = html;
+            }
+            
+            // Helper functions
+            function getFacultyName(code) {
+                const faculties = {
+                    'cntt': 'Công nghệ thông tin',
+                    'dtvt': 'Điện tử viễn thông',
+                    'ck': 'Cơ khí',
+                    'xd': 'Xây dựng',
+                    'kt': 'Kinh tế'
+                };
+                return faculties[code] || code;
+            }
+            
+            function getDepartmentName(code) {
+                const departments = {
+                    'httt': 'Hệ thống thông tin',
+                    'mmt': 'Mạng máy tính',
+                    'khmt': 'Khoa học máy tính',
+                    'ktpm': 'Kỹ thuật phần mềm'
+                };
+                return departments[code] || code;
+            }
+            
+            function getSubjectName(code) {
+                const subjects = {
+                    'csdl': 'Cơ sở dữ liệu',
+                    'ltw': 'Lập trình web',
+                    'ptud': 'Phân tích thiết kế hệ thống',
+                    'ai': 'Trí tuệ nhân tạo'
+                };
+                return subjects[code] || code;
+            }
+            
+            function getRandomEssayQuestion(subject, hasSyllabus) {
+                const essayQuestions = {
+                    'csdl': [
+                        hasSyllabus ? 'Hãy giải thích khái niệm chuẩn hóa cơ sở dữ liệu và các dạng chuẩn cơ bản (1NF, 2NF, 3NF) theo đề cương.' : 'Hãy giải thích khái niệm chuẩn hóa cơ sở dữ liệu và các dạng chuẩn cơ bản (1NF, 2NF, 3NF).',
+                        hasSyllabus ? 'Phân tích vai trò của khóa chính và khóa ngoại trong thiết kế cơ sở dữ liệu quan hệ, dựa trên đề cương.' : 'Phân tích vai trò của khóa chính và khóa ngoại trong thiết kế cơ sở dữ liệu quan hệ.',
+                        hasSyllabus ? 'Mô tả cách sử dụng câu lệnh JOIN trong SQL và cung cấp ví dụ minh họa từ đề cương.' : 'Mô tả cách sử dụng câu lệnh JOIN trong SQL và cung cấp ví dụ minh họa.',
+                        hasSyllabus ? 'Hãy giải thích cách hoạt động của chỉ mục (index) trong cơ sở dữ liệu và lợi ích của nó theo đề cương.' : 'Hãy giải thích cách hoạt động của chỉ mục (index) trong cơ sở dữ liệu và lợi ích của nó.',
+                        hasSyllabus ? 'So sánh các hệ quản trị cơ sở dữ liệu quan hệ và phi quan hệ, đưa ra ví dụ cụ thể từ đề cương.' : 'So sánh các hệ quản trị cơ sở dữ liệu quan hệ và phi quan hệ, đưa ra ví dụ cụ thể.'
+                    ],
+                    'ltw': [
+                        hasSyllabus ? 'Hãy mô tả quy trình phát triển một trang web từ giai đoạn thiết kế đến triển khai theo đề cương.' : 'Hãy mô tả quy trình phát triển một trang web từ giai đoạn thiết kế đến triển khai.',
+                        hasSyllabus ? 'Giải thích sự khác biệt giữa HTTP và HTTPS, cùng với vai trò của SSL/TLS, dựa trên đề cương.' : 'Giải thích sự khác biệt giữa HTTP và HTTPS, cùng với vai trò của SSL/TLS.',
+                        hasSyllabus ? 'Phân tích cách sử dụng CSS Flexbox để tạo bố cục giao diện responsive theo đề cương.' : 'Phân tích cách sử dụng CSS Flexbox để tạo bố cục giao diện responsive.',
+                        hasSyllabus ? 'Hãy viết một đoạn mã JavaScript để xử lý sự kiện click trên một nút và giải thích cách hoạt động theo đề cương.' : 'Hãy viết một đoạn mã JavaScript để xử lý sự kiện click trên một nút và giải thích cách hoạt động.',
+                        hasSyllabus ? 'So sánh các framework frontend như React, Vue, và Angular về tính năng và trường hợp sử dụng từ đề cương.' : 'So sánh các framework frontend như React, Vue, và Angular về tính năng và trường hợp sử dụng.'
+                    ],
+                    'ptud': [
+                        hasSyllabus ? 'Hãy mô tả quy trình phân tích yêu cầu trong phát triển phần mềm và các kỹ thuật phổ biến theo đề cương.' : 'Hãy mô tả quy trình phân tích yêu cầu trong phát triển phần mềm và các kỹ thuật phổ biến.',
+                        hasSyllabus ? 'Giải thích vai trò của sơ đồ UML (Use Case, Class Diagram) trong thiết kế hệ thống dựa trên đề cương.' : 'Giải thích vai trò của sơ đồ UML (Use Case, Class Diagram) trong thiết kế hệ thống.',
+                        hasSyllabus ? 'Phân tích ưu và nhược điểm của phương pháp phát triển phần mềm Agile so với Waterfall theo đề cương.' : 'Phân tích ưu và nhược điểm của phương pháp phát triển phần mềm Agile so với Waterfall.',
+                        hasSyllabus ? 'Hãy thiết kế một sơ đồ ERD cho hệ thống quản lý thư viện và giải thích các thành phần theo đề cương.' : 'Hãy thiết kế một sơ đồ ERD cho hệ thống quản lý thư viện và giải thích các thành phần.',
+                        hasSyllabus ? 'Mô tả cách kiểm thử hệ thống phần mềm và các loại kiểm thử phổ biến theo đề cương.' : 'Mô tả cách kiểm thử hệ thống phần mềm và các loại kiểm thử phổ biến.'
+                    ],
+                    'ai': [
+                        hasSyllabus ? 'Hãy giải thích khái niệm học máy và phân biệt giữa học có giám sát và học không giám sát theo đề cương.' : 'Hãy giải thích khái niệm học máy và phân biệt giữa học có giám sát và học không giám sát.',
+                        hasSyllabus ? 'Mô tả cách hoạt động của một mạng neural nhân tạo và ứng dụng trong thực tế dựa trên đề cương.' : 'Mô tả cách hoạt động của một mạng neural nhân tạo và ứng dụng trong thực tế.',
+                        hasSyllabus ? 'Phân tích bài toán phân loại trong học máy, đưa ra ví dụ về thuật toán và ứng dụng từ đề cương.' : 'Phân tích bài toán phân loại trong học máy, đưa ra ví dụ về thuật toán và ứng dụng.',
+                        hasSyllabus ? 'Hãy giải thích hiện tượng overfitting trong học máy và cách khắc phục theo đề cương.' : 'Hãy giải thích hiện tượng overfitting trong học máy và cách khắc phục.',
+                        hasSyllabus ? 'So sánh các thuật toán học máy như Decision Tree, SVM, và Neural Network về cách hoạt động theo đề cương.' : 'So sánh các thuật toán học máy như Decision Tree, SVM, và Neural Network về cách hoạt động.'
+                    ]
+                };
+                
+                const questionPool = essayQuestions[subject];
+                return questionPool ? questionPool[Math.floor(Math.random() * questionPool.length)] : 'Câu hỏi tự luận mẫu về ' + subject;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -135,14 +135,33 @@ def format_file_size(size_bytes):
     return f"{size:.2f} {size_units[i]}"
 @app.route('/check-session', methods=['GET'])
 def check_session():
-    if 'user_id' in session:
-        return jsonify({
-            'loggedIn': True,
-            'user_id': session.get('user_id'),  # Trả về user_id từ session
-            'username': session.get('username')
-        }), 200
-    else:
+    user_id = session.get('user_id')
+
+    if not user_id:
         return jsonify({'loggedIn': False}), 200
+
+    # Kiểm tra user_id có trong CSDL không
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('SELECT id FROM users WHERE id = %s', (user_id,))
+        user = cursor.fetchone()
+        cursor.close()
+        conn.close()
+
+        if user:
+            return jsonify({
+                'loggedIn': True,
+                'user_id': user_id,
+                'username': session.get('username')
+            }), 200
+        else:
+            # user_id không tồn tại trong CSDL
+            session.clear()  # Xóa session luôn cho chắc
+            return jsonify({'loggedIn': False}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 # Hàm định dạng kích thước file
 def format_file_size(size_bytes):
     if size_bytes == 0:
