@@ -30,14 +30,11 @@
     <!-- Favicon & Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../static/css/app.css">
     <link rel="stylesheet" href="../static/css/exams.css">
     <link rel="shortcut icon" href="../static/img/logo.png" type="image/x-icon">
-
 </head>
+
 <body>
     <div class="app-container">
         <header class="header">
@@ -46,7 +43,6 @@
             </div>
             <h1 class="header-title">Thư viện đề thi</h1>
             <div class="header-actions">
-
                 <div class="header-icon theme-icon">
                     <i class="fas fa-moon"></i>
                 </div>
@@ -54,7 +50,7 @@
             </div>
         </header>
 
-      <nav class="sidebar">
+        <nav class="sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-logo" style="font-size: 32px; color: #007bff;">
                     <i class="fas fa-file-alt"></i>
@@ -66,31 +62,24 @@
             </div>
 
             <div class="sidebar-nav">
-                <!-- 1. Trang chủ -->
                 <a href="/" class="nav-item">
                     <div class="nav-icon">
                         <i class="fas fa-home"></i>
                     </div>
                     <div class="nav-text">Trang chủ</div>
                 </a>
-
-                <!-- 2. Đề Thi -->
                 <a href="#" class="nav-item active">
                     <div class="nav-icon">
                         <i class="fas fa-file-alt"></i>
                     </div>
                     <div class="nav-text">Đề Thi</div>
                 </a>
-
-                <!-- 3. Tài liệu của bạn (lịch sử mua hoặc upload) -->
                 <a href="/lichsumua" class="nav-item">
                     <div class="nav-icon">
                         <i class="fas fa-folder-open"></i>
                     </div>
                     <div class="nav-text">Tài liệu của bạn</div>
                 </a>
-
-                <!-- 4. Quy đổi lượt xem -->
                 <a href="/quydoi" class="nav-item">
                     <div class="nav-icon">
                         <i class="fas fa-exchange-alt"></i>
@@ -98,7 +87,6 @@
                     <div class="nav-text">Quy đổi lượt xem</div>
                 </a>
             </div>
-
 
             <div class="sidebar-footer">
                 <div class="theme-toggle">
@@ -111,6 +99,7 @@
                 </div>
             </div>
         </nav>
+
         <main class="main-content">
             <div class="repo-header">
                 <div class="repo-actions">
@@ -151,31 +140,31 @@
                 <button class="modal-close" id="filterModalClose">×</button>
             </div>
             <div class="modal-body">
-                <div class="form-group">
+                <div class="form-group" id="schoolFilterGroup">
                     <label class="form-label">Trường</label>
                     <select class="form-control form-select" id="filterSchool">
                         <option value="">Tất cả trường</option>
                     </select>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="facultyFilterGroup">
                     <label class="form-label">Khoa</label>
                     <select class="form-control form-select" id="filterFaculty">
                         <option value="">Tất cả khoa</option>
                     </select>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="subjectFilterGroup">
                     <label class="form-label">Môn học</label>
                     <select class="form-control form-select" id="filterSubject">
                         <option value="">Tất cả môn</option>
                     </select>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="yearFilterGroup">
                     <label class="form-label">Năm</label>
                     <div class="filter-options" id="filterYears"></div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="documentFilterGroup">
                     <label class="form-label">Loại tài liệu</label>
-                    <div class="filter-options">
+                    <div class="filter-options" id="filterDocumentTypes">
                         <label class="filter-option">
                             <input type="checkbox" value="exam" checked> Đề thi
                         </label>
@@ -191,10 +180,12 @@
             </div>
         </div>
     </div>
+
     <div id="loadingSpinner" style="display: none; text-align: center; padding: 2rem;">
         <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary);"></i>
         <p style="color: var(--text-light); margin-top: 0.5rem;">Đang tải...</p>
     </div>
+
     <div class="modal" id="searchModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -238,6 +229,6 @@
     </div>
     <script src="../static/js/exams.js"></script>
     <script src="../static/js/app.js"></script>
-</body>
 
+</body>
 </html>

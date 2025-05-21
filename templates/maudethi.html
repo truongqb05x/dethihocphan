@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đề Thi Học Phần - Lược Khảo Chữ Hán | Dethihocphan.com</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #e74c3c;
+            --accent-color: #3498db;
+            --success-color: #2ecc71;
+            --light-bg: #f9f9f9;
+            --dark-text: #333;
+            --light-text: #777;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Noto Sans JP', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-text);
+            background-color: var(--light-bg);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 25px;
+            background-color: white;
+            box-shadow: var(--box-shadow);
+            border-radius: var(--border-radius);
+            margin-top: 30px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .header {
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .university-name {
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+        
+        .school-name {
+            color: var(--secondary-color);
+            font-weight: bold;
+            font-size: 1.4em;
+            margin-bottom: 10px;
+        }
+        
+        .exam-title {
+            text-align: center;
+            font-size: 1.8em;
+            color: var(--primary-color);
+            margin: 20px 0;
+            padding: 15px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .exam-title::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+        }
+        
+        .exam-info {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: var(--border-radius);
+        }
+        
+        .exam-info-item {
+            margin: 8px 0;
+            flex-basis: 48%;
+            display: flex;
+        }
+        
+        .exam-info-item strong {
+            min-width: 100px;
+            display: inline-block;
+            color: var(--primary-color);
+        }
+        
+        .question {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            background-color: white;
+            border-left: 4px solid var(--accent-color);
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+        
+        .question:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .question-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+        }
+        
+        .question-title::before {
+            content: "Q";
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 25px;
+            margin-right: 10px;
+            font-size: 0.8em;
+        }
+        
+        .question-content {
+            margin-bottom: 15px;
+        }
+        
+        .hanzi {
+            font-family: "Noto Sans JP", "SimSun", "STKaiti", serif;
+            font-size: 1.3em;
+            line-height: 1.8;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin: 10px 0;
+        }
+        
+        .solution-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .solution-btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .solution-btn i {
+            font-size: 0.9em;
+        }
+        
+        .solution-container {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+            border-left: 3px solid var(--accent-color);
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .solution-container h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .solution-container h3::before {
+            content: "\f058";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            color: var(--success-color);
+            margin-right: 10px;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .watermark {
+            position: absolute;
+            right: 0;
+            top: 0;
+            opacity: 0.1;
+            font-size: 5em;
+            color: var(--secondary-color);
+            z-index: -1;
+            font-weight: bold;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--light-text);
+            font-size: 0.9em;
+            padding: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        /* New features */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .toolbar-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: var(--transition);
+            border: 1px solid #ddd;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .btn:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #1a252f;
+        }
+        
+        .btn-print {
+            background-color: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+        
+        .btn-print:hover {
+            background-color: #c0392b;
+        }
+        
+        .timer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 8px 15px;
+            border-radius: var(--border-radius);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: var(--border-radius);
+            margin: 20px 0;
+            height: 10px;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            border-radius: var(--border-radius);
+            background: linear-gradient(90deg, var(--accent-color), var(--secondary-color));
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .dark-mode {
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+        }
+        
+        .dark-mode .container {
+            background-color: #2d2d2d;
+            color: #f0f0f0;
+        }
+        
+        .dark-mode .question {
+            background-color: #3a3a3a;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        
+        .dark-mode .hanzi,
+        .dark-mode .solution-container,
+        .dark-mode .exam-info {
+            background-color: #333;
+        }
+        
+        .dark-mode .exam-title {
+            background: linear-gradient(135deg, #3a3a3a 0%, #2d2d2d 100%);
+            color: #f0f0f0;
+        }
+        
+        .dark-mode .btn {
+            background-color: #333;
+            color: #f0f0f0;
+            border-color: #444;
+        }
+        
+        .dark-mode .btn:hover {
+            background-color: #444;
+        }
+        
+        .dark-mode .solution-container h3 {
+            border-bottom-color: #444;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+            
+            .exam-info-item {
+                flex-basis: 100%;
+            }
+            
+            .watermark {
+                font-size: 3em;
+            }
+            
+            .toolbar {
+                flex-direction: column;
+            }
+            
+            .toolbar-group {
+                justify-content: space-between;
+                width: 100%;
+            }
+        }
+        
+        @media print {
+            .toolbar, .solution-btn, footer {
+                display: none !important;
+            }
+            
+            .container {
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+            }
+            
+            .question {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="toolbar">
+            <div class="toolbar-group">
+                <button class="btn" id="darkModeToggle">
+                    <i class="fas fa-moon"></i> Chế độ tối
+                </button>
+                <button class="btn" id="fontSizeToggle">
+                    <i class="fas fa-text-height"></i> Cỡ chữ
+                </button>
+                <button class="btn btn-print" onclick="window.print()">
+                    <i class="fas fa-print"></i> In đề thi
+                </button>
+            </div>
+            <div class="toolbar-group">
+                <div class="timer">
+                    <i class="fas fa-clock"></i>
+                    <span id="timeDisplay">120:00</span>
+                </div>
+                <button class="btn btn-primary" id="submitBtn">
+                    <i class="fas fa-paper-plane"></i> Nộp bài
+                </button>
+            </div>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <div class="header">
+            <div class="watermark">dethihocphan.com</div>
+            <div class="university-name">ĐẠI HỌC HUẾ</div>
+            <div class="school-name">TRƯỜNG ĐẠI HỌC SƯ PHẠM</div>
+            
+            <div class="exam-info">
+                <div class="exam-info-item"><strong>Kỳ thi:</strong> Kết thúc học phần</div>
+                <div class="exam-info-item"><strong>Học kỳ:</strong> I Năm học 2024 - 2025</div>
+                <div class="exam-info-item"><strong>Môn:</strong> Lược khảo chữ Hán và văn bản Hán văn</div>
+                <div class="exam-info-item"><strong>Lớp:</strong> Văn IAB</div>
+                <div class="exam-info-item"><strong>Đề số:</strong> 1</div>
+                <div class="exam-info-item"><strong>Thời gian:</strong> 120 phút (không kể thời gian phát đề)</div>
+            </div>
+        </div>
+        
+        <div class="exam-title">
+            ĐỀ THI KẾT THÚC HỌC PHẦN
+        </div>
+        
+        <div class="question">
+            <div class="question-title">Câu I (2 điểm):</div>
+            <div class="question-content">
+                Chữ Hội ý là gì? Viết 5 chữ Hán theo lối này và phân tích cấu tạo?
+            </div>
+            <button class="solution-btn" onclick="getSolution(1)">
+                <i class="fas fa-lightbulb"></i> Xem lời giải
+            </button>
+            <div class="solution-container" id="solution-1"></div>
+        </div>
+        
+        <div class="question">
+            <div class="question-title">Câu II (3 điểm):</div>
+            <div class="question-content">
+                <p>Đọc văn bản chữ Hán dưới đây:</p>
+                <div class="hanzi">
+                    任颉盛衰无结果，颓如電影友完無，盛衰如驚訝頭緒。萬法春樂收又枯。
+                </div>
+                <p>a. Anh (chị) hãy chỉ ra những chữ sai và chép lại đúng nguyên bản.</p>
+                <p>b. Phiên âm, dịch nghĩa.</p>
+            </div>
+            <button class="solution-btn" onclick="getSolution(2)">
+                <i class="fas fa-lightbulb"></i> Xem lời giải
+            </button>
+            <div class="solution-container" id="solution-2"></div>
+        </div>
+        
+        <div class="question">
+            <div class="question-title">Câu III (3 điểm):</div>
+            <div class="question-content">
+                Viết ra chữ Hán bài thơ Kim lũ y 金缕衣 của Đỗ Thu Nương 杜秋娘. Phiên âm, dịch nghĩa và bình luận nội dung.
+            </div>
+            <button class="solution-btn" onclick="getSolution(3)">
+                <i class="fas fa-lightbulb"></i> Xem lời giải
+            </button>
+            <div class="solution-container" id="solution-3"></div>
+        </div>
+        
+        <div class="question">
+            <div class="question-title">Câu IV (2 điểm):</div>
+            <div class="question-content">
+                <p>Chép lại và dịch nghĩa văn bản chữ Hán sau:</p>
+                <div class="hanzi">
+                    不達農時、穀不可勝食也。數罟不入滲池、魚鱉不可勝食也。斧斤以時入山林材木不可勝用也。穀與魚鱉不可勝食、材木不可勝用、是使民養生喪死無憾也。養生喪死無憾、王道之始也。[梁惠王上]。
+                </div>
+            </div>
+            <button class="solution-btn" onclick="getSolution(4)">
+                <i class="fas fa-lightbulb"></i> Xem lời giải
+            </button>
+            <div class="solution-container" id="solution-4"></div>
+        </div>
+        
+        <footer>
+            <p>© 2025 dethihocphan.com - Đề thi độc quyền</p>
+            <p>Trang web chính thức cung cấp đề thi học phần các trường Đại học</p>
+        </footer>
+    </div>
+    
+    <script>
+        // DOM Elements
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const fontSizeToggle = document.getElementById('fontSizeToggle');
+        const submitBtn = document.getElementById('submitBtn');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const progressBar = document.getElementById('progressBar');
+        
+        // Timer functionality
+        let timeLeft = 120 * 60; // 120 minutes in seconds
+        let timerInterval;
+        
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+        
+        function updateTimer() {
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                timeDisplay.textContent = "Hết giờ!";
+                alert("Thời gian làm bài đã kết thúc!");
+                return;
+            }
+            
+            timeLeft--;
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timeDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Update progress bar
+            const progress = ((120 * 60 - timeLeft) / (120 * 60)) * 100;
+            progressBar.style.width = `${progress}%`;
+            
+            // Change color when time is running out
+            if (timeLeft < 300) { // 5 minutes left
+                timeDisplay.parentElement.style.backgroundColor = '#e74c3c';
+            } else if (timeLeft < 600) { // 10 minutes left
+                timeDisplay.parentElement.style.backgroundColor = '#f39c12';
+            }
+        }
+        
+        // Dark mode toggle
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i> Chế độ sáng';
+            } else {
+                darkModeToggle.innerHTML = '<i class="fas fa-moon"></i> Chế độ tối';
+            }
+        });
+        
+        // Font size toggle
+        let fontSizeIndex = 0;
+        const fontSizes = ['14px', '16px', '18px'];
+        
+        fontSizeToggle.addEventListener('click', () => {
+            fontSizeIndex = (fontSizeIndex + 1) % fontSizes.length;
+            document.body.style.fontSize = fontSizes[fontSizeIndex];
+        });
+        
+        // Submit button
+        submitBtn.addEventListener('click', () => {
+            if (confirm('Bạn có chắc chắn muốn nộp bài không?')) {
+                clearInterval(timerInterval);
+                alert('Bài thi của bạn đã được nộp thành công!');
+                submitBtn.disabled = true;
+            }
+        });
+        
+        // Start timer when page loads
+        window.addEventListener('load', startTimer);
+        
+        // Solution functionality
+        async function getSolution(questionNumber) {
+            const btn = document.querySelector(`button[onclick="getSolution(${questionNumber})"]`);
+            const solutionContainer = document.getElementById(`solution-${questionNumber}`);
+            
+            // Toggle solution visibility if already loaded
+            if (solutionContainer.innerHTML && solutionContainer.style.display !== 'none') {
+                solutionContainer.style.display = 'none';
+                btn.innerHTML = '<i class="fas fa-lightbulb"></i> Xem lời giải';
+                return;
+            }
+            
+            // Show loading state
+            btn.innerHTML = '<span class="loading"></span> Đang tải lời giải...';
+            btn.disabled = true;
+            
+            // Simulate AI response (in a real implementation, this would be an API call)
+            setTimeout(() => {
+                const solutions = {
+                    1: `<h3>Lời giải Câu I:</h3>
+                        <p><strong>Chữ Hội ý</strong> là loại chữ Hán được tạo thành bằng cách kết hợp hai hoặc nhiều chữ đơn giản để biểu thị một ý nghĩa mới từ sự kết hợp đó.</p>
+                        <p><strong>5 ví dụ chữ Hội ý:</strong></p>
+                        <ol>
+                            <li><span class="hanzi">休</span> (nghỉ ngơi) = 亻(người) + 木(cây)</li>
+                            <li><span class="hanzi">明</span> (sáng) = 日(mặt trời) + 月(mặt trăng)</li>
+                            <li><span class="hanzi">信</span> (tin tưởng) = 亻(người) + 言(lời nói)</li>
+                            <li><span class="hanzi">森</span> (rừng rậm) = 木(cây) + 木 + 木</li>
+                            <li><span class="hanzi">好</span> (tốt) = 女(phụ nữ) + 子(con trai)</li>
+                        </ol>`,
+                    2: `<h3>Lời giải Câu II:</h3>
+                        <p><strong>a. Chữ sai và bản đúng:</strong></p>
+                        <p>Bản gốc có lẽ là:</p>
+                        <div class="hanzi">盛衰有常理 颓如電光速 荣悴如驚飈 萬法春榮秋又枯</div>
+                        <p>Các chữ sai: 无结果 → 有常理; 電影友完無 → 電光速; 驚訝頭緒 → 驚飈; 樂收 → 榮秋</p>
+                        
+                        <p><strong>b. Phiên âm và dịch nghĩa:</strong></p>
+                        <p>Phiên âm: "Thịnh suy hữu thường lý, đồi như điện quang tốc, vinh tụy như kinh biêu, vạn pháp xuân vinh thu hựu khô."</p>
+                        <p>Dịch nghĩa: "Thịnh suy có lẽ thường, suy tàn nhanh như ánh chớp, vinh nhục như gió lốc, vạn vật mùa xuân tươi tốt mùa thu lại khô héo."</p>`,
+                    3: `<h3>Lời giải Câu III:</h3>
+                        <p><strong>Chữ Hán bài thơ Kim lũ y:</strong></p>
+                        <div class="hanzi" style="text-align: center; font-size: 1.3em;">
+                            勸君莫惜金縷衣<br>
+                            勸君須惜少年時<br>
+                            花開堪折直須折<br>
+                            莫待無花空折枝
+                        </div>
+                        
+                        <p><strong>Phiên âm:</strong></p>
+                        <p>Khuyến quân mạc tích kim lũ y,<br>
+                        Khuyến quân tu tích thiếu niên thì.<br>
+                        Hoa khai kham chiết trực tu chiết,<br>
+                        Mạc đãi vô hoa không chiết chi.</p>
+                        
+                        <p><strong>Dịch nghĩa:</strong></p>
+                        <p>Khuyên chàng chớ tiếc áo lụa vàng,<br>
+                        Khuyên chàng nên tiếc thuở thiếu niên.<br>
+                        Hoa nên hái, cứ hái ngay đi,<br>
+                        Chớ đợi không hoa, hái cành không.</p>
+                        
+                        <p><strong>Bình luận:</strong> Bài thơ khuyên nhủ người ta nên trân trọng tuổi trẻ và thời gian, đừng quá mải mê với vật chất phù phiếm. Triết lý "hái hoa khi còn có thể" thể hiện quan niệm sống tích cực, tận hưởng những gì tốt đẹp khi còn có thể, đừng để đến khi quá muộn.</p>`,
+                    4: `<h3>Lời giải Câu IV:</h3>
+                        <p><strong>Chép lại:</strong></p>
+                        <div class="hanzi">
+                            不違農時、穀不可勝食也。數罟不入洿池、魚鱉不可勝食也。斧斤以時入山林、材木不可勝用也。穀與魚鱉不可勝食、材木不可勝用、是使民養生喪死無憾也。養生喪死無憾、王道之始也。[梁惠王上]。
+                        </div>
+                        
+                        <p><strong>Dịch nghĩa:</strong></p>
+                        <p>Không trái thời vụ nông nghiệp, thì lương thực sẽ ăn không hết. Không dùng lưới dày vào ao hồ, thì cá tôm sẽ ăn không hết. Đốn cây theo mùa vào rừng núi, thì gỗ sẽ dùng không hết. Lương thực và cá tôm ăn không hết, gỗ dùng không hết, như vậy khiến dân chúng nuôi sống người sống và tống táng người chết không phải hối tiếc. Nuôi sống người sống và tống táng người chết không phải hối tiếc, đó là khởi đầu của vương đạo. [Lương Huệ Vương thượng].</p>
+                        <p><em>Bài này nói về chính sách cai trị nhân đạo, tôn trọng quy luật tự nhiên để phát triển bền vững.</em></p>`
+                };
+                
+                solutionContainer.innerHTML = solutions[questionNumber];
+                solutionContainer.style.display = 'block';
+                
+                // Restore button
+                btn.innerHTML = '<i class="fas fa-eye-slash"></i> Ẩn lời giải';
+                btn.disabled = false;
+                
+                // Scroll to solution if it's not fully visible
+                solutionContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 1500);
+        }
+        
+        // In a real implementation, this would be an API call to an AI service:
+        /*
+        async function getAISolution(question) {
+            const response = await fetch('https://api.dethihocphan.com/ai-solution', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer YOUR_API_KEY'
+                },
+                body: JSON.stringify({
+                    question: question,
+                    subject: 'Hán Nôm',
+                    level: 'Đại học'
+                })
+            });
+            
+            const data = await response.json();
+            return data.solution;
+        }
+        */
+    </script>
+</body>
+</html>

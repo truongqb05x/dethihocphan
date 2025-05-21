@@ -139,11 +139,55 @@
             });
 
             document.querySelectorAll('.download-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const name = btn.getAttribute('data-name');
-                    alert(`Đang tải xuống: ${name}`);
-                });
-            });
+  btn.addEventListener('click', async () => {
+    const name = btn.getAttribute('data-name');               // ví dụ "de1.pdf"
+    const path = btn.closest('tr').querySelector('.view-btn').dataset.path;
+
+    try {
+      // 1) Lấy link thật từ API xem
+      const viewRes = await fetch('/view_document', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ document_path: path })
+      });
+      const viewData = await viewRes.json();
+
+      if (!viewRes.ok) {
+        // xử lý lỗi giống nút View
+        if (viewData.error.includes('hết lượt xem') && confirm('Bạn đã hết lượt xem. Muốn đổi lượt xem không?')) {
+          return window.location.href = '/view';
+        }
+        if (viewData.error.includes('đăng nhập')) {
+          return window.location.href = '/index.html';
+        }
+        return showError(viewData.error || 'Không thể tải xuống tài liệu');
+      }
+
+      // 2) Fetch blob và download
+      const fileRes = await fetch(viewData.document_path);
+      const blob = await fileRes.blob();
+      const url = URL.createObjectURL(blob);
+
+      // --- xử lý thêm hậu tố vào filename ---
+      const dotIndex = name.lastIndexOf('.');
+      const base = dotIndex > -1 ? name.slice(0, dotIndex) : name;
+      const ext  = dotIndex > -1 ? name.slice(dotIndex) : '';
+      const newName = `${base}_dethihocphan.com${ext}`;  // ví dụ "de1_dethihocphan.com.pdf"
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = newName;
+      document.body.appendChild(a);
+      a.click();
+      URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      // -----------------------------------------
+    } catch (err) {
+      showError('Không thể tải xuống: ' + err.message);
+    }
+  });
+});
+
 
             document.querySelectorAll('.complaint-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
