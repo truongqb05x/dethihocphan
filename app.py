@@ -92,7 +92,10 @@ def login():
         cursor = conn.cursor(dictionary=True)
 
         # Check user
-        cursor.execute('SELECT id, username, password FROM users WHERE username = %s', (username,))
+        cursor.execute(
+            'SELECT id, username, password FROM users WHERE username = %s',
+            (username,)
+        )
         user = cursor.fetchone()
 
         cursor.close()
@@ -103,16 +106,9 @@ def login():
 
         # Verify password
         if bcrypt.checkpw(password.encode('utf-8'), user['password'].encode('utf-8')):
+            # Lưu thông tin user vào session
             session['user_id'] = user['id']
             session['username'] = user['username']
-
-            # Update luot_xem
-            conn = get_db_connection()
-            cursor = conn.cursor()
-            cursor.execute('UPDATE users SET luot_xem = luot_xem + 1 WHERE id = %s', (user['id'],))
-            conn.commit()
-            cursor.close()
-            conn.close()
 
             return jsonify({'message': 'Đăng nhập thành công', 'username': user['username']}), 200
         else:
@@ -297,12 +293,44 @@ def api_subjects():
     except Error as e:
         return jsonify({"error": f"Database error: {str(e)}"}), 500
 
-# API to return list of years with documents for a given subject
-@app.route('/api/years', methods=['GET'])
-def api_years():
+# API to return list of document types for a given subject
+@app.route('/api/document_types', methods=['GET'])
+def api_document_types():
     subject_id = request.args.get('subject_id', type=int)
     if not subject_id:
         return jsonify({'error': 'subject_id is required'}), 400
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("""
+            SELECT document_type, 
+                  MAX(created_at) as latest_updated, 
+                  SUM(file_size) as total_size,
+                  COUNT(id) as document_count
+            FROM documents
+            WHERE subject_id = %s
+            GROUP BY document_type
+            ORDER BY document_type
+        """, (subject_id,))
+        document_types = cursor.fetchall()
+        for doc_type in document_types:
+            if doc_type['latest_updated']:
+                doc_type['latest_updated'] = doc_type['latest_updated'].strftime('%Y-%m-%d')
+            doc_type['total_size'] = format_file_size(doc_type['total_size'])
+            doc_type['document_count'] = int(doc_type['document_count'] or 0)
+        cursor.close()
+        conn.close()
+        return jsonify(document_types)
+    except Error as e:
+        return jsonify({"error": f"Database error: {str(e)}"}), 500
+
+# API to return list of years with documents for a given subject and document type
+@app.route('/api/years', methods=['GET'])
+def api_years():
+    subject_id = request.args.get('subject_id', type=int)
+    document_type = request.args.get('document_type')
+    if not subject_id or not document_type:
+        return jsonify({'error': 'subject_id and document_type are required'}), 400
     try:
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
@@ -312,10 +340,10 @@ def api_years():
                   SUM(file_size) as total_size,
                   COUNT(id) as document_count
             FROM documents
-            WHERE subject_id = %s
+            WHERE subject_id = %s AND document_type = %s
             GROUP BY year
             ORDER BY year
-        """, (subject_id,))
+        """, (subject_id, document_type))
         years = cursor.fetchall()
         for year in years:
             if year['latest_updated']:
@@ -332,16 +360,17 @@ def api_years():
 @app.route('/api/documents', methods=['GET'])
 def api_documents():
     subject_id = request.args.get('subject_id', type=int)
+    document_type = request.args.get('document_type')
     year = request.args.get('year')
     keyword = request.args.get('keyword', default='', type=str).strip()
-    document_type = request.args.get('document_type', default='', type=str)
+
+    print(f"API /api/documents called with: subject_id={subject_id}, document_type={document_type}, year={year}, keyword={keyword}")
 
     try:
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
 
-        # Nếu có subject_id và year, lọc theo điều kiện
-        if subject_id and year:
+        if subject_id and document_type and year:
             query = (
                 "SELECT d.id, d.file_name, d.file_path, d.document_type, "
                 "d.created_at, d.year, "
@@ -350,11 +379,10 @@ def api_documents():
                 "JOIN subjects s ON d.subject_id = s.id "
                 "JOIN faculties f ON s.faculty_id = f.id "
                 "JOIN schools sc ON f.school_id = sc.id "
-                "WHERE d.subject_id = %s AND d.year = %s"
+                "WHERE d.subject_id = %s AND d.document_type = %s AND d.year = %s"
             )
-            params = [subject_id, year]
+            params = [subject_id, document_type, year]
         else:
-            # Truy vấn toàn bộ nếu không có subject_id và year
             query = (
                 "SELECT d.id, d.file_name, d.file_path, d.document_type, "
                 "d.created_at, d.year, "
@@ -367,24 +395,23 @@ def api_documents():
             )
             params = []
 
-        # Tìm theo từ khóa nếu có
         if keyword:
             keywords = keyword.split()
             for kw in keywords:
                 query += f" AND d.file_name LIKE %s"
                 params.append(f"%{kw}%")
 
-        # Lọc theo loại tài liệu nếu hợp lệ
-        if document_type in ['exam', 'syllabus']:
+        if document_type and not (subject_id and year):
             query += " AND d.document_type = %s"
             params.append(document_type)
 
         query += " ORDER BY d.created_at DESC"
 
+        print(f"Executing query: {query} with params: {params}")
         cursor.execute(query, params)
         documents = cursor.fetchall()
+        print(f"Documents found: {len(documents)}")
 
-        # Xử lý định dạng ngày và kích thước file
         for doc in documents:
             if doc['created_at']:
                 doc['created_at'] = doc['created_at'].strftime('%d/%m/%Y')
@@ -402,8 +429,10 @@ def api_documents():
         return jsonify(documents)
 
     except Error as e:
+        print(f"Database error: {str(e)}")
         return jsonify({"error": f"Lỗi cơ sở dữ liệu: {str(e)}"}), 500
     except Exception as e:
+        print(f"Server error: {str(e)}")
         return jsonify({"error": f"Lỗi máy chủ: {str(e)}"}), 500
 # File upload configuration
 UPLOAD_FOLDER = 'static/exam'

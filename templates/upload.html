@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ngân hàng đề thi học phần</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/app.css">
+    <link rel="stylesheet" href="../static/css/upload.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+            <h1 class="header-title">Upload Tài Liệu</h1>
+            <div class="header-actions">
+                <div class="header-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </div>
+                <div class="header-icon theme-icon">
+                    <i class="fas fa-moon"></i>
+                </div>
+                <div class="user-avatar">NM</div>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div>
+                    <div class="sidebar-title">Ngân Hàng Đề Thi</div>
+                    <div class="sidebar-group">Hệ thống quản lý tài liệu</div>
+                </div>
+            </div>
+
+            <div class="sidebar-nav">
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <div class="nav-text">Trang chủ</div>
+                </a>
+                <a href="#" class="nav-item active">
+                    <div class="nav-icon">
+                        <i class="fas fa-upload"></i>
+                    </div>
+                    <div class="nav-text">Upload tài liệu</div>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="nav-text">Tìm kiếm tài liệu</div>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <div class="nav-text">Trường/Khoa</div>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="nav-text">Môn học</div>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="nav-text">Người dùng</div>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div class="nav-text">Thống kê</div>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <div class="nav-text">Cài đặt</div>
+                </a>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="theme-toggle">
+                    <div class="theme-btn active" data-theme="light">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <div class="theme-btn" data-theme="dark">
+                        <i class="fas fa-moon"></i>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="main-content">
+            <div class="upload-container">
+                <h2 class="upload-title">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    Upload Tài Liệu Mới
+                </h2>
+
+                <div class="tabs">
+                    <div class="tab active" data-tab="document">Tài liệu</div>
+                    <div class="tab" data-tab="university">Thêm Trường</div>
+                    <div class="tab" data-tab="faculty">Thêm Khoa</div>
+                    <div class="tab" data-tab="subject">Thêm Môn Học</div>
+                </div>
+
+                <!-- Document Upload Tab -->
+                <div class="tab-content active" id="document-tab">
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label" for="university">Trường</label>
+                                <select class="form-control" id="university" required>
+                                    <option value="">-- Chọn trường --</option>
+                                    <option value="1">Đại học Bách Khoa Hà Nội</option>
+                                    <option value="2">Đại học Khoa học Tự nhiên</option>
+                                    <option value="3">Đại học Kinh tế Quốc dân</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label" for="faculty">Khoa</label>
+                                <select class="form-control" id="faculty" required>
+                                    <option value="">-- Chọn khoa --</option>
+                                    <option value="1">Công nghệ Thông tin</option>
+                                    <option value="2">Điện - Điện tử</option>
+                                    <option value="3">Cơ khí</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label" for="subject">Môn học</label>
+                                <select class="form-control" id="subject" required>
+                                    <option value="">-- Chọn môn học --</option>
+                                    <option value="1">Lập trình hướng đối tượng</option>
+                                    <option value="2">Cấu trúc dữ liệu và giải thuật</option>
+                                    <option value="3">Cơ sở dữ liệu</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label" for="document-type">Loại tài liệu</label>
+                                <select class="form-control" id="document-type" required>
+                                    <option value="">-- Chọn loại tài liệu --</option>
+                                    <option value="exam">Đề thi</option>
+                                    <option value="lecture">Bài giảng</option>
+                                    <option value="exercise">Bài tập</option>
+                                    <option value="other">Khác</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="document-title">Tiêu đề tài liệu</label>
+                        <input type="text" class="form-control" id="document-title" placeholder="Nhập tiêu đề tài liệu" required>
+                    </div>
+
+
+                    <div class="file-upload" id="file-upload-area">
+                        <i class="fas fa-file-upload"></i>
+                        <div class="file-upload-text">Kéo thả tài liệu vào đây hoặc click để chọn</div>
+                        <div class="file-upload-hint">Hỗ trợ file PDF, DOCX, PPTX (tối đa 50MB)</div>
+                        <input type="file" id="file-input" style="display: none;" multiple>
+                    </div>
+
+                    <div class="file-list" id="file-list">
+                        <!-- Files will be listed here -->
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Hủy bỏ
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-upload"></i> Upload Tài liệu
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Add University Tab -->
+                <div class="tab-content" id="university-tab">
+                    <div class="form-group">
+                        <label class="form-label" for="new-university-name">Tên trường</label>
+                        <input type="text" class="form-control" id="new-university-name" placeholder="Nhập tên trường đại học/học viện" required>
+                    </div>
+
+
+
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Hủy bỏ
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-save"></i> Lưu Thông Tin
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Add Faculty Tab -->
+                <div class="tab-content" id="faculty-tab">
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label" for="faculty-university">Trường</label>
+                                <select class="form-control" id="faculty-university" required>
+                                    <option value="">-- Chọn trường --</option>
+                                    <option value="1">Đại học Bách Khoa Hà Nội</option>
+                                    <option value="2">Đại học Khoa học Tự nhiên</option>
+                                    <option value="3">Đại học Kinh tế Quốc dân</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label" for="new-faculty-name">Tên khoa</label>
+                                <input type="text" class="form-control" id="new-faculty-name" placeholder="Nhập tên khoa" required>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Hủy bỏ
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-save"></i> Lưu Thông Tin
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Add Subject Tab -->
+                <div class="tab-content" id="subject-tab">
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label" for="subject-university">Trường</label>
+                                <select class="form-control" id="subject-university" required>
+                                    <option value="">-- Chọn trường --</option>
+                                    <option value="1">Đại học Bách Khoa Hà Nội</option>
+                                    <option value="2">Đại học Khoa học Tự nhiên</option>
+                                    <option value="3">Đại học Kinh tế Quốc dân</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label" for="subject-faculty">Khoa</label>
+                                <select class="form-control" id="subject-faculty" required>
+                                    <option value="">-- Chọn khoa --</option>
+                                    <option value="1">Công nghệ Thông tin</option>
+                                    <option value="2">Điện - Điện tử</option>
+                                    <option value="3">Cơ khí</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="new-subject-name">Tên môn học</label>
+                        <input type="text" class="form-control" id="new-subject-name" placeholder="Nhập tên môn học" required>
+                    </div>
+
+
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Hủy bỏ
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-save"></i> Lưu Thông Tin
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+<script src="../static/js/upload.js"></script>
+</body>
+</html>

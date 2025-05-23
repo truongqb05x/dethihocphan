@@ -121,7 +121,7 @@
                 });
         }
 
-        function fetchYears(subjectId, filters = {}) {
+        function fetchDocumentTypes(subjectId, filters = {}) {
             if (!subjectId || isNaN(subjectId)) {
                 showError(`ID môn học không hợp lệ: ${subjectId}`);
                 hideLoading();
@@ -129,7 +129,36 @@
             }
             showLoading();
             currentSubjectId = subjectId;
-            fetch(`/api/years?subject_id=${subjectId}`)
+            fetch(`/api/document_types?subject_id=${subjectId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: Không thể tải danh sách loại tài liệu`);
+                    }
+                    return response.json();
+                })
+                .then(documentTypes => {
+                    let filteredDocumentTypes = documentTypes;
+                    if (filters.documentTypes && filters.documentTypes.length > 0 && currentPath.split('/').length === 4) {
+                        filteredDocumentTypes = documentTypes.filter(docType => filters.documentTypes.includes(docType.document_type));
+                    }
+                    renderItems(filteredDocumentTypes, 'document_type');
+                    updateFilterOptions('document_type', documentTypes || []);
+                    hideLoading();
+                })
+                .catch(error => {
+                    showError(`Không thể tải danh sách loại tài liệu: ${error.message}`);
+                    hideLoading();
+                });
+        }
+
+        function fetchYears(subjectId, documentType, filters = {}) {
+            if (!subjectId || isNaN(subjectId) || !documentType) {
+                showError(`Thiếu thông tin môn học hoặc loại tài liệu: subjectId=${subjectId}, documentType=${documentType}`);
+                hideLoading();
+                return;
+            }
+            showLoading();
+            fetch(`/api/years?subject_id=${subjectId}&document_type=${documentType}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`HTTP ${response.status}: Không thể tải danh sách năm`);
@@ -138,10 +167,10 @@
                 })
                 .then(years => {
                     let filteredYears = years;
-                    if (filters.years && filters.years.length > 0 && currentPath.split('/').length === 4) {
+                    if (filters.years && filters.years.length > 0 && currentPath.split('/').length === 5) {
                         filteredYears = years.filter(year => filters.years.includes(year.year));
                     }
-                    renderItems(filteredYears, 'year');
+                    renderItems(filteredYears, 'year', documentType);
                     updateFilterOptions('year', years || []);
                     hideLoading();
                 })
@@ -151,30 +180,39 @@
                 });
         }
 
-        function fetchDocuments(subjectId, year, filters = {}) {
-            if (!subjectId || isNaN(subjectId) || !year) {
-                showError(`Thiếu thông tin môn học hoặc năm: subjectId=${subjectId}, year=${year}`);
+        function fetchDocuments(subjectId, documentType, year, filters = {}) {
+            if (!subjectId || isNaN(subjectId) || !documentType || !year) {
+                showError(`Thiếu thông tin môn học, loại tài liệu hoặc năm: subjectId=${subjectId}, documentType=${documentType}, year=${year}`);
                 hideLoading();
                 return;
             }
             showLoading();
-            fetch(`/api/documents?subject_id=${subjectId}&year=${year}`)
+            console.log(`Fetching documents with: subjectId=${subjectId}, documentType=${documentType}, year=${year}`);
+            fetch(`/api/documents?subject_id=${subjectId}&document_type=${documentType}&year=${encodeURIComponent(year)}`)
                 .then(response => {
+                    console.log('API response status:', response.status);
                     if (!response.ok) {
                         throw new Error(`HTTP ${response.status}: Không thể tải danh sách tài liệu`);
                     }
                     return response.json();
                 })
                 .then(documents => {
+                    console.log('Documents received:', documents);
+                    if (!documents || documents.length === 0) {
+                        showError('Không tìm thấy tài liệu nào cho năm này.');
+                        hideLoading();
+                        return;
+                    }
                     let filteredDocuments = documents;
-                    if (filters.documentTypes && filters.documentTypes.length > 0 && currentPath.split('/').length >= 5) {
+                    if (filters.documentTypes && filters.documentTypes.length > 0 && currentPath.split('/').length >= 6) {
                         filteredDocuments = documents.filter(doc => filters.documentTypes.includes(doc.document_type));
                     }
                     renderItems(filteredDocuments, 'document');
-                    updateFilterOptions('document', documents || []);
+                    updateFilterOptions('document', filteredDocuments);
                     hideLoading();
                 })
                 .catch(error => {
+                    console.error('Error fetching documents:', error);
                     showError(`Không thể tải danh sách tài liệu: ${error.message}`);
                     hideLoading();
                 });
@@ -205,10 +243,13 @@
 
                 if (i === 0) type = 'faculty';
                 else if (i === 1) type = 'subject';
-                else if (i === 2) type = 'year';
-                else if (i === 3) type = 'document';
+                else if (i === 2) type = 'document_type';
+                else if (i === 3) type = 'year';
+                else if (i === 4) type = 'document';
 
-                const displayName = type === 'year' || type === 'document' ? decodeURIComponent(parts[i]) : (pathNames[parts[i]] || decodeURIComponent(parts[i]));
+                const displayName = type === 'year' || type === 'document' ? decodeURIComponent(parts[i]) :
+                                   type === 'document_type' ? (parts[i] === 'exam' ? 'Đề thi' : 'Đề cương') :
+                                   (pathNames[parts[i]] || decodeURIComponent(parts[i]));
 
                 if (i === parts.length - 1) {
                     partItem.innerHTML = `<span data-path="${currentPath}" data-type="${type}">${displayName}</span>`;
@@ -238,17 +279,31 @@
                 fetchFaculties(parts[0], filters);
             } else if (type === 'subject') {
                 fetchSubjects(parts[1], filters);
+            } else if (type === 'document_type') {
+                fetchDocumentTypes(parts[1], filters);
             } else if (type === 'year') {
-                fetchYears(parts[1], filters);
+                fetchYears(parts[1], parts[2], filters);
             } else if (type === 'document') {
-                fetchDocuments(parts[1], parts[2], filters);
+                fetchDocuments(parts[1], parts[2], parts[3], filters);
             }
             navigateTo(path);
         }
 
-        function renderItems(items, type) {
+        function renderItems(items, type, documentType = '') {
             const fileTableBody = document.getElementById('fileTableBody');
             fileTableBody.innerHTML = '';
+
+            if (!items || items.length === 0) {
+                fileTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 2rem; color: var(--text-light);">
+                            <i class="fas fa-info-circle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                            <p>Không có ${type === 'document' ? 'tài liệu' : type === 'year' ? 'năm' : type === 'document_type' ? 'loại tài liệu' : 'dữ liệu'} để hiển thị.</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
 
             if (currentPath !== '/' && items.length > 0) {
                 const parentPath = getParentPath(currentPath);
@@ -273,7 +328,7 @@
                 const row = document.createElement('tr');
                 let icon = '';
                 let itemType = '';
-                let name, path, id, year, size, updated;
+                let name, path, id, itemDocumentType, year, size, updated;
 
                 if (['school', 'faculty', 'subject'].includes(type)) {
                     icon = '<i class="fas fa-folder file-icon" style="color: #54aeff;"></i>';
@@ -281,6 +336,17 @@
                     name = item.name;
                     path = `${currentPath}/${item.id}`;
                     id = item.id || '';
+                    itemDocumentType = '';
+                    year = '';
+                    size = item.total_size || '0 KB';
+                    updated = item.latest_updated ? new Date(item.latest_updated).toLocaleDateString('vi-VN') : '-';
+                } else if (type === 'document_type') {
+                    icon = '<i class="fas fa-folder file-icon" style="color: #54aeff;"></i>';
+                    itemType = 'Thư mục';
+                    name = item.document_type === 'exam' ? 'Đề thi' : 'Đề cương';
+                    path = `${currentPath}/${item.document_type}`;
+                    id = currentSubjectId || '';
+                    itemDocumentType = item.document_type;
                     year = '';
                     size = item.total_size || '0 KB';
                     updated = item.latest_updated ? new Date(item.latest_updated).toLocaleDateString('vi-VN') : '-';
@@ -290,6 +356,7 @@
                     name = item.year;
                     path = `${currentPath}/${encodeURIComponent(item.year)}`;
                     id = currentSubjectId || '';
+                    itemDocumentType = documentType;
                     year = item.year;
                     size = item.total_size || '0 KB';
                     updated = item.latest_updated ? new Date(item.latest_updated).toLocaleDateString('vi-VN') : '-';
@@ -329,11 +396,12 @@
                             break;
                         default:
                             icon = '<i class="fas fa-file file-icon" style="color: var(--text-light);"></i>';
-                            itemType = item.document_type ? item.document_type.charAt(0).toUpperCase() + item.document_type.slice(1) : 'Tài liệu';
+                            itemType = item.document_type ? (item.document_type === 'exam' ? 'Đề thi' : 'Đề cương') : 'Tài liệu';
                     }
                     name = item.file_name;
                     path = item.file_path;
                     id = item.id || '';
+                    itemDocumentType = item.document_type || '';
                     year = item.year || '';
                     size = item.file_size || '0 KB';
                     updated = item.created_at || '-';
@@ -344,7 +412,7 @@
                         <div style="display: flex; align-items: center;">
                             ${icon}
                             <a href="#" class="file-name" data-path="${path}" data-type="${type}" 
-                               data-id="${id}" data-year="${year}">${name}</a>
+                               data-id="${id}" data-document-type="${itemDocumentType}" data-year="${year}">${name}</a>
                         </div>
                     </td>
                     <td class="file-meta">${itemType}</td>
@@ -362,12 +430,12 @@
                 let valueA, valueB;
                 switch(currentSortColumn) {
                     case 'name':
-                        valueA = typeof a === 'string' ? a.toLowerCase() : (a.name || a.file_name || a.year || '').toLowerCase();
-                        valueB = typeof b === 'string' ? b.toLowerCase() : (b.name || b.file_name || b.year || '').toLowerCase();
+                        valueA = typeof a === 'string' ? a.toLowerCase() : (a.name || a.file_name || a.year || a.document_type || '').toLowerCase();
+                        valueB = typeof b === 'string' ? b.toLowerCase() : (b.name || b.file_name || b.year || b.document_type || '').toLowerCase();
                         break;
                     case 'type':
                         valueA = a.type || (typeof a === 'string' ? 'Thư mục' : a.document_type || '');
-                        valueB = b.type || (typeof b === 'string' ? 'Thư mục' : a.document_type || '');
+                        valueB = b.type || (typeof b === 'string' ? 'Thư mục' : b.document_type || '');
                         break;
                     case 'size':
                         valueA = parseFileSize(a.total_size || a.file_size || '0 KB');
@@ -386,8 +454,8 @@
                         }
                         break;
                     default:
-                        valueA = typeof a === 'string' ? a.toLowerCase() : (a.name || a.file_name || a.year || '').toLowerCase();
-                        valueB = typeof b === 'string' ? b.toLowerCase() : (b.name || b.file_name || b.year || '').toLowerCase();
+                        valueA = typeof a === 'string' ? a.toLowerCase() : (a.name || a.file_name || a.year || a.document_type || '').toLowerCase();
+                        valueB = typeof b === 'string' ? b.toLowerCase() : (b.name || b.file_name || b.year || b.document_type || '').toLowerCase();
                 }
                 return (valueA < valueB ? -1 : 1) * (sortDirection === 'asc' ? 1 : -1);
             });
@@ -413,9 +481,27 @@
                     const path = this.getAttribute('data-path');
                     const type = this.getAttribute('data-type');
                     const id = this.getAttribute('data-id');
+                    let documentType = this.getAttribute('data-document-type');
                     const year = this.getAttribute('data-year');
 
-                    console.log('Item clicked:', { path, type, id, year });
+                    // For 'year' type, extract documentType from currentPath
+                    if (type === 'year') {
+                        const parts = currentPath.split('/').filter(part => part);
+                        console.log('Year path segments:', parts);
+                        if (parts.length >= 4) {
+                            documentType = parts[3]; // document_type is the fourth segment
+                            // Validate documentType
+                            if (!['exam', 'syllabus'].includes(documentType)) {
+                                showError(`Loại tài liệu không hợp lệ: ${documentType}`);
+                                return;
+                            }
+                        } else {
+                            showError('Không thể xác định loại tài liệu từ đường dẫn hiện tại.');
+                            return;
+                        }
+                    }
+
+                    console.log('Item clicked:', { path, type, id, documentType, year, currentPath });
 
                     if (type === 'parent') {
                         const parts = path.split('/').filter(part => part);
@@ -426,7 +512,9 @@
                         } else if (parts.length === 2) {
                             fetchSubjects(parts[1]);
                         } else if (parts.length === 3) {
-                            fetchYears(parts[2]);
+                            fetchDocumentTypes(parts[1]);
+                        } else if (parts.length === 4) {
+                            fetchYears(parts[1], parts[2]);
                         }
                         navigateTo(path);
                     } else if (type === 'school') {
@@ -436,14 +524,25 @@
                         fetchSubjects(id);
                         navigateTo(path);
                     } else if (type === 'subject') {
-                        fetchYears(id);
+                        fetchDocumentTypes(id);
+                        navigateTo(path);
+                    } else if (type === 'document_type') {
+                        if (!id || isNaN(id)) {
+                            showError(`ID môn học không hợp lệ: ${id}`);
+                            return;
+                        }
+                        fetchYears(id, documentType);
                         navigateTo(path);
                     } else if (type === 'year') {
                         if (!id || isNaN(id)) {
                             showError(`ID môn học không hợp lệ: ${id}`);
                             return;
                         }
-                        fetchDocuments(id, year);
+                        if (!documentType) {
+                            showError(`Loại tài liệu không hợp lệ: ${documentType}`);
+                            return;
+                        }
+                        fetchDocuments(id, documentType, year);
                         navigateTo(path);
                     } else if (type === 'document') {
                         try {
@@ -483,6 +582,7 @@
                 school: document.getElementById('schoolFilterGroup'),
                 faculty: document.getElementById('facultyFilterGroup'),
                 subject: document.getElementById('subjectFilterGroup'),
+                document_type: document.getElementById('documentTypeFilterGroup'),
                 year: document.getElementById('yearFilterGroup'),
                 document: document.getElementById('documentFilterGroup')
             };
@@ -491,6 +591,7 @@
                 school: document.getElementById('filterSchool'),
                 faculty: document.getElementById('filterFaculty'),
                 subject: document.getElementById('filterSubject'),
+                document_type: document.getElementById('filterDocumentTypes'),
                 year: document.getElementById('filterYears'),
                 document: document.getElementById('filterDocumentTypes')
             };
@@ -505,7 +606,8 @@
             const currentLevel = parts.length === 0 ? 'school' :
                                 parts.length === 1 ? 'faculty' :
                                 parts.length === 2 ? 'subject' :
-                                parts.length === 3 ? 'year' : 'document';
+                                parts.length === 3 ? 'document_type' :
+                                parts.length === 4 ? 'year' : 'document';
 
             // Hiển thị và cập nhật bộ lọc tương ứng
             if (currentLevel === 'school' && type === 'school' && filterGroups.school && elements.school) {
@@ -526,6 +628,15 @@
                     elements.subject.innerHTML = `<option value="">Tất cả môn</option>` + 
                         items.map(item => `<option value="${item.id}">${item.name}</option>`).join('');
                 }
+            } else if (currentLevel === 'document_type' && type === 'document_type' && filterGroups.document_type && elements.document_type) {
+                filterGroups.document_type.style.display = 'block';
+                if (items && items.length > 0) {
+                    elements.document_type.innerHTML = items.map(item => `
+                        <label class="filter-option">
+                            <input type="checkbox" value="${item.document_type}" checked> ${item.document_type === 'exam' ? 'Đề thi' : 'Đề cương'}
+                        </label>
+                    `).join('');
+                }
             } else if (currentLevel === 'year' && type === 'year' && filterGroups.year && elements.year) {
                 filterGroups.year.style.display = 'block';
                 if (items && items.length > 0) {
@@ -537,15 +648,17 @@
                 }
             } else if (currentLevel === 'document' && filterGroups.document && elements.document) {
                 filterGroups.document.style.display = 'block';
-                // Bộ lọc loại tài liệu không cần dữ liệu từ items
             }
         }
 
         function navigateTo(path) {
+            // Normalize path to remove double slashes
+            path = '/' + path.split('/').filter(part => part).join('/');
             currentPath = path;
             navigationHistory.push(path);
             renderPathNavigation(path);
             updateSortIndicator();
+            console.log('Navigated to:', currentPath);
         }
 
         function updateSortIndicator() {
@@ -590,9 +703,11 @@
                     } else if (parts.length === 2) {
                         fetchSubjects(parts[1]);
                     } else if (parts.length === 3) {
-                        fetchYears(parts[2]);
-                    } else if (parts.length >= 4) {
-                        fetchDocuments(parts[1], parts[2]);
+                        fetchDocumentTypes(parts[1]);
+                    } else if (parts.length === 4) {
+                        fetchYears(parts[1], parts[2]);
+                    } else if (parts.length >= 5) {
+                        fetchDocuments(parts[1], parts[2], parts[3]);
                     }
                 });
             });
@@ -605,12 +720,12 @@
 
             filterModalBtn.addEventListener('click', () => {
                 filterModal.classList.add('active');
-                // Cập nhật bộ lọc khi mở modal để đảm bảo hiển thị đúng
                 const parts = currentPath.split('/').filter(part => part);
                 const type = parts.length === 0 ? 'school' :
                              parts.length === 1 ? 'faculty' :
                              parts.length === 2 ? 'subject' :
-                             parts.length === 3 ? 'year' : 'document';
+                             parts.length === 3 ? 'document_type' :
+                             parts.length === 4 ? 'year' : 'document';
                 updateFilterOptions(type, []);
             });
 
@@ -623,8 +738,8 @@
                     schoolId: document.getElementById('filterSchool').value,
                     facultyId: document.getElementById('filterFaculty').value,
                     subjectId: document.getElementById('filterSubject').value,
-                    years: Array.from(document.querySelectorAll('#filterYears input[type="checkbox"]:checked')).map(cb => cb.value),
-                    documentTypes: Array.from(document.querySelectorAll('#filterDocumentTypes input[type="checkbox"]:checked')).map(cb => cb.value)
+                    documentTypes: Array.from(document.querySelectorAll('#filterDocumentTypes input[type="checkbox"]:checked')).map(cb => cb.value),
+                    years: Array.from(document.querySelectorAll('#filterYears input[type="checkbox"]:checked')).map(cb => cb.value)
                 };
 
                 console.log('Applying filters:', filters);
@@ -633,7 +748,8 @@
                 const type = parts.length === 0 ? 'school' :
                              parts.length === 1 ? 'faculty' :
                              parts.length === 2 ? 'subject' :
-                             parts.length === 3 ? 'year' : 'document';
+                             parts.length === 3 ? 'document_type' :
+                             parts.length === 4 ? 'year' : 'document';
 
                 navigateToPath(currentPath, type, filters);
             });
@@ -649,9 +765,11 @@
                 } else if (parts.length === 2) {
                     fetchSubjects(parts[1]);
                 } else if (parts.length === 3) {
-                    fetchYears(parts[1]);
-                } else if (parts.length >= 4) {
-                    fetchDocuments(parts[1], parts[2]);
+                    fetchDocumentTypes(parts[1]);
+                } else if (parts.length === 4) {
+                    fetchYears(parts[1], parts[2]);
+                } else if (parts.length >= 5) {
+                    fetchDocuments(parts[1], parts[2], parts[3]);
                 }
             });
 
